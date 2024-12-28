@@ -39,7 +39,7 @@ export const DOMAIN_STATUS_LABELS: Record<DomainStatus, { label: string; color: 
         label: 'The domain is not present in DNS.',
     },
     [DomainStatus.inactive]: {
-        color: '#D6E2E9',
+        color: '#84dcc6',
         label: 'The domain is available for a new registration.',
     },
     [DomainStatus.pending]: {
@@ -67,7 +67,7 @@ export const DOMAIN_STATUS_LABELS: Record<DomainStatus, { label: string; color: 
         label: 'A domain longer than 64 characters. Technically invalid, e.g. too long or too short.',
     },
     [DomainStatus.active]: {
-        color: '#C5DEDD',
+        color: '#ff686b',
         label: 'Registered, but possibly available via the aftermarket.',
     },
     [DomainStatus.parked]: {

@@ -9,25 +9,25 @@ export default function Home() {
                 <SearchBar />
                 <Carousel />
                 <Feature
-                    color="#c5dedd"
+                    color="#fcf6bd"
                     description="A domain name that is easy to recall ensures people can find you. What's simpler than your own name?"
                     image="bulb.svg"
                     title="Memorable Matters"
                 />
                 <Feature
-                    color="#bcd4e6"
+                    color="#d0f4de"
                     description="A vanity domain sets you apart online, representing your personal brand. Secure it before someone else does!"
                     image="target.svg"
                     title="Claim Your Unique Spot"
                 />
                 <Feature
-                    color="#f0efeb"
+                    color="#a9def9"
                     description="A vanity domain shows you mean business. Stand out and leave a lasting impression. Seize this opportunity today!"
                     image="push-pins.svg"
                     title="Look Professional"
                 />
                 <Feature
-                    color="#fde2e4"
+                    color="#e4c1f9"
                     description="A vanity domain is your digital license plate: memorable, stylish, and sure to leave an impression!"
                     image="presentation.svg"
                     title="Boost your ego"
