@@ -18,7 +18,7 @@ export default function SearchBar() {
 
     return (
         <div className="w-full">
-            <form className="flex w-full flex-row gap-5" onSubmit={handleSearch}>
+            <form className="flex w-full flex-row gap-2" onSubmit={handleSearch}>
                 <Input
                     type="text"
                     placeholder="Enter your name"

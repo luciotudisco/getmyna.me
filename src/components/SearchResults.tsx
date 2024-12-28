@@ -4,6 +4,7 @@ import { useEffect, useState, useTransition } from 'react';
 import { Separator } from '@/components/ui/separator';
 import NumberTicker from '@/components/ui/number-ticker';
 import { FallingLines } from 'react-loader-spinner';
+import { SaladIcon } from 'lucide-react';
 
 export function SearchResults() {
     const searchParams = useSearchParams();
@@ -11,11 +12,9 @@ export function SearchResults() {
     const [isPending, startTransition] = useTransition();
 
     useEffect(() => {
-        const term = searchParams.get('term');
-
-        // Wrap the fetch call in startTransition
         startTransition(async () => {
             try {
+                const term = searchParams.get('term');
                 const response = await fetch(`/api/domains/search?term=${term}`);
                 const data = await response.json();
                 setDomains(data.domains || []);
@@ -29,7 +28,7 @@ export function SearchResults() {
     if (isPending) {
         return (
             <div className="flex min-h-screen flex-col items-center gap-5 py-24 align-middle">
-                <p className="text-xl">Loading results...</p>
+                <p className="text-xl text-muted-foreground">Loading results...</p>
             </div>
         );
     }
@@ -37,7 +36,7 @@ export function SearchResults() {
     if (domains.length === 0) {
         return (
             <div className="flex min-h-screen flex-col items-center gap-5 py-24 align-middle">
-                <p className="from-accent-foreground text-xl">Oops! No results found</p>
+                <p className="from-accent-foreground text-xl text-muted-foreground">Oops! No results found</p>
             </div>
         );
     }

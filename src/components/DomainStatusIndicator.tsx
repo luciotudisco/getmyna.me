@@ -47,11 +47,11 @@ export default function DomainStatusIndicator(props: DomainStatusIndicatorProps)
             <TooltipProvider>
                 <Tooltip>
                     <TooltipTrigger asChild>
-                        <Button variant="ghost" size="icon" className='hover:bg-transparent'>
+                        <Button variant="ghost" size="icon" className="hover:bg-transparent">
                             <Info />
                         </Button>
                     </TooltipTrigger>
-                    <TooltipContent className="p-5 font-mono text-sm">{tooltip}</TooltipContent>
+                    <TooltipContent className="text-balance p-2 font-mono text-xs">{tooltip}</TooltipContent>
                 </Tooltip>
             </TooltipProvider>
         </div>
