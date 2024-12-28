@@ -1,66 +1,9 @@
-'use client';
+"use client";
 
-import Domain from '@/components/Domain';
-import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { Separator } from '@/components/ui/separator';
-import NumberTicker from '@/components/ui/number-ticker';
-import { FallingLines } from 'react-loader-spinner';
+import { SearchResults } from '@/components/SearchResults';
+import { Suspense } from 'react';
 
 export default function SearchPage() {
-    const [isLoading, setLoading] = useState(true);
-    const [domains, setDomains] = useState<string[]>([]);
-    const searchParams = useSearchParams();
 
-    useEffect(() => {
-        setLoading(true);
-        fetchDomains();
-        setLoading(false);
-    }, [searchParams]);
-
-    const fetchDomains = async () => {
-        try {
-            setLoading(true);
-            const term = searchParams.get('term');
-            const response = await fetch('/api/domains/search?term=' + term);
-            const data = await response.json();
-            setDomains(data.domains);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    if (isLoading) {
-        return (
-            <div className="flex min-h-screen flex-col items-center gap-5 py-24 align-middle">
-                <FallingLines width="8rem" color="#bcd4e6" />
-                <p className="text-md from-accent-foreground">Hold tigth! Loading ...</p>
-            </div>
-        );
-    }
-
-    if (domains.length === 0) {
-        return (
-            <div className="flex min-h-screen flex-col items-center gap-5 py-24 align-middle">
-                <p className="from-accent-foreground text-xl">Oops! No results found</p>
-            </div>
-        );
-    }
-
-    return (
-        <div className="min-h-screen">
-            <main className="m-auto flex flex-col items-center gap-0 p-10 md:w-3/4">
-                <p className="text-muted-foregroun whitespace-pre-wrap p-5 font-mono text-sm tracking-tighter text-black dark:text-white">
-                    <NumberTicker value={domains.length} />
-                    <span> results found</span>
-                </p>
-                {domains.map((domain) => (
-                    <>
-                        <Domain domain={domain} key={domain} />
-                        <Separator />
-                    </>
-                ))}
-            </main>
-        </div>
-    );
+    return <Suspense><SearchResults /></Suspense>;
 }

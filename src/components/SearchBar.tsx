@@ -18,15 +18,15 @@ export default function SearchBar() {
 
     return (
         <div className="w-full">
-            <form className="flex w-full flex-row gap-2" onSubmit={handleSearch}>
+            <form className="flex w-full flex-row gap-5" onSubmit={handleSearch}>
                 <Input
                     type="text"
                     placeholder="Enter your name"
-                    className="rounded-sm font-mono"
+                    className="rounded-sm font-mono shadow-sm"
                     onChange={(event) => setSearchTerm(event.target.value)}
                     value={searchTerm}
                 />
-                <Button type="submit" className="rounded-md font-mono">
+                <Button type="submit" className="rounded-md font-mono shadow-sm">
                     Search
                 </Button>
             </form>

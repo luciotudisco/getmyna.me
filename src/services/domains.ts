@@ -3,57 +3,56 @@ import isFQDN from 'validator/lib/isFQDN';
 import { Permutation, PowerSet } from 'js-combinatorics';
 
 /**
- * Returns a (possibly empty) list of first-level domains that are vanity domains for the given input string.
+ * Returns a (possibly empty) list of domains that are domains hacks for the given input string.
  *
- * E.g., Given the input 'lucio tudisco', the method will return the following list of vanity domains:
- * ['luc.io', 'tudis.co', 'luciotudis.co', 'tudiscoluc.io'].
+ * E.g., Given the input "bill gates", the method will return the following list of vanity domains:
+ * ["BILL.GAT.ES", "BILLGAT.ES", "GAT.ES"].
  *
  * @param input - The input string.
  * @returns A (possibly empty) list of vanity domains for the given input string.
  */
-export function getDomains(input: string): string[] {
-    // Normalize input string
+export function getDomainsHacks(input: string): string[] {
     input = input.trim().toLowerCase();
 
-    const candidateNames: string[] = [];
-
     // Split the input into words
+    // If more than 3 words, join the middle ones to reduce complexity
     let nameParts = input.split(/\s+/);
-
-    // If more than 3 words, combine the middle ones to reduce complexity
     if (nameParts.length > 3) {
         nameParts = [
             nameParts[0],
-            nameParts.slice(1, -1).join(''), // Join middle parts
+            nameParts.slice(1, -1).join(''),
             nameParts[nameParts.length - 1],
         ];
     }
 
-    // Generate power set of the name parts
+    // Generate a power set of the name parts.
+    // E.g. given ["foo", "bar"] generates ["", "foo", "bar", "foo bar"].
     const namePartsPowerSet = PowerSet.of(nameParts);
 
-    // Generate permutations for each element in the power set
-    for (const namePartsElement of namePartsPowerSet) {
-        const namePartsElementPermutations = Permutation.of(namePartsElement);
+    // Generate permutations for each element in the power set.
+    const candidateNames: string[] = [];
+    for (const element of namePartsPowerSet) {
+        const namePartsElementPermutations = Permutation.of(element);
         for (const permutation of namePartsElementPermutations) {
-            const candidateName = permutation.join('');
-            candidateNames.push(candidateName);
+            candidateNames.push(permutation.join(''));
+            candidateNames.push(permutation.join('.'));
         }
     }
 
-    const domains: Set<string> = new Set();
+    const domains: string[] = [];
     for (const candidateName of candidateNames) {
         const matchingDomains = getMatchingDomains(candidateName);
-        matchingDomains.forEach((domain) => domains.add(domain));
+        matchingDomains.forEach((domain) => domains.push(domain));
     }
 
-    return domains.size ? Array.from(domains).sort() : [];
+    // Removes duplicates.
+    return new Set(domains).values().toArray();
 }
 
 /**
- * Returns a (possibly empty) list of valid first level domains that match the given string.
+ * Returns a (possibly empty) list of valid first level domains that match the given input text.
  *
- * E.g. Given the text 'MOVING' as input the method will return ['MOV.ING', 'MOVI.NG'] where 'ING' and 'NG' are valid TLDs.
+ * E.g. Given the text "MOVING" as input the method will return ["MOV.ING", "MOVI.NG"] where "ING" and "NG" are valid TLDs.
  *
  * @param text  - The text.
  * @returns A (possibly empty) list of valid first level domains that match the given text.
@@ -66,7 +65,7 @@ export function getMatchingDomains(text: string): string[] {
 }
 
 /**
- * Returns a (possibly empty) list of TLDs that match the ending of the given string.
+ * Returns a (possibly empty) list of TLDs that match the ending of the given input text.
  *
  * E.g. Given the text 'lucio' as input, the method will return ['io'] where 'io' is a valid TLD.
  *

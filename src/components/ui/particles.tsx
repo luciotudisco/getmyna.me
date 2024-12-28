@@ -205,13 +205,7 @@ const Particles: React.FC<ParticlesProps> = ({
         }
     };
 
-    const remapValue = (
-        value: number,
-        start1: number,
-        end1: number,
-        start2: number,
-        end2: number,
-    ): number => {
+    const remapValue = (value: number, start1: number, end1: number, start2: number, end2: number): number => {
         const remapped = ((value - start1) * (end2 - start2)) / (end1 - start1) + start2;
         return remapped > 0 ? remapped : 0;
     };
@@ -238,10 +232,8 @@ const Particles: React.FC<ParticlesProps> = ({
             }
             circle.x += circle.dx + vx;
             circle.y += circle.dy + vy;
-            circle.translateX +=
-                (mouse.current.x / (staticity / circle.magnetism) - circle.translateX) / ease;
-            circle.translateY +=
-                (mouse.current.y / (staticity / circle.magnetism) - circle.translateY) / ease;
+            circle.translateX += (mouse.current.x / (staticity / circle.magnetism) - circle.translateX) / ease;
+            circle.translateY += (mouse.current.y / (staticity / circle.magnetism) - circle.translateY) / ease;
 
             drawCircle(circle, true);
 
@@ -264,11 +256,7 @@ const Particles: React.FC<ParticlesProps> = ({
     };
 
     return (
-        <div
-            className={cn('pointer-events-none', className)}
-            ref={canvasContainerRef}
-            aria-hidden="true"
-        >
+        <div className={cn('pointer-events-none', className)} ref={canvasContainerRef} aria-hidden="true">
             <canvas ref={canvasRef} className="size-full" />
         </div>
     );

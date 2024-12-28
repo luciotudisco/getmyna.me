@@ -1,23 +1,23 @@
-import { getDomains, getMatchingDomains, getMatchingTLDs } from '@/services/domains';
+import { getDomainsHacks, getMatchingDomains, getMatchingTLDs } from '@/services/domains';
 
-describe('getDomains', () => {
+describe('getDomainsHacks', () => {
     it('should return correct domains for uppercase input', () => {
-        const result = getDomains('lucio tudisco');
-        expect(result).toEqual(['LUC.IO', 'LUCIOTUDIS.CO', 'TUDIS.CO', 'TUDISCOLUC.IO']);
+        const result = getDomainsHacks('bill gates');
+        expect(result).toEqual(['GAT.ES', 'BILLGAT.ES', 'BILL.GAT.ES']);
     });
 
     it('should handle input with extra whitespace and return correct domains', () => {
-        const result = getDomains('   lucio   tudisco ');
-        expect(result).toEqual(['LUC.IO', 'LUCIOTUDIS.CO', 'TUDIS.CO', 'TUDISCOLUC.IO']);
+        const result = getDomainsHacks(' bill   gates ');
+        expect(result).toEqual(['GAT.ES', 'BILLGAT.ES', 'BILL.GAT.ES']);
     });
 
     it('should handle single-word input and return correct domains', () => {
-        const result = getDomains('lucio');
-        expect(result).toEqual(['LUC.IO']);
+        const result = getDomainsHacks('google');
+        expect(result).toEqual(['GOO.GLE']);
     });
 
     it('should handle input with more than three words and combine middle words', () => {
-        const result = getDomains('lucio foo bar tudisco');
+        const result = getDomainsHacks('lucio foo bar tudisco');
         expect(result).toContain('LUC.IO');
         expect(result).toContain('TUDIS.CO');
         expect(result).toContain('LUCIOTUDIS.CO');
@@ -25,7 +25,7 @@ describe('getDomains', () => {
     });
 
     it('should return an empty array for an empty input', () => {
-        const result = getDomains('');
+        const result = getDomainsHacks('');
         expect(result).toEqual([]);
     });
 });

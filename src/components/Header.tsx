@@ -8,23 +8,20 @@ import SearchBar from './SearchBar';
 
 export default function Header() {
     const pathname = usePathname();
-    const isHomePage = pathname === '/';
+    const showSearchBar = pathname !== '/';
 
     return (
-        <header className="supports-backdrop-blur:bg-background/90 border-grid sticky top-0 z-40 flex min-h-16 w-full flex-row items-center gap-2 border-b bg-background/40 p-2 px-5 backdrop-blur-lg">
+        <header className="supports-backdrop-blur:bg-background/90 border-grid sticky top-0 z-40 flex min-h-16 w-full flex-row items-center gap-5 border-b bg-background/40 p-2 px-5 backdrop-blur-lg">
             <Link href="/">
                 <Image src="/logo.svg" alt="GetMyNa.me logo" width={28} height={28} />{' '}
             </Link>
-            {isHomePage && (
-                <>
-                    <h1>
-                        <TypingAnimation className="font-sans text-xl font-extralight">
-                            GetMyNa.me
-                        </TypingAnimation>
-                    </h1>
-                </>
+            {showSearchBar ? (
+                <SearchBar />
+            ) : (
+                <TypingAnimation className="font-sans text-xl font-extralight leading-loose">
+                    GetMyNa.me
+                </TypingAnimation>
             )}
-            {!isHomePage && <SearchBar />}
         </header>
     );
 }
