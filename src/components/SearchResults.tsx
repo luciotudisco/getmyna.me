@@ -27,13 +27,7 @@ export function SearchResults() {
     if (isPending) {
         return (
             <div className="flex min-h-screen flex-col items-center gap-5 py-24 align-middle">
-                <ThreeDots
-                    visible={true}
-                    height="50"
-                    width="50"
-                    radius="10"
-                    ariaLabel="three-dots-loading"
-                />
+                <ThreeDots visible={true} height="50" width="50" radius="10" ariaLabel="three-dots-loading" />
                 <p className="text-xl text-muted-foreground">Loading results ...</p>
             </div>
         );

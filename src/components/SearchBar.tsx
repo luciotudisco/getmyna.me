@@ -25,6 +25,7 @@ export default function SearchBar() {
                     className="rounded-sm font-mono shadow-sm"
                     onChange={(event) => setSearchTerm(event.target.value)}
                     value={searchTerm}
+                    autoFocus
                 />
                 <Button type="submit" className="rounded-md font-mono shadow-sm">
                     Search

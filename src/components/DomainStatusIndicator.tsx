@@ -33,16 +33,18 @@ export default function DomainStatusIndicator(props: DomainStatusIndicatorProps)
             <TooltipProvider>
                 <Tooltip>
                     <TooltipTrigger asChild>
-                    <Badge
-                className="min-w-24 justify-center text-center text-black min-h-8 shadow-md"
-                style={{
-                    backgroundColor: color,
-                }}
-            >
-                {isPending ? '...' : domainStatus}
-            </Badge>
+                        <Badge
+                            className="min-h-8 min-w-24 justify-center text-center text-black shadow-md"
+                            style={{
+                                backgroundColor: color,
+                            }}
+                        >
+                            {isPending ? '...' : domainStatus}
+                        </Badge>
                     </TooltipTrigger>
-                    <TooltipContent className="max-w-52 text-balance p-2 font-mono text-xs text-center">{tooltip}</TooltipContent>
+                    <TooltipContent className="max-w-52 text-balance p-2 text-center font-mono text-xs">
+                        {tooltip}
+                    </TooltipContent>
                 </Tooltip>
             </TooltipProvider>
         </div>

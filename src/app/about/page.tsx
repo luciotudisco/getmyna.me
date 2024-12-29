@@ -6,8 +6,8 @@ export default function AboutPage() {
                 <p className="text-md font-sans font-light">
                     Domain hacks are clever ways of constructing domain names by combining words with TLDs (Top-Level
                     Domains) or ccTLDs (country-code Top-Level Domains) to create{' '}
-                    <span className="font-bold">🧠 memorable</span>,{' '}
-                    <span className="font-bold">👀 eye-catching</span> URLs.
+                    <span className="font-bold">🧠 memorable</span>, <span className="font-bold">👀 eye-catching</span>{' '}
+                    URLs.
                 </p>
                 <p className="text-md font-sans font-light">
                     Instead of using traditional ".com" domains, these hacks employ extensions like ".ly", ".io", and
@@ -30,8 +30,8 @@ export default function AboutPage() {
                 <h2 className="text-xl">Build Your Brand Around It</h2>
                 <p className="text-md font-sans font-light">
                     A memorable domain hack can become a powerful{' '}
-                    <span className="font-bold">✨centerpiece for your brand</span>. By leveraging domain hacks,
-                    you can give your new site a more appealing identity that resonates with modern users. With a little
+                    <span className="font-bold">✨centerpiece for your brand</span>. By leveraging domain hacks, you can
+                    give your new site a more appealing identity that resonates with modern users. With a little
                     creativity and research, you can transform a standard web address into an interactive part of your
                     brand story—one that's not only functional but also fun and memorable.
                 </p>
