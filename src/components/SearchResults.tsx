@@ -3,8 +3,7 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
 import { Separator } from '@/components/ui/separator';
 import NumberTicker from '@/components/ui/number-ticker';
-import { FallingLines } from 'react-loader-spinner';
-import { SaladIcon } from 'lucide-react';
+import { ThreeDots } from 'react-loader-spinner';
 
 export function SearchResults() {
     const searchParams = useSearchParams();
@@ -28,7 +27,14 @@ export function SearchResults() {
     if (isPending) {
         return (
             <div className="flex min-h-screen flex-col items-center gap-5 py-24 align-middle">
-                <p className="text-xl text-muted-foreground">Loading results...</p>
+                <ThreeDots
+                    visible={true}
+                    height="50"
+                    width="50"
+                    radius="10"
+                    ariaLabel="three-dots-loading"
+                />
+                <p className="text-xl text-muted-foreground">Loading results ...</p>
             </div>
         );
     }

@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { DOMAIN_STATUS_LABELS, DomainStatus } from '@/models/domainr';
-import { Button } from '@/components/ui/button';
-import { Info } from 'lucide-react';
 
 interface DomainStatusIndicatorProps {
     domain: string;
@@ -11,47 +9,40 @@ interface DomainStatusIndicatorProps {
 
 export default function DomainStatusIndicator(props: DomainStatusIndicatorProps) {
     const { domain } = props;
-    const [domainStatus, setDomainStatus] = useState<DomainStatus | undefined>();
-    const [isLoading, setLoading] = useState(true);
+    const [domainStatus, setDomainStatus] = useState<DomainStatus | undefined>(DomainStatus.unknown);
+    const [isPending, startTransition] = useTransition();
 
     useEffect(() => {
-        fetchStatus();
-    }, [domain]);
+        startTransition(async () => {
+            try {
+                const response = await fetch('/api/domains/status?domain=' + domain);
+                const data = await response.json();
+                setDomainStatus(data.status.at(0).summary);
+            } catch (error) {
+                console.error('Error fetching domain status', error);
+                setDomainStatus(DomainStatus.unknown);
+            }
+        });
+    }, []);
 
-    const fetchStatus = async () => {
-        try {
-            setLoading(true);
-            const response = await fetch('/api/domains/status?domain=' + domain);
-            const data = await response.json();
-            setDomainStatus(data.status.at(0).summary);
-        } catch {
-            setDomainStatus(DomainStatus.unknown);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const tooltip = DOMAIN_STATUS_LABELS[(domainStatus || DomainStatus.unknown) as DomainStatus].label;
-    const color = DOMAIN_STATUS_LABELS[(domainStatus || DomainStatus.unknown) as DomainStatus].color;
+    const tooltip = DOMAIN_STATUS_LABELS[domainStatus as DomainStatus].label;
+    const color = DOMAIN_STATUS_LABELS[domainStatus as DomainStatus].color;
 
     return (
         <div className="flex flex-row gap-2">
-            <Badge
-                className="min-w-24 justify-center text-center text-black"
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                    <Badge
+                className="min-w-24 justify-center text-center text-black min-h-8 shadow-md"
                 style={{
                     backgroundColor: color,
                 }}
             >
-                {isLoading ? '...' : domainStatus}
+                {isPending ? '...' : domainStatus}
             </Badge>
-            <TooltipProvider>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Button variant="ghost" size="icon" className="hover:bg-transparent">
-                            <Info />
-                        </Button>
                     </TooltipTrigger>
-                    <TooltipContent className="text-balance p-2 font-mono text-xs">{tooltip}</TooltipContent>
+                    <TooltipContent className="max-w-52 text-balance p-2 font-mono text-xs text-center">{tooltip}</TooltipContent>
                 </Tooltip>
             </TooltipProvider>
         </div>

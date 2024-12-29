@@ -12,10 +12,9 @@ export default function CarouselItem(props: CarouselItemProps) {
     return (
         <Item className="m-5 flex items-center justify-center">
             <blockquote className="text-md text-balance text-center font-mono leading-loose text-gray-900">
-                {title}{' '}
-                <span className="rounded-md p-1 font-bold" style={{ backgroundColor: color }}>
+            <span className="rounded-md p-1 font-bold" style={{ backgroundColor: color }}>
                     {domain}
-                </span>
+                </span>{' '}{title}
             </blockquote>
         </Item>
     );
