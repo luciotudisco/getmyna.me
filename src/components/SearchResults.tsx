@@ -28,7 +28,7 @@ export function SearchResults() {
         return (
             <div className="flex min-h-screen flex-col items-center gap-5 py-24 align-middle">
                 <ThreeDots visible={true} height="50" width="50" radius="10" ariaLabel="three-dots-loading" />
-                <p className="text-xl text-muted-foreground">Loading results ...</p>
+                <p className="text-md text-muted-foreground">Loading results ...</p>
             </div>
         );
     }
@@ -36,7 +36,7 @@ export function SearchResults() {
     if (domains.length === 0) {
         return (
             <div className="flex min-h-screen flex-col items-center gap-5 py-24 align-middle">
-                <p className="from-accent-foreground text-xl text-muted-foreground">Oops! No results found</p>
+                <p className="from-accent-foreground text-md text-muted-foreground">Oops! No results found</p>
             </div>
         );
     }

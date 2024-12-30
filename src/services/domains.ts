@@ -38,7 +38,12 @@ export function getDomainsHacks(input: string): string[] {
     const domains: string[] = [];
     for (const candidateName of candidateNames) {
         const matchingDomains = getMatchingDomains(candidateName);
-        matchingDomains.forEach((domain) => domains.push(domain));
+        for (const domain of matchingDomains) {
+            const level = domain.split('.').length - 1
+            if (level <= 2) {
+                domains.push(domain);
+            }
+        }
     }
 
     // Removes duplicates.
@@ -59,7 +64,6 @@ export function getMatchingDomains(text: string): string[] {
     for (const tld of matchingTLDs) {
         const domain = text.slice(0, -tld.length);
         const sudomains = getSubdomains(domain);
-        console.log(sudomains);
         for (const sudomain of sudomains) {
             const candidate = `${sudomain}.${tld}`.toLocaleUpperCase();
             if (isFQDN(candidate)) {
