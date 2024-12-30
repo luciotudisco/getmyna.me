@@ -1,4 +1,4 @@
-import { getDomainsHacks, getMatchingDomains, getMatchingTLDs } from '@/services/domains';
+import { getDomainsHacks, getMatchingDomains, getMatchingTLDs, getSubdomains } from '@/services/domains';
 
 describe('getDomainsHacks', () => {
     it('should return correct domains for uppercase input', () => {
@@ -60,6 +60,19 @@ describe('getMatchingDomains', () => {
         const result = getMatchingDomains('^*&124newman');
         expect(result).toEqual([]);
     });
+});
+
+describe('getSubdomains', () => {
+    it('should return an empty array if the domain is empty', () => {
+        const result = getSubdomains('');
+        expect(result).toEqual([]);
+    });
+
+    it('should return all subdomains for a given domain label', () => {
+        const result = getSubdomains('lucio');
+        expect(result).toEqual(["l.ucio", "lu.cio", "luc.io", "luci.o", "lucio"]);
+    });
+
 });
 
 describe('getMatchingTLDs', () => {

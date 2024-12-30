@@ -18,11 +18,7 @@ export function getDomainsHacks(input: string): string[] {
     // If more than 3 words, join the middle ones to reduce complexity
     let nameParts = input.split(/\s+/);
     if (nameParts.length > 3) {
-        nameParts = [
-            nameParts[0],
-            nameParts.slice(1, -1).join(''),
-            nameParts[nameParts.length - 1],
-        ];
+        nameParts = [nameParts[0], nameParts.slice(1, -1).join(''), nameParts[nameParts.length - 1]];
     }
 
     // Generate a power set of the name parts.
@@ -59,9 +55,42 @@ export function getDomainsHacks(input: string): string[] {
  */
 export function getMatchingDomains(text: string): string[] {
     const matchingTLDs = getMatchingTLDs(text);
-    return matchingTLDs
-        .map((tld) => `${text.slice(0, -tld.length)}.${tld}`.toLocaleUpperCase())
-        .filter((domain) => isFQDN(domain));
+    const domains: string[] = [];
+    for (const tld of matchingTLDs) {
+        const domain = text.slice(0, -tld.length);
+        const sudomains = getSubdomains(domain);
+        console.log(sudomains);
+        for (const sudomain of sudomains) {
+            const candidate = `${sudomain}.${tld}`.toLocaleUpperCase();
+            if (isFQDN(candidate)) {
+                domains.push(candidate);
+            }
+        }
+    }
+    return domains;
+}
+
+/**
+ * Given a string like returns all the possible ways to split it into valid sudomains.
+ *
+ * For example, "ABCD" -> ["A.BCD", "AB.CD", "ABC.D", "ABCD"].
+ *
+ * @param domain - The domain.
+ * @returns A list of possible ways to split the domain into subdomains.
+ */
+export function getSubdomains(domain: string): string[] {
+    if (!domain || domain.length === 0) {
+        return [];
+    }
+
+    // Split the domain into parts.
+    const results: string[] = [];
+    for (let i = 0; i <= domain.length; i++) {
+        const label = domain.slice(0, i);
+        const remainder = domain.slice(i);
+        results.push(remainder ? `${label}.${remainder}` : label);
+    }
+    return results;
 }
 
 /**
