@@ -10,27 +10,27 @@ export default function Home() {
                 <Carousel />
                 <Feature
                     color="#fcf6bd"
-                    description="A domain name that is easy to recall ensures people can find you. What's simpler than your own name?"
+                    description="A domain name that is easy to recall ensures people can find you."
                     image="bulb.svg"
-                    title="Memorable Matters"
+                    title="Memorable"
                 />
                 <Feature
                     color="#d0f4de"
-                    description="A vanity domain sets you apart online, representing your personal brand. Secure it before someone else does!"
+                    description="A domain hack sets you apart online, representing your personal brand."
                     image="target.svg"
-                    title="Claim Your Unique Spot"
+                    title="Unique"
                 />
                 <Feature
                     color="#a9def9"
-                    description="A vanity domain shows you mean business. Stand out and leave a lasting impression. Seize this opportunity today!"
+                    description="A domain hack stands out and leaves a long lasting impression."
                     image="push-pins.svg"
-                    title="Look Professional"
+                    title="Catchy"
                 />
                 <Feature
                     color="#e4c1f9"
-                    description="A vanity domain is your digital license plate: memorable, stylish, and sure to leave an impression!"
+                    description="A domain hack is a digital vanity plate: guaranteed to turn heads."
                     image="presentation.svg"
-                    title="Boost your ego"
+                    title="Stylish"
                 />
             </main>
         </div>

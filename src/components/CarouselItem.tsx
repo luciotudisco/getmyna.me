@@ -1,8 +1,8 @@
 import { CarouselItem as Item } from '@/components/ui/carousel';
 
 interface CarouselItemProps {
-    color: string;
-    domain: string;
+    color?: string;
+    domain?: string;
     title: string;
 }
 

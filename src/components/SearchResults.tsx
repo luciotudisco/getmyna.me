@@ -20,7 +20,7 @@ export const columns: ColumnDef<Domain>[] = [
         accessorKey: 'name',
         header: 'Domain',
         cell: ({ cell }) => (
-            <p className="flex min-h-10 w-full flex-row items-center truncate align-middle font-extralight lowercase">
+            <p className="flex min-h-10 flex-grow flex-row items-center truncate align-middle font-extralight lowercase">
                 {cell.row.original.getName()}
             </p>
         ),
@@ -29,7 +29,7 @@ export const columns: ColumnDef<Domain>[] = [
         accessorKey: 'isAvailable',
         header: ({ column }) => {
             return (
-                <div className="flex flex-row items-center justify-center">
+                <div className="flex flex-row items-center justify-center align-middle">
                     <p>Available</p>
                     <ArrowUpDown
                         className="ml-2 h-4 w-4"
