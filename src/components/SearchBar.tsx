@@ -7,7 +7,7 @@ import { FormEvent, useState } from 'react';
 
 export default function SearchBar() {
     const router = useRouter();
-    const [searchTerm, setSearchTerm] = useState<string | undefined>();
+    const [searchTerm, setSearchTerm] = useState<string>('');
 
     const handleSearch = (event: FormEvent) => {
         event.preventDefault();
