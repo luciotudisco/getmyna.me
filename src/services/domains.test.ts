@@ -70,9 +70,8 @@ describe('getSubdomains', () => {
 
     it('should return all subdomains for a given domain label', () => {
         const result = getSubdomains('lucio');
-        expect(result).toEqual(["l.ucio", "lu.cio", "luc.io", "luci.o", "lucio"]);
+        expect(result).toEqual(['l.ucio', 'lu.cio', 'luc.io', 'luci.o', 'lucio']);
     });
-
 });
 
 describe('getMatchingTLDs', () => {

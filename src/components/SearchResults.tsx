@@ -1,14 +1,58 @@
-import Domain from '@/components/Domain';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
-import { Separator } from '@/components/ui/separator';
 import NumberTicker from '@/components/ui/number-ticker';
 import { ThreeDots } from 'react-loader-spinner';
+import { Domain, DomainStatus } from '@/models/domain';
+import {
+    ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    getSortedRowModel,
+    SortingState,
+    useReactTable,
+} from '@tanstack/react-table';
+
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { ArrowUpDown, CircleCheck, OctagonX } from 'lucide-react';
+
+export const columns: ColumnDef<Domain>[] = [
+    {
+        accessorKey: 'name',
+        header: 'Domain',
+        cell: ({ cell }) => <p className="min-h-10 align-middle items-center truncate font-extralight lowercase flex flex-row w-full">{cell.row.original.getName()}</p>,
+    },
+    {
+        accessorKey: 'isAvailable',
+        header: ({ column }) => {
+            return (
+                <div className="flex flex-row items-center justify-center">
+               <p>
+                    Available
+                    
+                    </p>
+                <ArrowUpDown className="ml-2 h-4 w-4" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}/>
+                </div>
+            );
+        },
+        cell: ({ cell }) => {
+            return cell.row.original.getIsAvailable() ? (
+                <div className="flex flex-row items-center justify-center align-middle">
+                <CircleCheck className="h-4 w-4 text-green-600 justify-center" />
+                </div>
+            ) : (
+                <div className="flex flex-row items-center justify-center align-middle">
+                <OctagonX className="h-4 w-4 text-red-600 justify-center" />
+                </div>
+            );
+        },
+    },
+];
 
 export function SearchResults() {
     const searchParams = useSearchParams();
-    const [domains, setDomains] = useState<string[]>([]);
+    const [domains, setDomains] = useState<Domain[]>([]);
     const [isPending, startTransition] = useTransition();
+    const [sorting, setSorting] = useState<SortingState>([]);
 
     useEffect(() => {
         startTransition(async () => {
@@ -16,13 +60,34 @@ export function SearchResults() {
                 const term = searchParams.get('term');
                 const response = await fetch(`/api/domains/search?term=${term}`);
                 const data = await response.json();
-                setDomains(data.domains || []);
+                const domains = data.domains.map((name: string) => new Domain(name));
+                const statusPromises = domains.map((domain: Domain) =>
+                    fetch('/api/domains/status?domain=' + domain.getName()),
+                );
+                await Promise.all(statusPromises).then((responses) => {
+                    responses.forEach(async (response, index) => {
+                        const data = await response.json();
+                        domains[index].setStatus(data.status.at(0).summary as DomainStatus);
+                    });
+                });
+                setDomains(domains || []);
             } catch (error) {
                 console.error('Error fetching domains:', error);
                 setDomains([]);
             }
         });
     }, [searchParams]);
+
+    const table = useReactTable({
+        data: domains,
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+        onSortingChange: setSorting,
+        getSortedRowModel: getSortedRowModel(),
+        state: {
+            sorting,
+        },
+    });
 
     if (isPending) {
         return (
@@ -36,7 +101,7 @@ export function SearchResults() {
     if (domains.length === 0) {
         return (
             <div className="flex min-h-screen flex-col items-center gap-5 py-24 align-middle">
-                <p className="from-accent-foreground text-md text-muted-foreground">Oops! No results found</p>
+                <p className="text-md text-muted-foreground">Oops! No results found</p>
             </div>
         );
     }
@@ -48,12 +113,42 @@ export function SearchResults() {
                     <NumberTicker value={domains.length} />
                     <span> results found</span>
                 </p>
-                {domains.map((domain) => (
-                    <>
-                        <Domain domain={domain} key={domain} />
-                        <Separator />
-                    </>
-                ))}
+                <Table>
+                    <TableHeader>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => {
+                                    return (
+                                        <TableHead key={header.id}>
+                                            {header.isPlaceholder
+                                                ? null
+                                                : flexRender(header.column.columnDef.header, header.getContext())}
+                                        </TableHead>
+                                    );
+                                })}
+                            </TableRow>
+                        ))}
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows?.length ? (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id}>
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={columns.length} className="h-24 text-center">
+                                    No results.
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
             </main>
         </div>
     );

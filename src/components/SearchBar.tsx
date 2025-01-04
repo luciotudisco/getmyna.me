@@ -7,10 +7,13 @@ import { FormEvent, useState } from 'react';
 
 export default function SearchBar() {
     const router = useRouter();
-    const [searchTerm, setSearchTerm] = useState('');
+    const [searchTerm, setSearchTerm] = useState();
 
     const handleSearch = (event: FormEvent) => {
         event.preventDefault();
+        if (!searchTerm) {
+            return
+        };
         const parms = { term: searchTerm };
         router.push(`/search?${new URLSearchParams(parms).toString()}`);
         router.refresh();
@@ -21,7 +24,7 @@ export default function SearchBar() {
             <form className="flex w-full flex-row gap-2" onSubmit={handleSearch}>
                 <Input
                     type="text"
-                    placeholder="Enter your name"
+                    placeholder="Type the domain name you want to search"
                     className="rounded-sm font-mono shadow-sm"
                     onChange={(event) => setSearchTerm(event.target.value)}
                     value={searchTerm}

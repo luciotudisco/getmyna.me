@@ -39,7 +39,7 @@ export function getDomainsHacks(input: string): string[] {
     for (const candidateName of candidateNames) {
         const matchingDomains = getMatchingDomains(candidateName);
         for (const domain of matchingDomains) {
-            const level = domain.split('.').length - 1
+            const level = domain.split('.').length - 1;
             if (level <= 2) {
                 domains.push(domain);
             }
