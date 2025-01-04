@@ -19,29 +19,33 @@ export const columns: ColumnDef<Domain>[] = [
     {
         accessorKey: 'name',
         header: 'Domain',
-        cell: ({ cell }) => <p className="min-h-10 align-middle items-center truncate font-extralight lowercase flex flex-row w-full">{cell.row.original.getName()}</p>,
+        cell: ({ cell }) => (
+            <p className="flex min-h-10 w-full flex-row items-center truncate align-middle font-extralight lowercase">
+                {cell.row.original.getName()}
+            </p>
+        ),
     },
     {
         accessorKey: 'isAvailable',
         header: ({ column }) => {
             return (
                 <div className="flex flex-row items-center justify-center">
-               <p>
-                    Available
-                    
-                    </p>
-                <ArrowUpDown className="ml-2 h-4 w-4" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}/>
+                    <p>Available</p>
+                    <ArrowUpDown
+                        className="ml-2 h-4 w-4"
+                        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                    />
                 </div>
             );
         },
         cell: ({ cell }) => {
             return cell.row.original.getIsAvailable() ? (
                 <div className="flex flex-row items-center justify-center align-middle">
-                <CircleCheck className="h-4 w-4 text-green-600 justify-center" />
+                    <CircleCheck className="h-4 w-4 justify-center text-green-600" />
                 </div>
             ) : (
                 <div className="flex flex-row items-center justify-center align-middle">
-                <OctagonX className="h-4 w-4 text-red-600 justify-center" />
+                    <OctagonX className="h-4 w-4 justify-center text-red-600" />
                 </div>
             );
         },

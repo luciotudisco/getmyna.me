@@ -7,13 +7,13 @@ import { FormEvent, useState } from 'react';
 
 export default function SearchBar() {
     const router = useRouter();
-    const [searchTerm, setSearchTerm] = useState();
+    const [searchTerm, setSearchTerm] = useState<string | undefined>();
 
     const handleSearch = (event: FormEvent) => {
         event.preventDefault();
         if (!searchTerm) {
-            return
-        };
+            return;
+        }
         const parms = { term: searchTerm };
         router.push(`/search?${new URLSearchParams(parms).toString()}`);
         router.refresh();

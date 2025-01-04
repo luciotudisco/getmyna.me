@@ -4,7 +4,7 @@
 export class Domain {
     private name: string;
     private status: DomainStatus;
-    private isAvailable: Boolean;
+    private isAvailable: boolean;
 
     public constructor(name: string) {
         this.name = name;
@@ -22,11 +22,13 @@ export class Domain {
 
     public setStatus(status: DomainStatus): void {
         this.status = status;
-        this.isAvailable = [DomainStatus.inactive, DomainStatus.premium, DomainStatus.transferable].includes(this.status);
+        this.isAvailable = [DomainStatus.inactive, DomainStatus.premium, DomainStatus.transferable].includes(
+            this.status,
+        );
     }
 
-    public getIsAvailable(): Boolean {
-        return this.isAvailable
+    public getIsAvailable(): boolean {
+        return this.isAvailable;
     }
 }
 
