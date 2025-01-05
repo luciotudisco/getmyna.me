@@ -32,7 +32,7 @@ export const columns: ColumnDef<Domain>[] = [
         header: ({ column }) => {
             return (
                 <div className="flex flex-row items-center justify-end align-middle">
-                    <p>Available</p>
+                    <p>Status</p>
                     <ArrowUpDown
                         className="ml-2 h-4 w-4"
                         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
