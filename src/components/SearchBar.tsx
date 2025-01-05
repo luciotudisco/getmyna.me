@@ -36,6 +36,7 @@ export default function SearchBar() {
                     {searchTerm && (
                         <Button
                             variant="ghost"
+                            type='button'
                             className="absolute right-0 hover:bg-inherit"
                             onClick={() => setSearchTerm('')}
                         >

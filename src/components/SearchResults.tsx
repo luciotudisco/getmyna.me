@@ -79,7 +79,7 @@ export function SearchResults() {
                 const term = searchParams.get('term');
                 const response = await fetch(`/api/domains/search?term=${term}`);
                 const data = await response.json();
-                const domains = data.domains.map((name: string) => new Domain(name));
+                let domains = data.domains.map((name: string) => new Domain(name));
                 const statusPromises = domains.map((domain: Domain) =>
                     fetch('/api/domains/status?domain=' + domain.getName()),
                 );
@@ -89,7 +89,7 @@ export function SearchResults() {
                         domains[index].setStatus(data.status.at(0).summary as DomainStatus);
                     });
                 });
-                domains.sort((a: Domain, b: Domain) => {
+                domains = domains.sort((a: Domain, b: Domain) => {
                     if (a.isAvailable() && !b.isAvailable()) {
                         return -1;
                     }
