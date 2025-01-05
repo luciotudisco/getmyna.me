@@ -14,7 +14,7 @@ import {
 } from '@tanstack/react-table';
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ArrowUpDown, CircleCheck, OctagonX } from 'lucide-react';
+import { ArrowUpDown, BadgeCheck, CircleCheck, OctagonX, Star } from 'lucide-react';
 
 export const columns: ColumnDef<Domain>[] = [
     {
@@ -23,6 +23,7 @@ export const columns: ColumnDef<Domain>[] = [
         cell: ({ cell }) => (
             <p className="flex min-h-10 flex-grow flex-row items-center truncate align-middle font-extralight lowercase">
                 {cell.row.original.getName()}
+                {cell.row.original.isAvailable() && cell.row.original.getLevel() <= 2 && <BadgeCheck className="ml-2 h-4 w-4 text-orange-400" />}
             </p>
         ),
     },
