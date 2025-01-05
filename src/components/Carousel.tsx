@@ -20,7 +20,7 @@ export default function Carousel() {
                     color="#eff7f6"
                 />
                 <CarouselItem
-                    title="A widely recognized URL shortening service that uses the ccTLD of Libya (.ly) to create a catchy and memorable name."
+                    title="A widely recognized URL shortening service that uses the TLD of Libya (.ly) to create a catchy and memorable name."
                     domain="bit.ly"
                     color="#e5b3fe"
                 />
@@ -30,7 +30,7 @@ export default function Carousel() {
                     color="#ffd6a5"
                 />
                 <CarouselItem
-                    title="Flickr uses this domain hack with the ccTLD of South Korea (.kr) to create a short and recognizable name"
+                    title="Flickr uses this domain hack with the TLD of South Korea (.kr) to create a short and recognizable name"
                     domain="flic.kr"
                     color="#bcd4e6"
                 />

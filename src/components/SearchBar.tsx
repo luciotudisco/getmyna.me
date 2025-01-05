@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
+import { SearchIcon, XIcon } from 'lucide-react';
 
 export default function SearchBar() {
     const router = useRouter();
@@ -22,14 +23,26 @@ export default function SearchBar() {
     return (
         <div className="w-full">
             <form className="flex w-full flex-row gap-2" onSubmit={handleSearch}>
-                <Input
-                    type="text"
-                    placeholder="Type the domain name you want to search"
-                    className="rounded-sm font-mono shadow-sm"
-                    onChange={(event) => setSearchTerm(event.target.value)}
-                    value={searchTerm}
-                    autoFocus
-                />
+                <div className="relative flex w-full flex-row items-center align-middle">
+                    <SearchIcon size={18} className="absolute left-2 text-muted-foreground" />
+                    <Input
+                        type="text"
+                        placeholder="Type the domain name you want to search"
+                        className="rounded-sm pl-10 pr-10 font-mono text-xs shadow-sm"
+                        onChange={(event) => setSearchTerm(event.target.value)}
+                        value={searchTerm}
+                        autoFocus
+                    />
+                    {searchTerm && (
+                        <Button
+                            variant="ghost"
+                            className="absolute right-0 hover:bg-inherit"
+                            onClick={() => setSearchTerm('')}
+                        >
+                            <XIcon size={18} className="text-muted-foreground" />
+                        </Button>
+                    )}
+                </div>
                 <Button type="submit" className="rounded-md font-mono shadow-sm">
                     Search
                 </Button>

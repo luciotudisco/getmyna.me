@@ -5,9 +5,8 @@ export default function AboutPage() {
                 <h2 className="text-xl">What's a domain hack</h2>
                 <p className="text-md font-sans font-light">
                     Domain hacks are clever ways of constructing domain names by combining words with TLDs (Top-Level
-                    Domains) or ccTLDs (country-code Top-Level Domains) to create{' '}
-                    <span className="font-bold">🧠 memorable</span>, <span className="font-bold">👀 eye-catching</span>{' '}
-                    URLs.
+                    Domains) to create <span className="font-bold">🧠 memorable</span>,{' '}
+                    <span className="font-bold">👀 eye-catching</span> URLs.
                 </p>
                 <p className="text-md font-sans font-light">
                     Instead of using traditional ".com" domains, these hacks employ extensions like ".ly", ".io", and
