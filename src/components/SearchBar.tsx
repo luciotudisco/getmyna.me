@@ -39,6 +39,7 @@ export default function SearchBar() {
                             type='button'
                             className="absolute right-0 hover:bg-inherit"
                             onClick={() => setSearchTerm('')}
+                            autoFocus={false}
                         >
                             <XIcon size={18} className="text-muted-foreground" />
                         </Button>
