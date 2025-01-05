@@ -14,7 +14,7 @@ import {
 } from '@tanstack/react-table';
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ArrowUpDown, BadgeCheck, CircleCheck, OctagonX, Star } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpDown, BadgeCheck, CircleCheck, OctagonX, Star } from 'lucide-react';
 
 export const columns: ColumnDef<Domain>[] = [
     {
@@ -23,7 +23,9 @@ export const columns: ColumnDef<Domain>[] = [
         cell: ({ cell }) => (
             <p className="flex min-h-10 flex-grow flex-row items-center truncate align-middle font-extralight lowercase">
                 {cell.row.original.getName()}
-                {cell.row.original.isAvailable() && cell.row.original.getLevel() <= 2 && <BadgeCheck className="ml-2 h-4 w-4 text-orange-400" />}
+                {cell.row.original.isAvailable() && cell.row.original.getLevel() <= 2 && (
+                    <BadgeCheck className="ml-2 h-4 w-4 text-orange-400" />
+                )}
             </p>
         ),
     },
@@ -33,10 +35,17 @@ export const columns: ColumnDef<Domain>[] = [
             return (
                 <div className="flex flex-row items-center justify-end align-middle">
                     <p>Status</p>
-                    <ArrowUpDown
-                        className="ml-2 h-4 w-4"
-                        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-                    />
+                    {column.getIsSorted() === 'asc' ? (
+                        <ArrowUp
+                            className="ml-2 h-4 w-4"
+                            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                        />
+                    ) : (
+                        <ArrowDown
+                            className="ml-2 h-4 w-4"
+                            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                        />
+                    )}
                 </div>
             );
         },
@@ -80,6 +89,15 @@ export function SearchResults() {
                         domains[index].setStatus(data.status.at(0).summary as DomainStatus);
                     });
                 });
+                domains.sort((a: Domain, b: Domain) => {
+                    if (a.isAvailable() && !b.isAvailable()) {
+                        return -1;
+                    }
+                    if (!a.isAvailable() && b.isAvailable()) {
+                        return 1;
+                    }
+                    return a.getLevel() - b.getLevel();
+                });
                 setDomains(domains || []);
             } catch (error) {
                 console.error('Error fetching domains:', error);
@@ -118,8 +136,8 @@ export function SearchResults() {
 
     return (
         <div className="min-h-screen">
-            <main className="m-auto flex flex-col items-center gap-0 p-10 md:w-3/4">
-                <p className="text-muted-foregroun whitespace-pre-wrap p-5 font-mono text-sm tracking-tighter text-black dark:text-white">
+            <main className="m-auto flex flex-col items-center gap-0 p-2 md:w-3/4 md:p-10">
+                <p className="text-muted-foregroun whitespace-pre-wrap p-3 font-mono text-sm tracking-tighter text-black dark:text-white md:p-5">
                     <NumberTicker value={domains.length} />
                     <span> results found</span>
                 </p>
