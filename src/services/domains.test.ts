@@ -3,25 +3,25 @@ import { getDomainsHacks, getMatchingDomains, getMatchingTLDs, getSubdomains } f
 describe('getDomainsHacks', () => {
     it('should return correct domains for uppercase input', () => {
         const result = getDomainsHacks('bill gates');
-        expect(result).toEqual(['GAT.ES', 'BILLGAT.ES', 'BILL.GAT.ES']);
+        expect(result).toEqual(['gat.es', 'billgat.es', 'bill.gat.es']);
     });
 
     it('should handle input with extra whitespace and return correct domains', () => {
         const result = getDomainsHacks(' bill   gates ');
-        expect(result).toEqual(['GAT.ES', 'BILLGAT.ES', 'BILL.GAT.ES']);
+        expect(result).toEqual(['gat.es', 'billgat.es', 'bill.gat.es']);
     });
 
     it('should handle single-word input and return correct domains', () => {
         const result = getDomainsHacks('google');
-        expect(result).toEqual(['GOO.GLE']);
+        expect(result).toEqual(['goo.gle']);
     });
 
     it('should handle input with more than three words and combine middle words', () => {
         const result = getDomainsHacks('lucio foo bar tudisco');
-        expect(result).toContain('LUC.IO');
-        expect(result).toContain('TUDIS.CO');
-        expect(result).toContain('LUCIOTUDIS.CO');
-        expect(result).toContain('TUDISCOLUC.IO');
+        expect(result).toContain('luc.io');
+        expect(result).toContain('tudis.co');
+        expect(result).toContain('luciotudis.co');
+        expect(result).toContain('tudiscoluc.io');
     });
 
     it('should return an empty array for an empty input', () => {
@@ -33,12 +33,12 @@ describe('getDomainsHacks', () => {
 describe('getMatchingDomains', () => {
     it('should return correct domains for uppercase input', () => {
         const result = getMatchingDomains('NEWMAN');
-        expect(result).toEqual(['NEW.MAN']);
+        expect(result).toEqual(['new.man']);
     });
 
     it('should return correct domains for lowercase input', () => {
         const result = getMatchingDomains('newman');
-        expect(result).toEqual(['NEW.MAN']);
+        expect(result).toEqual(['new.man']);
     });
 
     it('should return an empty array when there are no matching domains', () => {
@@ -48,12 +48,12 @@ describe('getMatchingDomains', () => {
 
     it('should return multiple domains for input with multiple matching TLDs', () => {
         const result = getMatchingDomains('moving');
-        expect(result).toEqual(['MOV.ING', 'MOVI.NG']);
+        expect(result).toEqual(['mov.ing', 'movi.ng']);
     });
 
     it('should handle numeric input correctly', () => {
         const result = getMatchingDomains('124newman');
-        expect(result).toEqual(['124NEW.MAN']);
+        expect(result).toEqual(['124new.man']);
     });
 
     it('should return an empty array for input with invalid characters', () => {
@@ -82,17 +82,17 @@ describe('getMatchingTLDs', () => {
 
     it('should return a single matching TLD', () => {
         const result = getMatchingTLDs('lucio');
-        expect(result).toEqual(['IO']);
+        expect(result).toEqual(['io']);
     });
 
     it('should return multiple matching TLDs, if applicable', () => {
         const result = getMatchingTLDs('moving');
-        expect(result.sort()).toEqual(['ING', 'NG'].sort());
+        expect(result.sort()).toEqual(['ing', 'ng'].sort());
     });
 
     it('should be case-insensitive', () => {
         const result = getMatchingTLDs('LuCiO');
-        expect(result).toEqual(['IO']);
+        expect(result).toEqual(['io']);
     });
 
     it('should handle an empty string as input', () => {

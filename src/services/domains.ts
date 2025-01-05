@@ -65,7 +65,7 @@ export function getMatchingDomains(text: string): string[] {
         const domain = text.slice(0, -tld.length);
         const sudomains = getSubdomains(domain);
         for (const sudomain of sudomains) {
-            const candidate = `${sudomain}.${tld}`.toLocaleUpperCase();
+            const candidate = `${sudomain}.${tld}`.toLowerCase();
             if (isFQDN(candidate)) {
                 domains.push(candidate);
             }
@@ -106,5 +106,7 @@ export function getSubdomains(domain: string): string[] {
  * @return A (possibly empty) list of TLDs that match the ending of the given text.
  */
 export function getMatchingTLDs(text: string): string[] {
-    return TOP_LEVEL_DOMAINS.filter((tld) => text.toUpperCase().endsWith(tld.toUpperCase()));
+    return TOP_LEVEL_DOMAINS.filter((tld) => text.toLowerCase().endsWith(tld.toLowerCase())).map((tld) =>
+        tld.toLowerCase(),
+    );
 }

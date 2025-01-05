@@ -22,7 +22,7 @@ export const columns: ColumnDef<Domain>[] = [
         accessorKey: 'name',
         header: 'Domain',
         cell: ({ cell }) => (
-            <p className="flex min-h-10 flex-grow flex-row items-center truncate align-middle font-extralight lowercase">
+            <p className="flex min-h-10 flex-grow flex-row items-center truncate align-middle font-extralight">
                 {cell.row.original.getName()}
                 {cell.row.original.isAvailable() && cell.row.original.getLevel() <= 2 && (
                     <TooltipProvider>
