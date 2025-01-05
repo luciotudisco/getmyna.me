@@ -6,7 +6,7 @@ import { Amplitude } from '@/components/Amplitude';
 
 export const metadata: Metadata = {
     title: 'GetMyNa.me',
-    description: 'Find your vanity domain',
+    description: 'Find the perfect domain hack.',
 };
 
 export default function RootLayout({

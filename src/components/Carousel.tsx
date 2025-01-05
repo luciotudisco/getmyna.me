@@ -1,13 +1,25 @@
 'use client';
 
 import Autoplay from 'embla-carousel-autoplay';
-import { Carousel as CarouselRoot, CarouselContent } from '@/components/ui/carousel';
-import CarouselItem from '@/components/CarouselItem';
+import { Carousel as CarouselRoot, CarouselItem as Item, CarouselContent } from '@/components/ui/carousel';
 
 export default function Carousel() {
+    function CarouselItem({ title, domain, color }: { title: string; domain?: string; color?: string }) {
+        return (
+            <Item className="m-2 flex items-center justify-center align-middle md:m-5">
+                <p className="text-balance text-center text-sm leading-loose">
+                    <span className="rounded-md p-1 font-bold" style={{ backgroundColor: color }}>
+                        {domain}
+                    </span>{' '}
+                    {title}
+                </p>
+            </Item>
+        );
+    }
+
     return (
-        <CarouselRoot opts={{ loop: true }} plugins={[Autoplay({ delay: 5000 })]} className="w-full p-5">
-            <CarouselContent className="text-md font-mono">
+        <CarouselRoot opts={{ loop: true }} plugins={[Autoplay({ delay: 4000 })]} className="w-full p-5">
+            <CarouselContent className="text-sm">
                 <CarouselItem title="A domain hack is a clever twist where the domain and extension merge together. Perfect for creating short, catchy, and brandable web addresses." />
                 <CarouselItem
                     title="The original domain for Instagram utilized the TLD of Armenia (.am) to form a memorable and brand-aligned name"
@@ -30,7 +42,7 @@ export default function Carousel() {
                     color="#ffd6a5"
                 />
                 <CarouselItem
-                    title="Flickr uses this domain hack with the TLD of South Korea (.kr) to create a short and recognizable name"
+                    title="Flickr uses a domain hack with the TLD of South Korea (.kr) to create a short and recognizable name"
                     domain="flic.kr"
                     color="#bcd4e6"
                 />

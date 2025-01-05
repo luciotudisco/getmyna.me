@@ -3,21 +3,11 @@
 import * as amplitude from '@amplitude/analytics-browser';
 import { useEffect } from 'react';
 
-export const initializeAmplitude = () => {
-    amplitude.init(process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY!, undefined, {
-        defaultTracking: {
-            sessions: true,
-            pageViews: true,
-            formInteractions: true,
-        },
-    });
-
-    return amplitude;
-};
+const AMPLITUDE_API_KEY = process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY!;
 
 export const Amplitude = () => {
     useEffect(() => {
-        initializeAmplitude();
+        amplitude.init(AMPLITUDE_API_KEY, { autocapture: true });
     }, []);
 
     return null;
