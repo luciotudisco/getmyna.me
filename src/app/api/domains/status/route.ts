@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 
 const DOMAINR_BASE_URL = 'https://domainr.p.rapidapi.com/v2/status';
-const RAPID_API_KEY = '1420927789mshb407bf1f219396fp17ebc1jsnaf8d37a27aca';
+const RAPID_API_KEY = process.env.RAPID_API_KEY!;
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
     try {
