@@ -11,7 +11,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         const headers = { headers: { 'x-rapidapi-key': RAPID_API_KEY } };
         const url = `${DOMAINR_BASE_URL}?${new URLSearchParams(params).toString()}`;
         const response = await axios.get(url, headers);
-        console.log('Response Data:', response.data);
         return NextResponse.json(response.data);
     } catch (error) {
         console.error('Error fetching data:', error);

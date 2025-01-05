@@ -1,6 +1,7 @@
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
 import NumberTicker from '@/components/ui/number-ticker';
+import { Badge } from '@/components/ui/badge';
 import { ThreeDots } from 'react-loader-spinner';
 import { Domain, DomainStatus } from '@/models/domain';
 import {
@@ -26,10 +27,10 @@ export const columns: ColumnDef<Domain>[] = [
         ),
     },
     {
-        accessorKey: 'isAvailable',
+        accessorKey: '_isAvailable',
         header: ({ column }) => {
             return (
-                <div className="flex flex-row items-center justify-center align-middle">
+                <div className="flex flex-row items-center justify-end align-middle">
                     <p>Available</p>
                     <ArrowUpDown
                         className="ml-2 h-4 w-4"
@@ -39,13 +40,17 @@ export const columns: ColumnDef<Domain>[] = [
             );
         },
         cell: ({ cell }) => {
-            return cell.row.original.getIsAvailable() ? (
-                <div className="flex flex-row items-center justify-center align-middle">
-                    <CircleCheck className="h-4 w-4 justify-center text-green-600" />
-                </div>
-            ) : (
-                <div className="flex flex-row items-center justify-center align-middle">
-                    <OctagonX className="h-4 w-4 justify-center text-red-600" />
+            return (
+                <div className="flex flex-row items-center justify-end align-middle">
+                    <Badge
+                        className={`flex min-h-7 min-w-24 justify-center text-center ${
+                            cell.row.original.isAvailable()
+                                ? 'bg-green-400 hover:bg-green-600'
+                                : 'bg-red-400 hover:bg-red-600'
+                        }`}
+                    >
+                        {cell.row.original.isAvailable() ? 'Available' : 'Taken'}
+                    </Badge>{' '}
                 </div>
             );
         },
@@ -97,7 +102,7 @@ export function SearchResults() {
         return (
             <div className="flex min-h-screen flex-col items-center gap-5 py-24 align-middle">
                 <ThreeDots visible={true} height="50" width="50" radius="10" ariaLabel="three-dots-loading" />
-                <p className="text-md text-muted-foreground">Loading results ...</p>
+                <p className="text-md text-muted-foreground">Hang tight — your info is on the way…</p>
             </div>
         );
     }
@@ -124,9 +129,7 @@ export function SearchResults() {
                                 {headerGroup.headers.map((header) => {
                                     return (
                                         <TableHead key={header.id}>
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(header.column.columnDef.header, header.getContext())}
+                                            {flexRender(header.column.columnDef.header, header.getContext())}
                                         </TableHead>
                                     );
                                 })}

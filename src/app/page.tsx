@@ -6,12 +6,11 @@ export default function Home() {
     return (
         <div className="min-h-screen">
             <main className="m-auto flex w-full max-w-4xl flex-col items-center gap-5 p-5 md:p-10">
-                <p>Impact-Site-Verification: 969e17c9-e093-4ac4-bfea-eea63a89ecdb</p>
                 <SearchBar />
                 <Carousel />
                 <Feature
                     color="#fcf6bd"
-                    description="A domain name that is easy to recall ensures people can find you."
+                    description="A domain hack is always easy to recall and keeps you top-of-mind."
                     image="bulb.svg"
                     title="Memorable"
                 />
