@@ -90,25 +90,27 @@ export function SearchResults() {
                 const response = await fetch(`/api/domains/search?term=${term}`);
                 const data = await response.json();
                 let domains = data.domains.map((name: string) => new Domain(name));
-                const statusPromises = domains.map((domain: Domain) =>
-                    fetch('/api/domains/status?domain=' + domain.getName()),
-                );
-                await Promise.all(statusPromises).then((responses) => {
-                    responses.forEach(async (response, index) => {
-                        const data = await response.json();
-                        domains[index].setStatus(data.status.at(0).summary as DomainStatus);
+                
+                // Show initial results immediately
+                setDomains(domains);
+
+                // Check domain statuses sequentially and update UI progressively
+                for (const [index, domain] of domains.entries()) {
+                    const statusResponse = await fetch('/api/domains/status?domain=' + domain.getName());
+                    const statusData = await statusResponse.json();
+                    domain.setStatus(statusData.status.at(0).summary as DomainStatus);
+                    
+                    // Update domains array with the new status
+                    setDomains(currentDomains => {
+                        const updatedDomains = [...currentDomains];
+                        updatedDomains[index] = domain;
+                        return updatedDomains.sort((a: Domain, b: Domain) => {
+                            if (a.isAvailable() && !b.isAvailable()) return -1;
+                            if (!a.isAvailable() && b.isAvailable()) return 1;
+                            return a.getLevel() - b.getLevel();
+                        });
                     });
-                });
-                domains = domains.sort((a: Domain, b: Domain) => {
-                    if (a.isAvailable() && !b.isAvailable()) {
-                        return -1;
-                    }
-                    if (!a.isAvailable() && b.isAvailable()) {
-                        return 1;
-                    }
-                    return a.getLevel() - b.getLevel();
-                });
-                setDomains(domains || []);
+                }
             } catch (error) {
                 console.error('Error fetching domains:', error);
                 setDomains([]);

@@ -27,7 +27,7 @@ export default function SearchBar() {
                 <Input
                     type="text"
                     placeholder="Find the perfect domain hack"
-                    className="rounded-sm pl-10 pr-10 text-xs shadow-sm"
+                    className="rounded-sm pl-10 pr-10 text-md shadow-sm"
                     onChange={(event) => setSearchTerm(event.target.value)}
                     value={searchTerm}
                     autoFocus
@@ -44,7 +44,7 @@ export default function SearchBar() {
                     </Button>
                 )}
             </div>
-            <Button type="submit" className="rounded-md shadow-sm">
+            <Button type="submit" className="rounded-md shadow-sm hidden md:inline">
                 Search
             </Button>
         </form>
