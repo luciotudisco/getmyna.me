@@ -145,7 +145,7 @@ export function SearchResults() {
                 <Player
                     autoplay
                     loop
-                    src="https://lottiefiles.com/animation/sad-empty-box-GaU6k5DfLa"
+                    src="/sad-empty-box.json"
                     style={{ height: 120, width: 120 }}
                 />
                 <p className="text-md text-center text-muted-foreground">
