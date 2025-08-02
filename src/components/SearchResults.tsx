@@ -1,9 +1,9 @@
+import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
 import NumberTicker from '@/components/ui/number-ticker';
 import { Badge } from '@/components/ui/badge';
 import { ThreeDots } from 'react-loader-spinner';
-import { Player } from '@lottiefiles/react-lottie-player';
 import { Domain, DomainStatus } from '@/models/domain';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
@@ -17,6 +17,11 @@ import {
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ArrowDown, ArrowUp, BadgeCheck } from 'lucide-react';
+
+const Player = dynamic(
+    () => import('@lottiefiles/react-lottie-player').then((mod) => mod.Player),
+    { ssr: false }
+);
 
 export const columns: ColumnDef<Domain>[] = [
     {
