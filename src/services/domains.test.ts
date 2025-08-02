@@ -28,6 +28,11 @@ describe('getDomainsHacks', () => {
         const result = getDomainsHacks('');
         expect(result).toEqual([]);
     });
+
+    it('should remove duplicate domains from the result', () => {
+        const result = getDomainsHacks('gates gates');
+        expect(result).toEqual([...new Set(result)]);
+    });
 });
 
 describe('getMatchingDomains', () => {
