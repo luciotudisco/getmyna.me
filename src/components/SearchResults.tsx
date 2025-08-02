@@ -3,6 +3,7 @@ import { useEffect, useState, useTransition } from 'react';
 import NumberTicker from '@/components/ui/number-ticker';
 import { Badge } from '@/components/ui/badge';
 import { ThreeDots } from 'react-loader-spinner';
+import { Player } from '@lottiefiles/react-lottie-player';
 import { Domain, DomainStatus } from '@/models/domain';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
@@ -141,7 +142,15 @@ export function SearchResults() {
     if (domains.length === 0) {
         return (
             <div className="flex min-h-screen flex-col items-center gap-5 py-24 align-middle">
-                <p className="text-md text-muted-foreground">Oops! No results found</p>
+                <Player
+                    autoplay
+                    loop
+                    src="https://lottiefiles.com/animation/sad-empty-box-GaU6k5DfLa"
+                    style={{ height: 120, width: 120 }}
+                />
+                <p className="text-md text-center text-muted-foreground">
+                    No domains hit the mark—try a different search!
+                </p>
             </div>
         );
     }
