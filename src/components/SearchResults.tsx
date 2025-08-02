@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
@@ -17,7 +16,7 @@ import {
 } from '@tanstack/react-table';
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ArrowDown, ArrowUp, ArrowUpDown, BadgeCheck, CircleCheck, OctagonX, Star } from 'lucide-react';
+import { ArrowDown, ArrowUp, BadgeCheck } from 'lucide-react';
 
 const Player = dynamic(
     () => import('@lottiefiles/react-lottie-player').then((mod) => mod.Player),
