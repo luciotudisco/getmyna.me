@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
 import NumberTicker from '@/components/ui/number-ticker';
@@ -141,7 +142,15 @@ export function SearchResults() {
     if (domains.length === 0) {
         return (
             <div className="flex min-h-screen flex-col items-center gap-5 py-24 align-middle">
-                <p className="text-md text-muted-foreground">Oops! No results found</p>
+                <Image
+                    src="/target.svg"
+                    alt="No results illustration"
+                    width={120}
+                    height={120}
+                />
+                <p className="text-md text-muted-foreground text-center">
+                    No domains hit the mark—try a different search!
+                </p>
             </div>
         );
     }
