@@ -5,6 +5,7 @@ import TypingAnimation from '@/components/ui/typing-animation';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import SearchBar from './SearchBar';
+import { Suspense } from 'react';
 import { Button } from './ui/button';
 import { Info } from 'lucide-react';
 
@@ -19,7 +20,9 @@ export default function Header() {
             </Link>
             {showSearchBar ? (
                 <div className="flex flex-1 items-center justify-between">
-                    <SearchBar />
+                    <Suspense fallback={null}>
+                        <SearchBar />
+                    </Suspense>
                     <div className="hidden min-w-72 md:block" />
                     <Link href="/about" className="hidden md:block">
                         <Button type="button" variant="ghost">
