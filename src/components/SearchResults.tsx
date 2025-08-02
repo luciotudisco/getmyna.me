@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
 import NumberTicker from '@/components/ui/number-ticker';
@@ -17,7 +16,7 @@ import {
 } from '@tanstack/react-table';
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ArrowDown, ArrowUp, ArrowUpDown, BadgeCheck, CircleCheck, OctagonX, Star } from 'lucide-react';
+import { ArrowDown, ArrowUp, BadgeCheck } from 'lucide-react';
 
 export const columns: ColumnDef<Domain>[] = [
     {
