@@ -4,6 +4,7 @@ import { useEffect, useState, useTransition } from 'react';
 import NumberTicker from '@/components/ui/number-ticker';
 import { Badge } from '@/components/ui/badge';
 import { ThreeDots } from 'react-loader-spinner';
+import { Player } from '@lottiefiles/react-lottie-player';
 import { Domain, DomainStatus } from '@/models/domain';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
@@ -142,14 +143,14 @@ export function SearchResults() {
     if (domains.length === 0) {
         return (
             <div className="flex min-h-screen flex-col items-center gap-5 py-24 align-middle">
-                <Image
-                    src="/target.svg"
-                    alt="No results illustration"
-                    width={120}
-                    height={120}
+                <Player
+                    autoplay
+                    loop
+                    src="/sad-empty-box.json"
+                    style={{ height: 120, width: 120 }}
                 />
-                <p className="text-md text-muted-foreground text-center">
-                    No domains hit the mark—try a different search!
+                <p className="text-md text-center text-muted-foreground">
+                    No matches found! Give it another shot.
                 </p>
             </div>
         );

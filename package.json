@@ -19,6 +19,7 @@
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-switch": "^1.1.2",
     "@radix-ui/react-tooltip": "^1.1.6",
+    "@lottiefiles/react-lottie-player": "^3.5.0",
     "@tanstack/react-table": "^8.20.6",
     "axios": "^1.7.9",
     "class-variance-authority": "^0.7.1",
