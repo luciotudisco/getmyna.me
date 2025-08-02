@@ -150,7 +150,7 @@ export function SearchResults() {
                     style={{ height: 120, width: 120 }}
                 />
                 <p className="text-md text-center text-muted-foreground">
-                    No domains hit the mark—try a different search!
+                    No matches found! Give it another shot.
                 </p>
             </div>
         );
