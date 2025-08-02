@@ -1,12 +1,15 @@
 import Carousel from '@/components/Carousel';
 import Feature from '@/components/Feature';
 import SearchBar from '@/components/SearchBar';
+import { Suspense } from 'react';
 
 export default function Home() {
     return (
         <div className="min-h-screen">
             <main className="m-auto flex w-full max-w-4xl flex-col items-center gap-5 p-5 md:p-10">
-                <SearchBar />
+                <Suspense fallback={null}>
+                    <SearchBar />
+                </Suspense>
                 <Carousel />
                 <Feature
                     color="#fcf6bd"
