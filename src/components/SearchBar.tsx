@@ -2,13 +2,21 @@
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
-import { FormEvent, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { FormEvent, useEffect, useState } from 'react';
 import { SearchIcon, XIcon } from 'lucide-react';
 
 export default function SearchBar() {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const [searchTerm, setSearchTerm] = useState<string>('');
+
+    useEffect(() => {
+        const term = searchParams.get('term');
+        if (term) {
+            setSearchTerm(term);
+        }
+    }, [searchParams]);
 
     const handleSearch = (event: FormEvent) => {
         event.preventDefault();
