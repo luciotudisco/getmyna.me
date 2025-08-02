@@ -27,7 +27,7 @@ export default function SearchBar() {
                 <Input
                     type="text"
                     placeholder="Find the perfect domain hack"
-                    className="rounded-sm pl-10 pr-10 text-md shadow-sm"
+                    className="rounded-sm pl-10 pr-10 shadow-sm !text-base"
                     onChange={(event) => setSearchTerm(event.target.value)}
                     value={searchTerm}
                     autoFocus

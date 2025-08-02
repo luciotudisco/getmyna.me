@@ -89,7 +89,7 @@ export function getSubdomains(domain: string): string[] {
 
     // Split the domain into parts.
     const results: string[] = [];
-    for (let i = 0; i <= domain.length; i++) {
+    for (let i = 1; i <= domain.length; i++) {
         const label = domain.slice(0, i);
         const remainder = domain.slice(i);
         results.push(remainder ? `${label}.${remainder}` : label);
