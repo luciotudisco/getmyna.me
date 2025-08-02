@@ -147,7 +147,7 @@ export function SearchResults() {
                     autoplay
                     loop
                     src="/sad-empty-box.json"
-                    style={{ height: 120, width: 120 }}
+                    style={{ height: 160, width: 160 }}
                 />
                 <p className="text-md text-center text-muted-foreground">
                     No matches found! Give it another shot.
