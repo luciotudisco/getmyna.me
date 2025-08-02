@@ -6,7 +6,7 @@ import { Permutation, PowerSet } from 'js-combinatorics';
  * Returns a (possibly empty) list of domains that are domains hacks for the given input string.
  *
  * E.g., Given the input "bill gates", the method will return the following list of vanity domains:
- * ["BILL.GAT.ES", "BILLGAT.ES", "GAT.ES"].
+ * ["bill.gat.es", "billgat.es", "gat.es"].
  *
  * @param input - The input string.
  * @returns A (possibly empty) list of vanity domains for the given input string.
@@ -47,7 +47,7 @@ export function getDomainsHacks(input: string): string[] {
     }
 
     // Removes duplicates.
-    return new Set(domains).values().toArray();
+    return Array.from(new Set(domains));
 }
 
 /**
@@ -63,9 +63,9 @@ export function getMatchingDomains(text: string): string[] {
     const domains: string[] = [];
     for (const tld of matchingTLDs) {
         const domain = text.slice(0, -tld.length);
-        const sudomains = getSubdomains(domain);
-        for (const sudomain of sudomains) {
-            const candidate = `${sudomain}.${tld}`.toLowerCase();
+        const subdomains = getSubdomains(domain);
+        for (const subdomain of subdomains) {
+            const candidate = `${subdomain}.${tld}`.toLowerCase();
             if (isFQDN(candidate)) {
                 domains.push(candidate);
             }
@@ -75,7 +75,7 @@ export function getMatchingDomains(text: string): string[] {
 }
 
 /**
- * Given a string like returns all the possible ways to split it into valid sudomains.
+ * Given a string, returns all the possible ways to split it into valid subdomains.
  *
  * For example, "ABCD" -> ["A.BCD", "AB.CD", "ABC.D", "ABCD"].
  *
