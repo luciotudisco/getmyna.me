@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { Badge } from '@/components/ui/badge';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { Separator } from '@/components/ui/separator';
+import { getTldInfo, TldInfo } from '@/services/tld-info';
 
 interface DomainDetailDrawerProps {
     domain: Domain;
@@ -14,6 +16,7 @@ interface DomainDetailDrawerProps {
 
 export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawerProps) {
     const [isMobile, setIsMobile] = useState(false);
+    const [tldInfo, setTldInfo] = useState<TldInfo | null>(null);
 
     useEffect(() => {
         const mq = window.matchMedia('(max-width: 768px)');
@@ -22,6 +25,10 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
         mq.addEventListener('change', handler);
         return () => mq.removeEventListener('change', handler);
     }, []);
+
+    useEffect(() => {
+        getTldInfo(domain.getTLD()).then(setTldInfo);
+    }, [domain]);
 
     return (
         <Drawer
@@ -33,7 +40,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                 <DrawerHeader>
                     <DrawerTitle>{domain.getName()}</DrawerTitle>
                 </DrawerHeader>
-                <div className="p-6 pt-0">
+                <div className="p-6 pt-0 space-y-4">
                     <Badge
                         className={`inline-flex h-7 min-w-[8rem] items-center justify-center px-3 ${
                             status === DomainStatusEnum.unknown
@@ -53,6 +60,28 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                             ? 'Available'
                             : 'Taken'}
                     </Badge>
+
+                    <Separator />
+
+                    <div className="text-sm">
+                        <p className="font-medium">Top-level domain</p>
+                        <p className="mb-2">.{domain.getTLD()}</p>
+                        {tldInfo ? (
+                            <p>
+                                {tldInfo.description}{' '}
+                                <a
+                                    href={tldInfo.wikipediaUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 underline"
+                                >
+                                    Learn more on Wikipedia
+                                </a>
+                            </p>
+                        ) : (
+                            <p>Loading TLD info...</p>
+                        )}
+                    </div>
                 </div>
             </DrawerContent>
         </Drawer>
