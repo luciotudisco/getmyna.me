@@ -14,7 +14,12 @@ import {
 
 import { cn } from '@/lib/utils';
 
-const Drawer = DrawerPrimitive;
+// The `vaul` library exports a `Drawer` object whose `Root` property is the
+// actual React component. Exporting the object directly causes TypeScript to
+// treat it as a plain object and not a component, leading to "does not have any
+// construct or call signatures" errors when used in JSX. Map to the `Root`
+// component so `<Drawer />` works as expected.
+const Drawer = DrawerPrimitive.Root;
 
 const DrawerOverlay = React.forwardRef<
     React.ElementRef<typeof DrawerPrimitiveOverlay>,
