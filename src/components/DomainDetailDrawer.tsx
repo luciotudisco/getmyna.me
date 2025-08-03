@@ -41,33 +41,36 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     <DrawerTitle>{domain.getName()}</DrawerTitle>
                 </DrawerHeader>
                 <div className="p-6 pt-0 space-y-4">
-                    <Badge
-                        className={`inline-flex h-7 min-w-[8rem] items-center justify-center px-3 ${
-                            status === DomainStatusEnum.unknown
-                                ? 'bg-gray-400'
+                    <div className="flex items-center gap-2">
+                        <Badge
+                            className={`inline-flex h-7 min-w-[8rem] items-center justify-center px-3 ${
+                                status === DomainStatusEnum.unknown
+                                    ? 'bg-gray-400'
+                                    : status === DomainStatusEnum.error
+                                    ? 'bg-yellow-400 hover:bg-yellow-500'
+                                    : domain.isAvailable()
+                                    ? 'bg-green-400 hover:bg-green-600'
+                                    : 'bg-red-400 hover:bg-red-600'
+                            }`}
+                        >
+                            {status === DomainStatusEnum.unknown
+                                ? 'Checking'
                                 : status === DomainStatusEnum.error
-                                ? 'bg-yellow-400 hover:bg-yellow-500'
+                                ? 'Error'
                                 : domain.isAvailable()
-                                ? 'bg-green-400 hover:bg-green-600'
-                                : 'bg-red-400 hover:bg-red-600'
-                        }`}
-                    >
-                        {status === DomainStatusEnum.unknown
-                            ? 'Checking'
-                            : status === DomainStatusEnum.error
-                            ? 'Error'
-                            : domain.isAvailable()
-                            ? 'Available'
-                            : 'Taken'}
-                    </Badge>
+                                ? 'Available'
+                                : 'Taken'}
+                        </Badge>
+                        <Badge variant="outline">.{domain.getTLD()}</Badge>
+                    </div>
 
                     <Separator />
 
-                    <div className="text-sm">
-                        <p className="font-medium">Top-level domain</p>
-                        <p className="mb-2">.{domain.getTLD()}</p>
+                    <div>
+                        <p className="text-sm font-medium">Top-level domain</p>
+                        <p className="mb-2 text-sm">.{domain.getTLD()}</p>
                         {tldInfo ? (
-                            <p>
+                            <p className="text-xs">
                                 {tldInfo.description}{' '}
                                 <a
                                     href={tldInfo.wikipediaUrl}
@@ -79,7 +82,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                                 </a>
                             </p>
                         ) : (
-                            <p>Loading TLD info...</p>
+                            <p className="text-xs">Loading TLD info...</p>
                         )}
                     </div>
                 </div>
