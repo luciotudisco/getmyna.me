@@ -1,3 +1,5 @@
+"use client";
+
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
@@ -5,12 +7,14 @@ import { useEffect, useState } from 'react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { AlertCircle, BadgeCheck, Loader2 } from 'lucide-react';
 import { RateLimiter } from '@/lib/rate-limiter';
+import { DomainDetailDrawer } from '@/components/DomainDetailDrawer';
 
 // Create a shared rate limiter instance (1 call per second)
 const statusRateLimiter = new RateLimiter(1);
 
 export function SearchResult({ domain }: { domain: Domain }) {
     const [status, setStatus] = useState<DomainStatusEnum>(DomainStatusEnum.unknown);
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         const fetchStatus = async () => {
@@ -37,52 +41,55 @@ export function SearchResult({ domain }: { domain: Domain }) {
     }, [domain]);
 
     return (
-        <TableRow>
-            <TableCell>
-                <p className="flex min-h-10 flex-grow flex-row items-center truncate align-middle font-extralight">
-                    {domain.getName()}
-                    {domain.isAvailable() && domain.getLevel() <= 2 && (
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <BadgeCheck className="ml-2 h-4 w-4 text-orange-400" />
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>This is a rare second level domain!</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
-                    )}
-                </p>
-            </TableCell>
-            <TableCell className="text-right">
-                <Badge
-                    className={`inline-flex h-7 min-w-[8rem] items-center justify-center px-3 ${
-                        status === DomainStatusEnum.unknown
-                            ? 'bg-gray-400'
-                            : status === DomainStatusEnum.error
-                            ? 'bg-yellow-400 hover:bg-yellow-500'
-                            : domain.isAvailable()
-                            ? 'bg-green-400 hover:bg-green-600'
-                            : 'bg-red-400 hover:bg-red-600'
-                    }`}
-                >
-                    {status === DomainStatusEnum.unknown ? (
-                        <div className="flex items-center gap-2">
-                            <Loader2 className="h-4 w-4 animate-spin text-white" />
-                            <span>Checking</span>
-                        </div>
-                    ) : status === DomainStatusEnum.error ? (
-                        <div className="flex items-center gap-2">
-                            <AlertCircle className="h-4 w-4 text-white" />
-                            <span>Error</span>
-                        </div>
-                    ) : (
-                        domain.isAvailable() ? 'Available' : 'Taken'
-                    )}
-                </Badge>
-            </TableCell>
-        </TableRow>
+        <>
+            <TableRow onClick={() => setOpen(true)} className="cursor-pointer">
+                <TableCell>
+                    <p className="flex min-h-10 flex-grow flex-row items-center truncate align-middle font-extralight">
+                        {domain.getName()}
+                        {domain.isAvailable() && domain.getLevel() <= 2 && (
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <BadgeCheck className="ml-2 h-4 w-4 text-orange-400" />
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>This is a rare second level domain!</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                        )}
+                    </p>
+                </TableCell>
+                <TableCell className="text-right">
+                    <Badge
+                        className={`inline-flex h-7 min-w-[8rem] items-center justify-center px-3 ${
+                            status === DomainStatusEnum.unknown
+                                ? 'bg-gray-400'
+                                : status === DomainStatusEnum.error
+                                ? 'bg-yellow-400 hover:bg-yellow-500'
+                                : domain.isAvailable()
+                                ? 'bg-green-400 hover:bg-green-600'
+                                : 'bg-red-400 hover:bg-red-600'
+                        }`}
+                    >
+                        {status === DomainStatusEnum.unknown ? (
+                            <div className="flex items-center gap-2">
+                                <Loader2 className="h-4 w-4 animate-spin text-white" />
+                                <span>Checking</span>
+                            </div>
+                        ) : status === DomainStatusEnum.error ? (
+                            <div className="flex items-center gap-2">
+                                <AlertCircle className="h-4 w-4 text-white" />
+                                <span>Error</span>
+                            </div>
+                        ) : (
+                            domain.isAvailable() ? 'Available' : 'Taken'
+                        )}
+                    </Badge>
+                </TableCell>
+            </TableRow>
+            <DomainDetailDrawer domain={domain} status={status} open={open} onClose={() => setOpen(false)} />
+        </>
     );
 }
 
