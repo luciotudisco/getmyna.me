@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { AlertCircle, BadgeCheck, Loader2 } from 'lucide-react';
 import { RateLimiter } from '@/lib/rate-limiter';
-import { DomainDetailDrawer } from '@/components/DomainDetailDrawer';
+import DomainDetailDrawer from '@/components/DomainDetailDrawer';
 
 // Create a shared rate limiter instance (1 call per second)
 const statusRateLimiter = new RateLimiter(1);
