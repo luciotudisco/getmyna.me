@@ -64,8 +64,6 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     <Separator />
 
                     <div>
-                        <p className="font-medium">Top-level domain</p>
-                        <p className="mb-2">.{domain.getTLD()}</p>
                         {tldInfo ? (
                             <p className="text-sm">
                                 {tldInfo.description}{' '}
