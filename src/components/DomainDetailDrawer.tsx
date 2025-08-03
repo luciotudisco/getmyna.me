@@ -65,7 +65,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
 
                     <div>
                         {tldInfo ? (
-                            <p className="text-sm">
+                            <p className="text-xs">
                                 {tldInfo.description}{' '}
                                 <a
                                     href={tldInfo.wikipediaUrl}
