@@ -3,11 +3,11 @@ import { Badge } from '@/components/ui/badge';
 import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { useEffect, useState } from 'react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { BadgeCheck, Loader2 } from 'lucide-react';
+import { AlertCircle, BadgeCheck, Loader2 } from 'lucide-react';
 import { RateLimiter } from '@/lib/rate-limiter';
 
-// Create a shared rate limiter instance (2 calls per second)
-const statusRateLimiter = new RateLimiter(2);
+// Create a shared rate limiter instance (1 call per second)
+const statusRateLimiter = new RateLimiter(1);
 
 export function SearchResult({ domain }: { domain: Domain }) {
     const [status, setStatus] = useState<DomainStatusEnum>(DomainStatusEnum.unknown);
@@ -17,6 +17,9 @@ export function SearchResult({ domain }: { domain: Domain }) {
             try {
                 const result = await statusRateLimiter.add(async () => {
                     const response = await fetch('/api/domains/status?domain=' + domain.getName());
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
                     const data = await response.json();
                     return data.status.at(0).summary as DomainStatusEnum;
                 });
@@ -25,7 +28,8 @@ export function SearchResult({ domain }: { domain: Domain }) {
                 setStatus(result);
             } catch (error) {
                 console.error('Error fetching domain status:', error);
-                // Keep the unknown status on error
+                domain.setStatus(DomainStatusEnum.error);
+                setStatus(DomainStatusEnum.error);
             }
         };
 
@@ -53,9 +57,11 @@ export function SearchResult({ domain }: { domain: Domain }) {
             </TableCell>
             <TableCell className="text-right">
                 <Badge
-                    className={`flex min-h-7 min-w-24 justify-center text-center ${
+                    className={`inline-flex h-7 min-w-[8rem] items-center justify-center px-3 ${
                         status === DomainStatusEnum.unknown
                             ? 'bg-gray-400'
+                            : status === DomainStatusEnum.error
+                            ? 'bg-yellow-400 hover:bg-yellow-500'
                             : domain.isAvailable()
                             ? 'bg-green-400 hover:bg-green-600'
                             : 'bg-red-400 hover:bg-red-600'
@@ -65,6 +71,11 @@ export function SearchResult({ domain }: { domain: Domain }) {
                         <div className="flex items-center gap-2">
                             <Loader2 className="h-4 w-4 animate-spin text-white" />
                             <span>Checking</span>
+                        </div>
+                    ) : status === DomainStatusEnum.error ? (
+                        <div className="flex items-center gap-2">
+                            <AlertCircle className="h-4 w-4 text-white" />
+                            <span>Error</span>
                         </div>
                     ) : (
                         domain.isAvailable() ? 'Available' : 'Taken'
