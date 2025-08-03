@@ -1,22 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 
-const DOMAINR_INFO_URL = 'https://domainr.p.rapidapi.com/v2/info';
-const RAPID_API_KEY = process.env.RAPID_API_KEY!;
+const WIKIPEDIA_SUMMARY_URL = 'https://en.wikipedia.org/api/rest_v1/page/summary';
+const FALLBACK_DESCRIPTION = 'No additional information is available for this TLD.';
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
+    const tld = request.nextUrl.searchParams.get('tld');
+    if (!tld) {
+        return NextResponse.json({ error: 'Missing tld parameter' }, { status: 400 });
+    }
+
     try {
-        const tld = request.nextUrl.searchParams.get('tld');
-        const params = { domain: tld! };
-        const headers = { headers: { 'x-rapidapi-key': RAPID_API_KEY } };
-        const url = `${DOMAINR_INFO_URL}?${new URLSearchParams(params).toString()}`;
-        const response = await axios.get(url, headers);
-        const info = response.data.info?.[0];
-        const summary = info?.summary || 'No additional information is available for this TLD.';
-        return NextResponse.json({ description: summary });
+        const url = `${WIKIPEDIA_SUMMARY_URL}/.${tld}`;
+        const response = await axios.get(url);
+        const extract: string | undefined = response.data?.extract;
+        if (extract) {
+            const description = extract
+                .split(/(?<=\.)\s+/)
+                .slice(0, 2)
+                .join(' ');
+            return NextResponse.json({ description: description || FALLBACK_DESCRIPTION });
+        }
+        return NextResponse.json({ description: FALLBACK_DESCRIPTION });
     } catch (error) {
         console.error('Error fetching TLD info:', error);
-        return NextResponse.json({ error: 'Failed to fetch data' }, { status: 500 });
+        return NextResponse.json({ description: FALLBACK_DESCRIPTION });
     }
 }
-
