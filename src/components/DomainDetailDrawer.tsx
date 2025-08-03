@@ -24,7 +24,11 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
     }, []);
 
     return (
-        <Drawer open={open} onOpenChange={(o) => !o && onClose()} direction={isMobile ? 'bottom' : 'right'}>
+        <Drawer
+            open={open}
+            onOpenChange={(openState: boolean) => !openState && onClose()}
+            direction={isMobile ? 'bottom' : 'right'}
+        >
             <DrawerContent className={isMobile ? '' : 'h-full w-80 rounded-none'}>
                 <DrawerHeader>
                     <DrawerTitle>{domain.getName()}</DrawerTitle>
