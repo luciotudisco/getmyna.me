@@ -21,7 +21,7 @@ export function SearchResult({ domain }: SearchResultProps) {
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <BadgeCheck className="ml-2 h-4 w-4 text-orange-400" />
+                                    <BadgeCheck className="ml-2 h-4 w-4 text-orange-500" />
                                 </TooltipTrigger>
                                 <TooltipContent>
                                     <p>This is a rare second level domain!</p>
