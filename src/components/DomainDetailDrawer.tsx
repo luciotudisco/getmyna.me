@@ -63,11 +63,11 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
 
                     <Separator />
 
-                    <div className="text-sm">
+                    <div>
                         <p className="font-medium">Top-level domain</p>
                         <p className="mb-2">.{domain.getTLD()}</p>
                         {tldInfo ? (
-                            <p>
+                            <p className="text-sm">
                                 {tldInfo.description}{' '}
                                 <a
                                     href={tldInfo.wikipediaUrl}
@@ -79,7 +79,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                                 </a>
                             </p>
                         ) : (
-                            <p>Loading TLD info...</p>
+                            <p className="text-sm">Loading TLD info...</p>
                         )}
                     </div>
                 </div>
