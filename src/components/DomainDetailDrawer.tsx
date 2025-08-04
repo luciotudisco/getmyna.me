@@ -76,9 +76,6 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     <div>
                         <p className="text-xs">
                             <span className="font-bold">Status:</span>{' '}
-                            <span className="capitalize">{status}</span>
-                        </p>
-                        <p className="text-xs">
                             {DOMAIN_STATUS_DESCRIPTIONS[status]}
                         </p>
                     </div>
