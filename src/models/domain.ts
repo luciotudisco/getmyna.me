@@ -68,7 +68,7 @@ export enum DomainStatus {
     undelegated = 'undelegated',
     unknown = 'unknown',
     zone = 'zone',
-    error = 'error',  // Add error status
+    error = 'error',
 }
 
 const DOMAIN_AVAILABLE_STATUS_VALUES = new Set([
