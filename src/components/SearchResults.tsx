@@ -24,7 +24,7 @@ export function SearchResults() {
                 const response = await fetch(`/api/domains/search?term=${term}`);
                 const data = await response.json();
                 const initialDomains = data.domains.map((name: string) => new Domain(name));
-                initialDomains.sort((a, b) =>
+                initialDomains.sort((a: Domain, b: Domain) =>
                     a.getLevel() - b.getLevel() || a.getName().localeCompare(b.getName()),
                 );
                 setDomains(initialDomains);
