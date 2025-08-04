@@ -38,7 +38,12 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
         >
             <DrawerContent className={isMobile ? '' : 'h-full w-80 rounded-none'}>
                 <DrawerHeader>
-                    <DrawerTitle>{domain.getName()}</DrawerTitle>
+                    <DrawerTitle className="flex items-center gap-2">
+                        {domain.getName()}
+                        {domain.getLevel() === 1 && (
+                            <Badge variant="secondary">First level domain</Badge>
+                        )}
+                    </DrawerTitle>
                 </DrawerHeader>
                 <div className="p-6 pt-0 space-y-4">
                     <Badge
