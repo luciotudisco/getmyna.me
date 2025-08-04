@@ -76,3 +76,27 @@ const DOMAIN_AVAILABLE_STATUS_VALUES = new Set([
     DomainStatus.premium,
     DomainStatus.transferable,
 ]);
+
+export const DOMAIN_STATUS_DESCRIPTIONS: Record<DomainStatus, string> = {
+    [DomainStatus.active]: 'Domain is currently active and in use.',
+    [DomainStatus.claimed]: 'Domain has been claimed and is not available.',
+    [DomainStatus.deleting]: 'Domain is in the process of being deleted.',
+    [DomainStatus.disallowed]: 'Domain cannot be registered.',
+    [DomainStatus.dpml]: 'Domain is blocked by the DPML program.',
+    [DomainStatus.expiring]: 'Domain registration is expiring soon.',
+    [DomainStatus.inactive]: 'Domain is available for registration.',
+    [DomainStatus.invalid]: 'Domain is not valid.',
+    [DomainStatus.marketed]: 'Domain is for sale by registry or reseller.',
+    [DomainStatus.parked]: 'Domain is registered but not in active use.',
+    [DomainStatus.pending]: 'Domain registration is pending.',
+    [DomainStatus.premium]: 'Domain is available at a premium price.',
+    [DomainStatus.priced]: 'Domain has a listed purchase price.',
+    [DomainStatus.reserved]: 'Domain is reserved by the registry.',
+    [DomainStatus.suffix]: 'Domain is a known suffix.',
+    [DomainStatus.tld]: 'Domain is a top level domain.',
+    [DomainStatus.transferable]: 'Domain can be transferred from another registrar.',
+    [DomainStatus.undelegated]: 'Domain is registered but lacks DNS delegation.',
+    [DomainStatus.unknown]: 'Domain status is unknown.',
+    [DomainStatus.zone]: 'Domain is a DNS zone.',
+    [DomainStatus.error]: 'An error occurred while fetching domain status.',
+};

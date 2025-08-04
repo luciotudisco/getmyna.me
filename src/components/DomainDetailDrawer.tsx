@@ -1,7 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
+import {
+    Domain,
+    DomainStatus as DomainStatusEnum,
+    DOMAIN_STATUS_DESCRIPTIONS,
+} from '@/models/domain';
 import { Badge } from '@/components/ui/badge';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
@@ -65,6 +69,18 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                             ? 'Available'
                             : 'Taken'}
                     </Badge>
+
+                    <Separator />
+
+                    <div>
+                        <p className="text-xs">
+                            <span className="font-bold">Status:</span>{' '}
+                            <span className="capitalize">{status}</span>
+                        </p>
+                        <p className="text-xs">
+                            {DOMAIN_STATUS_DESCRIPTIONS[status]}
+                        </p>
+                    </div>
 
                     <Separator />
 
