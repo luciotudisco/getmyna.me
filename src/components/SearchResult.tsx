@@ -75,7 +75,6 @@ export function SearchResult({ domain }: { domain: Domain }) {
                         {status === DomainStatusEnum.unknown ? (
                             <div className="flex items-center gap-2">
                                 <Loader2 className="h-4 w-4 animate-spin text-white" />
-                                <span>…</span>
                             </div>
                         ) : status === DomainStatusEnum.error ? (
                             <div className="flex items-center gap-2">
