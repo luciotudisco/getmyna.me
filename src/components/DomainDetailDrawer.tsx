@@ -75,7 +75,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
 
                     <div>
                         <p className="text-xs">
-                            <span className="font-bold">Status:</span>{' '}
+                            <span className="font-bold">{status}:</span>{' '}
                             {DOMAIN_STATUS_DESCRIPTIONS[status]}
                         </p>
                     </div>
