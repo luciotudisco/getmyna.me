@@ -42,34 +42,35 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
         >
             <DrawerContent className={isMobile ? '' : 'h-full w-80 rounded-none'}>
                 <DrawerHeader>
-                    <DrawerTitle className="flex items-center gap-2">
-                        {domain.getName()}
-                        {domain.getLevel() === 1 && (
-                            <Badge variant="secondary">First level domain</Badge>
-                        )}
+                    <DrawerTitle className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            {domain.getName()}
+                            {domain.getLevel() === 1 && (
+                                <Badge variant="secondary">First level domain</Badge>
+                            )}
+                        </div>
+                        <Badge
+                            className={`inline-flex h-7 min-w-[8rem] items-center justify-center px-3 ${
+                                status === DomainStatusEnum.unknown
+                                    ? 'bg-gray-400'
+                                    : status === DomainStatusEnum.error
+                                    ? 'bg-yellow-400 hover:bg-yellow-500'
+                                    : domain.isAvailable()
+                                    ? 'bg-green-400 hover:bg-green-600'
+                                    : 'bg-red-400 hover:bg-red-600'
+                            }`}
+                        >
+                            {status === DomainStatusEnum.unknown
+                                ? 'Checking'
+                                : status === DomainStatusEnum.error
+                                ? 'Error'
+                                : domain.isAvailable()
+                                ? 'Available'
+                                : 'Taken'}
+                        </Badge>
                     </DrawerTitle>
                 </DrawerHeader>
                 <div className="p-6 pt-0 space-y-4">
-                    <Badge
-                        className={`inline-flex h-7 min-w-[8rem] items-center justify-center px-3 ${
-                            status === DomainStatusEnum.unknown
-                                ? 'bg-gray-400'
-                                : status === DomainStatusEnum.error
-                                ? 'bg-yellow-400 hover:bg-yellow-500'
-                                : domain.isAvailable()
-                                ? 'bg-green-400 hover:bg-green-600'
-                                : 'bg-red-400 hover:bg-red-600'
-                        }`}
-                    >
-                        {status === DomainStatusEnum.unknown
-                            ? 'Checking'
-                            : status === DomainStatusEnum.error
-                            ? 'Error'
-                            : domain.isAvailable()
-                            ? 'Available'
-                            : 'Taken'}
-                    </Badge>
-
                     <Separator />
 
                     <div>
