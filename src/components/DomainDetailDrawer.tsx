@@ -7,6 +7,7 @@ import {
     DOMAIN_STATUS_DESCRIPTIONS,
 } from '@/models/domain';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
 import { getTldInfo, TldInfo } from '@/services/tld-info';
@@ -87,14 +88,12 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                             <p className="text-xs">
                                 <span className="font-bold">.{domain.getTLD()}:</span>{' '}
                                 {tldInfo.description}{' '}
-                                <a
-                                    href={tldInfo.wikipediaUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-blue-600 underline"
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => window.open(tldInfo.wikipediaUrl, '_blank')}
                                 >
                                     Learn more on Wikipedia
-                                </a>
+                                </Button>
                             </p>
                         ) : (
                             <p className="text-sm">Loading TLD info...</p>
@@ -108,34 +107,43 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                                 <p className="font-bold">Buy this domain:</p>
                                 <ul className="list-disc pl-4 space-y-1">
                                     <li>
-                                        <a
-                                            href={`https://www.godaddy.com/domainsearch/find?domainToCheck=${domain.getName()}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-blue-600 underline"
+                                        <Button
+                                            variant="secondary"
+                                            onClick={() =>
+                                                window.open(
+                                                    `https://www.godaddy.com/domainsearch/find?domainToCheck=${domain.getName()}`,
+                                                    '_blank',
+                                                )
+                                            }
                                         >
                                             GoDaddy
-                                        </a>
+                                        </Button>
                                     </li>
                                     <li>
-                                        <a
-                                            href={`https://www.namecheap.com/domains/registration/results/?domain=${domain.getName()}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-blue-600 underline"
+                                        <Button
+                                            variant="secondary"
+                                            onClick={() =>
+                                                window.open(
+                                                    `https://www.namecheap.com/domains/registration/results/?domain=${domain.getName()}`,
+                                                    '_blank',
+                                                )
+                                            }
                                         >
                                             Namecheap
-                                        </a>
+                                        </Button>
                                     </li>
                                     <li>
-                                        <a
-                                            href={`https://domains.google.com/registrar/search?searchTerm=${domain.getName()}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-blue-600 underline"
+                                        <Button
+                                            variant="secondary"
+                                            onClick={() =>
+                                                window.open(
+                                                    `https://www.hover.com/domains/results?q=${domain.getName()}`,
+                                                    '_blank',
+                                                )
+                                            }
                                         >
-                                            Google Domains
-                                        </a>
+                                            Hover
+                                        </Button>
                                     </li>
                                 </ul>
                             </div>
