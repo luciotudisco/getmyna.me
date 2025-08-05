@@ -35,7 +35,7 @@ export default function Header() {
                     <TypingAnimation className="font-sans text-xl font-extralight leading-loose">
                         GetMyNa.me
                     </TypingAnimation>
-                    <Link href="/about" className="hidden md:block">
+                    <Link href="/about">
                         <Button type="button" variant="ghost">
                             <Info />
                         </Button>
