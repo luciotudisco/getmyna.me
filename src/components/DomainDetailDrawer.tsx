@@ -103,12 +103,12 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                                     className="w-full bg-blue-400 text-white hover:bg-blue-600"
                                     onClick={() =>
                                         window.open(
-                                            `https://www.hover.com/domains/results?q=${domain.getName()}`,
+                                            `https://porkbun.com/checkout/search?q=${domain.getName()}`,
                                             '_blank',
                                         )
                                     }
                                 >
-                                    Hover
+                                    Porkbun
                                 </Button>
                             </div>
                             <Separator />
