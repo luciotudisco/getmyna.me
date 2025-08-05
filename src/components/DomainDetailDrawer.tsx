@@ -74,6 +74,47 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                 <div className="p-6 pt-0 space-y-4">
                     <Separator />
 
+                    {domain.isAvailable() && (
+                        <>
+                            <div className="space-y-2">
+                                <Button
+                                    className="w-full bg-green-400 text-white hover:bg-green-600"
+                                    onClick={() =>
+                                        window.open(
+                                            `https://www.godaddy.com/domainsearch/find?domainToCheck=${domain.getName()}`,
+                                            '_blank',
+                                        )
+                                    }
+                                >
+                                    GoDaddy
+                                </Button>
+                                <Button
+                                    className="w-full bg-green-400 text-white hover:bg-green-600"
+                                    onClick={() =>
+                                        window.open(
+                                            `https://www.namecheap.com/domains/registration/results/?domain=${domain.getName()}`,
+                                            '_blank',
+                                        )
+                                    }
+                                >
+                                    Namecheap
+                                </Button>
+                                <Button
+                                    className="w-full bg-green-400 text-white hover:bg-green-600"
+                                    onClick={() =>
+                                        window.open(
+                                            `https://www.hover.com/domains/results?q=${domain.getName()}`,
+                                            '_blank',
+                                        )
+                                    }
+                                >
+                                    Hover
+                                </Button>
+                            </div>
+                            <Separator />
+                        </>
+                    )}
+
                     <div>
                         <p className="text-xs">
                             <span className="font-bold">{status}:</span>{' '}
@@ -99,56 +140,6 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                             <p className="text-sm">Loading TLD info...</p>
                         )}
                     </div>
-
-                    {domain.isAvailable() && (
-                        <>
-                            <Separator />
-                            <div className="text-xs">
-                                <p className="font-bold">Buy this domain:</p>
-                                <ul className="list-disc pl-4 space-y-1">
-                                    <li>
-                                        <Button
-                                            variant="secondary"
-                                            onClick={() =>
-                                                window.open(
-                                                    `https://www.godaddy.com/domainsearch/find?domainToCheck=${domain.getName()}`,
-                                                    '_blank',
-                                                )
-                                            }
-                                        >
-                                            GoDaddy
-                                        </Button>
-                                    </li>
-                                    <li>
-                                        <Button
-                                            variant="secondary"
-                                            onClick={() =>
-                                                window.open(
-                                                    `https://www.namecheap.com/domains/registration/results/?domain=${domain.getName()}`,
-                                                    '_blank',
-                                                )
-                                            }
-                                        >
-                                            Namecheap
-                                        </Button>
-                                    </li>
-                                    <li>
-                                        <Button
-                                            variant="secondary"
-                                            onClick={() =>
-                                                window.open(
-                                                    `https://www.hover.com/domains/results?q=${domain.getName()}`,
-                                                    '_blank',
-                                                )
-                                            }
-                                        >
-                                            Hover
-                                        </Button>
-                                    </li>
-                                </ul>
-                            </div>
-                        </>
-                    )}
                 </div>
             </DrawerContent>
         </Drawer>
