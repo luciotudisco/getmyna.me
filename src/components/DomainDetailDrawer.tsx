@@ -79,23 +79,6 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                             {DOMAIN_STATUS_DESCRIPTIONS[status]}
                         </p>
                     </div>
-                    {status === DomainStatusEnum.active && (
-                        <>
-                            <Separator />
-                            <div>
-                                <p className="text-xs">
-                                    <a
-                                        href={`https://${domain.getName()}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-blue-600 underline"
-                                    >
-                                        {domain.getName()}
-                                    </a>
-                                </p>
-                            </div>
-                        </>
-                    )}
 
                     <Separator />
 
