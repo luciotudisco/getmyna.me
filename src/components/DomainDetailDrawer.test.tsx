@@ -39,7 +39,7 @@ describe('DomainDetailDrawer', () => {
 
         const godaddyButton = await screen.findByRole('button', { name: /GoDaddy/i });
         const namecheapButton = screen.getByRole('button', { name: /Namecheap/i });
-        const hoverButton = screen.getByRole('button', { name: /Hover/i });
+        const porkbunButton = screen.getByRole('button', { name: /Porkbun/i });
 
         fireEvent.click(godaddyButton);
         expect(openSpy).toHaveBeenNthCalledWith(
@@ -55,10 +55,10 @@ describe('DomainDetailDrawer', () => {
             '_blank',
         );
 
-        fireEvent.click(hoverButton);
+        fireEvent.click(porkbunButton);
         expect(openSpy).toHaveBeenNthCalledWith(
             3,
-            `https://www.hover.com/domains/results?q=${domain.getName()}`,
+            `https://porkbun.com/checkout/search?q=${domain.getName()}`,
             '_blank',
         );
 
@@ -76,6 +76,6 @@ describe('DomainDetailDrawer', () => {
         );
         expect(screen.queryByRole('button', { name: /GoDaddy/i })).toBeNull();
         expect(screen.queryByRole('button', { name: /Namecheap/i })).toBeNull();
-        expect(screen.queryByRole('button', { name: /Hover/i })).toBeNull();
+        expect(screen.queryByRole('button', { name: /Porkbun/i })).toBeNull();
     });
 });
