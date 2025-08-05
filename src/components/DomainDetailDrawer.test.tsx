@@ -71,7 +71,8 @@ describe('DomainDetailDrawer', () => {
         render(
             <DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />,
         );
-
-        expect(screen.queryByText(/Buy this domain:/i)).toBeNull();
+        expect(screen.queryByRole('button', { name: /GoDaddy/i })).toBeNull();
+        expect(screen.queryByRole('button', { name: /Namecheap/i })).toBeNull();
+        expect(screen.queryByRole('button', { name: /Hover/i })).toBeNull();
     });
 });
