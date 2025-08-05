@@ -68,14 +68,33 @@ describe('DomainDetailDrawer', () => {
         openSpy.mockRestore();
     });
 
-    it('does not show registrar links when domain is not available', async () => {
+    it('shows WHOIS info when domain is not available', async () => {
         const domain = new Domain('example.com');
         domain.setStatus(DomainStatus.active);
+
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                json: () =>
+                    Promise.resolve({
+                        registrarName: 'Mock Registrar',
+                        createDate: '2020-01-01',
+                        expiryDate: '2030-01-01',
+                    }),
+            }),
+        ) as jest.Mock;
+
         render(
             <DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />,
         );
+
         expect(screen.queryByRole('button', { name: /GoDaddy/i })).toBeNull();
         expect(screen.queryByRole('button', { name: /Namecheap/i })).toBeNull();
         expect(screen.queryByRole('button', { name: /Porkbun/i })).toBeNull();
+
+        const registrar = await screen.findByText(/Mock Registrar/);
+        expect(registrar).toBeInTheDocument();
+
+        (global.fetch as jest.Mock).mockRestore();
     });
 });
