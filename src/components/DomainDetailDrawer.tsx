@@ -12,6 +12,14 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Separator } from '@/components/ui/separator';
 import { getTldInfo, TldInfo } from '@/services/tld-info';
 
+interface WhoisInfo {
+    registrarName?: string;
+    registrar?: string;
+    createDate?: string;
+    expiryDate?: string;
+    expiresDate?: string;
+}
+
 interface DomainDetailDrawerProps {
     domain: Domain;
     status: DomainStatusEnum;
@@ -22,6 +30,8 @@ interface DomainDetailDrawerProps {
 export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawerProps) {
     const [isMobile, setIsMobile] = useState(false);
     const [tldInfo, setTldInfo] = useState<TldInfo | null>(null);
+    const [whoisInfo, setWhoisInfo] = useState<WhoisInfo | null>(null);
+    const [whoisError, setWhoisError] = useState(false);
 
     useEffect(() => {
         const mq = window.matchMedia('(max-width: 768px)');
@@ -34,6 +44,28 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
     useEffect(() => {
         getTldInfo(domain.getTLD()).then(setTldInfo);
     }, [domain]);
+
+    useEffect(() => {
+        if (!open || domain.isAvailable()) {
+            return;
+        }
+        const fetchWhois = async () => {
+            try {
+                setWhoisError(false);
+                setWhoisInfo(null);
+                const response = await fetch(`/api/domains/whois?domain=${domain.getName()}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                setWhoisInfo(data);
+            } catch (error) {
+                console.error('Error fetching WHOIS data:', error);
+                setWhoisError(true);
+            }
+        };
+        fetchWhois();
+    }, [open, domain]);
 
     return (
         <Drawer
@@ -121,6 +153,42 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                             {DOMAIN_STATUS_DESCRIPTIONS[status]}
                         </p>
                     </div>
+
+                    {!domain.isAvailable() && (
+                        <>
+                            <Separator />
+                            <div>
+                                {whoisInfo ? (
+                                    <>
+                                        {(whoisInfo.registrarName || whoisInfo.registrar) && (
+                                            <p className="text-xs">
+                                                <span className="font-bold">Registrar:</span>{' '}
+                                                {whoisInfo.registrarName || whoisInfo.registrar}
+                                            </p>
+                                        )}
+                                        {whoisInfo.createDate && (
+                                            <p className="text-xs">
+                                                <span className="font-bold">Created:</span>{' '}
+                                                {new Date(whoisInfo.createDate).toLocaleDateString()}
+                                            </p>
+                                        )}
+                                        {(whoisInfo.expiryDate || whoisInfo.expiresDate) && (
+                                            <p className="text-xs">
+                                                <span className="font-bold">Expires:</span>{' '}
+                                                {new Date(
+                                                    whoisInfo.expiryDate || whoisInfo.expiresDate!,
+                                                ).toLocaleDateString()}
+                                            </p>
+                                        )}
+                                    </>
+                                ) : whoisError ? (
+                                    <p className="text-xs">Failed to load WHOIS info</p>
+                                ) : (
+                                    <p className="text-sm">Loading WHOIS info...</p>
+                                )}
+                            </div>
+                        </>
+                    )}
 
                     <Separator />
 
