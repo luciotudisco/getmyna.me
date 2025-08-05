@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import DomainDetailDrawer from './DomainDetailDrawer';
 import { Domain, DomainStatus } from '@/models/domain';
 
@@ -28,29 +28,41 @@ describe('DomainDetailDrawer', () => {
         });
     });
 
-    it('shows registrar links when domain is available', async () => {
+    it('shows registrar buttons when domain is available', async () => {
         const domain = new Domain('example.com');
         domain.setStatus(DomainStatus.inactive);
         render(
             <DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />,
         );
 
-        const godaddyLink = await screen.findByRole('link', { name: /GoDaddy/i });
-        const namecheapLink = screen.getByRole('link', { name: /Namecheap/i });
-        const googleLink = screen.getByRole('link', { name: /Google Domains/i });
+        const openSpy = jest.spyOn(window, 'open').mockImplementation(() => null);
 
-        expect(godaddyLink).toHaveAttribute(
-            'href',
+        const godaddyButton = await screen.findByRole('button', { name: /GoDaddy/i });
+        const namecheapButton = screen.getByRole('button', { name: /Namecheap/i });
+        const hoverButton = screen.getByRole('button', { name: /Hover/i });
+
+        fireEvent.click(godaddyButton);
+        expect(openSpy).toHaveBeenNthCalledWith(
+            1,
             `https://www.godaddy.com/domainsearch/find?domainToCheck=${domain.getName()}`,
+            '_blank',
         );
-        expect(namecheapLink).toHaveAttribute(
-            'href',
+
+        fireEvent.click(namecheapButton);
+        expect(openSpy).toHaveBeenNthCalledWith(
+            2,
             `https://www.namecheap.com/domains/registration/results/?domain=${domain.getName()}`,
+            '_blank',
         );
-        expect(googleLink).toHaveAttribute(
-            'href',
-            `https://domains.google.com/registrar/search?searchTerm=${domain.getName()}`,
+
+        fireEvent.click(hoverButton);
+        expect(openSpy).toHaveBeenNthCalledWith(
+            3,
+            `https://www.hover.com/domains/results?q=${domain.getName()}`,
+            '_blank',
         );
+
+        openSpy.mockRestore();
     });
 
     it('does not show registrar links when domain is not available', async () => {
