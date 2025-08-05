@@ -100,6 +100,47 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                             <p className="text-sm">Loading TLD info...</p>
                         )}
                     </div>
+
+                    {domain.isAvailable() && (
+                        <>
+                            <Separator />
+                            <div className="text-xs">
+                                <p className="font-bold">Buy this domain:</p>
+                                <ul className="list-disc pl-4 space-y-1">
+                                    <li>
+                                        <a
+                                            href={`https://www.godaddy.com/domainsearch/find?domainToCheck=${domain.getName()}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-600 underline"
+                                        >
+                                            GoDaddy
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            href={`https://www.namecheap.com/domains/registration/results/?domain=${domain.getName()}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-600 underline"
+                                        >
+                                            Namecheap
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            href={`https://domains.google.com/registrar/search?searchTerm=${domain.getName()}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-600 underline"
+                                        >
+                                            Google Domains
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </>
+                    )}
                 </div>
             </DrawerContent>
         </Drawer>
