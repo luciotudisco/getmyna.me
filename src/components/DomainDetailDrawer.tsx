@@ -78,7 +78,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                         <>
                             <div className="space-y-2">
                                 <Button
-                                    className="w-full bg-green-400 text-white hover:bg-green-600"
+                                    className="w-full bg-blue-400 text-white hover:bg-blue-600"
                                     onClick={() =>
                                         window.open(
                                             `https://www.godaddy.com/domainsearch/find?domainToCheck=${domain.getName()}`,
@@ -89,7 +89,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                                     GoDaddy
                                 </Button>
                                 <Button
-                                    className="w-full bg-green-400 text-white hover:bg-green-600"
+                                    className="w-full bg-blue-400 text-white hover:bg-blue-600"
                                     onClick={() =>
                                         window.open(
                                             `https://www.namecheap.com/domains/registration/results/?domain=${domain.getName()}`,
@@ -100,7 +100,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                                     Namecheap
                                 </Button>
                                 <Button
-                                    className="w-full bg-green-400 text-white hover:bg-green-600"
+                                    className="w-full bg-blue-400 text-white hover:bg-blue-600"
                                     onClick={() =>
                                         window.open(
                                             `https://www.hover.com/domains/results?q=${domain.getName()}`,
@@ -129,12 +129,14 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                             <p className="text-xs">
                                 <span className="font-bold">.{domain.getTLD()}:</span>{' '}
                                 {tldInfo.description}{' '}
-                                <Button
-                                    variant="secondary"
-                                    onClick={() => window.open(tldInfo.wikipediaUrl, '_blank')}
+                                <a
+                                    href={tldInfo.wikipediaUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 underline"
                                 >
                                     Learn more on Wikipedia
-                                </Button>
+                                </a>
                             </p>
                         ) : (
                             <p className="text-sm">Loading TLD info...</p>

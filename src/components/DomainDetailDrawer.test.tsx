@@ -62,6 +62,9 @@ describe('DomainDetailDrawer', () => {
             '_blank',
         );
 
+        const learnMoreLink = await screen.findByRole('link', { name: /Learn more on Wikipedia/i });
+        expect(learnMoreLink).toHaveAttribute('href', 'https://example.com');
+
         openSpy.mockRestore();
     });
 
