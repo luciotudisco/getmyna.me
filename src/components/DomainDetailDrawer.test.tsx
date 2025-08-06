@@ -95,6 +95,9 @@ describe('DomainDetailDrawer', () => {
         const registrar = await screen.findByText(/Mock Registrar/);
         expect(registrar).toBeInTheDocument();
 
+        const jsonPre = await screen.findByTestId('whois-json');
+        expect(jsonPre.textContent).toContain('"registrarName": "Mock Registrar"');
+
         (global.fetch as jest.Mock).mockRestore();
     });
 });
