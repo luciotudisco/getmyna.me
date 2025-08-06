@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 
-const WHOIS_BASE_URL = 'https://domains-api.p.rapidapi.com/v1/whois';
+const WHOIS_API_URL = 'https://whois-api6.p.rapidapi.com/dns/api/v1/getRecords';
 const RAPID_API_KEY = process.env.RAPID_API_KEY!;
-const RAPID_API_HOST = 'domains-api.p.rapidapi.com';
+const RAPID_API_HOST = 'whois-api6.p.rapidapi.com';
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
     const domain = request.nextUrl.searchParams.get('domain');
@@ -12,14 +12,17 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     }
 
     try {
-        const url = `${WHOIS_BASE_URL}?${new URLSearchParams({ domain }).toString()}`;
-        const headers = {
-            headers: {
-                'x-rapidapi-key': RAPID_API_KEY,
-                'x-rapidapi-host': RAPID_API_HOST,
+        const response = await axios.post(
+            WHOIS_API_URL,
+            { query: domain },
+            {
+                headers: {
+                    'x-rapidapi-key': RAPID_API_KEY,
+                    'x-rapidapi-host': RAPID_API_HOST,
+                    'Content-Type': 'application/json',
+                },
             },
-        };
-        const response = await axios.get(url, headers);
+        );
         return NextResponse.json(response.data);
     } catch (error) {
         console.error('Error fetching WHOIS data:', error);
