@@ -180,6 +180,13 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                                                 ).toLocaleDateString()}
                                             </p>
                                         )}
+                                        <p className="text-xs font-bold mt-2">Full WHOIS response:</p>
+                                        <pre
+                                            data-testid="whois-json"
+                                            className="mt-1 whitespace-pre-wrap rounded bg-gray-100 p-2 text-xs"
+                                        >
+                                            {JSON.stringify(whoisInfo, null, 2)}
+                                        </pre>
                                     </>
                                 ) : whoisError ? (
                                     <p className="text-xs">Failed to load WHOIS info</p>
