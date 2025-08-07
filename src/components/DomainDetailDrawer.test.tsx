@@ -68,7 +68,7 @@ describe('DomainDetailDrawer', () => {
         openSpy.mockRestore();
     });
 
-    it('shows DNS records when domain is not available', async () => {
+    it('shows DNS records and website link when domain is not available with A record', async () => {
         const domain = new Domain('example.com');
         domain.setStatus(DomainStatus.active);
 
@@ -101,7 +101,38 @@ describe('DomainDetailDrawer', () => {
         expect(aRecord).toHaveTextContent('1.2.3.4');
         const mxRecord = await screen.findByText(/MX:/);
         expect(mxRecord).toHaveTextContent('10 mx.example.com.');
-        expect(screen.queryByTestId('dig-json')).toBeNull();
+        const websiteLink = await screen.findByRole('link', { name: /Visit website/i });
+        expect(websiteLink).toHaveAttribute('href', 'https://example.com');
+
+        (global.fetch as jest.Mock).mockRestore();
+    });
+
+    it('does not show website link when domain has no A record', async () => {
+        const domain = new Domain('example.com');
+        domain.setStatus(DomainStatus.active);
+
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                json: () =>
+                    Promise.resolve({
+                        result: {
+                            domain: 'example.com',
+                            records: {
+                                CNAME: ['alias.example.com.'],
+                                MX: ['10 mx.example.com.'],
+                            },
+                        },
+                    }),
+            }),
+        ) as jest.Mock;
+
+        render(
+            <DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />,
+        );
+
+        await screen.findByText(/DNS Records/);
+        expect(screen.queryByRole('link', { name: /Visit website/i })).toBeNull();
 
         (global.fetch as jest.Mock).mockRestore();
     });
