@@ -68,7 +68,7 @@ describe('DomainDetailDrawer', () => {
         openSpy.mockRestore();
     });
 
-    it('shows WHOIS info when domain is not available', async () => {
+    it('shows DNS records when domain is not available', async () => {
         const domain = new Domain('example.com');
         domain.setStatus(DomainStatus.active);
 
@@ -77,9 +77,13 @@ describe('DomainDetailDrawer', () => {
                 ok: true,
                 json: () =>
                     Promise.resolve({
-                        registrarName: 'Mock Registrar',
-                        createDate: '2020-01-01',
-                        expiryDate: '2030-01-01',
+                        result: {
+                            domain: 'example.com',
+                            records: {
+                                A: ['1.2.3.4'],
+                                CNAME: ['alias.example.com.'],
+                            },
+                        },
                     }),
             }),
         ) as jest.Mock;
@@ -92,11 +96,11 @@ describe('DomainDetailDrawer', () => {
         expect(screen.queryByRole('button', { name: /Namecheap/i })).toBeNull();
         expect(screen.queryByRole('button', { name: /Porkbun/i })).toBeNull();
 
-        const registrar = await screen.findByText(/Mock Registrar/);
-        expect(registrar).toBeInTheDocument();
+        const aRecord = await screen.findByText(/A:/);
+        expect(aRecord).toHaveTextContent('1.2.3.4');
 
-        const jsonPre = await screen.findByTestId('whois-json');
-        expect(jsonPre.textContent).toContain('"registrarName": "Mock Registrar"');
+        const jsonPre = await screen.findByTestId('dig-json');
+        expect(jsonPre.textContent).toContain('"A": [\n    "1.2.3.4"');
 
         (global.fetch as jest.Mock).mockRestore();
     });
