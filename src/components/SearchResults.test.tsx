@@ -51,17 +51,14 @@ describe('SearchResults', () => {
         expect(rows[2]).toHaveTextContent('b.a.com');
     });
 
-    it('shows visit link for taken domains', async () => {
+    it('does not show visit link for any domains', async () => {
         render(<SearchResults />);
 
         const rows = await screen.findAllByRole('row');
         const takenRow = rows[1];
         const availableRow = rows[2];
 
-        expect(within(takenRow).getByRole('link', { name: /visit/i })).toHaveAttribute(
-            'href',
-            'https://c.com',
-        );
+        expect(within(takenRow).queryByRole('link', { name: /visit/i })).toBeNull();
         expect(within(availableRow).queryByRole('link', { name: /visit/i })).toBeNull();
     });
 });

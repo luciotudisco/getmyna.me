@@ -86,17 +86,7 @@ export function SearchResult({ domain }: { domain: Domain }) {
                                 domain.isAvailable() ? 'Available' : 'Taken'
                             )}
                         </Badge>
-                        {!domain.isAvailable() && (
-                            <a
-                                href={`https://${domain.getName()}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-600 underline"
-                                onClick={(e) => e.stopPropagation()}
-                            >
-                                Visit
-                            </a>
-                        )}
+
                     </div>
                 </TableCell>
             </TableRow>
