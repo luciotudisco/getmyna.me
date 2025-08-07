@@ -166,12 +166,6 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                                                 {values.join(', ')}
                                             </p>
                                         ))}
-                                        <pre
-                                            data-testid="dig-json"
-                                            className="mt-1 whitespace-pre-wrap rounded bg-gray-100 p-2 text-xs"
-                                        >
-                                            {JSON.stringify(digInfo, null, 2)}
-                                        </pre>
                                     </>
                                 ) : digError ? (
                                     <p className="text-xs">Failed to load DNS info</p>

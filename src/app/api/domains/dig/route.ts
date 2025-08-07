@@ -19,6 +19,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         if (cnameRecords.length) {
             records.CNAME = cnameRecords.map(String);
         }
+        const mxRecords = await resolver.resolve(domain, 'MX').catch(() => []);
+        if (mxRecords.length) {
+            // Format as "priority exchange"
+            records.MX = (mxRecords as { priority: number; exchange: string }[]).map(
+                (mx) => `${mx.priority} ${mx.exchange}`,
+            );
+        }
 
         return NextResponse.json({
             result: {
