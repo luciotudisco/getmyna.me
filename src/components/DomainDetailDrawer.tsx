@@ -12,12 +12,11 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Separator } from '@/components/ui/separator';
 import { getTldInfo, TldInfo } from '@/services/tld-info';
 
-interface WhoisInfo {
-    registrarName?: string;
-    registrar?: string;
-    createDate?: string;
-    expiryDate?: string;
-    expiresDate?: string;
+interface DigInfo {
+    result: {
+        domain: string;
+        records: Record<string, string[]>;
+    };
 }
 
 interface DomainDetailDrawerProps {
@@ -30,8 +29,8 @@ interface DomainDetailDrawerProps {
 export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawerProps) {
     const [isMobile, setIsMobile] = useState(false);
     const [tldInfo, setTldInfo] = useState<TldInfo | null>(null);
-    const [whoisInfo, setWhoisInfo] = useState<WhoisInfo | null>(null);
-    const [whoisError, setWhoisError] = useState(false);
+    const [digInfo, setDigInfo] = useState<DigInfo | null>(null);
+    const [digError, setDigError] = useState(false);
 
     useEffect(() => {
         const mq = window.matchMedia('(max-width: 768px)');
@@ -49,22 +48,22 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
         if (!open || domain.isAvailable()) {
             return;
         }
-        const fetchWhois = async () => {
+        const fetchDig = async () => {
             try {
-                setWhoisError(false);
-                setWhoisInfo(null);
-                const response = await fetch(`/api/domains/whois?domain=${domain.getName()}`);
+                setDigError(false);
+                setDigInfo(null);
+                const response = await fetch(`/api/domains/dig?domain=${domain.getName()}`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
-                setWhoisInfo(data);
+                setDigInfo(data);
             } catch (error) {
-                console.error('Error fetching WHOIS data:', error);
-                setWhoisError(true);
+                console.error('Error fetching DNS data:', error);
+                setDigError(true);
             }
         };
-        fetchWhois();
+        fetchDig();
     }, [open, domain]);
 
     return (
@@ -158,40 +157,26 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                         <>
                             <Separator />
                             <div>
-                                {whoisInfo ? (
+                                {digInfo ? (
                                     <>
-                                        {(whoisInfo.registrarName || whoisInfo.registrar) && (
-                                            <p className="text-xs">
-                                                <span className="font-bold">Registrar:</span>{' '}
-                                                {whoisInfo.registrarName || whoisInfo.registrar}
+                                        <p className="text-xs font-bold mt-2">DNS Records:</p>
+                                        {Object.entries(digInfo.result.records).map(([type, values]) => (
+                                            <p key={type} className="text-xs">
+                                                <span className="font-bold">{type}:</span>{' '}
+                                                {values.join(', ')}
                                             </p>
-                                        )}
-                                        {whoisInfo.createDate && (
-                                            <p className="text-xs">
-                                                <span className="font-bold">Created:</span>{' '}
-                                                {new Date(whoisInfo.createDate).toLocaleDateString()}
-                                            </p>
-                                        )}
-                                        {(whoisInfo.expiryDate || whoisInfo.expiresDate) && (
-                                            <p className="text-xs">
-                                                <span className="font-bold">Expires:</span>{' '}
-                                                {new Date(
-                                                    whoisInfo.expiryDate || whoisInfo.expiresDate!,
-                                                ).toLocaleDateString()}
-                                            </p>
-                                        )}
-                                        <p className="text-xs font-bold mt-2">Full WHOIS response:</p>
+                                        ))}
                                         <pre
-                                            data-testid="whois-json"
+                                            data-testid="dig-json"
                                             className="mt-1 whitespace-pre-wrap rounded bg-gray-100 p-2 text-xs"
                                         >
-                                            {JSON.stringify(whoisInfo, null, 2)}
+                                            {JSON.stringify(digInfo, null, 2)}
                                         </pre>
                                     </>
-                                ) : whoisError ? (
-                                    <p className="text-xs">Failed to load WHOIS info</p>
+                                ) : digError ? (
+                                    <p className="text-xs">Failed to load DNS info</p>
                                 ) : (
-                                    <p className="text-sm">Loading WHOIS info...</p>
+                                    <p className="text-sm">Loading DNS info...</p>
                                 )}
                             </div>
                         </>
