@@ -82,6 +82,7 @@ describe('DomainDetailDrawer', () => {
                             records: {
                                 A: ['1.2.3.4'],
                                 CNAME: ['alias.example.com.'],
+                                MX: ['10 mx.example.com.'],
                             },
                         },
                     }),
@@ -98,9 +99,9 @@ describe('DomainDetailDrawer', () => {
 
         const aRecord = await screen.findByText(/A:/);
         expect(aRecord).toHaveTextContent('1.2.3.4');
-
-        const jsonPre = await screen.findByTestId('dig-json');
-        expect(jsonPre.textContent).toContain('"A": [\n    "1.2.3.4"');
+        const mxRecord = await screen.findByText(/MX:/);
+        expect(mxRecord).toHaveTextContent('10 mx.example.com.');
+        expect(screen.queryByTestId('dig-json')).toBeNull();
 
         (global.fetch as jest.Mock).mockRestore();
     });
