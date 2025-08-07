@@ -61,30 +61,43 @@ export function SearchResult({ domain }: { domain: Domain }) {
                     </p>
                 </TableCell>
                 <TableCell className="text-right">
-                    <Badge
-                        className={`inline-flex h-7 min-w-[6rem] items-center justify-center px-3 ${
-                            status === DomainStatusEnum.unknown
-                                ? 'bg-gray-400'
-                                : status === DomainStatusEnum.error
-                                ? 'bg-yellow-400 hover:bg-yellow-500'
-                                : domain.isAvailable()
-                                ? 'bg-green-400 hover:bg-green-600'
-                                : 'bg-red-400 hover:bg-red-600'
-                        }`}
-                    >
-                        {status === DomainStatusEnum.unknown ? (
-                            <div className="flex items-center gap-2">
-                                <Loader2 className="h-4 w-4 animate-spin text-white" />
-                            </div>
-                        ) : status === DomainStatusEnum.error ? (
-                            <div className="flex items-center gap-2">
-                                <AlertCircle className="h-4 w-4 text-white" />
-                                <span>Error</span>
-                            </div>
-                        ) : (
-                            domain.isAvailable() ? 'Available' : 'Taken'
+                    <div className="flex items-center justify-end gap-2">
+                        <Badge
+                            className={`inline-flex h-7 min-w-[6rem] items-center justify-center px-3 ${
+                                status === DomainStatusEnum.unknown
+                                    ? 'bg-gray-400'
+                                    : status === DomainStatusEnum.error
+                                    ? 'bg-yellow-400 hover:bg-yellow-500'
+                                    : domain.isAvailable()
+                                    ? 'bg-green-400 hover:bg-green-600'
+                                    : 'bg-red-400 hover:bg-red-600'
+                            }`}
+                        >
+                            {status === DomainStatusEnum.unknown ? (
+                                <div className="flex items-center gap-2">
+                                    <Loader2 className="h-4 w-4 animate-spin text-white" />
+                                </div>
+                            ) : status === DomainStatusEnum.error ? (
+                                <div className="flex items-center gap-2">
+                                    <AlertCircle className="h-4 w-4 text-white" />
+                                    <span>Error</span>
+                                </div>
+                            ) : (
+                                domain.isAvailable() ? 'Available' : 'Taken'
+                            )}
+                        </Badge>
+                        {!domain.isAvailable() && (
+                            <a
+                                href={`https://${domain.getName()}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 underline"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                Visit
+                            </a>
                         )}
-                    </Badge>
+                    </div>
                 </TableCell>
             </TableRow>
             <DomainDetailDrawer domain={domain} status={status} open={open} onClose={() => setOpen(false)} />

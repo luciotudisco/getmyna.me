@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { SearchResults } from './SearchResults';
 import { useSearchParams } from 'next/navigation';
 
@@ -31,9 +31,11 @@ describe('SearchResults', () => {
             }
 
             if (url.startsWith('/api/domains/status')) {
+                const domain = new URL('http://test' + url).searchParams.get('domain');
+                const summary = domain === 'c.com' ? 'active' : 'inactive';
                 return Promise.resolve({
                     ok: true,
-                    json: async () => ({ status: [{ summary: 'inactive' }] }),
+                    json: async () => ({ status: [{ summary }] }),
                 } as Response);
             }
 
@@ -47,6 +49,20 @@ describe('SearchResults', () => {
         const rows = await screen.findAllByRole('row');
         expect(rows[1]).toHaveTextContent('c.com');
         expect(rows[2]).toHaveTextContent('b.a.com');
+    });
+
+    it('shows visit link for taken domains', async () => {
+        render(<SearchResults />);
+
+        const rows = await screen.findAllByRole('row');
+        const takenRow = rows[1];
+        const availableRow = rows[2];
+
+        expect(within(takenRow).getByRole('link', { name: /visit/i })).toHaveAttribute(
+            'href',
+            'https://c.com',
+        );
+        expect(within(availableRow).queryByRole('link', { name: /visit/i })).toBeNull();
     });
 });
 
