@@ -11,13 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
 import { getTldInfo, TldInfo } from '@/services/tld-info';
-
-interface DigInfo {
-    result: {
-        domain: string;
-        records: Record<string, string[]>;
-    };
-}
+import { DigInfo } from '@/models/dig';
 
 interface DomainDetailDrawerProps {
     domain: Domain;
