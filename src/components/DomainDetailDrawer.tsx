@@ -56,12 +56,8 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
     }, [open, domain]);
 
     return (
-        <Drawer
-            open={open}
-            onOpenChange={(openState: boolean) => !openState && onClose()}
-            direction={isMobile ? 'bottom' : 'right'}
-        >
-            <DrawerContent className={isMobile ? '' : 'h-full w-80 rounded-none'}>
+        <Drawer open={open} onOpenChange={(openState: boolean) => !openState && onClose()} direction="bottom">
+            <DrawerContent>
                 <DrawerHeader>
                     <DrawerTitle className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
