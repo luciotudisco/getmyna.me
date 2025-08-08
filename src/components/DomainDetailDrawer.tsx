@@ -8,6 +8,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Separator } from '@/components/ui/separator';
 import { getTldInfo, TldInfo } from '@/services/tld-info';
 import { DigInfo } from '@/models/dig';
+import { WhoisInfo } from '@/models/whois';
 
 interface DomainDetailDrawerProps {
     domain: Domain;
@@ -20,6 +21,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
     const [isMobile, setIsMobile] = useState(false);
     const [tldInfo, setTldInfo] = useState<TldInfo | null>(null);
     const [hasARecord, setHasARecord] = useState(false);
+    const [whoisInfo, setWhoisInfo] = useState<WhoisInfo | null>(null);
 
     useEffect(() => {
         const mq = window.matchMedia('(max-width: 768px)');
@@ -37,6 +39,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
         if (!open || domain.isAvailable()) {
             return;
         }
+
         const fetchDig = async () => {
             try {
                 setHasARecord(false);
@@ -52,7 +55,22 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                 console.error('Error fetching DNS data:', error);
             }
         };
+
+        const fetchWhois = async () => {
+            try {
+                const response = await fetch(`/api/domains/whois?domain=${domain.getName()}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data: WhoisInfo = await response.json();
+                setWhoisInfo(data);
+            } catch (error) {
+                console.error('Error fetching whois data:', error);
+            }
+        };
+
         fetchDig();
+        fetchWhois();
     }, [open, domain]);
 
     return (
@@ -147,6 +165,34 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                         </p>
                     </div>
                     <Separator />
+
+                    {!domain.isAvailable() && whoisInfo && (
+                        <>
+                            <div className="space-y-1">
+                                {whoisInfo.creationDate && (
+                                    <p className="text-xs">
+                                        <span className="font-bold">Created:</span> {whoisInfo.creationDate}
+                                    </p>
+                                )}
+                                {whoisInfo.age && (
+                                    <p className="text-xs">
+                                        <span className="font-bold">Age:</span> {whoisInfo.age}
+                                    </p>
+                                )}
+                                {whoisInfo.expirationDate && (
+                                    <p className="text-xs">
+                                        <span className="font-bold">Expires:</span> {whoisInfo.expirationDate}
+                                    </p>
+                                )}
+                                {whoisInfo.registrar && (
+                                    <p className="text-xs">
+                                        <span className="font-bold">Registrar:</span> {whoisInfo.registrar}
+                                    </p>
+                                )}
+                            </div>
+                            <Separator />
+                        </>
+                    )}
 
                     <div>
                         {tldInfo ? (
