@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Loader2 } from 'lucide-react';
 import { Domain, DomainStatus as DomainStatusEnum, DOMAIN_STATUS_DESCRIPTIONS } from '@/models/domain';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -21,6 +23,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
     const [tldInfo, setTldInfo] = useState<TldInfo | null>(null);
     const [hasARecord, setHasARecord] = useState(false);
     const [whoisInfo, setWhoisInfo] = useState<WhoisInfo | null>(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         getTldInfo(domain.getTLD()).then(setTldInfo);
@@ -31,37 +34,34 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
             return;
         }
 
-        const fetchDig = async () => {
+        const fetchData = async () => {
+            setLoading(true);
             try {
-                setHasARecord(false);
-                const response = await fetch(`/api/domains/dig?domain=${domain.getName()}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data: DigInfo = await response.json();
-                if (data.result.records.A && data.result.records.A.length > 0) {
+                const [digResponse, whoisResponse] = await Promise.all([
+                    axios.get('/api/domains/dig', {
+                        params: { domain: domain.getName() },
+                    }),
+                    axios.get('/api/domains/whois', {
+                        params: { domain: domain.getName() },
+                    }),
+                ]);
+
+                const digData = digResponse.data as DigInfo;
+                if (digData.result.records.A && digData.result.records.A.length > 0) {
                     setHasARecord(true);
+                } else {
+                    setHasARecord(false);
                 }
+
+                setWhoisInfo(whoisResponse.data as WhoisInfo);
             } catch (error) {
-                console.error('Error fetching DNS data:', error);
+                console.error('Error fetching domain details:', error);
+            } finally {
+                setLoading(false);
             }
         };
 
-        const fetchWhois = async () => {
-            try {
-                const response = await fetch(`/api/domains/whois?domain=${domain.getName()}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data: WhoisInfo = await response.json();
-                setWhoisInfo(data);
-            } catch (error) {
-                console.error('Error fetching whois data:', error);
-            }
-        };
-
-        fetchDig();
-        fetchWhois();
+        fetchData();
     }, [open, domain]);
 
     return (
@@ -157,7 +157,13 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     </div>
                     <Separator />
 
-                    {!domain.isAvailable() && whoisInfo && (
+                    {!domain.isAvailable() && loading && (
+                        <div className="flex items-center gap-2 text-sm">
+                            <Loader2 className="h-4 w-4 animate-spin" /> Loading domain details...
+                        </div>
+                    )}
+
+                    {!domain.isAvailable() && !loading && whoisInfo && (
                         <>
                             <div className="space-y-1">
                                 {whoisInfo.creationDate && (

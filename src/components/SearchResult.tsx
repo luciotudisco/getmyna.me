@@ -4,6 +4,7 @@ import { TableCell, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { AlertCircle, BadgeCheck, Loader2 } from 'lucide-react';
 import { RateLimiter } from '@/lib/rate-limiter';
@@ -20,12 +21,11 @@ export function SearchResult({ domain }: { domain: Domain }) {
         const fetchStatus = async () => {
             try {
                 const result = await statusRateLimiter.add(async () => {
-                    const response = await fetch('/api/domains/status?domain=' + domain.getName());
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const data = await response.json();
-                    return data.status.at(0).summary as DomainStatusEnum;
+                    const response = await axios.get('/api/domains/status', {
+                        params: { domain: domain.getName() },
+                    });
+                    const data = response.data as { status?: { summary?: string }[] };
+                    return (data.status?.[0]?.summary as DomainStatusEnum) ?? DomainStatusEnum.error;
                 });
 
                 domain.setStatus(result);

@@ -14,14 +14,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         const url = `${WIKIPEDIA_SUMMARY_URL}/.${tld}`;
         const response = await axios.get(url);
         const extract: string | undefined = response.data?.extract;
-        if (extract) {
-            const description = extract
-                .split(/(?<=\.)\s+/)
-                .slice(0, 2)
-                .join(' ');
-            return NextResponse.json({ description: description || FALLBACK_DESCRIPTION });
+        if (!extract) {
+            return NextResponse.json({ description: FALLBACK_DESCRIPTION });
         }
-        return NextResponse.json({ description: FALLBACK_DESCRIPTION });
+        const description = extract
+            .split(/(?<=\.)\s+/)
+            .slice(0, 2)
+            .join(' ');
+        return NextResponse.json({ description });
     } catch (error) {
         console.error('Error fetching TLD info:', error);
         return NextResponse.json({ description: FALLBACK_DESCRIPTION });
