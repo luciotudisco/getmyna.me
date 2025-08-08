@@ -64,34 +64,48 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
         fetchData();
     }, [open, domain]);
 
+    if (!domain.isAvailable() && loading) {
+        return (
+            <Drawer open={open} onOpenChange={(openState: boolean) => !openState && onClose()} direction="bottom">
+                <DrawerContent>
+                    <div className="flex items-center gap-2 text-sm">
+                        <Loader2 className="h-4 w-4 animate-spin" /> Loading domain details...
+                    </div>
+                </DrawerContent>
+            </Drawer>
+        );
+    }
+
     return (
         <Drawer open={open} onOpenChange={(openState: boolean) => !openState && onClose()} direction="bottom">
             <DrawerContent>
                 <DrawerHeader>
                     <DrawerTitle className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">{domain.getName()}</div>
                         <div className="flex items-center gap-2">
-                            {domain.getName()}
-                            {domain.getLevel() === 1 && <Badge variant="secondary">First level domain</Badge>}
+                            {domain.getLevel() === 1 && <Badge variant="secondary">Exact match</Badge>}
+                            <>
+                                <Badge
+                                    className={`inline-flex h-7 min-w-[8rem] items-center justify-center px-3 ${
+                                        status === DomainStatusEnum.unknown
+                                            ? 'bg-gray-400'
+                                            : status === DomainStatusEnum.error
+                                              ? 'bg-yellow-400 hover:bg-yellow-500'
+                                              : domain.isAvailable()
+                                                ? 'bg-green-400 hover:bg-green-600'
+                                                : 'bg-red-400 hover:bg-red-600'
+                                    }`}
+                                >
+                                    {status === DomainStatusEnum.unknown
+                                        ? 'Checking'
+                                        : status === DomainStatusEnum.error
+                                          ? 'Error'
+                                          : domain.isAvailable()
+                                            ? 'Available'
+                                            : 'Taken'}
+                                </Badge>
+                            </>
                         </div>
-                        <Badge
-                            className={`inline-flex h-7 min-w-[8rem] items-center justify-center px-3 ${
-                                status === DomainStatusEnum.unknown
-                                    ? 'bg-gray-400'
-                                    : status === DomainStatusEnum.error
-                                      ? 'bg-yellow-400 hover:bg-yellow-500'
-                                      : domain.isAvailable()
-                                        ? 'bg-green-400 hover:bg-green-600'
-                                        : 'bg-red-400 hover:bg-red-600'
-                            }`}
-                        >
-                            {status === DomainStatusEnum.unknown
-                                ? 'Checking'
-                                : status === DomainStatusEnum.error
-                                  ? 'Error'
-                                  : domain.isAvailable()
-                                    ? 'Available'
-                                    : 'Taken'}
-                        </Badge>
                     </DrawerTitle>
                 </DrawerHeader>
                 <div className="space-y-4 p-6 pt-0">
@@ -157,13 +171,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     </div>
                     <Separator />
 
-                    {!domain.isAvailable() && loading && (
-                        <div className="flex items-center gap-2 text-sm">
-                            <Loader2 className="h-4 w-4 animate-spin" /> Loading domain details...
-                        </div>
-                    )}
-
-                    {!domain.isAvailable() && !loading && whoisInfo && (
+                    {!domain.isAvailable() && whoisInfo && (
                         <>
                             <div className="space-y-1">
                                 {whoisInfo.creationDate && (
