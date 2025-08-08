@@ -38,4 +38,3 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         return NextResponse.json({ error: 'Failed to fetch DNS data' }, { status: 500 });
     }
 }
-

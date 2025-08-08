@@ -7,10 +7,7 @@ import { Domain } from '@/models/domain';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { SearchResult } from '@/components/SearchResult';
 
-const Player = dynamic(
-    () => import('@lottiefiles/react-lottie-player').then((mod) => mod.Player),
-    { ssr: false }
-);
+const Player = dynamic(() => import('@lottiefiles/react-lottie-player').then((mod) => mod.Player), { ssr: false });
 
 export function SearchResults() {
     const searchParams = useSearchParams();
@@ -24,8 +21,8 @@ export function SearchResults() {
                 const response = await fetch(`/api/domains/search?term=${term}`);
                 const data = await response.json();
                 const initialDomains = data.domains.map((name: string) => new Domain(name));
-                initialDomains.sort((a: Domain, b: Domain) =>
-                    a.getLevel() - b.getLevel() || a.getName().localeCompare(b.getName()),
+                initialDomains.sort(
+                    (a: Domain, b: Domain) => a.getLevel() - b.getLevel() || a.getName().localeCompare(b.getName()),
                 );
                 setDomains(initialDomains);
             } catch (error) {
@@ -48,9 +45,7 @@ export function SearchResults() {
         return (
             <div className="flex min-h-screen flex-col items-center gap-5 py-24 align-middle">
                 <Player autoplay loop src="/sad-empty-box.json" style={{ height: 120, width: 120 }} />
-                <p className="text-md text-center text-muted-foreground">
-                    No matches found! Give it another shot.
-                </p>
+                <p className="text-md text-center text-muted-foreground">No matches found! Give it another shot.</p>
             </div>
         );
     }
@@ -79,4 +74,3 @@ export function SearchResults() {
         </div>
     );
 }
-

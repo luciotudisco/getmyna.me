@@ -26,10 +26,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         return NextResponse.json(response.data);
     } catch (error) {
         console.error('Error fetching whois data:', error);
-        return NextResponse.json(
-            { error: 'Failed to fetch whois data' },
-            { status: 500 },
-        );
+        return NextResponse.json({ error: 'Failed to fetch whois data' }, { status: 500 });
     }
 }
-

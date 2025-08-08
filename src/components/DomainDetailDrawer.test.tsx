@@ -31,9 +31,7 @@ describe('DomainDetailDrawer', () => {
     it('shows registrar buttons when domain is available', async () => {
         const domain = new Domain('example.com');
         domain.setStatus(DomainStatus.inactive);
-        render(
-            <DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />,
-        );
+        render(<DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />);
 
         const openSpy = jest.spyOn(window, 'open').mockImplementation(() => null);
 
@@ -85,9 +83,7 @@ describe('DomainDetailDrawer', () => {
             }),
         ) as jest.Mock;
 
-        render(
-            <DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />,
-        );
+        render(<DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />);
 
         expect(screen.queryByRole('button', { name: /GoDaddy/i })).toBeNull();
         expect(screen.queryByRole('button', { name: /Namecheap/i })).toBeNull();
@@ -117,9 +113,7 @@ describe('DomainDetailDrawer', () => {
             }),
         ) as jest.Mock;
 
-        render(
-            <DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />,
-        );
+        render(<DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />);
 
         await waitFor(() => expect(global.fetch).toHaveBeenCalled());
         expect(screen.queryByRole('link', { name: /Visit website/i })).toBeNull();

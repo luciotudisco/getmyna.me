@@ -62,4 +62,3 @@ describe('SearchResults', () => {
         expect(within(availableRow).queryByRole('link', { name: /visit/i })).toBeNull();
     });
 });
-

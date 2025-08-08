@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
@@ -27,7 +27,7 @@ export function SearchResult({ domain }: { domain: Domain }) {
                     const data = await response.json();
                     return data.status.at(0).summary as DomainStatusEnum;
                 });
-                
+
                 domain.setStatus(result);
                 setStatus(result);
             } catch (error) {
@@ -67,10 +67,10 @@ export function SearchResult({ domain }: { domain: Domain }) {
                                 status === DomainStatusEnum.unknown
                                     ? 'bg-gray-400'
                                     : status === DomainStatusEnum.error
-                                    ? 'bg-yellow-400 hover:bg-yellow-500'
-                                    : domain.isAvailable()
-                                    ? 'bg-green-400 hover:bg-green-600'
-                                    : 'bg-red-400 hover:bg-red-600'
+                                      ? 'bg-yellow-400 hover:bg-yellow-500'
+                                      : domain.isAvailable()
+                                        ? 'bg-green-400 hover:bg-green-600'
+                                        : 'bg-red-400 hover:bg-red-600'
                             }`}
                         >
                             {status === DomainStatusEnum.unknown ? (
@@ -82,11 +82,12 @@ export function SearchResult({ domain }: { domain: Domain }) {
                                     <AlertCircle className="h-4 w-4 text-white" />
                                     <span>Error</span>
                                 </div>
+                            ) : domain.isAvailable() ? (
+                                'Available'
                             ) : (
-                                domain.isAvailable() ? 'Available' : 'Taken'
+                                'Taken'
                             )}
                         </Badge>
-
                     </div>
                 </TableCell>
             </TableRow>
@@ -94,4 +95,3 @@ export function SearchResult({ domain }: { domain: Domain }) {
         </>
     );
 }
-

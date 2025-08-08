@@ -32,7 +32,7 @@ export class RateLimiter {
             const delay = Math.max(0, this.delayMs - timeSinceLastCall);
 
             if (delay > 0) {
-                await new Promise(resolve => setTimeout(resolve, delay));
+                await new Promise((resolve) => setTimeout(resolve, delay));
             }
 
             const task = this.queue.shift();
@@ -44,4 +44,4 @@ export class RateLimiter {
 
         this.processing = false;
     }
-} 
+}

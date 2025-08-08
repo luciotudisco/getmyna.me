@@ -22,4 +22,3 @@ export async function getTldInfo(tld: string): Promise<TldInfo> {
         };
     }
 }
-

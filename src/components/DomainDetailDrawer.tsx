@@ -1,11 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import {
-    Domain,
-    DomainStatus as DomainStatusEnum,
-    DOMAIN_STATUS_DESCRIPTIONS,
-} from '@/models/domain';
+import { Domain, DomainStatus as DomainStatusEnum, DOMAIN_STATUS_DESCRIPTIONS } from '@/models/domain';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -59,7 +55,6 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
         fetchDig();
     }, [open, domain]);
 
-
     return (
         <Drawer
             open={open}
@@ -71,32 +66,30 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     <DrawerTitle className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                             {domain.getName()}
-                            {domain.getLevel() === 1 && (
-                                <Badge variant="secondary">First level domain</Badge>
-                            )}
+                            {domain.getLevel() === 1 && <Badge variant="secondary">First level domain</Badge>}
                         </div>
                         <Badge
                             className={`inline-flex h-7 min-w-[8rem] items-center justify-center px-3 ${
                                 status === DomainStatusEnum.unknown
                                     ? 'bg-gray-400'
                                     : status === DomainStatusEnum.error
-                                    ? 'bg-yellow-400 hover:bg-yellow-500'
-                                    : domain.isAvailable()
-                                    ? 'bg-green-400 hover:bg-green-600'
-                                    : 'bg-red-400 hover:bg-red-600'
+                                      ? 'bg-yellow-400 hover:bg-yellow-500'
+                                      : domain.isAvailable()
+                                        ? 'bg-green-400 hover:bg-green-600'
+                                        : 'bg-red-400 hover:bg-red-600'
                             }`}
                         >
                             {status === DomainStatusEnum.unknown
                                 ? 'Checking'
                                 : status === DomainStatusEnum.error
-                                ? 'Error'
-                                : domain.isAvailable()
-                                ? 'Available'
-                                : 'Taken'}
+                                  ? 'Error'
+                                  : domain.isAvailable()
+                                    ? 'Available'
+                                    : 'Taken'}
                         </Badge>
                     </DrawerTitle>
                 </DrawerHeader>
-                <div className="p-6 pt-0 space-y-4">
+                <div className="space-y-4 p-6 pt-0">
                     <Separator />
 
                     {domain.isAvailable() && (
@@ -142,8 +135,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
 
                     <div>
                         <p className="text-xs">
-                            <span className="font-bold">{status}:</span>{' '}
-                            {DOMAIN_STATUS_DESCRIPTIONS[status]}
+                            <span className="font-bold">{status}:</span> {DOMAIN_STATUS_DESCRIPTIONS[status]}
                             {!domain.isAvailable() && hasARecord && (
                                 <span className="ml-2">
                                     <a
@@ -163,8 +155,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     <div>
                         {tldInfo ? (
                             <p className="text-xs">
-                                <span className="font-bold">.{domain.getTLD()}:</span>{' '}
-                                {tldInfo.description}{' '}
+                                <span className="font-bold">.{domain.getTLD()}:</span> {tldInfo.description}{' '}
                                 <a
                                     href={tldInfo.wikipediaUrl}
                                     target="_blank"
@@ -185,4 +176,3 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
 }
 
 export default DomainDetailDrawer;
-
