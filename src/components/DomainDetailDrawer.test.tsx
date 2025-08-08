@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import DomainDetailDrawer from './DomainDetailDrawer';
 import { Domain, DomainStatus } from '@/models/domain';
 
@@ -68,7 +68,7 @@ describe('DomainDetailDrawer', () => {
         openSpy.mockRestore();
     });
 
-    it('shows DNS records and website link when domain is not available with A record', async () => {
+    it('shows website link when domain is not available with A record', async () => {
         const domain = new Domain('example.com');
         domain.setStatus(DomainStatus.active);
 
@@ -79,11 +79,7 @@ describe('DomainDetailDrawer', () => {
                     Promise.resolve({
                         result: {
                             domain: 'example.com',
-                            records: {
-                                A: ['1.2.3.4'],
-                                CNAME: ['alias.example.com.'],
-                                MX: ['10 mx.example.com.'],
-                            },
+                            records: { A: ['1.2.3.4'] },
                         },
                     }),
             }),
@@ -97,12 +93,9 @@ describe('DomainDetailDrawer', () => {
         expect(screen.queryByRole('button', { name: /Namecheap/i })).toBeNull();
         expect(screen.queryByRole('button', { name: /Porkbun/i })).toBeNull();
 
-        const aRecord = await screen.findByText(/A:/);
-        expect(aRecord).toHaveTextContent('1.2.3.4');
-        const mxRecord = await screen.findByText(/MX:/);
-        expect(mxRecord).toHaveTextContent('10 mx.example.com.');
         const websiteLink = await screen.findByRole('link', { name: /Visit website/i });
         expect(websiteLink).toHaveAttribute('href', 'https://example.com');
+        expect(screen.queryByText(/DNS Records/)).toBeNull();
 
         (global.fetch as jest.Mock).mockRestore();
     });
@@ -118,10 +111,7 @@ describe('DomainDetailDrawer', () => {
                     Promise.resolve({
                         result: {
                             domain: 'example.com',
-                            records: {
-                                CNAME: ['alias.example.com.'],
-                                MX: ['10 mx.example.com.'],
-                            },
+                            records: { CNAME: ['alias.example.com.'] },
                         },
                     }),
             }),
@@ -131,8 +121,9 @@ describe('DomainDetailDrawer', () => {
             <DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />,
         );
 
-        await screen.findByText(/DNS Records/);
+        await waitFor(() => expect(global.fetch).toHaveBeenCalled());
         expect(screen.queryByRole('link', { name: /Visit website/i })).toBeNull();
+        expect(screen.queryByText(/DNS Records/)).toBeNull();
 
         (global.fetch as jest.Mock).mockRestore();
     });
