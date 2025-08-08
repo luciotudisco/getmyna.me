@@ -18,18 +18,9 @@ interface DomainDetailDrawerProps {
 }
 
 export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawerProps) {
-    const [isMobile, setIsMobile] = useState(false);
     const [tldInfo, setTldInfo] = useState<TldInfo | null>(null);
     const [hasARecord, setHasARecord] = useState(false);
     const [whoisInfo, setWhoisInfo] = useState<WhoisInfo | null>(null);
-
-    useEffect(() => {
-        const mq = window.matchMedia('(max-width: 768px)');
-        const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-        setIsMobile(mq.matches);
-        mq.addEventListener('change', handler);
-        return () => mq.removeEventListener('change', handler);
-    }, []);
 
     useEffect(() => {
         getTldInfo(domain.getTLD()).then(setTldInfo);
