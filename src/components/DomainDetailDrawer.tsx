@@ -23,8 +23,7 @@ interface DomainDetailDrawerProps {
 export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawerProps) {
     const [isMobile, setIsMobile] = useState(false);
     const [tldInfo, setTldInfo] = useState<TldInfo | null>(null);
-    const [digInfo, setDigInfo] = useState<DigInfo | null>(null);
-    const [digError, setDigError] = useState(false);
+    const [hasARecord, setHasARecord] = useState(false);
 
     useEffect(() => {
         const mq = window.matchMedia('(max-width: 768px)');
@@ -44,21 +43,22 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
         }
         const fetchDig = async () => {
             try {
-                setDigError(false);
-                setDigInfo(null);
+                setHasARecord(false);
                 const response = await fetch(`/api/domains/dig?domain=${domain.getName()}`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                const data = await response.json();
-                setDigInfo(data);
+                const data: DigInfo = await response.json();
+                if (data.result.records.A && data.result.records.A.length > 0) {
+                    setHasARecord(true);
+                }
             } catch (error) {
                 console.error('Error fetching DNS data:', error);
-                setDigError(true);
             }
         };
         fetchDig();
     }, [open, domain]);
+
 
     return (
         <Drawer
@@ -144,47 +144,20 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                         <p className="text-xs">
                             <span className="font-bold">{status}:</span>{' '}
                             {DOMAIN_STATUS_DESCRIPTIONS[status]}
-                            {!domain.isAvailable() &&
-                                digInfo &&
-                                digInfo.result.records.A &&
-                                digInfo.result.records.A.length > 0 && (
-                                    <span className="ml-2">
-                                        <a
-                                            href={`https://${domain.getName()}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-blue-600 underline"
-                                        >
-                                            Visit website
-                                        </a>
-                                    </span>
-                                )}
+                            {!domain.isAvailable() && hasARecord && (
+                                <span className="ml-2">
+                                    <a
+                                        href={`https://${domain.getName()}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-blue-600 underline"
+                                    >
+                                        Visit website
+                                    </a>
+                                </span>
+                            )}
                         </p>
                     </div>
-
-                    {!domain.isAvailable() && (
-                        <>
-                            <Separator />
-                            <div>
-                                {digInfo ? (
-                                    <>
-                                        <p className="text-xs font-bold mt-2">DNS Records:</p>
-                                        {Object.entries(digInfo.result.records).map(([type, values]) => (
-                                            <p key={type} className="text-xs">
-                                                <span className="font-bold">{type}:</span>{' '}
-                                                {values.join(', ')}
-                                            </p>
-                                        ))}
-                                    </>
-                                ) : digError ? (
-                                    <p className="text-xs">Failed to load DNS info</p>
-                                ) : (
-                                    <p className="text-sm">Loading DNS info...</p>
-                                )}
-                            </div>
-                        </>
-                    )}
-
                     <Separator />
 
                     <div>
