@@ -150,22 +150,22 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                         <p className="text-xs">
                             <span className="font-bold">{status}:</span>{' '}
                             {DOMAIN_STATUS_DESCRIPTIONS[status]}
+                            {!domain.isAvailable() &&
+                                digInfo &&
+                                digInfo.result.records.A &&
+                                digInfo.result.records.A.length > 0 && (
+                                    <span className="ml-2">
+                                        <a
+                                            href={`https://${domain.getName()}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-600 underline"
+                                        >
+                                            Visit website
+                                        </a>
+                                    </span>
+                                )}
                         </p>
-                        {!domain.isAvailable() &&
-                            digInfo &&
-                            digInfo.result.records.A &&
-                            digInfo.result.records.A.length > 0 && (
-                                <p className="text-xs mt-2">
-                                    <a
-                                        href={`https://${domain.getName()}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-blue-600 underline"
-                                    >
-                                        Visit website
-                                    </a>
-                                </p>
-                            )}
                     </div>
 
                     {!domain.isAvailable() && (
