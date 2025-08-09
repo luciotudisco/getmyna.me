@@ -1,17 +1,16 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Loader2 } from 'lucide-react';
 import { Domain, DomainStatus as DomainStatusEnum, DOMAIN_STATUS_DESCRIPTIONS } from '@/models/domain';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
 import TldInfo from '@/components/TldInfo';
-import { DigInfo } from '@/models/dig';
 import { WhoisInfo } from '@/models/whois';
 import { Badge } from '@/components/ui/badge';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
+import { apiService } from '@/services/api';
 
 interface DomainDetailDrawerProps {
     domain: Domain;
@@ -34,23 +33,18 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
         const fetchData = async () => {
             setLoading(true);
             try {
-                const [digResponse, whoisResponse] = await Promise.all([
-                    axios.get('/api/domains/dig', {
-                        params: { domain: domain.getName() },
-                    }),
-                    axios.get('/api/domains/whois', {
-                        params: { domain: domain.getName() },
-                    }),
+                const [digData, whoisData] = await Promise.all([
+                    apiService.digDomain(domain.getName()),
+                    apiService.getDomainWhois(domain.getName()),
                 ]);
 
-                const digData = digResponse.data as DigInfo;
                 if (digData.result.records.A && digData.result.records.A.length > 0) {
                     setHasARecord(true);
                 } else {
                     setHasARecord(false);
                 }
 
-                setWhoisInfo(whoisResponse.data as WhoisInfo);
+                setWhoisInfo(whoisData as WhoisInfo);
             } catch (error) {
                 console.error('Error fetching domain details:', error);
             } finally {

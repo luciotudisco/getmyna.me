@@ -6,6 +6,7 @@ import { ThreeDots } from 'react-loader-spinner';
 import { Domain } from '@/models/domain';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { SearchResult } from '@/components/SearchResult';
+import { apiService } from '@/services/api';
 
 const Player = dynamic(() => import('@lottiefiles/react-lottie-player').then((mod) => mod.Player), { ssr: false });
 
@@ -18,9 +19,8 @@ export function SearchResults() {
         startTransition(async () => {
             try {
                 const term = searchParams.get('term');
-                const response = await fetch(`/api/domains/search?term=${term}`);
-                const data = await response.json();
-                const initialDomains = data.domains.map((name: string) => new Domain(name));
+                const names = await apiService.searchDomains(term ?? '');
+                const initialDomains = names.map((name: string) => new Domain(name));
                 initialDomains.sort(
                     (a: Domain, b: Domain) => a.getLevel() - b.getLevel() || a.getName().localeCompare(b.getName()),
                 );
