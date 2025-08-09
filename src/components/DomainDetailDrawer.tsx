@@ -4,13 +4,14 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Loader2 } from 'lucide-react';
 import { Domain, DomainStatus as DomainStatusEnum, DOMAIN_STATUS_DESCRIPTIONS } from '@/models/domain';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
 import { getTldInfo, TldInfo } from '@/services/tld-info';
 import { DigInfo } from '@/models/dig';
 import { WhoisInfo } from '@/models/whois';
+import { Badge } from '@/components/ui/badge';
+import DomainStatusBadge from '@/components/DomainStatusBadge';
 
 interface DomainDetailDrawerProps {
     domain: Domain;
@@ -84,27 +85,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                         <div className="flex items-center gap-2">{domain.getName()}</div>
                         <div className="flex items-center gap-2">
                             {domain.getLevel() === 1 && <Badge variant="secondary">Exact match</Badge>}
-                            <>
-                                <Badge
-                                    className={`inline-flex h-7 min-w-[8rem] items-center justify-center px-3 ${
-                                        status === DomainStatusEnum.unknown
-                                            ? 'bg-gray-400'
-                                            : status === DomainStatusEnum.error
-                                              ? 'bg-yellow-400 hover:bg-yellow-500'
-                                              : domain.isAvailable()
-                                                ? 'bg-green-400 hover:bg-green-600'
-                                                : 'bg-red-400 hover:bg-red-600'
-                                    }`}
-                                >
-                                    {status === DomainStatusEnum.unknown
-                                        ? 'Checking'
-                                        : status === DomainStatusEnum.error
-                                          ? 'Error'
-                                          : domain.isAvailable()
-                                            ? 'Available'
-                                            : 'Taken'}
-                                </Badge>
-                            </>
+                            <DomainStatusBadge domain={domain} status={status} className="min-w-[8rem]" />
                         </div>
                     </DrawerTitle>
                 </DrawerHeader>
