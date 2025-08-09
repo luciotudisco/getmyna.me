@@ -4,7 +4,7 @@ import { Domain, DomainStatus } from '@/models/domain';
 
 jest.mock('@/components/ui/drawer', () => ({
     Drawer: ({ children }: any) => <div>{children}</div>,
-    DrawerContent: ({ children }: any) => <div>{children}</div>,
+    DrawerContent: ({ children, className }: any) => <div className={className}>{children}</div>,
     DrawerHeader: ({ children }: any) => <div>{children}</div>,
     DrawerTitle: ({ children }: any) => <div>{children}</div>,
 }));

@@ -67,8 +67,8 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
     if (!domain.isAvailable() && loading) {
         return (
             <Drawer open={open} onOpenChange={(openState: boolean) => !openState && onClose()} direction="bottom">
-                <DrawerContent>
-                    <div className="flex items-center gap-2 text-sm">
+                <DrawerContent className="min-h-[400px]">
+                    <div className="flex flex-1 items-center justify-center gap-2 text-sm">
                         <Loader2 className="h-4 w-4 animate-spin" /> Loading domain details...
                     </div>
                 </DrawerContent>
@@ -78,7 +78,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
 
     return (
         <Drawer open={open} onOpenChange={(openState: boolean) => !openState && onClose()} direction="bottom">
-            <DrawerContent>
+            <DrawerContent className="min-h-[400px]">
                 <DrawerHeader>
                     <DrawerTitle className="flex items-center justify-between">
                         <div className="flex items-center gap-2">{domain.getName()}</div>
