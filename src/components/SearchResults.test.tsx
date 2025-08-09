@@ -1,6 +1,8 @@
 import { render, screen, within } from '@testing-library/react';
 import { SearchResults } from './SearchResults';
 import { useSearchParams } from 'next/navigation';
+import { apiService } from '@/services/api';
+import { DomainStatus } from '@/models/domain';
 
 jest.mock('next/navigation', () => ({
     useSearchParams: jest.fn(),
@@ -16,31 +18,25 @@ jest.mock('@/lib/rate-limiter', () => ({
     },
 }));
 
+jest.mock('@/services/api', () => ({
+    apiService: {
+        searchDomains: jest.fn(),
+        getDomainStatus: jest.fn(),
+    },
+}));
+
+const mockedApiService = apiService as jest.Mocked<typeof apiService>;
+
 describe('SearchResults', () => {
     beforeEach(() => {
         (useSearchParams as jest.Mock).mockReturnValue({
             get: (key: string) => (key === 'term' ? 'example' : null),
         });
 
-        global.fetch = jest.fn((url: string) => {
-            if (url.startsWith('/api/domains/search')) {
-                return Promise.resolve({
-                    ok: true,
-                    json: async () => ({ domains: ['c.com', 'b.a.com'] }),
-                } as Response);
-            }
-
-            if (url.startsWith('/api/domains/status')) {
-                const domain = new URL('http://test' + url).searchParams.get('domain');
-                const summary = domain === 'c.com' ? 'active' : 'inactive';
-                return Promise.resolve({
-                    ok: true,
-                    json: async () => ({ status: [{ summary }] }),
-                } as Response);
-            }
-
-            return Promise.reject(new Error('Unknown URL'));
-        }) as jest.Mock;
+        mockedApiService.searchDomains.mockResolvedValue(['c.com', 'b.a.com']);
+        mockedApiService.getDomainStatus.mockImplementation((domain: string) =>
+            Promise.resolve(domain === 'c.com' ? DomainStatus.active : DomainStatus.inactive),
+        );
     });
 
     it('orders domains by level', async () => {

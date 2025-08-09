@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getTldInfo, TldInfo as TldInfoType } from '@/services/tld-info';
+import { apiService, TldInfo as TldInfoType } from '@/services/api';
 
 interface TldInfoProps {
     tld: string;
@@ -11,7 +11,7 @@ export default function TldInfo({ tld }: TldInfoProps) {
     const [tldInfo, setTldInfo] = useState<TldInfoType | null>(null);
 
     useEffect(() => {
-        getTldInfo(tld).then(setTldInfo);
+        apiService.getTldInfo(tld).then(setTldInfo);
     }, [tld]);
 
     if (!tldInfo) {

@@ -3,12 +3,12 @@
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { BadgeCheck } from 'lucide-react';
 import { RateLimiter } from '@/lib/rate-limiter';
 import DomainDetailDrawer from '@/components/DomainDetailDrawer';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
+import { apiService } from '@/services/api';
 
 // Create a shared rate limiter instance (1 call per second)
 const statusRateLimiter = new RateLimiter(1);
@@ -20,13 +20,9 @@ export function SearchResult({ domain }: { domain: Domain }) {
     useEffect(() => {
         const fetchStatus = async () => {
             try {
-                const result = await statusRateLimiter.add(async () => {
-                    const response = await axios.get('/api/domains/status', {
-                        params: { domain: domain.getName() },
-                    });
-                    const data = response.data as { status?: { summary?: string }[] };
-                    return (data.status?.[0]?.summary as DomainStatusEnum) ?? DomainStatusEnum.error;
-                });
+                const result = await statusRateLimiter.add(() =>
+                    apiService.getDomainStatus(domain.getName()),
+                );
 
                 domain.setStatus(result);
                 setStatus(result);
