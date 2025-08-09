@@ -7,7 +7,7 @@ import { Domain, DomainStatus as DomainStatusEnum, DOMAIN_STATUS_DESCRIPTIONS } 
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
-import { getTldInfo, TldInfo } from '@/services/tld-info';
+import TldInfo from '@/components/TldInfo';
 import { DigInfo } from '@/models/dig';
 import { WhoisInfo } from '@/models/whois';
 import { Badge } from '@/components/ui/badge';
@@ -21,14 +21,10 @@ interface DomainDetailDrawerProps {
 }
 
 export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawerProps) {
-    const [tldInfo, setTldInfo] = useState<TldInfo | null>(null);
     const [hasARecord, setHasARecord] = useState(false);
     const [whoisInfo, setWhoisInfo] = useState<WhoisInfo | null>(null);
     const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        getTldInfo(domain.getTLD()).then(setTldInfo);
-    }, [domain]);
 
     useEffect(() => {
         if (!open || domain.isAvailable()) {
@@ -182,21 +178,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     )}
 
                     <div>
-                        {tldInfo ? (
-                            <p className="text-xs">
-                                <span className="font-bold">.{domain.getTLD()}:</span> {tldInfo.description}{' '}
-                                <a
-                                    href={tldInfo.wikipediaUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-blue-600 underline"
-                                >
-                                    Learn more on Wikipedia
-                                </a>
-                            </p>
-                        ) : (
-                            <p className="text-sm">Loading TLD info...</p>
-                        )}
+                        <TldInfo tld={domain.getTLD()} />
                     </div>
                 </div>
             </DrawerContent>
