@@ -69,8 +69,9 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
         return (
             <Drawer open={open} onOpenChange={(openState: boolean) => !openState && onClose()} direction="bottom">
                 <DrawerContent className="min-h-[400px]">
-                    <div className="flex flex-1 items-center justify-center gap-2 text-sm">
-                        <Loader2 className="h-4 w-4 animate-spin" /> Loading domain details...
+                    <div className="flex flex-1 flex-col items-center justify-center gap-4 text-sm text-muted-foreground">
+                        <Loader2 className="h-6 w-6 animate-spin" />
+                        <span>Hang tight, fetching domain details...</span>
                     </div>
                 </DrawerContent>
             </Drawer>
