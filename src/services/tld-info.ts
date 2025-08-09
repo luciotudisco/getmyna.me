@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export interface TldInfo {
     description: string;
     wikipediaUrl: string;
@@ -5,11 +7,8 @@ export interface TldInfo {
 
 export async function getTldInfo(tld: string): Promise<TldInfo> {
     try {
-        const res = await fetch(`/api/tlds/info?tld=${tld}`);
-        if (!res.ok) {
-            throw new Error('Failed to fetch TLD info');
-        }
-        const data = await res.json();
+        const response = await axios.get('/api/tlds/info', { params: { tld } });
+        const data = response.data;
         return {
             description: data.description ?? 'No additional information is available for this TLD.',
             wikipediaUrl: `https://en.wikipedia.org/wiki/.${tld}`,

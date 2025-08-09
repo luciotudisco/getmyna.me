@@ -1,6 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import DomainDetailDrawer from './DomainDetailDrawer';
 import { Domain, DomainStatus } from '@/models/domain';
+import axios from 'axios';
 
 jest.mock('@/components/ui/drawer', () => ({
     Drawer: ({ children }: any) => <div>{children}</div>,
@@ -9,9 +10,12 @@ jest.mock('@/components/ui/drawer', () => ({
     DrawerTitle: ({ children }: any) => <div>{children}</div>,
 }));
 
+jest.mock('axios');
 jest.mock('@/services/tld-info', () => ({
     getTldInfo: jest.fn(() => Promise.resolve({ description: 'Test', wikipediaUrl: 'https://example.com' })),
 }));
+
+const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('DomainDetailDrawer', () => {
     beforeAll(() => {
@@ -70,33 +74,29 @@ describe('DomainDetailDrawer', () => {
         const domain = new Domain('example.com');
         domain.setStatus(DomainStatus.active);
 
-        global.fetch = jest.fn((url: string) => {
+        mockedAxios.get.mockImplementation((url: string) => {
             if (url.startsWith('/api/domains/dig')) {
                 return Promise.resolve({
-                    ok: true,
-                    json: () =>
-                        Promise.resolve({
-                            result: {
-                                domain: 'example.com',
-                                records: { A: ['1.2.3.4'] },
-                            },
-                        }),
+                    data: {
+                        result: {
+                            domain: 'example.com',
+                            records: { A: ['1.2.3.4'] },
+                        },
+                    },
                 });
             }
             if (url.startsWith('/api/domains/whois')) {
                 return Promise.resolve({
-                    ok: true,
-                    json: () =>
-                        Promise.resolve({
-                            creationDate: '2000-01-01',
-                            age: '24 years',
-                            expirationDate: '2030-01-01',
-                            registrar: 'Example Registrar',
-                        }),
+                    data: {
+                        creationDate: '2000-01-01',
+                        age: '24 years',
+                        expirationDate: '2030-01-01',
+                        registrar: 'Example Registrar',
+                    },
                 });
             }
             return Promise.reject(new Error('Unknown URL'));
-        }) as jest.Mock;
+        });
 
         render(<DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />);
 
@@ -108,81 +108,73 @@ describe('DomainDetailDrawer', () => {
         expect(websiteLink).toHaveAttribute('href', 'https://example.com');
         expect(screen.queryByText(/DNS Records/)).toBeNull();
 
-        (global.fetch as jest.Mock).mockRestore();
+        mockedAxios.get.mockReset();
     });
 
     it('does not show website link when domain has no A record', async () => {
         const domain = new Domain('example.com');
         domain.setStatus(DomainStatus.active);
 
-        global.fetch = jest.fn((url: string) => {
+        mockedAxios.get.mockImplementation((url: string) => {
             if (url.startsWith('/api/domains/dig')) {
                 return Promise.resolve({
-                    ok: true,
-                    json: () =>
-                        Promise.resolve({
-                            result: {
-                                domain: 'example.com',
-                                records: { CNAME: ['alias.example.com.'] },
-                            },
-                        }),
+                    data: {
+                        result: {
+                            domain: 'example.com',
+                            records: { CNAME: ['alias.example.com.'] },
+                        },
+                    },
                 });
             }
             if (url.startsWith('/api/domains/whois')) {
                 return Promise.resolve({
-                    ok: true,
-                    json: () =>
-                        Promise.resolve({
-                            creationDate: '2000-01-01',
-                            age: '24 years',
-                            expirationDate: '2030-01-01',
-                            registrar: 'Example Registrar',
-                        }),
+                    data: {
+                        creationDate: '2000-01-01',
+                        age: '24 years',
+                        expirationDate: '2030-01-01',
+                        registrar: 'Example Registrar',
+                    },
                 });
             }
             return Promise.reject(new Error('Unknown URL'));
-        }) as jest.Mock;
+        });
 
         render(<DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />);
 
-        await waitFor(() => expect(global.fetch).toHaveBeenCalled());
+        await waitFor(() => expect(mockedAxios.get).toHaveBeenCalled());
         expect(screen.queryByRole('link', { name: /Visit website/i })).toBeNull();
         expect(screen.queryByText(/DNS Records/)).toBeNull();
 
-        (global.fetch as jest.Mock).mockRestore();
+        mockedAxios.get.mockReset();
     });
 
     it('shows whois information when domain is not available', async () => {
         const domain = new Domain('example.com');
         domain.setStatus(DomainStatus.active);
 
-        global.fetch = jest.fn((url: string) => {
+        mockedAxios.get.mockImplementation((url: string) => {
             if (url.startsWith('/api/domains/dig')) {
                 return Promise.resolve({
-                    ok: true,
-                    json: () =>
-                        Promise.resolve({
-                            result: {
-                                domain: 'example.com',
-                                records: { A: ['1.2.3.4'] },
-                            },
-                        }),
+                    data: {
+                        result: {
+                            domain: 'example.com',
+                            records: { A: ['1.2.3.4'] },
+                        },
+                    },
                 });
             }
             if (url.startsWith('/api/domains/whois')) {
                 return Promise.resolve({
-                    ok: true,
-                    json: () =>
-                        Promise.resolve({
-                            creationDate: '2000-01-01',
-                            age: '24 years',
-                            expirationDate: '2030-01-01',
-                            registrar: 'Example Registrar',
-                        }),
+                    data: {
+                        creationDate: '2000-01-01',
+                        age: '24 years',
+                        expirationDate: '2030-01-01',
+                        registrar: 'Example Registrar',
+                    },
                 });
             }
             return Promise.reject(new Error('Unknown URL'));
-        }) as jest.Mock;
+        });
 
         render(<DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />);
 
@@ -192,6 +184,6 @@ describe('DomainDetailDrawer', () => {
         expect(screen.getByText(/Expires:/i)).toHaveTextContent('2030-01-01');
         expect(screen.getByText(/Registrar:/i)).toHaveTextContent('Example Registrar');
 
-        (global.fetch as jest.Mock).mockRestore();
+        mockedAxios.get.mockReset();
     });
 });
