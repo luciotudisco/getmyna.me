@@ -86,7 +86,6 @@ describe('DomainDetailDrawer', () => {
         });
         mockedApiService.getDomainWhois.mockResolvedValue({
             creationDate: '2000-01-01',
-            age: '24 years',
             expirationDate: '2030-01-01',
             registrar: 'Example Registrar',
             registrarUrl: 'https://example-registrar.com',
@@ -120,7 +119,6 @@ describe('DomainDetailDrawer', () => {
         });
         mockedApiService.getDomainWhois.mockResolvedValue({
             creationDate: '2000-01-01',
-            age: '24 years',
             expirationDate: '2030-01-01',
             registrar: 'Example Registrar',
             registrarUrl: 'https://example-registrar.com',
@@ -150,7 +148,6 @@ describe('DomainDetailDrawer', () => {
         });
         mockedApiService.getDomainWhois.mockResolvedValue({
             creationDate: '2000-01-01',
-            age: '24 years',
             expirationDate: '2030-01-01',
             registrar: 'Example Registrar',
             registrarUrl: 'https://example-registrar.com',
@@ -158,12 +155,11 @@ describe('DomainDetailDrawer', () => {
 
         render(<DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />);
 
-        await screen.findByText(/Created:/i);
-        expect(screen.getByText(/Created:/i)).toHaveTextContent('2000-01-01');
-        expect(screen.getByText(/Age:/i)).toHaveTextContent('24 years');
-        expect(screen.getByText(/Expires:/i)).toHaveTextContent('2030-01-01');
-        expect(screen.getByText(/Registrar:/i)).toHaveTextContent('Example Registrar');
-        const registrarLink = screen.getByRole('link', { name: 'https://example-registrar.com' });
+        const whoisParagraph = await screen.findByText(/This domain was created on/i);
+        expect(whoisParagraph).toHaveTextContent(
+            'This domain was created on 2000-01-01. It is registered with Example Registrar. It is set to expire on 2030-01-01.',
+        );
+        const registrarLink = screen.getByRole('link', { name: 'Example Registrar' });
         expect(registrarLink).toHaveAttribute('href', 'https://example-registrar.com');
 
         expect(mockedApiService.digDomain).toHaveBeenCalledWith(domain.getName(), DNSRecordType.A);

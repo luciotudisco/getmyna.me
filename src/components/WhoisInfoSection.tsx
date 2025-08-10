@@ -5,42 +5,25 @@ interface WhoisInfoSectionProps {
 }
 
 export function WhoisInfoSection({ whoisInfo }: WhoisInfoSectionProps) {
+    const { creationDate, registrarUrl, registrar, expirationDate } = whoisInfo;
+
+    if (!creationDate || !registrarUrl || !expirationDate) {
+        return null;
+    }
+
     return (
-        <div className="space-y-1">
-            {whoisInfo.creationDate && (
-                <p className="text-xs">
-                    <span className="font-bold">Created:</span> {whoisInfo.creationDate}
-                </p>
-            )}
-            {whoisInfo.age && (
-                <p className="text-xs">
-                    <span className="font-bold">Age:</span> {whoisInfo.age}
-                </p>
-            )}
-            {whoisInfo.expirationDate && (
-                <p className="text-xs">
-                    <span className="font-bold">Expires:</span> {whoisInfo.expirationDate}
-                </p>
-            )}
-            {whoisInfo.registrar && (
-                <p className="text-xs">
-                    <span className="font-bold">Registrar:</span> {whoisInfo.registrar}
-                </p>
-            )}
-            {whoisInfo.registrarUrl && (
-                <p className="text-xs">
-                    <span className="font-bold">Registrar URL:</span>{' '}
-                    <a
-                        href={whoisInfo.registrarUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 underline"
-                    >
-                        {whoisInfo.registrarUrl}
-                    </a>
-                </p>
-            )}
-        </div>
+        <p className="text-xs">
+            This domain was created on {creationDate}. It is registered with{' '}
+            <a
+                href={registrarUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 underline"
+            >
+                {registrar ?? registrarUrl}
+            </a>
+            . It is set to expire on {expirationDate}.
+        </p>
     );
 }
 
