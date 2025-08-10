@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import DomainDetailDrawer from './DomainDetailDrawer';
 import { Domain, DomainStatus } from '@/models/domain';
 import { apiService } from '@/services/api';
+import { DNSRecordType } from '@/models/dig';
 
 jest.mock('@/components/ui/drawer', () => ({
     Drawer: ({ children }: any) => <div>{children}</div>,
@@ -80,7 +81,7 @@ describe('DomainDetailDrawer', () => {
         mockedApiService.digDomain.mockResolvedValue({
             result: {
                 domain: 'example.com',
-                records: { A: ['1.2.3.4'] },
+                records: { [DNSRecordType.A]: ['1.2.3.4'] },
             },
         });
         mockedApiService.getDomainWhois.mockResolvedValue({
@@ -100,6 +101,8 @@ describe('DomainDetailDrawer', () => {
         expect(websiteLink).toHaveAttribute('href', 'https://example.com');
         expect(screen.queryByText(/DNS Records/)).toBeNull();
 
+        expect(mockedApiService.digDomain).toHaveBeenCalledWith(domain.getName(), DNSRecordType.A);
+
         mockedApiService.digDomain.mockReset();
         mockedApiService.getDomainWhois.mockReset();
     });
@@ -111,7 +114,7 @@ describe('DomainDetailDrawer', () => {
         mockedApiService.digDomain.mockResolvedValue({
             result: {
                 domain: 'example.com',
-                records: { CNAME: ['alias.example.com.'] },
+                records: { [DNSRecordType.CNAME]: ['alias.example.com.'] },
             },
         });
         mockedApiService.getDomainWhois.mockResolvedValue({
@@ -123,7 +126,9 @@ describe('DomainDetailDrawer', () => {
 
         render(<DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />);
 
-        await waitFor(() => expect(mockedApiService.digDomain).toHaveBeenCalled());
+        await waitFor(() =>
+            expect(mockedApiService.digDomain).toHaveBeenCalledWith(domain.getName(), DNSRecordType.A),
+        );
         expect(screen.queryByRole('link', { name: /Visit website/i })).toBeNull();
         expect(screen.queryByText(/DNS Records/)).toBeNull();
 
@@ -138,7 +143,7 @@ describe('DomainDetailDrawer', () => {
         mockedApiService.digDomain.mockResolvedValue({
             result: {
                 domain: 'example.com',
-                records: { A: ['1.2.3.4'] },
+                records: { [DNSRecordType.A]: ['1.2.3.4'] },
             },
         });
         mockedApiService.getDomainWhois.mockResolvedValue({
@@ -155,6 +160,8 @@ describe('DomainDetailDrawer', () => {
         expect(screen.getByText(/Age:/i)).toHaveTextContent('24 years');
         expect(screen.getByText(/Expires:/i)).toHaveTextContent('2030-01-01');
         expect(screen.getByText(/Registrar:/i)).toHaveTextContent('Example Registrar');
+
+        expect(mockedApiService.digDomain).toHaveBeenCalledWith(domain.getName(), DNSRecordType.A);
 
         mockedApiService.digDomain.mockReset();
         mockedApiService.getDomainWhois.mockReset();

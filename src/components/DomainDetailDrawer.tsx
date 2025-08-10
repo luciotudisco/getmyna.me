@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
 import DomainRegistrarButtons from '@/components/DomainRegistrarButtons';
 import { apiService, TldInfo as TldInfoType } from '@/services/api';
+import { DNSRecordType } from '@/models/dig';
 
 interface DomainDetailDrawerProps {
     domain: Domain;
@@ -41,12 +42,12 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
 
                 if (!domain.isAvailable()) {
                     const [digData, whoisData, tldData] = await Promise.all([
-                        apiService.digDomain(domain.getName()),
+                        apiService.digDomain(domain.getName(), DNSRecordType.A),
                         apiService.getDomainWhois(domain.getName()),
                         tldPromise,
                     ]);
 
-                    if (digData.result.records.A && digData.result.records.A.length > 0) {
+                    if (digData.result.records[DNSRecordType.A]?.length) {
                         setHasARecord(true);
                     } else {
                         setHasARecord(false);

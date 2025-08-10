@@ -1,30 +1,46 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resolver } from 'dns/promises';
+import { DNSRecordType } from '@/models/dig';
 
 const resolver = new Resolver();
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
     const domain = request.nextUrl.searchParams.get('domain');
+    const recordTypeParam = request.nextUrl.searchParams.get('type')?.toUpperCase();
+
     if (!domain) {
         return NextResponse.json({ error: 'Missing domain parameter' }, { status: 400 });
     }
 
+    if (!recordTypeParam) {
+        return NextResponse.json({ error: 'Missing type parameter' }, { status: 400 });
+    }
+
+    const recordType = recordTypeParam as DNSRecordType;
+
+    if (!Object.values(DNSRecordType).includes(recordType)) {
+        return NextResponse.json({ error: 'Unsupported record type' }, { status: 400 });
+    }
+
+    const recordTypes: DNSRecordType[] = [recordType];
+
     try {
-        const records: Record<string, string[]> = {};
-        const aRecords = await resolver.resolve(domain, 'A').catch(() => []);
-        if (aRecords.length) {
-            records.A = aRecords.map(String);
-        }
-        const cnameRecords = await resolver.resolve(domain, 'CNAME').catch(() => []);
-        if (cnameRecords.length) {
-            records.CNAME = cnameRecords.map(String);
-        }
-        const mxRecords = await resolver.resolve(domain, 'MX').catch(() => []);
-        if (mxRecords.length) {
-            // Format as "priority exchange"
-            records.MX = (mxRecords as { priority: number; exchange: string }[]).map(
-                (mx) => `${mx.priority} ${mx.exchange}`,
-            );
+        const records: Partial<Record<DNSRecordType, string[]>> = {};
+
+        for (const type of recordTypes) {
+            const result = await resolver.resolve(domain, type as any).catch(() => []);
+            if (!result.length) {
+                continue;
+            }
+
+            if (type === DNSRecordType.MX) {
+                // Format as "priority exchange"
+                records[DNSRecordType.MX] = (result as { priority: number; exchange: string }[]).map(
+                    (mx) => `${mx.priority} ${mx.exchange}`,
+                );
+            } else {
+                records[type] = (result as string[]).map(String);
+            }
         }
 
         return NextResponse.json({

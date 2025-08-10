@@ -1,6 +1,12 @@
+export enum DNSRecordType {
+    A = 'A',
+    CNAME = 'CNAME',
+    MX = 'MX',
+}
+
 export interface DigInfo {
     result: {
         domain: string;
-        records: Record<string, string[]>;
+        records: Partial<Record<DNSRecordType, string[]>>;
     };
 }

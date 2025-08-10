@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import { DomainStatus as DomainStatusEnum } from '@/models/domain';
-import { DigInfo } from '@/models/dig';
+import { DigInfo, DNSRecordType } from '@/models/dig';
 import { WhoisInfo } from '@/models/whois';
 
 export interface TldInfo {
@@ -31,8 +31,8 @@ class ApiService {
         return response.data as WhoisInfo;
     }
 
-    async digDomain(domain: string): Promise<DigInfo> {
-        const response = await this.client.get('/api/domains/dig', { params: { domain } });
+    async digDomain(domain: string, type: DNSRecordType): Promise<DigInfo> {
+        const response = await this.client.get('/api/domains/dig', { params: { domain, type } });
         return response.data as DigInfo;
     }
 
