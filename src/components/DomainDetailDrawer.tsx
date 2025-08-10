@@ -10,7 +10,7 @@ import { WhoisInfo } from '@/models/whois';
 import { Badge } from '@/components/ui/badge';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
 import DomainRegistrarButtons from '@/components/DomainRegistrarButtons';
-import { apiService } from '@/services/api';
+import { apiService, TldInfo as TldInfoType } from '@/services/api';
 
 interface DomainDetailDrawerProps {
     domain: Domain;
@@ -22,29 +22,42 @@ interface DomainDetailDrawerProps {
 export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawerProps) {
     const [hasARecord, setHasARecord] = useState(false);
     const [whoisInfo, setWhoisInfo] = useState<WhoisInfo | null>(null);
+    const [tldInfo, setTldInfo] = useState<TldInfoType | null>(null);
     const [loading, setLoading] = useState(false);
 
-
     useEffect(() => {
-        if (!open || domain.isAvailable()) {
+        if (!open) {
             return;
         }
+
+        setHasARecord(false);
+        setWhoisInfo(null);
+        setTldInfo(null);
 
         const fetchData = async () => {
             setLoading(true);
             try {
-                const [digData, whoisData] = await Promise.all([
-                    apiService.digDomain(domain.getName()),
-                    apiService.getDomainWhois(domain.getName()),
-                ]);
+                const tldPromise = apiService.getTldInfo(domain.getTLD());
 
-                if (digData.result.records.A && digData.result.records.A.length > 0) {
-                    setHasARecord(true);
+                if (!domain.isAvailable()) {
+                    const [digData, whoisData, tldData] = await Promise.all([
+                        apiService.digDomain(domain.getName()),
+                        apiService.getDomainWhois(domain.getName()),
+                        tldPromise,
+                    ]);
+
+                    if (digData.result.records.A && digData.result.records.A.length > 0) {
+                        setHasARecord(true);
+                    } else {
+                        setHasARecord(false);
+                    }
+
+                    setWhoisInfo(whoisData as WhoisInfo);
+                    setTldInfo(tldData as TldInfoType);
                 } else {
-                    setHasARecord(false);
+                    const tldData = await tldPromise;
+                    setTldInfo(tldData as TldInfoType);
                 }
-
-                setWhoisInfo(whoisData as WhoisInfo);
             } catch (error) {
                 console.error('Error fetching domain details:', error);
             } finally {
@@ -55,7 +68,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
         fetchData();
     }, [open, domain]);
 
-    if (!domain.isAvailable() && loading) {
+    if (loading) {
         return (
             <Drawer open={open} onOpenChange={(openState: boolean) => !openState && onClose()} direction="bottom">
                 <DrawerContent className="min-h-[400px]">
@@ -137,9 +150,11 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                         </>
                     )}
 
-                    <div>
-                        <TldInfo tld={domain.getTLD()} />
-                    </div>
+                    {tldInfo && (
+                        <div>
+                            <TldInfo tld={domain.getTLD()} info={tldInfo} />
+                        </div>
+                    )}
                 </div>
             </DrawerContent>
         </Drawer>
