@@ -7,6 +7,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Separator } from '@/components/ui/separator';
 import TldInfo from '@/components/TldInfo';
 import { WhoisInfo } from '@/models/whois';
+import { WhoisInfoSection } from '@/components/WhoisInfoSection';
 import { Badge } from '@/components/ui/badge';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
 import DomainRegistrarButtons from '@/components/DomainRegistrarButtons';
@@ -125,28 +126,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
 
                     {!domain.isAvailable() && whoisInfo && (
                         <>
-                            <div className="space-y-1">
-                                {whoisInfo.creationDate && (
-                                    <p className="text-xs">
-                                        <span className="font-bold">Created:</span> {whoisInfo.creationDate}
-                                    </p>
-                                )}
-                                {whoisInfo.age && (
-                                    <p className="text-xs">
-                                        <span className="font-bold">Age:</span> {whoisInfo.age}
-                                    </p>
-                                )}
-                                {whoisInfo.expirationDate && (
-                                    <p className="text-xs">
-                                        <span className="font-bold">Expires:</span> {whoisInfo.expirationDate}
-                                    </p>
-                                )}
-                                {whoisInfo.registrar && (
-                                    <p className="text-xs">
-                                        <span className="font-bold">Registrar:</span> {whoisInfo.registrar}
-                                    </p>
-                                )}
-                            </div>
+                            <WhoisInfoSection whoisInfo={whoisInfo} />
                             <Separator />
                         </>
                     )}
