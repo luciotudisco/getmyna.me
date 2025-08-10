@@ -19,6 +19,11 @@ describe('WhoisInfoSection', () => {
         );
         const registrarLink = screen.getByRole('link', { name: 'Example Registrar' });
         expect(registrarLink).toHaveAttribute('href', 'https://example-registrar.com');
+        expect(registrarLink).toHaveClass('font-bold');
+        const creationSpan = screen.getByText('2000-01-01');
+        expect(creationSpan).toHaveClass('font-bold');
+        const expirationSpan = screen.getByText('2030-01-01');
+        expect(expirationSpan).toHaveClass('font-bold');
     });
 
     it('returns null when required info is missing', () => {
