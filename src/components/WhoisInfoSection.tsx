@@ -1,7 +1,16 @@
 import { WhoisInfo } from '@/models/whois';
+import { format, parseISO } from 'date-fns';
 
 interface WhoisInfoSectionProps {
     whoisInfo: WhoisInfo;
+}
+
+function formatDate(dateStr: string): string {
+    try {
+        return format(parseISO(dateStr), 'MMMM do, yyyy');
+    } catch {
+        return dateStr;
+    }
 }
 
 export function WhoisInfoSection({ whoisInfo }: WhoisInfoSectionProps) {
@@ -11,9 +20,13 @@ export function WhoisInfoSection({ whoisInfo }: WhoisInfoSectionProps) {
         return null;
     }
 
+    const formattedCreationDate = formatDate(creationDate);
+    const formattedExpirationDate = formatDate(expirationDate);
+
     return (
         <p className="text-xs">
-            This domain was created on <span className="font-bold">{creationDate}</span>. It is registered with{' '}
+            This domain was created on <span className="font-bold">{formattedCreationDate}</span>. It is registered
+            with{' '}
             <a
                 href={registrarUrl}
                 target="_blank"
@@ -22,7 +35,7 @@ export function WhoisInfoSection({ whoisInfo }: WhoisInfoSectionProps) {
             >
                 {registrar ?? registrarUrl}
             </a>
-            . It is set to expire on <span className="font-bold">{expirationDate}</span>.
+            . It is set to expire on <span className="font-bold">{formattedExpirationDate}</span>.
         </p>
     );
 }

@@ -85,7 +85,7 @@ describe('DomainDetailDrawer', () => {
             },
         });
         mockedApiService.getDomainWhois.mockResolvedValue({
-            creationDate: '2000-01-01',
+            creationDate: '2025-10-03',
             expirationDate: '2030-01-01',
             registrar: 'Example Registrar',
             registrarUrl: 'https://example-registrar.com',
@@ -118,7 +118,7 @@ describe('DomainDetailDrawer', () => {
             },
         });
         mockedApiService.getDomainWhois.mockResolvedValue({
-            creationDate: '2000-01-01',
+            creationDate: '2025-10-03',
             expirationDate: '2030-01-01',
             registrar: 'Example Registrar',
             registrarUrl: 'https://example-registrar.com',
@@ -147,7 +147,7 @@ describe('DomainDetailDrawer', () => {
             },
         });
         mockedApiService.getDomainWhois.mockResolvedValue({
-            creationDate: '2000-01-01',
+            creationDate: '2025-10-03',
             expirationDate: '2030-01-01',
             registrar: 'Example Registrar',
             registrarUrl: 'https://example-registrar.com',
@@ -157,14 +157,14 @@ describe('DomainDetailDrawer', () => {
 
         const whoisParagraph = await screen.findByText(/This domain was created on/i);
         expect(whoisParagraph).toHaveTextContent(
-            'This domain was created on 2000-01-01. It is registered with Example Registrar. It is set to expire on 2030-01-01.',
+            'This domain was created on October 3rd, 2025. It is registered with Example Registrar. It is set to expire on January 1st, 2030.',
         );
         const registrarLink = screen.getByRole('link', { name: 'Example Registrar' });
         expect(registrarLink).toHaveAttribute('href', 'https://example-registrar.com');
         expect(registrarLink).toHaveClass('font-bold');
-        const creationSpan = screen.getByText('2000-01-01');
+        const creationSpan = screen.getByText('October 3rd, 2025');
         expect(creationSpan).toHaveClass('font-bold');
-        const expirationSpan = screen.getByText('2030-01-01');
+        const expirationSpan = screen.getByText('January 1st, 2030');
         expect(expirationSpan).toHaveClass('font-bold');
 
         expect(mockedApiService.digDomain).toHaveBeenCalledWith(domain.getName(), DNSRecordType.A);
