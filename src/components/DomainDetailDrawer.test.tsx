@@ -89,6 +89,7 @@ describe('DomainDetailDrawer', () => {
             age: '24 years',
             expirationDate: '2030-01-01',
             registrar: 'Example Registrar',
+            registrarUrl: 'https://example-registrar.com',
         });
 
         render(<DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />);
@@ -122,6 +123,7 @@ describe('DomainDetailDrawer', () => {
             age: '24 years',
             expirationDate: '2030-01-01',
             registrar: 'Example Registrar',
+            registrarUrl: 'https://example-registrar.com',
         });
 
         render(<DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />);
@@ -151,6 +153,7 @@ describe('DomainDetailDrawer', () => {
             age: '24 years',
             expirationDate: '2030-01-01',
             registrar: 'Example Registrar',
+            registrarUrl: 'https://example-registrar.com',
         });
 
         render(<DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />);
@@ -160,6 +163,8 @@ describe('DomainDetailDrawer', () => {
         expect(screen.getByText(/Age:/i)).toHaveTextContent('24 years');
         expect(screen.getByText(/Expires:/i)).toHaveTextContent('2030-01-01');
         expect(screen.getByText(/Registrar:/i)).toHaveTextContent('Example Registrar');
+        const registrarLink = screen.getByRole('link', { name: 'https://example-registrar.com' });
+        expect(registrarLink).toHaveAttribute('href', 'https://example-registrar.com');
 
         expect(mockedApiService.digDomain).toHaveBeenCalledWith(domain.getName(), DNSRecordType.A);
 

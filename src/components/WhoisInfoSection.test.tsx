@@ -7,6 +7,7 @@ const info: WhoisInfo = {
     age: '24 years',
     expirationDate: '2030-01-01',
     registrar: 'Example Registrar',
+    registrarUrl: 'https://example-registrar.com',
 };
 
 describe('WhoisInfoSection', () => {
@@ -17,6 +18,8 @@ describe('WhoisInfoSection', () => {
         expect(screen.getByText(/Age:/i)).toHaveTextContent('24 years');
         expect(screen.getByText(/Expires:/i)).toHaveTextContent('2030-01-01');
         expect(screen.getByText(/Registrar:/i)).toHaveTextContent('Example Registrar');
+        const registrarLink = screen.getByRole('link', { name: 'https://example-registrar.com' });
+        expect(registrarLink).toHaveAttribute('href', 'https://example-registrar.com');
     });
 
     it('hides empty fields', () => {
@@ -25,6 +28,7 @@ describe('WhoisInfoSection', () => {
             age: null,
             expirationDate: null,
             registrar: null,
+            registrarUrl: null,
         };
         render(<WhoisInfoSection whoisInfo={partial} />);
 
@@ -32,6 +36,7 @@ describe('WhoisInfoSection', () => {
         expect(screen.queryByText(/Age:/i)).toBeNull();
         expect(screen.queryByText(/Expires:/i)).toBeNull();
         expect(screen.queryByText(/Registrar:/i)).toBeNull();
+        expect(screen.queryByText(/Registrar URL:/i)).toBeNull();
     });
 });
 
