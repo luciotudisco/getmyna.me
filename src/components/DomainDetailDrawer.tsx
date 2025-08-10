@@ -3,13 +3,13 @@
 import { useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { Domain, DomainStatus as DomainStatusEnum, DOMAIN_STATUS_DESCRIPTIONS } from '@/models/domain';
-import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
 import TldInfo from '@/components/TldInfo';
 import { WhoisInfo } from '@/models/whois';
 import { Badge } from '@/components/ui/badge';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
+import DomainRegistrarButtons from '@/components/DomainRegistrarButtons';
 import { apiService } from '@/services/api';
 
 interface DomainDetailDrawerProps {
@@ -85,41 +85,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
 
                     {domain.isAvailable() && (
                         <>
-                            <div className="space-y-2">
-                                <Button
-                                    className="w-full bg-blue-400 text-white hover:bg-blue-600"
-                                    onClick={() =>
-                                        window.open(
-                                            `https://www.godaddy.com/domainsearch/find?domainToCheck=${domain.getName()}`,
-                                            '_blank',
-                                        )
-                                    }
-                                >
-                                    GoDaddy
-                                </Button>
-                                <Button
-                                    className="w-full bg-blue-400 text-white hover:bg-blue-600"
-                                    onClick={() =>
-                                        window.open(
-                                            `https://www.namecheap.com/domains/registration/results/?domain=${domain.getName()}`,
-                                            '_blank',
-                                        )
-                                    }
-                                >
-                                    Namecheap
-                                </Button>
-                                <Button
-                                    className="w-full bg-blue-400 text-white hover:bg-blue-600"
-                                    onClick={() =>
-                                        window.open(
-                                            `https://porkbun.com/checkout/search?q=${domain.getName()}`,
-                                            '_blank',
-                                        )
-                                    }
-                                >
-                                    Porkbun
-                                </Button>
-                            </div>
+                            <DomainRegistrarButtons domainName={domain.getName()} />
                             <Separator />
                         </>
                     )}
