@@ -27,6 +27,19 @@ export function WhoisInfoSection({ whoisInfo }: WhoisInfoSectionProps) {
                     <span className="font-bold">Registrar:</span> {whoisInfo.registrar}
                 </p>
             )}
+            {whoisInfo.registrarUrl && (
+                <p className="text-xs">
+                    <span className="font-bold">Registrar URL:</span>{' '}
+                    <a
+                        href={whoisInfo.registrarUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 underline"
+                    >
+                        {whoisInfo.registrarUrl}
+                    </a>
+                </p>
+            )}
         </div>
     );
 }
