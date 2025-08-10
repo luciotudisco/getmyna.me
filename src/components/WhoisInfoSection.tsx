@@ -13,16 +13,16 @@ export function WhoisInfoSection({ whoisInfo }: WhoisInfoSectionProps) {
 
     return (
         <p className="text-xs">
-            This domain was created on {creationDate}. It is registered with{' '}
+            This domain was created on <span className="font-bold">{creationDate}</span>. It is registered with{' '}
             <a
                 href={registrarUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 underline"
+                className="font-bold text-blue-600 underline"
             >
                 {registrar ?? registrarUrl}
             </a>
-            . It is set to expire on {expirationDate}.
+            . It is set to expire on <span className="font-bold">{expirationDate}</span>.
         </p>
     );
 }
