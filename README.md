@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# getmyna.me
 
-## Getting Started
+getmyna.me is a Next.js app that helps you discover creative "domain hacks" — domain names that spell a phrase using top level domains (for example: **getmyna.me** → "get my name"). Enter a word or phrase and the app generates candidate domains, checks whether they are registered and shows WHOIS and DNS information.
 
-First, run the development server:
+## Features
+
+- Generates domain hack suggestions from any input phrase using an extensive list of TLDs.
+- Checks availability and WHOIS data through RapidAPI providers.
+- Displays DNS records and TLD descriptions for deeper exploration.
+- Built with Next.js 15, TypeScript and Tailwind CSS.
+
+## Local development
+
+### Prerequisites
+
+- Node.js 20+
+- npm (or yarn, pnpm, bun)
+- A [RapidAPI](https://rapidapi.com/) key with access to the Domainr and WHOIS APIs.
+
+### Setup
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Create a `.env.local` file at the project root and add your RapidAPI key:
+
+```
+RAPID_API_KEY=your_key_here
+```
+
+3. Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open <http://localhost:3000> and try searching for a term.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+4. Run code quality checks:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint
+npm test
+```
 
-## Learn More
+## Production build
 
-To learn more about Next.js, take a look at the following resources:
+To create an optimized build and run it locally:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run build
+npm start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deployment
 
-## Deploy on Vercel
+The project can be deployed to [Vercel](https://vercel.com/) or any Node.js hosting provider.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Deploying on Vercel
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Push the repository to your Git provider.
+2. Import the project into Vercel and set the `RAPID_API_KEY` environment variable in your project settings.
+3. Vercel automatically builds and deploys the app.
+
+### Self-hosted Node.js
+
+1. Ensure `RAPID_API_KEY` is defined in the environment.
+2. Run `npm run build` followed by `npm start` on your server.
+3. Serve the application behind your preferred reverse proxy.
+
+---
