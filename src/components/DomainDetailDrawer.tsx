@@ -5,13 +5,13 @@ import { Loader2 } from 'lucide-react';
 import { Domain, DomainStatus as DomainStatusEnum, DOMAIN_STATUS_DESCRIPTIONS } from '@/models/domain';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
-import TldInfo from '@/components/TldInfo';
+import TldSection from '@/components/TldSection';
 import { WhoisInfo } from '@/models/whois';
 import { WhoisInfoSection } from '@/components/WhoisInfoSection';
 import { Badge } from '@/components/ui/badge';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
 import DomainRegistrarButtons from '@/components/DomainRegistrarButtons';
-import { apiService, TldInfo as TldInfoType } from '@/services/api';
+import { apiService, TldInfo } from '@/services/api';
 import { DNSRecordType } from '@/models/dig';
 
 interface DomainDetailDrawerProps {
@@ -24,7 +24,7 @@ interface DomainDetailDrawerProps {
 export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawerProps) {
     const [hasARecord, setHasARecord] = useState(false);
     const [whoisInfo, setWhoisInfo] = useState<WhoisInfo | null>(null);
-    const [tldInfo, setTldInfo] = useState<TldInfoType | null>(null);
+    const [tldInfo, setTldInfo] = useState<TldInfo | null>(null);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -55,10 +55,10 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     }
 
                     setWhoisInfo(whoisData as WhoisInfo);
-                    setTldInfo(tldData as TldInfoType);
+                    setTldInfo(tldData as TldInfo);
                 } else {
                     const tldData = await tldPromise;
-                    setTldInfo(tldData as TldInfoType);
+                    setTldInfo(tldData as TldInfo);
                 }
             } catch (error) {
                 console.error('Error fetching domain details:', error);
@@ -133,7 +133,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
 
                     {tldInfo && (
                         <div>
-                            <TldInfo tld={domain.getTLD()} info={tldInfo} />
+                            <TldSection tld={domain.getTLD()} {...tldInfo} />
                         </div>
                     )}
                 </div>

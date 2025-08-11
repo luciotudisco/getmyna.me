@@ -1,18 +1,17 @@
 'use client';
 
-import { TldInfo as TldInfoType } from '@/services/api';
+import { TldInfo } from '@/services/api';
 
-interface TldInfoProps {
+interface TldSectionProps extends TldInfo {
     tld: string;
-    info: TldInfoType;
 }
 
-export default function TldInfo({ tld, info }: TldInfoProps) {
+export default function TldSection({ tld, description, wikipediaUrl }: TldSectionProps) {
     return (
         <p className="text-xs">
-            <span className="font-bold">.{tld}:</span> {info.description}{' '}
+            <span className="font-bold">.{tld}:</span> {description}{' '}
             <a
-                href={info.wikipediaUrl}
+                href={wikipediaUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 underline"
