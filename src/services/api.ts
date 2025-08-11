@@ -37,20 +37,12 @@ class ApiService {
     }
 
     async getTldInfo(tld: string): Promise<TldInfo> {
-        try {
-            const response = await this.client.get('/api/tlds/info', { params: { tld } });
-            const data = response.data;
-            return {
-                description: data.description ?? 'No additional information is available for this TLD.',
-                wikipediaUrl: `https://en.wikipedia.org/wiki/.${tld}`,
-            };
-        } catch (error) {
-            console.error('Error fetching TLD info:', error);
-            return {
-                description: 'No additional information is available for this TLD.',
-                wikipediaUrl: `https://en.wikipedia.org/wiki/.${tld}`,
-            };
-        }
+        const response = await this.client.get('/api/tlds/info', { params: { tld } });
+        const data = response.data;
+        return {
+            description: data.description ?? 'No additional information is available for this TLD.',
+            wikipediaUrl: `https://en.wikipedia.org/wiki/.${tld}`,
+        };
     }
 }
 
