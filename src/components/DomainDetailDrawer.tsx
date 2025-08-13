@@ -11,7 +11,8 @@ import { WhoisInfoSection } from '@/components/WhoisInfoSection';
 import { Badge } from '@/components/ui/badge';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
 import DomainRegistrarButtons from '@/components/DomainRegistrarButtons';
-import { apiService, TldInfo } from '@/services/api';
+import { apiService } from '@/services/api';
+import { TldInfo } from '@/models/tld';
 import { DNSRecordType } from '@/models/dig';
 
 interface DomainDetailDrawerProps {
