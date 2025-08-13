@@ -6,7 +6,8 @@ interface TldSectionProps extends TldInfo {
     tld: string;
 }
 
-export default function TldSection({ tld, description, wikipediaUrl }: TldSectionProps) {
+export default function TldSection({ tld, description }: TldSectionProps) {
+    const wikipediaUrl = `https://en.wikipedia.org/wiki/.${tld}`;
     return (
         <p className="text-xs">
             <span className="font-bold">.{tld}:</span> {description}{' '}

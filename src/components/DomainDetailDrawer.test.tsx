@@ -16,7 +16,7 @@ jest.mock('@/services/api', () => ({
     apiService: {
         digDomain: jest.fn(),
         getDomainWhois: jest.fn(),
-        getTldInfo: jest.fn(() => Promise.resolve({ description: 'Test', wikipediaUrl: 'https://example.com' })),
+        getTldInfo: jest.fn(() => Promise.resolve({ description: 'Test' })),
     },
 }));
 const mockedApiService = apiService as jest.Mocked<typeof apiService>;
@@ -69,7 +69,7 @@ describe('DomainDetailDrawer', () => {
         );
 
         const learnMoreLink = await screen.findByRole('link', { name: /Learn more on Wikipedia/i });
-        expect(learnMoreLink).toHaveAttribute('href', 'https://example.com');
+        expect(learnMoreLink).toHaveAttribute('href', `https://en.wikipedia.org/wiki/.${domain.getTLD()}`);
 
         openSpy.mockRestore();
     });

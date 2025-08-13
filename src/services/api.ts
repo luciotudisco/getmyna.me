@@ -5,7 +5,6 @@ import { WhoisInfo } from '@/models/whois';
 
 export interface TldInfo {
     description: string;
-    wikipediaUrl: string;
 }
 
 class ApiService {
@@ -41,7 +40,6 @@ class ApiService {
         const data = response.data;
         return {
             description: data.description ?? 'No additional information is available for this TLD.',
-            wikipediaUrl: `https://en.wikipedia.org/wiki/.${tld}`,
         };
     }
 }
