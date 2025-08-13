@@ -2,10 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 import { DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { DigInfo, DNSRecordType } from '@/models/dig';
 import { WhoisInfo } from '@/models/whois';
-
-export interface TldInfo {
-    description: string;
-}
+import { TldInfo } from '@/models/tld';
 
 class ApiService {
     private client: AxiosInstance;

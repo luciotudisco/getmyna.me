@@ -1,6 +1,6 @@
 'use client';
 
-import { TldInfo } from '@/services/api';
+import { TldInfo } from '@/models/tld';
 
 interface TldSectionProps extends TldInfo {
     tld: string;
