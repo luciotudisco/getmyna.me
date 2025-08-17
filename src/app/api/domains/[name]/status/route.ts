@@ -1,15 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import axios from 'axios';
 
 const DOMAINR_BASE_URL = 'https://domainr.p.rapidapi.com/v2/status';
 const RAPID_API_KEY = process.env.RAPID_API_KEY!;
 
 export async function GET(
-    _request: NextRequest,
-    { params }: { params: { name: string } },
+    _request: Request,
+    context: { params: { name: string } },
 ): Promise<NextResponse> {
     try {
-        const { name: domain } = params;
+        const { name: domain } = context.params;
         const query = { domain };
         const headers = { headers: { 'x-rapidapi-key': RAPID_API_KEY } };
         const url = `${DOMAINR_BASE_URL}?${new URLSearchParams(query).toString()}`;
