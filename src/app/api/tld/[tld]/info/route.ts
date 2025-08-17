@@ -3,11 +3,11 @@ import axios from 'axios';
 
 const WIKIPEDIA_SUMMARY_URL = 'https://en.wikipedia.org/api/rest_v1/page/summary';
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
-    const tld = request.nextUrl.searchParams.get('tld');
-    if (!tld) {
-        return NextResponse.json({ error: 'Missing tld parameter' }, { status: 400 });
-    }
+export async function GET(
+    _request: NextRequest,
+    { params }: { params: { tld: string } },
+): Promise<NextResponse> {
+    const { tld } = params;
 
     try {
         const url = `${WIKIPEDIA_SUMMARY_URL}/.${tld}`;

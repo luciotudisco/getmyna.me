@@ -5,11 +5,11 @@ const WHOIS_URL = 'https://whois-api6.p.rapidapi.com/whois/api/v1/getData';
 const WHOIS_HOST = 'whois-api6.p.rapidapi.com';
 const RAPID_API_KEY = process.env.RAPID_API_KEY!;
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
-    const domain = request.nextUrl.searchParams.get('domain');
-    if (!domain) {
-        return NextResponse.json({ error: 'Missing domain parameter' }, { status: 400 });
-    }
+export async function GET(
+    _request: NextRequest,
+    { params }: { params: { domain: string } },
+): Promise<NextResponse> {
+    const { domain } = params;
 
     try {
         const response = await axios.post(
