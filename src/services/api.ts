@@ -17,23 +17,23 @@ class ApiService {
     }
 
     async getDomainStatus(domain: string): Promise<DomainStatusEnum> {
-        const response = await this.client.get('/api/domains/status', { params: { domain } });
+        const response = await this.client.get(`/api/domain/${domain}/status`);
         const data = response.data as { status?: { summary?: string }[] };
         return (data.status?.[0]?.summary as DomainStatusEnum) ?? DomainStatusEnum.error;
     }
 
     async getDomainWhois(domain: string): Promise<WhoisInfo> {
-        const response = await this.client.get('/api/domains/whois', { params: { domain } });
+        const response = await this.client.get(`/api/domain/${domain}/whois`);
         return response.data as WhoisInfo;
     }
 
     async digDomain(domain: string, type: DNSRecordType): Promise<DigInfo> {
-        const response = await this.client.get('/api/domains/dig', { params: { domain, type } });
+        const response = await this.client.get(`/api/domain/${domain}/dig`, { params: { type } });
         return response.data as DigInfo;
     }
 
     async getTldInfo(tld: string): Promise<TldInfo> {
-        const response = await this.client.get('/api/tlds/info', { params: { tld } });
+        const response = await this.client.get(`/api/tld/${tld}/info`);
         const data = response.data;
         return { description: data.description };
     }

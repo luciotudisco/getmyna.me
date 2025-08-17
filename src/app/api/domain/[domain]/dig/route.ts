@@ -4,13 +4,12 @@ import { DNSRecordType } from '@/models/dig';
 
 const resolver = new Resolver();
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
-    const domain = request.nextUrl.searchParams.get('domain');
+export async function GET(
+    request: NextRequest,
+    { params }: { params: { domain: string } },
+): Promise<NextResponse> {
+    const { domain } = params;
     const recordTypeParam = request.nextUrl.searchParams.get('type')?.toUpperCase();
-
-    if (!domain) {
-        return NextResponse.json({ error: 'Missing domain parameter' }, { status: 400 });
-    }
 
     if (!recordTypeParam) {
         return NextResponse.json({ error: 'Missing type parameter' }, { status: 400 });
