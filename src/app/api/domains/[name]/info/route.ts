@@ -5,9 +5,9 @@ const WIKIPEDIA_SUMMARY_URL = 'https://en.wikipedia.org/api/rest_v1/page/summary
 
 export async function GET(
     _request: NextRequest,
-    { params }: { params: { tld: string } },
+    { params }: { params: { name: string } },
 ): Promise<NextResponse> {
-    const { tld } = params;
+    const { name: tld } = params;
 
     try {
         const url = `${WIKIPEDIA_SUMMARY_URL}/.${tld}`;

@@ -6,9 +6,9 @@ const resolver = new Resolver();
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: { domain: string } },
+    { params }: { params: { name: string } },
 ): Promise<NextResponse> {
-    const { domain } = params;
+    const { name: domain } = params;
     const recordTypeParam = request.nextUrl.searchParams.get('type')?.toUpperCase();
 
     if (!recordTypeParam) {

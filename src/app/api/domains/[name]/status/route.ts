@@ -6,10 +6,10 @@ const RAPID_API_KEY = process.env.RAPID_API_KEY!;
 
 export async function GET(
     _request: NextRequest,
-    { params }: { params: { domain: string } },
+    { params }: { params: { name: string } },
 ): Promise<NextResponse> {
     try {
-        const { domain } = params;
+        const { name: domain } = params;
         const query = { domain };
         const headers = { headers: { 'x-rapidapi-key': RAPID_API_KEY } };
         const url = `${DOMAINR_BASE_URL}?${new URLSearchParams(query).toString()}`;
