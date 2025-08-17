@@ -7,9 +7,9 @@ const RAPID_API_KEY = process.env.RAPID_API_KEY!;
 
 export async function GET(
     _request: NextRequest,
-    { params }: { params: { domain: string } },
+    { params }: { params: { name: string } },
 ): Promise<NextResponse> {
-    const { domain } = params;
+    const { name: domain } = params;
 
     try {
         const response = await axios.post(
