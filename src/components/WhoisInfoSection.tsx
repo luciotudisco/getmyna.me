@@ -5,14 +5,6 @@ interface WhoisInfoSectionProps {
     whoisInfo: WhoisInfo;
 }
 
-function formatDate(dateStr: string): string {
-    try {
-        return format(parseISO(dateStr), 'MMMM do, yyyy');
-    } catch {
-        return dateStr;
-    }
-}
-
 export function WhoisInfoSection({ whoisInfo }: WhoisInfoSectionProps) {
     const { creationDate, registrarUrl, registrar, expirationDate } = whoisInfo;
 
@@ -20,8 +12,8 @@ export function WhoisInfoSection({ whoisInfo }: WhoisInfoSectionProps) {
         return null;
     }
 
-    const formattedCreationDate = formatDate(creationDate);
-    const formattedExpirationDate = formatDate(expirationDate);
+    const formattedCreationDate = format(parseISO(creationDate), 'MMMM do, yyyy');
+    const formattedExpirationDate = format(parseISO(expirationDate), 'MMMM do, yyyy');
 
     return (
         <p className="text-xs">
