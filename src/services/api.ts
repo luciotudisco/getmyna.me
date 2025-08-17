@@ -17,7 +17,7 @@ class ApiService {
     }
 
     async getDomainStatus(domain: string): Promise<DomainStatusEnum> {
-        const response = await this.client.get('/api/domains/status', { params: { domain } });
+        const response = await this.client.get(`/api/domain/${domain}/status`);
         const data = response.data as { status?: { summary?: string }[] };
         return (data.status?.[0]?.summary as DomainStatusEnum) ?? DomainStatusEnum.error;
     }
