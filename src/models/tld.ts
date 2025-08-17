@@ -1,3 +1,3 @@
 export interface TldInfo {
-    description: string;
+    description?: string;
 }

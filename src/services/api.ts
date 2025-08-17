@@ -36,7 +36,7 @@ class ApiService {
         const response = await this.client.get('/api/tlds/info', { params: { tld } });
         const data = response.data;
         return {
-            description: data.description ?? 'No additional information is available for this TLD.',
+            description: data.description,
         };
     }
 }

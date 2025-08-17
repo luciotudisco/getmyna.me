@@ -8,9 +8,10 @@ interface TldSectionProps extends TldInfo {
 
 export default function TldSection({ tld, description }: TldSectionProps) {
     const wikipediaUrl = `https://en.wikipedia.org/wiki/.${tld}`;
+    const tldDescription = description ?? 'No additional information is available for this TLD.';
     return (
         <p className="text-xs">
-            <span className="font-bold">.{tld}:</span> {description}{' '}
+            <span className="font-bold">.{tld}:</span> {tldDescription}{' '}
             <a
                 href={wikipediaUrl}
                 target="_blank"
