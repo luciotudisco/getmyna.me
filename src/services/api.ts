@@ -35,9 +35,7 @@ class ApiService {
     async getTldInfo(tld: string): Promise<TldInfo> {
         const response = await this.client.get('/api/tlds/info', { params: { tld } });
         const data = response.data;
-        return {
-            description: data.description,
-        };
+        return { description: data.description };
     }
 }
 
