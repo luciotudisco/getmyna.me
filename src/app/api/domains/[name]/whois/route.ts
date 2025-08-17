@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import axios from 'axios';
 
 const WHOIS_URL = 'https://whois-api6.p.rapidapi.com/whois/api/v1/getData';
@@ -6,10 +6,10 @@ const WHOIS_HOST = 'whois-api6.p.rapidapi.com';
 const RAPID_API_KEY = process.env.RAPID_API_KEY!;
 
 export async function GET(
-    _request: NextRequest,
-    { params }: { params: { name: string } },
+    _request: Request,
+    context: { params: { name: string } },
 ): Promise<NextResponse> {
-    const { name: domain } = params;
+    const { name: domain } = context.params;
 
     try {
         const response = await axios.post(

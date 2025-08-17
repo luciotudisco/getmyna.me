@@ -1,15 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { Resolver } from 'dns/promises';
 import { DNSRecordType } from '@/models/dig';
 
 const resolver = new Resolver();
 
 export async function GET(
-    request: NextRequest,
-    { params }: { params: { name: string } },
+    request: Request,
+    context: { params: { name: string } },
 ): Promise<NextResponse> {
-    const { name: domain } = params;
-    const recordTypeParam = request.nextUrl.searchParams.get('type')?.toUpperCase();
+    const { name: domain } = context.params;
+    const recordTypeParam = new URL(request.url).searchParams.get('type')?.toUpperCase();
 
     if (!recordTypeParam) {
         return NextResponse.json({ error: 'Missing type parameter' }, { status: 400 });
