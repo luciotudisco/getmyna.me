@@ -4,10 +4,7 @@ import axios from 'axios';
 const DOMAINR_BASE_URL = 'https://domainr.p.rapidapi.com/v2/status';
 const RAPID_API_KEY = process.env.RAPID_API_KEY!;
 
-export async function GET(
-    _request: Request,
-    context: { params: { name: string } },
-): Promise<NextResponse> {
+export async function GET(_request: Request, context: { params: { name: string } }): Promise<NextResponse> {
     try {
         const { name: domain } = context.params;
         const query = { domain };

@@ -17,8 +17,7 @@ export function WhoisInfoSection({ whoisInfo }: WhoisInfoSectionProps) {
 
     return (
         <p className="text-xs">
-            This domain was created on <span className="font-bold">{formattedCreationDate}</span>. It is registered
-            with{' '}
+            This domain was created on <span className="font-bold">{formattedCreationDate}</span>. It is registered with{' '}
             <a
                 href={registrarUrl}
                 target="_blank"
@@ -31,4 +30,3 @@ export function WhoisInfoSection({ whoisInfo }: WhoisInfoSectionProps) {
         </p>
     );
 }
-

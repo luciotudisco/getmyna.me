@@ -4,10 +4,7 @@ import { DNSRecordType } from '@/models/dig';
 
 const resolver = new Resolver();
 
-export async function GET(
-    request: Request,
-    { params }: { params: { name: string } },
-): Promise<NextResponse> {
+export async function GET(request: Request, { params }: { params: { name: string } }): Promise<NextResponse> {
     const { name: domain } = params;
     const recordTypeParam = new URL(request.url).searchParams.get('type')?.toUpperCase();
 

@@ -38,4 +38,3 @@ describe('WhoisInfoSection', () => {
         expect(screen.queryByText(/This domain was created on/i)).toBeNull();
     });
 });
-

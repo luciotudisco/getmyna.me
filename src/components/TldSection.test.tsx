@@ -9,8 +9,6 @@ describe('TldSection', () => {
 
     it('uses default description when none is provided', () => {
         render(<TldSection tld="xyz" />);
-        expect(
-            screen.getByText('No additional information is available for this TLD.'),
-        ).toBeInTheDocument();
+        expect(screen.getByText('No additional information is available for this TLD.')).toBeInTheDocument();
     });
 });

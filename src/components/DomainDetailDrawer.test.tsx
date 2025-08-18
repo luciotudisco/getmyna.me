@@ -11,7 +11,6 @@ jest.mock('@/components/ui/drawer', () => ({
     DrawerTitle: ({ children }: any) => <div>{children}</div>,
 }));
 
-
 jest.mock('@/services/api', () => ({
     apiService: {
         digDomain: jest.fn(),
@@ -126,9 +125,7 @@ describe('DomainDetailDrawer', () => {
 
         render(<DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />);
 
-        await waitFor(() =>
-            expect(mockedApiService.digDomain).toHaveBeenCalledWith(domain.getName(), DNSRecordType.A),
-        );
+        await waitFor(() => expect(mockedApiService.digDomain).toHaveBeenCalledWith(domain.getName(), DNSRecordType.A));
         expect(screen.queryByRole('link', { name: /Visit website/i })).toBeNull();
         expect(screen.queryByText(/DNS Records/)).toBeNull();
 

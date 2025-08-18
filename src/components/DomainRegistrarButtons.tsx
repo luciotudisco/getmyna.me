@@ -38,4 +38,3 @@ export function DomainRegistrarButtons({ domainName }: DomainRegistrarButtonsPro
 }
 
 export default DomainRegistrarButtons;
-

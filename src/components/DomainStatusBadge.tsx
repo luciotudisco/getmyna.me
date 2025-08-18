@@ -35,19 +35,11 @@ function ErrorBadge({ className }: { className?: string }) {
 }
 
 function AvailableBadge({ className }: { className?: string }) {
-    return (
-        <Badge className={cn(baseClasses, 'bg-green-400 hover:bg-green-600', className)}>
-            Available
-        </Badge>
-    );
+    return <Badge className={cn(baseClasses, 'bg-green-400 hover:bg-green-600', className)}>Available</Badge>;
 }
 
 function TakenBadge({ className }: { className?: string }) {
-    return (
-        <Badge className={cn(baseClasses, 'bg-red-400 hover:bg-red-600', className)}>
-            Taken
-        </Badge>
-    );
+    return <Badge className={cn(baseClasses, 'bg-red-400 hover:bg-red-600', className)}>Taken</Badge>;
 }
 
 export function DomainStatusBadge({ domain, status, className }: DomainStatusBadgeProps) {
@@ -67,4 +59,3 @@ export function DomainStatusBadge({ domain, status, className }: DomainStatusBad
 }
 
 export default DomainStatusBadge;
-

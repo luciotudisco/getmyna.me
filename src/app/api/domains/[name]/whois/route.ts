@@ -5,10 +5,7 @@ const WHOIS_URL = 'https://whois-api6.p.rapidapi.com/whois/api/v1/getData';
 const WHOIS_HOST = 'whois-api6.p.rapidapi.com';
 const RAPID_API_KEY = process.env.RAPID_API_KEY!;
 
-export async function GET(
-    _request: Request,
-    context: { params: { name: string } },
-): Promise<NextResponse> {
+export async function GET(_request: Request, context: { params: { name: string } }): Promise<NextResponse> {
     const { name: domain } = context.params;
 
     try {

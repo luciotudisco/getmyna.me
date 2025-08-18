@@ -20,9 +20,7 @@ export function SearchResult({ domain }: { domain: Domain }) {
     useEffect(() => {
         const fetchStatus = async () => {
             try {
-                const result = await statusRateLimiter.add(() =>
-                    apiService.getDomainStatus(domain.getName()),
-                );
+                const result = await statusRateLimiter.add(() => apiService.getDomainStatus(domain.getName()));
 
                 domain.setStatus(result);
                 setStatus(result);
