@@ -1,12 +1,13 @@
+import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { Resolver } from 'dns/promises';
 import { DNSRecordType } from '@/models/dig';
 
 const resolver = new Resolver();
 
-export async function GET(request: Request, { params }: { params: { name: string } }): Promise<NextResponse> {
-    const { name: domain } = params;
-    const recordTypeParam = new URL(request.url).searchParams.get('type')?.toUpperCase();
+export async function GET(request: NextRequest, { params }: { params: { name: string } }) {
+    const domain = params.name;
+    const recordTypeParam = request.nextUrl.searchParams.get('type')?.toUpperCase();
 
     if (!recordTypeParam) {
         return NextResponse.json({ error: 'Missing type parameter' }, { status: 400 });
@@ -18,24 +19,18 @@ export async function GET(request: Request, { params }: { params: { name: string
         return NextResponse.json({ error: 'Unsupported record type' }, { status: 400 });
     }
 
-    const recordTypes: DNSRecordType[] = [recordType];
-
     try {
         const records: Partial<Record<DNSRecordType, string[]>> = {};
 
-        for (const type of recordTypes) {
-            const result = await resolver.resolve(domain, type as any).catch(() => []);
-            if (!result.length) {
-                continue;
-            }
-
-            if (type === DNSRecordType.MX) {
+        const result = await resolver.resolve(domain, recordType).catch(() => []);
+        if (Array.isArray(result) && result.length) {
+            if (recordType === DNSRecordType.MX) {
                 // Format as "priority exchange"
-                records[DNSRecordType.MX] = (result as { priority: number; exchange: string }[]).map(
+                records.MX = (result as { priority: number; exchange: string }[]).map(
                     (mx) => `${mx.priority} ${mx.exchange}`,
                 );
             } else {
-                records[type] = (result as string[]).map(String);
+                records[recordType] = (result as string[]).map(String);
             }
         }
 
