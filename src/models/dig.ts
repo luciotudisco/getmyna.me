@@ -8,8 +8,5 @@ export enum DNSRecordType {
 }
 
 export interface DigInfo {
-    result: {
-        domain: string;
-        records: Partial<Record<DNSRecordType, string[]>>;
-    };
+    records: Partial<Record<DNSRecordType, string[]>>;
 }

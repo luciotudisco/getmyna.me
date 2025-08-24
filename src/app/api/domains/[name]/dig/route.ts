@@ -53,7 +53,7 @@ export async function GET(
                 records = Array.isArray(res) ? res.map(String) : [];
             }
         }
-        return NextResponse.json({ result: { domain, type: recordType, records } });
+        return NextResponse.json({ records: { [recordType]: records } });
     } catch {
         return NextResponse.json({ error: 'Failed to fetch DNS data' }, { status: 502 });
     }

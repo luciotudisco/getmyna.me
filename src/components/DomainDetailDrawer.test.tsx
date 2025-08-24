@@ -78,10 +78,7 @@ describe('DomainDetailDrawer', () => {
         domain.setStatus(DomainStatus.active);
 
         mockedApiService.digDomain.mockResolvedValue({
-            result: {
-                domain: 'example.com',
-                records: { [DNSRecordType.A]: ['1.2.3.4'] },
-            },
+            records: { [DNSRecordType.A]: ['1.2.3.4'] },
         });
         mockedApiService.getDomainWhois.mockResolvedValue({
             creationDate: '2025-10-03',
@@ -111,10 +108,7 @@ describe('DomainDetailDrawer', () => {
         domain.setStatus(DomainStatus.active);
 
         mockedApiService.digDomain.mockResolvedValue({
-            result: {
-                domain: 'example.com',
-                records: { [DNSRecordType.CNAME]: ['alias.example.com.'] },
-            },
+            records: { [DNSRecordType.CNAME]: ['alias.example.com.'] },
         });
         mockedApiService.getDomainWhois.mockResolvedValue({
             creationDate: '2025-10-03',
@@ -138,10 +132,7 @@ describe('DomainDetailDrawer', () => {
         domain.setStatus(DomainStatus.active);
 
         mockedApiService.digDomain.mockResolvedValue({
-            result: {
-                domain: 'example.com',
-                records: { [DNSRecordType.A]: ['1.2.3.4'] },
-            },
+            records: { [DNSRecordType.A]: ['1.2.3.4'] },
         });
         mockedApiService.getDomainWhois.mockResolvedValue({
             creationDate: '2025-10-03',
