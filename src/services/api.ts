@@ -32,10 +32,9 @@ class ApiService {
         return response.data as DigInfo;
     }
 
-    async getTldInfo(tld: string): Promise<TldInfo> {
-        const response = await this.client.get(`/api/domains/${tld}/info`);
-        const data = response.data;
-        return { description: data.description };
+    async getTldInfo(domain: string): Promise<TldInfo> {
+        const response = await this.client.get(`/api/domains/${domain}/tld`);
+        return response.data as TldInfo;
     }
 }
 

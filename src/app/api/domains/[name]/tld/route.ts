@@ -3,10 +3,14 @@ import axios from 'axios';
 
 const WIKIPEDIA_SUMMARY_URL = 'https://en.wikipedia.org/api/rest_v1/page/summary';
 
-export async function GET(_request: Request, context: { params: { name: string } }): Promise<NextResponse> {
-    const { name: tld } = context.params;
-
+export async function GET(
+    _request: Request,
+    { params }: { params: Promise<Record<string, string | string[]>> },
+): Promise<NextResponse> {
     try {
+        const resolvedParams = await params;
+        const domain = Array.isArray(resolvedParams?.name) ? resolvedParams?.name[0] : resolvedParams?.name;
+        const tld = domain.split('.').pop();
         const url = `${WIKIPEDIA_SUMMARY_URL}/.${tld}`;
         const response = await axios.get(url);
         const extract: string | undefined = response.data?.extract;

@@ -40,8 +40,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
         const fetchData = async () => {
             setLoading(true);
             try {
-                const tldPromise = apiService.getTldInfo(domain.getTLD());
-
+                const tldPromise = apiService.getTldInfo(domain.getName());
                 if (!domain.isAvailable()) {
                     const [digData, whoisData, tldData] = await Promise.all([
                         apiService.digDomain(domain.getName(), DNSRecordType.A),

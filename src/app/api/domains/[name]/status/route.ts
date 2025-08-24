@@ -4,12 +4,15 @@ import axios from 'axios';
 const DOMAINR_BASE_URL = 'https://domainr.p.rapidapi.com/v2/status';
 const RAPID_API_KEY = process.env.RAPID_API_KEY!;
 
-export async function GET(_request: Request, context: { params: { name: string } }): Promise<NextResponse> {
+export async function GET(
+    _request: Request,
+    { params }: { params: Promise<Record<string, string | string[]>> },
+): Promise<NextResponse> {
     try {
-        const { name: domain } = context.params;
-        const query = { domain };
+        const resolvedParams = await params;
+        const domain = Array.isArray(resolvedParams?.name) ? resolvedParams?.name[0] : resolvedParams?.name;
         const headers = { headers: { 'x-rapidapi-key': RAPID_API_KEY } };
-        const url = `${DOMAINR_BASE_URL}?${new URLSearchParams(query).toString()}`;
+        const url = `${DOMAINR_BASE_URL}?${new URLSearchParams({ domain }).toString()}`;
         const response = await axios.get(url, headers);
         return NextResponse.json(response.data);
     } catch (error) {
