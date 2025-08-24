@@ -48,7 +48,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                         tldPromise,
                     ]);
 
-                    if (digData.result.records[DNSRecordType.A]?.length) {
+                    if (digData.records[DNSRecordType.A]?.length) {
                         setHasARecord(true);
                     } else {
                         setHasARecord(false);
