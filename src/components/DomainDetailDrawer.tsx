@@ -14,6 +14,7 @@ import DomainRegistrarButtons from '@/components/DomainRegistrarButtons';
 import { apiService } from '@/services/api';
 import { TldInfo } from '@/models/tld';
 import { DNSRecordType } from '@/models/dig';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
 interface DomainDetailDrawerProps {
     domain: Domain;
@@ -74,6 +75,11 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
         return (
             <Drawer open={open} onOpenChange={(openState: boolean) => !openState && onClose()} direction="bottom">
                 <DrawerContent className="min-h-[400px]">
+                    <DrawerHeader>
+                        <VisuallyHidden>
+                            <DrawerTitle>Loading domain details</DrawerTitle>
+                        </VisuallyHidden>
+                    </DrawerHeader>
                     <div className="flex flex-1 flex-col items-center justify-center gap-4 text-sm text-muted-foreground">
                         <Loader2 className="h-6 w-6 animate-spin" />
                         <span>Hang tight, fetching domain details...</span>
