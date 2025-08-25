@@ -11,9 +11,9 @@ class ApiService {
         this.client = axios.create();
     }
 
-    async searchDomains(term: string): Promise<string[]> {
-        const response = await this.client.get('/api/domains/search', { params: { term } });
-        return response.data.domains ?? [];
+    async digDomain(domain: string, type: DNSRecordType): Promise<DigInfo> {
+        const response = await this.client.get(`/api/domains/${domain}/dig`, { params: { type } });
+        return response.data as DigInfo;
     }
 
     async getDomainStatus(domain: string): Promise<DomainStatusEnum> {
@@ -27,14 +27,14 @@ class ApiService {
         return response.data as WhoisInfo;
     }
 
-    async digDomain(domain: string, type: DNSRecordType): Promise<DigInfo> {
-        const response = await this.client.get(`/api/domains/${domain}/dig`, { params: { type } });
-        return response.data as DigInfo;
-    }
-
     async getTldInfo(domain: string): Promise<TldInfo> {
         const response = await this.client.get(`/api/domains/${domain}/tld`);
         return response.data as TldInfo;
+    }
+
+    async searchDomains(term: string): Promise<string[]> {
+        const response = await this.client.get('/api/domains/search', { params: { term } });
+        return response.data.domains ?? [];
     }
 }
 
