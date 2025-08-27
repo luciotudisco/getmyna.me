@@ -13,15 +13,11 @@ export async function GET(
         const tld = domain.split('.').pop();
         const url = `${WIKIPEDIA_SUMMARY_URL}/.${tld}`;
         const response = await axios.get(url);
-        const extract: string | undefined = response.data?.extract;
-        if (!extract) {
-            return NextResponse.json({});
-        }
-        const description = extract
-            .split(/(?<=\.)\s+/)
+        const description = response.data?.extract
+            ?.split(/(?<=\.)\s+/)
             .slice(0, 2)
             .join(' ');
-        return NextResponse.json({ description });
+        return NextResponse.json({ description, name: tld });
     } catch (error) {
         console.error('Error fetching TLD info:', error);
         return NextResponse.json({});

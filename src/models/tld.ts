@@ -16,6 +16,7 @@ export enum TldType {
 }
 
 export interface TldInfo {
+    name?: string;
     description?: string;
     type?: TldType;
 }
