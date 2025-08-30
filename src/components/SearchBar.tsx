@@ -13,9 +13,7 @@ export default function SearchBar() {
 
     useEffect(() => {
         const term = searchParams.get('term');
-        if (term) {
-            setSearchTerm(term);
-        }
+        setSearchTerm(term || "");
     }, [searchParams]);
 
     const handleSearch = (event: FormEvent) => {
