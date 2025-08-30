@@ -35,9 +35,25 @@ describe('DomainDetailDrawer', () => {
         });
     });
 
+    beforeEach(() => {
+        mockedApiService.digDomain.mockResolvedValue({ records: { [DNSRecordType.A]: [] } });
+        mockedApiService.getDomainWhois.mockResolvedValue({
+            creationDate: '2025-10-03',
+            expirationDate: '2030-01-01',
+            registrar: 'Example Registrar',
+            registrarUrl: 'https://example-registrar.com',
+        });
+    });
+
+    afterEach(() => {
+        mockedApiService.digDomain.mockReset();
+        mockedApiService.getDomainWhois.mockReset();
+    });
+
     it('shows registrar buttons when domain is available', async () => {
         const domain = new Domain('example.com');
         domain.setStatus(DomainStatus.inactive);
+
         render(<DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />);
 
         const openSpy = jest.spyOn(window, 'open').mockImplementation(() => null);
@@ -70,6 +86,12 @@ describe('DomainDetailDrawer', () => {
         const learnMoreLink = await screen.findByRole('link', { name: /Learn more on Wikipedia/i });
         expect(learnMoreLink).toHaveAttribute('href', `https://en.wikipedia.org/wiki/.${domain.getTLD()}`);
 
+        await waitFor(() => expect(mockedApiService.digDomain).toHaveBeenCalledWith(domain.getName(), DNSRecordType.A));
+        await waitFor(() => expect(mockedApiService.getDomainWhois).toHaveBeenCalledWith(domain.getName()));
+
+        const whoisParagraph = await screen.findByText(/This domain was created on/i);
+        expect(whoisParagraph).toBeInTheDocument();
+
         openSpy.mockRestore();
     });
 
@@ -80,13 +102,7 @@ describe('DomainDetailDrawer', () => {
         mockedApiService.digDomain.mockResolvedValue({
             records: { [DNSRecordType.A]: ['1.2.3.4'] },
         });
-        mockedApiService.getDomainWhois.mockResolvedValue({
-            creationDate: '2025-10-03',
-            expirationDate: '2030-01-01',
-            registrar: 'Example Registrar',
-            registrarUrl: 'https://example-registrar.com',
-        });
-
+        
         render(<DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />);
 
         expect(screen.queryByRole('button', { name: /GoDaddy/i })).toBeNull();
@@ -98,9 +114,6 @@ describe('DomainDetailDrawer', () => {
         expect(screen.queryByText(/DNS Records/)).toBeNull();
 
         expect(mockedApiService.digDomain).toHaveBeenCalledWith(domain.getName(), DNSRecordType.A);
-
-        mockedApiService.digDomain.mockReset();
-        mockedApiService.getDomainWhois.mockReset();
     });
 
     it('does not show website link when domain has no A record', async () => {
@@ -110,21 +123,12 @@ describe('DomainDetailDrawer', () => {
         mockedApiService.digDomain.mockResolvedValue({
             records: { [DNSRecordType.CNAME]: ['alias.example.com.'] },
         });
-        mockedApiService.getDomainWhois.mockResolvedValue({
-            creationDate: '2025-10-03',
-            expirationDate: '2030-01-01',
-            registrar: 'Example Registrar',
-            registrarUrl: 'https://example-registrar.com',
-        });
 
         render(<DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />);
 
         await waitFor(() => expect(mockedApiService.digDomain).toHaveBeenCalledWith(domain.getName(), DNSRecordType.A));
         expect(screen.queryByRole('link', { name: /Visit website/i })).toBeNull();
         expect(screen.queryByText(/DNS Records/)).toBeNull();
-
-        mockedApiService.digDomain.mockReset();
-        mockedApiService.getDomainWhois.mockReset();
     });
 
     it('shows whois information when domain is not available', async () => {
@@ -133,12 +137,6 @@ describe('DomainDetailDrawer', () => {
 
         mockedApiService.digDomain.mockResolvedValue({
             records: { [DNSRecordType.A]: ['1.2.3.4'] },
-        });
-        mockedApiService.getDomainWhois.mockResolvedValue({
-            creationDate: '2025-10-03',
-            expirationDate: '2030-01-01',
-            registrar: 'Example Registrar',
-            registrarUrl: 'https://example-registrar.com',
         });
 
         render(<DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />);
@@ -156,8 +154,5 @@ describe('DomainDetailDrawer', () => {
         expect(expirationSpan).toHaveClass('font-bold');
 
         expect(mockedApiService.digDomain).toHaveBeenCalledWith(domain.getName(), DNSRecordType.A);
-
-        mockedApiService.digDomain.mockReset();
-        mockedApiService.getDomainWhois.mockReset();
     });
 });

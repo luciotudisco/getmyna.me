@@ -41,26 +41,20 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
         const fetchData = async () => {
             setLoading(true);
             try {
-                const tldPromise = apiService.getTldInfo(domain.getName());
-                if (!domain.isAvailable()) {
-                    const [digData, whoisData, tldData] = await Promise.all([
-                        apiService.digDomain(domain.getName(), DNSRecordType.A),
-                        apiService.getDomainWhois(domain.getName()),
-                        tldPromise,
-                    ]);
+                const [digData, whoisData, tldData] = await Promise.all([
+                    apiService.digDomain(domain.getName(), DNSRecordType.A),
+                    apiService.getDomainWhois(domain.getName()),
+                    apiService.getTldInfo(domain.getName()),
+                ]);
 
-                    if (digData.records[DNSRecordType.A]?.length) {
-                        setHasARecord(true);
-                    } else {
-                        setHasARecord(false);
-                    }
-
-                    setWhoisInfo(whoisData as WhoisInfo);
-                    setTldInfo(tldData as TldInfo);
+                if (digData.records[DNSRecordType.A]?.length) {
+                    setHasARecord(true);
                 } else {
-                    const tldData = await tldPromise;
-                    setTldInfo(tldData as TldInfo);
+                    setHasARecord(false);
                 }
+
+                setWhoisInfo(whoisData as WhoisInfo);
+                setTldInfo(tldData as TldInfo);
             } catch (error) {
                 console.error('Error fetching domain details:', error);
             } finally {
@@ -114,7 +108,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     <div>
                         <p className="text-xs">
                             <span className="font-bold">{status}:</span> {DOMAIN_STATUS_DESCRIPTIONS[status]}
-                            {!domain.isAvailable() && hasARecord && (
+                            {hasARecord && (
                                 <span className="ml-2">
                                     <a
                                         href={`https://${domain.getName()}`}
@@ -130,7 +124,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     </div>
                     <Separator />
 
-                    {!domain.isAvailable() && whoisInfo && (
+                    {whoisInfo && (
                         <>
                             <WhoisInfoSection whoisInfo={whoisInfo} />
                             <Separator />
