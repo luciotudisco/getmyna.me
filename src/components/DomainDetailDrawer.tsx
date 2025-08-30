@@ -45,7 +45,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     apiService.digDomain(domain.getName(), DNSRecordType.A),
                     apiService.getDomainWhois(domain.getName()),
                     apiService.getTldInfo(domain.getName()),
-                ]);
+                    ]);
 
                 if (digData.records[DNSRecordType.A]?.length) {
                     setHasARecord(true);
