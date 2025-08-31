@@ -11,13 +11,18 @@ class StorageService {
     }
 
     async createTld(tldInfo: TLD): Promise<void> {
-        const { error } = await this.client.from('tld').insert({
-            name: tldInfo.name,
-            description: tldInfo.description,
-        });
+        const { error } = await this.client.from('tld').upsert(
+            {
+                name: tldInfo.name,
+                description: tldInfo.description,
+            },
+            {
+                onConflict: 'name',
+            },
+        );
         if (error) {
-            console.error('Error creating TLD in Supabase:', error);
-            throw new Error(`Failed to create TLD: ${error.message}`);
+            console.error('Error upserting TLD in Supabase:', error);
+            throw new Error(`Failed to upsert TLD: ${error.message}`);
         }
     }
 
