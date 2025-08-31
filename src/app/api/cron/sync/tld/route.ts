@@ -12,11 +12,12 @@ export async function GET(): Promise<NextResponse> {
         const response = await axios.get(IANA_TLD_URL);
         const tldData = response.data as string;
 
-        // Parse the data - skip comments and empty lines
+        // Parse the data and store in Supabase
         const lines = tldData.split('\n');
         for (const line of lines) {
             const trimmed = line.trim();
             if (!trimmed || trimmed.startsWith('#')) {
+                // Skip comments and empty lines
                 continue;
             }
             await storageService.createTld({
