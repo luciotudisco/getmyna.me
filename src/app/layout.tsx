@@ -3,6 +3,7 @@ import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Amplitude } from '@/components/Amplitude';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata: Metadata = {
     title: 'GetMyNa.me',
@@ -20,6 +21,7 @@ export default function RootLayout({
                 <Amplitude />
                 <Header />
                 {children}
+                <SpeedInsights />
                 <Footer />
             </body>
         </html>

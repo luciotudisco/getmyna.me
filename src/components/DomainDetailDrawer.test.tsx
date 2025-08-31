@@ -102,7 +102,7 @@ describe('DomainDetailDrawer', () => {
         mockedApiService.digDomain.mockResolvedValue({
             records: { [DNSRecordType.A]: ['1.2.3.4'] },
         });
-        
+
         render(<DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />);
 
         expect(screen.queryByRole('button', { name: /GoDaddy/i })).toBeNull();
