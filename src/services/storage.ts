@@ -21,7 +21,7 @@ class StorageService {
             },
         );
         if (error) {
-            console.error('Error upserting TLD in Supabase:', error);
+            console.error('Error upserting TLD:', error);
             throw new Error(`Failed to upsert TLD: ${error.message}`);
         }
     }
@@ -33,7 +33,7 @@ class StorageService {
                 // No rows returned
                 return null;
             }
-            console.error('Error fetching TLD by name from Supabase:', error);
+            console.error('Error fetching TLD by name:', error);
             throw new Error(`Failed to fetch TLD: ${error.message}`);
         }
         return data as TLD;
@@ -45,7 +45,7 @@ class StorageService {
             .select('id, name, description')
             .order('name', { ascending: true });
         if (error) {
-            console.error('Error fetching TLDs from Supabase:', error);
+            console.error('Error fetching TLDs:', error);
             throw new Error(`Failed to fetch TLDs: ${error.message}`);
         }
         return data as TLD[];

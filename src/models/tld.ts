@@ -3,7 +3,7 @@ export enum TLDType {
     INFRASTRUCTURE = 'INFRASTRUCTURE',
     // Generic domains not tied to a country (e.g., .com, .app).
     GENERIC = 'GENERIC',
-    // Community-specific domains run by sponsors (e.g., .aero).
+    // Community-specific domains run by sponsors (e.g., .edu, .gov).
     SPONSORED = 'SPONSORED',
     // Two-letter country codes (e.g., .uk).
     COUNTRY_CODE = 'COUNTRY_CODE',

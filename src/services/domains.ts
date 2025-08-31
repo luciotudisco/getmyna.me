@@ -1,6 +1,6 @@
-import { TOP_LEVEL_DOMAINS } from './tlds';
 import isFQDN from 'validator/lib/isFQDN';
 import { Permutation, PowerSet } from 'js-combinatorics';
+import { storageService } from './storage';
 
 /**
  * Returns a (possibly empty) list of domains that are domains hacks for the given input string.
@@ -11,7 +11,7 @@ import { Permutation, PowerSet } from 'js-combinatorics';
  * @param input - The input string.
  * @returns A (possibly empty) list of vanity domains for the given input string.
  */
-export function getDomainsHacks(input: string): string[] {
+export async function getDomainsHacks(input: string): Promise<string[]> {
     input = input.trim().toLowerCase();
 
     // Split the input into words
@@ -37,7 +37,7 @@ export function getDomainsHacks(input: string): string[] {
 
     const domains: string[] = [];
     for (const candidateName of candidateNames) {
-        const matchingDomains = getMatchingDomains(candidateName);
+        const matchingDomains = await getMatchingDomains(candidateName);
         for (const domain of matchingDomains) {
             const level = domain.split('.').length - 1;
             if (level <= 2) {
@@ -58,8 +58,8 @@ export function getDomainsHacks(input: string): string[] {
  * @param text  - The text.
  * @returns A (possibly empty) list of valid first level domains that match the given text.
  */
-export function getMatchingDomains(text: string): string[] {
-    const matchingTLDs = getMatchingTLDs(text);
+export async function getMatchingDomains(text: string): Promise<string[]> {
+    const matchingTLDs = await getMatchingTLDs(text);
     const domains: string[] = [];
     for (const tld of matchingTLDs) {
         const domain = text.slice(0, -tld.length);
@@ -105,8 +105,9 @@ export function getSubdomains(domain: string): string[] {
  * @param text - The text.
  * @return A (possibly empty) list of TLDs that match the ending of the given text.
  */
-export function getMatchingTLDs(text: string): string[] {
-    return TOP_LEVEL_DOMAINS.filter((tld) => text.toLowerCase().endsWith(tld.toLowerCase())).map((tld) =>
-        tld.toLowerCase(),
-    );
+export async function getMatchingTLDs(text: string): Promise<string[]> {
+    const tlds = await storageService.listTLDs();
+    return tlds
+        .filter((tld) => text.toLowerCase().endsWith(tld.name?.toLowerCase() || ''))
+        .map((tld) => tld.name?.toLowerCase() || '');
 }
