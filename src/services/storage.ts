@@ -14,7 +14,6 @@ class StorageService {
         const { error } = await this.client.from('tld').insert({
             name: tldInfo.name,
             description: tldInfo.description,
-            type: tldInfo.type,
         });
         if (error) {
             console.error('Error creating TLD in Supabase:', error);
@@ -23,12 +22,12 @@ class StorageService {
     }
 
     async getTLDByName(name: string): Promise<TLD | null> {
-        const { data, error } = await this.client
-            .from('tld')
-            .select('id, name, description, type')
-            .eq('name', name)
-            .single();
+        const { data, error } = await this.client.from('tld').select('id, name, description').eq('name', name).single();
         if (error) {
+            if (error.code === 'PGRST116') {
+                // No rows returned
+                return null;
+            }
             console.error('Error fetching TLD by name from Supabase:', error);
             throw new Error(`Failed to fetch TLD: ${error.message}`);
         }
@@ -38,7 +37,7 @@ class StorageService {
     async listTLDs(): Promise<TLD[]> {
         const { data, error } = await this.client
             .from('tld')
-            .select('id, name, description, type')
+            .select('id, name, description')
             .order('name', { ascending: true });
         if (error) {
             console.error('Error fetching TLDs from Supabase:', error);
