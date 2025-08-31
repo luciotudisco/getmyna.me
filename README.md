@@ -1,6 +1,6 @@
 # getmyna.me
 
-getmyna.me is a Next.js app that helps you discover creative "domain hacks" — domain names that spell a phrase using top level domains (for example: **getmyna.me** → "get my name"). Enter a word or phrase and the app generates candidate domains, checks whether they are registered and shows WHOIS and DNS information.
+getmyna.me is a Next.js app that helps you discover creative "domain hacks" — domain names that spell a phrase using top level domains (for example: **getmyna.me** → "get my name"). Enter a word or phrase and the app generates candidate domains, checks whether they are available and shows WHOIS and DNS information.
 
 ## Features
 
