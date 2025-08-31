@@ -46,7 +46,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     apiService.getDomainWhois(domain.getName()),
                     apiService.getTldInfo(domain.getName()),
                 ]);
-                setHasARecord(digData.records[DNSRecordType.A]?.length);
+                setHasARecord((digData.records[DNSRecordType.A]?.length ?? 0) > 0);
                 setWhoisInfo(whoisData as WhoisInfo);
                 setTldInfo(tldData as TldInfo);
             } catch (error) {
