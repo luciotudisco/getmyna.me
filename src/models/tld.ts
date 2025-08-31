@@ -1,4 +1,4 @@
-export enum TldType {
+export enum TLDType {
     // .arpa for technical network infrastructure.
     INFRASTRUCTURE = 'INFRASTRUCTURE',
     // Generic domains not tied to a country (e.g., .com, .app).
@@ -15,8 +15,8 @@ export enum TldType {
     TEST = 'TEST',
 }
 
-export interface TldInfo {
+export interface TLD {
     name?: string;
     description?: string;
-    type?: TldType;
+    type?: TLDType;
 }

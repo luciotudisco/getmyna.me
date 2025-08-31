@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 import { DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { DigInfo, DNSRecordType } from '@/models/dig';
 import { WhoisInfo } from '@/models/whois';
-import { TldInfo } from '@/models/tld';
+import { TLD } from '@/models/tld';
 
 class ApiService {
     private client: AxiosInstance;
@@ -27,9 +27,9 @@ class ApiService {
         return response.data as WhoisInfo;
     }
 
-    async getTldInfo(domain: string): Promise<TldInfo> {
+    async getTldInfo(domain: string): Promise<TLD> {
         const response = await this.client.get(`/api/domains/${domain}/tld`);
-        return response.data as TldInfo;
+        return response.data as TLD;
     }
 
     async searchDomains(term: string): Promise<string[]> {

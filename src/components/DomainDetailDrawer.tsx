@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
 import DomainRegistrarButtons from '@/components/DomainRegistrarButtons';
 import { apiService } from '@/services/api';
-import { TldInfo } from '@/models/tld';
+import { TLD } from '@/models/tld';
 import { DNSRecordType } from '@/models/dig';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
@@ -26,7 +26,7 @@ interface DomainDetailDrawerProps {
 export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawerProps) {
     const [hasARecord, setHasARecord] = useState(false);
     const [whoisInfo, setWhoisInfo] = useState<WhoisInfo | null>(null);
-    const [tldInfo, setTldInfo] = useState<TldInfo | null>(null);
+    const [tldInfo, setTldInfo] = useState<TLD | null>(null);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -48,7 +48,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                 ]);
                 setHasARecord((digData.records[DNSRecordType.A]?.length ?? 0) > 0);
                 setWhoisInfo(whoisData as WhoisInfo);
-                setTldInfo(tldData as TldInfo);
+                setTldInfo(tldData as TLD);
             } catch (error) {
                 console.error('Error fetching domain details:', error);
             } finally {

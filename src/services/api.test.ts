@@ -3,7 +3,7 @@ import { ApiService } from '@/services/api';
 import { DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { DNSRecordType, DigInfo } from '@/models/dig';
 import { WhoisInfo } from '@/models/whois';
-import { TldInfo } from '@/models/tld';
+import { TLD } from '@/models/tld';
 
 jest.mock('axios');
 
@@ -65,7 +65,7 @@ describe('ApiService', () => {
     });
 
     it('getTldInfo fetches tld info', async () => {
-        const tldInfo: TldInfo = { description: 'desc' };
+        const tldInfo: TLD = { description: 'desc' };
         getMock.mockResolvedValue({ data: tldInfo });
 
         const result = await apiService.getTldInfo('example.com');

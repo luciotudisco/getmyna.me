@@ -1,8 +1,8 @@
 'use client';
 
-import { TldInfo } from '@/models/tld';
+import { TLD } from '@/models/tld';
 
-interface TldSectionProps extends TldInfo {
+interface TldSectionProps extends TLD {
     tld: string;
 }
 
