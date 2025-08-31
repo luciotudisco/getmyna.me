@@ -42,7 +42,7 @@ class StorageService {
     async listTLDs(): Promise<TLD[]> {
         const { data, error } = await this.client
             .from('tld')
-            .select('id, name, description')
+            .select('name, type, description')
             .order('name', { ascending: true });
         if (error) {
             console.error('Error fetching TLDs:', error);
