@@ -17,6 +17,7 @@ jobs:
                   NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
                   NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
                   RAPID_API_KEY: ${{ secrets.RAPID_API_KEY }}
+                  SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
               run: npm run build
             - name: Deploy to Vercel
               run: npx vercel --prod --token ${{ secrets.VERCEL_TOKEN }} --confirm
