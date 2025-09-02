@@ -39,6 +39,11 @@ class StorageService {
         return data as TLD;
     }
 
+    async tldExists(name: string): Promise<boolean> {
+        const tld = await this.getTLDByName(name);
+        return tld !== null;
+    }
+
     async listTLDs(): Promise<TLD[]> {
         const { data, error } = await this.client
             .from('tld')
