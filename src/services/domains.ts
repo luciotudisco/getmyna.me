@@ -11,7 +11,10 @@ import { storageService } from './storage';
  * @param input - The input string.
  * @returns A (possibly empty) list of vanity domains for the given input string.
  */
-export async function getDomainsHacks(input: string): Promise<string[]> {
+export async function getDomainsHacks(
+    input: string,
+    includeSubdomains = true,
+): Promise<string[]> {
     input = input.trim().toLowerCase();
 
     // Split the input into words
@@ -40,7 +43,7 @@ export async function getDomainsHacks(input: string): Promise<string[]> {
         const matchingDomains = await getMatchingDomains(candidateName);
         for (const domain of matchingDomains) {
             const level = domain.split('.').length - 1;
-            if (level <= 2) {
+            if (includeSubdomains ? level <= 2 : level <= 1) {
                 domains.push(domain);
             }
         }
