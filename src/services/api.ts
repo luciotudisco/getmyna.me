@@ -32,8 +32,10 @@ class ApiService {
         return response.data as TLD;
     }
 
-    async searchDomains(term: string): Promise<string[]> {
-        const response = await this.client.get('/api/domains/search', { params: { term } });
+    async searchDomains(term: string, includeSubdomains = false): Promise<string[]> {
+        const response = await this.client.get('/api/domains/search', {
+            params: { term, include_subdomains: includeSubdomains },
+        });
         return response.data.domains ?? [];
     }
 }
