@@ -15,6 +15,7 @@ class StorageService {
             {
                 name: tldInfo.name,
                 description: tldInfo.description,
+                created_at: new Date().toISOString(),
             },
             {
                 onConflict: 'name',
