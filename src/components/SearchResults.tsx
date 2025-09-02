@@ -19,7 +19,8 @@ export function SearchResults() {
         startTransition(async () => {
             try {
                 const term = searchParams.get('term');
-                const names = await apiService.searchDomains(term ?? '');
+                const includeSubdomains = searchParams.get('include_subdomains') === 'true';
+                const names = await apiService.searchDomains(term ?? '', includeSubdomains);
                 const initialDomains = names.map((name: string) => new Domain(name));
                 initialDomains.sort(
                     (a: Domain, b: Domain) => a.getLevel() - b.getLevel() || a.getName().localeCompare(b.getName()),
