@@ -33,6 +33,11 @@ describe('getDomainsHacks', () => {
         const result = await getDomainsHacks('gates gates');
         expect(result).toEqual([...new Set(result)]);
     });
+
+    it('should allow excluding subdomains when specified', async () => {
+        const result = await getDomainsHacks('bill gates', false);
+        expect(result).toEqual(['gat.es', 'billgat.es']);
+    });
 });
 
 describe('getMatchingDomains', () => {
