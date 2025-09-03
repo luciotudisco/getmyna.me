@@ -10,8 +10,8 @@ import DomainDetailDrawer from '@/components/DomainDetailDrawer';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
 import { apiService } from '@/services/api';
 
-// Create a shared rate limiter instance (1 call per second)
-const statusRateLimiter = new RateLimiter(1);
+// Create a shared rate limiter instance (2 calls per second / 500ms delay)
+const statusRateLimiter = new RateLimiter(2);
 
 export function SearchResult({ domain }: { domain: Domain }) {
     const [status, setStatus] = useState<DomainStatusEnum>(DomainStatusEnum.unknown);
