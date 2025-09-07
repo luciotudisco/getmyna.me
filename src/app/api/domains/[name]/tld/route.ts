@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
-import axios from 'axios';
-
-const WIKIPEDIA_SUMMARY_URL = 'https://en.wikipedia.org/api/rest_v1/page/summary';
+import { storageService } from '@/services/storage';
 
 export async function GET(
     _request: Request,
@@ -11,13 +9,15 @@ export async function GET(
         const resolvedParams = await params;
         const domain = Array.isArray(resolvedParams?.name) ? resolvedParams?.name[0] : resolvedParams?.name;
         const tld = domain.split('.').pop();
-        const url = `${WIKIPEDIA_SUMMARY_URL}/.${tld}`;
-        const response = await axios.get(url);
-        const description = response.data?.extract
-            ?.split(/(?<=\.)\s+/)
-            .slice(0, 2)
-            .join(' ');
-        return NextResponse.json({ description, name: tld });
+        if (tld === undefined) {
+            return NextResponse.json({ error: `The provided domain '${domain}' is not valid` }, { status: 400 });
+        }
+        const tldInfo = await storageService.getTLDByName(tld);
+        return NextResponse.json({
+            description: tldInfo?.description ?? '',
+            name: tld,
+            type: tldInfo?.type,
+        });
     } catch (error) {
         console.error('Error fetching TLD info:', error);
         return NextResponse.json({});
