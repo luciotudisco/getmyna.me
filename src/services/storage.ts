@@ -16,6 +16,7 @@ class StorageService {
                 name: tldInfo.name,
                 description: tldInfo.description,
                 created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
             },
             {
                 onConflict: 'name',
@@ -58,7 +59,10 @@ class StorageService {
     }
 
     async updateTld(name: string, tldInfo: TLD): Promise<void> {
-        const { error } = await this.client.from('tld').update(tldInfo).eq('name', name);
+        const { error } = await this.client
+            .from('tld')
+            .update({ ...tldInfo, updated_at: new Date().toISOString() })
+            .eq('name', name);
         if (error) {
             console.error('Error updating TLD:', error);
             throw new Error(`Failed to update TLD: ${error.message}`);
