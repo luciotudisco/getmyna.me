@@ -29,6 +29,8 @@ npm install
 
 ```
 RAPID_API_KEY=your_key_here
+OPENAI_API_KEY=your_key_here
+SUPABASE_SERVICE_ROLE_KEY=your_key_here
 ```
 
 3. Start the development server:
