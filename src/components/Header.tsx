@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import TypingAnimation from '@/components/ui/typing-animation';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import SearchBar from './SearchBar';
@@ -32,9 +31,7 @@ export default function Header() {
                 </div>
             ) : (
                 <div className="flex flex-1 items-center justify-between">
-                    <TypingAnimation className="font-sans text-xl font-extralight leading-loose">
-                        GetMyNa.me
-                    </TypingAnimation>
+                    <h1 className="font-mono text-xl font-extralight uppercase">GetMyNa.me</h1>
                     <Link href="/about">
                         <Button type="button" variant="ghost">
                             <Info />
