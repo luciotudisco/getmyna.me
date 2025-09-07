@@ -24,6 +24,10 @@ export class Domain {
         return this._level;
     }
 
+    public getRootDomain(): string {
+        return this._name.split('.').slice(0, -1).join('.');
+    }
+
     public getStatus(): DomainStatus {
         return this._status;
     }

@@ -41,14 +41,20 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
         const fetchData = async () => {
             setLoading(true);
             try {
-                const [digData, whoisData, tldData] = await Promise.all([
+                const [digData, whoisData, tldData] = await Promise.allSettled([
                     apiService.digDomain(domain.getName(), DNSRecordType.A),
                     apiService.getDomainWhois(domain.getName()),
                     apiService.getTldInfo(domain.getName()),
                 ]);
-                setHasARecord((digData.records[DNSRecordType.A]?.length ?? 0) > 0);
-                setWhoisInfo(whoisData as WhoisInfo);
-                setTldInfo(tldData as TLD);
+                if (digData.status === 'fulfilled') {
+                    setHasARecord((digData.value.records[DNSRecordType.A]?.length ?? 0) > 0);
+                }
+                if (whoisData.status === 'fulfilled') {
+                    setWhoisInfo(whoisData.value as WhoisInfo);
+                }
+                if (tldData.status === 'fulfilled') {
+                    setTldInfo(tldData.value as TLD);
+                }
             } catch (error) {
                 console.error('Error fetching domain details:', error);
             } finally {
