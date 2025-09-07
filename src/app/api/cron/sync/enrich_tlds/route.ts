@@ -22,7 +22,7 @@ export async function GET(): Promise<NextResponse> {
                     },
                     {
                         role: 'user',
-                        content: `Classify the TLD "${tld.name}" and provide a concise description. Consider its purpose, registration requirements, and intended use case.`,
+                        content: `Provide a concise description about the TLD "${tld.name}" (max 2 sentences). Explain its purpose, and intended use case.`,
                     },
                 ],
             });
