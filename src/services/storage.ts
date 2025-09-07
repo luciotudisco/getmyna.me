@@ -1,5 +1,4 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { Cacheable } from 'ts-cacheable';
 import { TLD } from '@/models/tld';
 
 class StorageService {
@@ -28,7 +27,6 @@ class StorageService {
         }
     }
 
-    @Cacheable({ ttl: 60 * 60 * 24 })
     async getTLDByName(name: string): Promise<TLD | null> {
         const { data, error } = await this.client.from('tld').select('id, name, description').eq('name', name).single();
         if (error) {
@@ -42,13 +40,11 @@ class StorageService {
         return data as TLD;
     }
 
-    @Cacheable({ ttl: 60 * 60 * 24 })
     async tldExists(name: string): Promise<boolean> {
         const tld = await this.getTLDByName(name);
         return tld !== null;
     }
 
-    @Cacheable({ ttl: 60 * 60 * 24 })
     async listTLDs(): Promise<TLD[]> {
         const { data, error } = await this.client
             .from('tld')
