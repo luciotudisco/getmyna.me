@@ -60,6 +60,14 @@ class StorageService {
         }
         return data as TLD[];
     }
+
+    async updateTld(name: string, tldInfo: TLD): Promise<void> {
+        const { error } = await this.client.from('tld').update(tldInfo).eq('name', name);
+        if (error) {
+            console.error('Error updating TLD:', error);
+            throw new Error(`Failed to update TLD: ${error.message}`);
+        }
+    }
 }
 
 export const storageService = new StorageService();

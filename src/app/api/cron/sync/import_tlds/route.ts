@@ -7,7 +7,7 @@ export const maxDuration = 300; // This function can run for a maximum of 5 minu
 
 export async function GET(): Promise<NextResponse> {
     try {
-        console.log('Starting TLD sync from IANA...');
+        console.log('Starting TLD import from IANA ...');
 
         // Fetch TLD data from IANA
         const response = await axios.get(IANA_TLD_URL);
@@ -26,10 +26,10 @@ export async function GET(): Promise<NextResponse> {
             });
         }
 
-        console.log('TLD sync completed');
-        return NextResponse.json({ message: 'TLD sync completed successfully' });
+        console.log('TLD import completed');
+        return NextResponse.json({ message: 'TLD import completed successfully' });
     } catch (error) {
-        console.error('Error during TLD sync:', error);
-        return NextResponse.json({ error: 'Failed to sync TLDs' }, { status: 500 });
+        console.error('Error during TLD import:', error);
+        return NextResponse.json({ error: 'Failed to import TLDs' }, { status: 500 });
     }
 }

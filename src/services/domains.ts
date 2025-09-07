@@ -11,10 +11,7 @@ import { storageService } from './storage';
  * @param input - The input string.
  * @returns A (possibly empty) list of vanity domains for the given input string.
  */
-export async function getDomainsHacks(
-    input: string,
-    includeSubdomains = true,
-): Promise<string[]> {
+export async function getDomainsHacks(input: string, includeSubdomains = true): Promise<string[]> {
     input = input.trim().toLowerCase();
 
     // Split the input into words
