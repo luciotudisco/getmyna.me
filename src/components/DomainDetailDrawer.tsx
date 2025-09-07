@@ -96,16 +96,15 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     </DrawerTitle>
                 </DrawerHeader>
                 <div className="space-y-4 p-6 pt-0">
-                    <Separator />
-
                     {domain.isAvailable() && (
                         <>
-                            <DomainRegistrarButtons domainName={domain.getName()} />
                             <Separator />
+                            <DomainRegistrarButtons domainName={domain.getName()} />
                         </>
                     )}
 
-                    <div>
+                    <>
+                        <Separator />
                         <p className="text-xs">
                             <span className="font-bold">{status}:</span> {DOMAIN_STATUS_DESCRIPTIONS[status]}
                             {hasARecord && (
@@ -121,20 +120,20 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                                 </span>
                             )}
                         </p>
-                    </div>
-                    <Separator />
+                    </>
 
                     {whoisInfo && (
                         <>
-                            <WhoisInfoSection whoisInfo={whoisInfo} />
                             <Separator />
+                            <WhoisInfoSection whoisInfo={whoisInfo} />
                         </>
                     )}
 
                     {tldInfo && (
-                        <div>
+                        <>
+                            <Separator />
                             <TldSection tld={domain.getTLD()} {...tldInfo} />
-                        </div>
+                        </>
                     )}
                 </div>
             </DrawerContent>
