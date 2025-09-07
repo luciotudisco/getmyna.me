@@ -19,9 +19,9 @@ export default function RootLayout({
         <html lang="en">
             <body>
                 <Amplitude />
+                <SpeedInsights />
                 <Header />
                 {children}
-                <SpeedInsights />
                 <Footer />
             </body>
         </html>
