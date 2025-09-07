@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { storageService } from '@/services/storage';
 import OpenAI from 'openai';
 
-const client = new OpenAI({ apiKey: process.env['OPENAI_API_KEY'] });
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
 
