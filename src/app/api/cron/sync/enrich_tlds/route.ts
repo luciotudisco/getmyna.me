@@ -14,7 +14,7 @@ export async function GET(): Promise<NextResponse> {
                 continue;
             }
             const response = await openaiClient.chat.completions.create({
-                model: 'gpt-5',
+                model: 'gpt-4.1',
                 messages: [
                     {
                         role: 'system',
