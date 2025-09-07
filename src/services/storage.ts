@@ -28,8 +28,8 @@ class StorageService {
         }
     }
 
-    async getTLDByName(name: string): Promise<TLD | null> {
-        const { data, error } = await this.client.from('tld').select('id, name, description').eq('name', name).single();
+    async getTLD(name: string): Promise<TLD | null> {
+        const { data, error } = await this.client.from('tld').select('name, description').eq('name', name).single();
         if (error) {
             if (error.code === 'PGRST116') {
                 // No rows returned
@@ -39,11 +39,6 @@ class StorageService {
             throw new Error(`Failed to fetch TLD: ${error.message}`);
         }
         return data as TLD;
-    }
-
-    async tldExists(name: string): Promise<boolean> {
-        const tld = await this.getTLDByName(name);
-        return tld !== null;
     }
 
     async listTLDs(): Promise<TLD[]> {
@@ -58,7 +53,7 @@ class StorageService {
         return data as TLD[];
     }
 
-    async updateTld(name: string, tldInfo: TLD): Promise<void> {
+    async updateTLD(name: string, tldInfo: TLD): Promise<void> {
         const { error } = await this.client
             .from('tld')
             .update({ ...tldInfo, updated_at: new Date().toISOString() })

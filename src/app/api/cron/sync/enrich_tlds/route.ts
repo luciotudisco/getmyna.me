@@ -27,7 +27,7 @@ export async function GET(): Promise<NextResponse> {
                 ],
             });
             const description = response.choices[0].message.content;
-            await storageService.updateTld(tld.name, { description: description ?? '' });
+            await storageService.updateTLD(tld.name, { description: description ?? '' });
         }
         console.log('TLD enrichment completed');
         return NextResponse.json({ message: 'TLD enrichment completed successfully' });

@@ -12,7 +12,7 @@ export async function GET(
         if (tld === undefined) {
             return NextResponse.json({ error: `The provided domain '${domain}' is not valid` }, { status: 400 });
         }
-        const tldInfo = await storageService.getTLDByName(tld);
+        const tldInfo = await storageService.getTLD(tld);
         return NextResponse.json({
             description: tldInfo?.description ?? '',
             name: tld,
