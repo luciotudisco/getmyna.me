@@ -18,11 +18,11 @@ export async function GET(): Promise<NextResponse> {
                 messages: [
                     {
                         role: 'system',
-                        content: `You are an expert on internet domain name system and top-level domains (TLDs).`,
+                        content: `You are an expert on internet domain name system and top-level domains (TLDs). Responses must be in plain text without markdown formatting.`,
                     },
                     {
                         role: 'user',
-                        content: `Provide a concise description about the TLD "${tld.name}" (max 2 sentences). Explain its purpose, and intended use case.`,
+                        content: `Provide a concise description about the TLD "${tld.name}" (max 2 sentences). Explain its purpose and intended use case using plain text only without markdown.`,
                     },
                 ],
             });
