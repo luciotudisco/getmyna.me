@@ -58,28 +58,28 @@ describe('DomainDetailDrawer', () => {
 
         const openSpy = jest.spyOn(window, 'open').mockImplementation(() => null);
 
-        const godaddyButton = await screen.findByRole('button', { name: /GoDaddy/i });
-        const namecheapButton = screen.getByRole('button', { name: /Namecheap/i });
-        const porkbunButton = screen.getByRole('button', { name: /Porkbun/i });
-
-        fireEvent.click(godaddyButton);
-        expect(openSpy).toHaveBeenNthCalledWith(
-            1,
-            `https://www.godaddy.com/domainsearch/find?domainToCheck=${domain.getName()}`,
-            '_blank',
-        );
-
-        fireEvent.click(namecheapButton);
-        expect(openSpy).toHaveBeenNthCalledWith(
-            2,
-            `https://www.namecheap.com/domains/registration/results/?domain=${domain.getName()}`,
-            '_blank',
-        );
+        const porkbunButton = await screen.findByRole('button', { name: /Porkbun/i });
+        const dynadotButton = screen.getByRole('button', { name: /Dynadot/i });
+        const namecomButton = screen.getByRole('button', { name: /Name.com/i });
 
         fireEvent.click(porkbunButton);
         expect(openSpy).toHaveBeenNthCalledWith(
-            3,
+            1,
             `https://porkbun.com/checkout/search?q=${domain.getName()}`,
+            '_blank',
+        );
+
+        fireEvent.click(dynadotButton);
+        expect(openSpy).toHaveBeenNthCalledWith(
+            2,
+            `https://www.dynadot.com/domain/search.html?domain=${domain.getName()}`,
+            '_blank',
+        );
+
+        fireEvent.click(namecomButton);
+        expect(openSpy).toHaveBeenNthCalledWith(
+            3,
+            `https://www.name.com/domain/search/${domain.getName()}`,
             '_blank',
         );
 
@@ -105,9 +105,9 @@ describe('DomainDetailDrawer', () => {
 
         render(<DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />);
 
-        expect(screen.queryByRole('button', { name: /GoDaddy/i })).toBeNull();
-        expect(screen.queryByRole('button', { name: /Namecheap/i })).toBeNull();
         expect(screen.queryByRole('button', { name: /Porkbun/i })).toBeNull();
+        expect(screen.queryByRole('button', { name: /Dynadot/i })).toBeNull();
+        expect(screen.queryByRole('button', { name: /Name.com/i })).toBeNull();
 
         const websiteLink = await screen.findByRole('link', { name: /Visit website/i });
         expect(websiteLink).toHaveAttribute('href', 'https://example.com');

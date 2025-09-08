@@ -8,16 +8,16 @@ interface DomainRegistrarButtonsProps {
 
 const REGISTRARS = [
     {
-        name: 'GoDaddy',
-        url: (domain: string) => `https://www.godaddy.com/domainsearch/find?domainToCheck=${domain}`,
-    },
-    {
-        name: 'Namecheap',
-        url: (domain: string) => `https://www.namecheap.com/domains/registration/results/?domain=${domain}`,
-    },
-    {
         name: 'Porkbun',
         url: (domain: string) => `https://porkbun.com/checkout/search?q=${domain}`,
+    },
+    {
+        name: 'Dynadot',
+        url: (domain: string) => `https://www.dynadot.com/domain/search.html?domain=${domain}`,
+    },
+    {
+        name: 'Name.com',
+        url: (domain: string) => `https://www.name.com/domain/search/${domain}`,
     },
 ];
 
