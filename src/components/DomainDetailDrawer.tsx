@@ -105,6 +105,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
 
                     <>
                         <Separator />
+                        <h3 className="text-sm font-semibold">Status</h3>
                         <p className="text-xs">
                             <span className="font-bold">{status}:</span> {DOMAIN_STATUS_DESCRIPTIONS[status]}
                             {hasARecord && (
@@ -125,14 +126,16 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     {whoisInfo && (
                         <>
                             <Separator />
-                            <WhoisInfoSection whoisInfo={whoisInfo} />
+                        <h3 className="text-sm font-semibold">Whois info</h3>
+                        <WhoisInfoSection whoisInfo={whoisInfo} />
                         </>
                     )}
 
                     {tldInfo && (
                         <>
                             <Separator />
-                            <TldSection tld={domain.getTLD()} {...tldInfo} />
+                        <h3 className="text-sm font-semibold">TLD</h3>
+                        <TldSection tld={domain.getTLD()} {...tldInfo} />
                         </>
                     )}
                 </div>

@@ -92,6 +92,10 @@ describe('DomainDetailDrawer', () => {
         const whoisParagraph = await screen.findByText(/This domain was created on/i);
         expect(whoisParagraph).toBeInTheDocument();
 
+        expect(await screen.findByRole('heading', { name: /Status/i })).toBeInTheDocument();
+        expect(await screen.findByRole('heading', { name: /Whois info/i })).toBeInTheDocument();
+        expect(await screen.findByRole('heading', { name: /TLD/i })).toBeInTheDocument();
+
         openSpy.mockRestore();
     });
 
