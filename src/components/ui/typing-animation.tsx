@@ -58,7 +58,9 @@ export default function TypingAnimation({
     }, [delay, startOnView]);
 
     useEffect(() => {
-        if (!started) return;
+        if (!started) {
+            return;
+        }
 
         let i = 0;
         const typingEffect = setInterval(() => {
