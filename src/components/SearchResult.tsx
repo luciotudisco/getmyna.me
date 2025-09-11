@@ -3,8 +3,6 @@
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { useEffect, useState } from 'react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { BadgeCheck } from 'lucide-react';
 import { RateLimiter } from '@/lib/rate-limiter';
 import DomainDetailDrawer from '@/components/DomainDetailDrawer';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
@@ -40,18 +38,6 @@ export function SearchResult({ domain }: { domain: Domain }) {
                 <TableCell>
                     <p className="flex min-h-10 flex-grow flex-row items-center truncate align-middle font-extralight">
                         {domain.getName()}
-                        {domain.isAvailable() && domain.getLevel() <= 2 && (
-                            <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <BadgeCheck className="ml-2 h-4 w-4 text-orange-400" />
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <p>This is a rare second level domain!</p>
-                                    </TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
-                        )}
                     </p>
                 </TableCell>
                 <TableCell className="text-right">
