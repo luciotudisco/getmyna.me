@@ -1,8 +1,11 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { TLD } from '@/models/tld';
+import { TTLCache } from '@/utils/ttl-cache';
 
 class StorageService {
     private client: SupabaseClient;
+    private cache = new TTLCache<unknown>();
+    private readonly ttlMs = 60_000;
 
     constructor() {
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -26,22 +29,39 @@ class StorageService {
             console.error('Error upserting TLD:', error);
             throw new Error(`Failed to upsert TLD: ${error.message}`);
         }
+
+        this.cache.delete('tlds');
+        this.cache.delete(`tld:${tldInfo.name}`);
     }
 
     async getTLD(name: string): Promise<TLD | null> {
+        const cacheKey = `tld:${name}`;
+        const cached = this.cache.get(cacheKey);
+        if (cached !== undefined) {
+            return cached as TLD | null;
+        }
+
         const { data, error } = await this.client.from('tld').select('name, description').eq('name', name).single();
         if (error) {
             if (error.code === 'PGRST116') {
                 // No rows returned
+                this.cache.set(cacheKey, null, this.ttlMs);
                 return null;
             }
             console.error('Error fetching TLD by name:', error);
             throw new Error(`Failed to fetch TLD: ${error.message}`);
         }
+        this.cache.set(cacheKey, data as TLD, this.ttlMs);
         return data as TLD;
     }
 
     async listTLDs(): Promise<TLD[]> {
+        const cacheKey = 'tlds';
+        const cached = this.cache.get(cacheKey);
+        if (cached) {
+            return cached as TLD[];
+        }
+
         const { data, error } = await this.client
             .from('tld')
             .select('name, type, description')
@@ -50,6 +70,7 @@ class StorageService {
             console.error('Error fetching TLDs:', error);
             throw new Error(`Failed to fetch TLDs: ${error.message}`);
         }
+        this.cache.set(cacheKey, data as TLD[], this.ttlMs);
         return data as TLD[];
     }
 
@@ -62,6 +83,9 @@ class StorageService {
             console.error('Error updating TLD:', error);
             throw new Error(`Failed to update TLD: ${error.message}`);
         }
+
+        this.cache.delete('tlds');
+        this.cache.delete(`tld:${name}`);
     }
 }
 
