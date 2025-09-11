@@ -13,7 +13,6 @@ import DomainStatusBadge from '@/components/DomainStatusBadge';
 import DomainRegistrarButtons from '@/components/DomainRegistrarButtons';
 import { apiService } from '@/services/api';
 import { TLD } from '@/models/tld';
-import { DNSRecordType } from '@/models/dig';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
 interface DomainDetailDrawerProps {
@@ -24,7 +23,6 @@ interface DomainDetailDrawerProps {
 }
 
 export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawerProps) {
-    const [hasARecord, setHasARecord] = useState(false);
     const [whoisInfo, setWhoisInfo] = useState<WhoisInfo | null>(null);
     const [tldInfo, setTldInfo] = useState<TLD | null>(null);
     const [loading, setLoading] = useState(false);
@@ -34,21 +32,16 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
             return;
         }
 
-        setHasARecord(false);
         setWhoisInfo(null);
         setTldInfo(null);
 
         const fetchData = async () => {
             setLoading(true);
             try {
-                const [digData, whoisData, tldData] = await Promise.allSettled([
-                    apiService.digDomain(domain.getName(), DNSRecordType.A),
+                const [whoisData, tldData] = await Promise.allSettled([
                     apiService.getDomainWhois(domain.getName()),
                     apiService.getTldInfo(domain.getName()),
                 ]);
-                if (digData.status === 'fulfilled') {
-                    setHasARecord((digData.value.records[DNSRecordType.A]?.length ?? 0) > 0);
-                }
                 if (whoisData.status === 'fulfilled') {
                     setWhoisInfo(whoisData.value as WhoisInfo);
                 }
@@ -108,18 +101,6 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                         <h3 className="text-sm font-semibold">Status</h3>
                         <p className="text-xs">
                             <span className="font-bold">{status}:</span> {DOMAIN_STATUS_DESCRIPTIONS[status]}
-                            {hasARecord && (
-                                <span className="ml-2">
-                                    <a
-                                        href={`https://${domain.getName()}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-blue-600 underline"
-                                    >
-                                        Visit website
-                                    </a>
-                                </span>
-                            )}
                         </p>
                     </>
 
