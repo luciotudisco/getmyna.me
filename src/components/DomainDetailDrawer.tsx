@@ -38,11 +38,13 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
         const fetchData = async () => {
             setLoading(true);
             try {
-                const [whoisData, tldData] = await Promise.allSettled([
-                    apiService.getDomainWhois(domain.getName()),
-                    apiService.getTldInfo(domain.getName()),
-                ]);
-                if (whoisData.status === 'fulfilled') {
+                const isAvailable = domain.isAvailable();
+                const whoisPromise = isAvailable
+                    ? Promise.resolve(null)
+                    : apiService.getDomainWhois(domain.getName());
+                const tldPromise = apiService.getTldInfo(domain.getName());
+                const [whoisData, tldData] = await Promise.allSettled([whoisPromise, tldPromise]);
+                if (!isAvailable && whoisData.status === 'fulfilled') {
                     setWhoisInfo(whoisData.value as WhoisInfo);
                 }
                 if (tldData.status === 'fulfilled') {
@@ -96,27 +98,29 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                         </>
                     )}
 
-                    <>
-                        <Separator />
-                        <h3 className="text-xs font-medium uppercase text-muted-foreground">STATUS</h3>
-                        <p className="text-xs">
-                            <span className="font-bold">{status}:</span> {DOMAIN_STATUS_DESCRIPTIONS[status]}
-                        </p>
-                    </>
-
-                    {whoisInfo && (
+                    {!domain.isAvailable() && (
                         <>
                             <Separator />
-                        <h3 className="text-xs font-medium uppercase text-muted-foreground">WHOIS INFO</h3>
-                        <WhoisInfoSection whoisInfo={whoisInfo} />
+                            <h3 className="text-xs font-medium uppercase text-muted-foreground">STATUS</h3>
+                            <p className="text-xs">
+                                <span className="font-bold">{status}:</span> {DOMAIN_STATUS_DESCRIPTIONS[status]}
+                            </p>
+                        </>
+                    )}
+
+                    {!domain.isAvailable() && whoisInfo && (
+                        <>
+                            <Separator />
+                            <h3 className="text-xs font-medium uppercase text-muted-foreground">WHOIS INFO</h3>
+                            <WhoisInfoSection whoisInfo={whoisInfo} />
                         </>
                     )}
 
                     {tldInfo && (
                         <>
                             <Separator />
-                        <h3 className="text-xs font-medium uppercase text-muted-foreground">TLD INFO</h3>
-                        <TldSection tld={domain.getTLD()} {...tldInfo} />
+                            <h3 className="text-xs font-medium uppercase text-muted-foreground">TLD INFO</h3>
+                            <TldSection tld={domain.getTLD()} {...tldInfo} />
                         </>
                     )}
                 </div>

@@ -46,7 +46,7 @@ describe('DomainDetailDrawer', () => {
         mockedApiService.getDomainWhois.mockReset();
     });
 
-    it('shows registrar buttons when domain is available', async () => {
+    it('shows registrar buttons but hides status and whois info when domain is available', async () => {
         const domain = new Domain('example.com');
         domain.setStatus(DomainStatus.inactive);
 
@@ -82,13 +82,12 @@ describe('DomainDetailDrawer', () => {
         const learnMoreLink = await screen.findByRole('link', { name: /Learn more on Wikipedia/i });
         expect(learnMoreLink).toHaveAttribute('href', `https://en.wikipedia.org/wiki/.${domain.getTLD()}`);
 
-        await waitFor(() => expect(mockedApiService.getDomainWhois).toHaveBeenCalledWith(domain.getName()));
+        await waitFor(() => expect(mockedApiService.getDomainWhois).not.toHaveBeenCalled());
 
-        const whoisParagraph = await screen.findByText(/This domain was created on/i);
-        expect(whoisParagraph).toBeInTheDocument();
+        expect(screen.queryByText(/This domain was created on/i)).not.toBeInTheDocument();
 
-        expect(await screen.findByRole('heading', { name: /Status/i })).toBeInTheDocument();
-        expect(await screen.findByRole('heading', { name: /Whois info/i })).toBeInTheDocument();
+        expect(screen.queryByRole('heading', { name: /Status/i })).not.toBeInTheDocument();
+        expect(screen.queryByRole('heading', { name: /Whois info/i })).not.toBeInTheDocument();
         expect(await screen.findByRole('heading', { name: /TLD/i })).toBeInTheDocument();
 
         openSpy.mockRestore();
@@ -112,5 +111,8 @@ describe('DomainDetailDrawer', () => {
         const expirationSpan = screen.getByText('January 1st, 2030');
         expect(expirationSpan).toHaveClass('font-bold');
 
+        expect(screen.getByRole('heading', { name: /Status/i })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: /Whois info/i })).toBeInTheDocument();
+        await waitFor(() => expect(mockedApiService.getDomainWhois).toHaveBeenCalledWith(domain.getName()));
     });
 });
