@@ -73,11 +73,7 @@ describe('DomainDetailDrawer', () => {
         );
 
         fireEvent.click(namecomButton);
-        expect(openSpy).toHaveBeenNthCalledWith(
-            3,
-            `https://www.name.com/domain/search/${domain.getName()}`,
-            '_blank',
-        );
+        expect(openSpy).toHaveBeenNthCalledWith(3, `https://www.name.com/domain/search/${domain.getName()}`, '_blank');
 
         const learnMoreLink = await screen.findByRole('link', { name: /Learn more on Wikipedia/i });
         expect(learnMoreLink).toHaveAttribute('href', `https://en.wikipedia.org/wiki/.${domain.getTLD()}`);

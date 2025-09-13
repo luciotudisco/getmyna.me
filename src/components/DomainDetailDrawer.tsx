@@ -8,7 +8,6 @@ import { Separator } from '@/components/ui/separator';
 import TldSection from '@/components/TldSection';
 import { WhoisInfo } from '@/models/whois';
 import { WhoisInfoSection } from '@/components/WhoisInfoSection';
-import { Badge } from '@/components/ui/badge';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
 import DomainRegistrarButtons from '@/components/DomainRegistrarButtons';
 import { apiService } from '@/services/api';
@@ -39,17 +38,11 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
             setLoading(true);
             try {
                 const isAvailable = domain.isAvailable();
-                const whoisPromise = isAvailable
-                    ? Promise.resolve(null)
-                    : apiService.getDomainWhois(domain.getName());
+                const whoisPromise = isAvailable ? Promise.resolve(null) : apiService.getDomainWhois(domain.getName());
                 const tldPromise = apiService.getTldInfo(domain.getName());
-                const [whoisData, tldData] = await Promise.allSettled([whoisPromise, tldPromise]);
-                if (!isAvailable && whoisData.status === 'fulfilled') {
-                    setWhoisInfo(whoisData.value as WhoisInfo);
-                }
-                if (tldData.status === 'fulfilled') {
-                    setTldInfo(tldData.value as TLD);
-                }
+                const [whoisData, tldData] = await Promise.all([whoisPromise, tldPromise]);
+                setWhoisInfo(whoisData as WhoisInfo);
+                setTldInfo(tldData as TLD);
             } catch (error) {
                 console.error('Error fetching domain details:', error);
             } finally {
@@ -84,10 +77,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                 <DrawerHeader>
                     <DrawerTitle className="flex items-center justify-between">
                         <div className="flex items-center gap-2">{domain.getName()}</div>
-                        <div className="flex items-center gap-2">
-                            {domain.getLevel() === 1 && <Badge variant="secondary">Exact match</Badge>}
-                            <DomainStatusBadge domain={domain} status={status} className="min-w-[8rem]" />
-                        </div>
+                        <DomainStatusBadge domain={domain} status={status} className="min-w-[8rem]" />
                     </DrawerTitle>
                 </DrawerHeader>
                 <div className="space-y-4 p-6 pt-0">
