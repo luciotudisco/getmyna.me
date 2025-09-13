@@ -10,22 +10,22 @@ const Player = dynamic(() => import('@lottiefiles/react-lottie-player').then((mo
 });
 
 const LOADING_MESSAGES = [
-    'Querying the DNS oracles... please hold.',
-    'Traversing the ICANN multiverse...',
+    'Aligning domains with the space-time continuum...',
+    'Consulting RFC scrolls for wisdom...',
+    'Crunching WHOIS records into human-readable form...',
     'Hashing some geek magic... almost there!',
+    'Looking up your domain in Schrödinger’s zone file...',
+    'Performing reverse DNS gymnastics...',
+    'Pinging alternate realities for availability...',
+    'Query timed out... just kidding.',
+    'Querying the DNS oracles... please hold.',
+    'Rebooting the hamster powering this server...',
+    'Shaking hands over TCP... politely.',
     'Summoning domains from the ether...',
     'Taming penguins in the server racks...',
-    'Aligning domains with the space-time continuum...',
-    'Crunching WHOIS records into human-readable form...',
-    'Pinging alternate realities for availability...',
-    'Rebooting the hamster powering this server...',
+    'Traversing the ICANN multiverse...',
     'Untangling DNS spaghetti...',
-    'Consulting RFC scrolls for wisdom...',
     'Waiting for ICANN clearance to land...',
-    'Performing reverse DNS gymnastics...',
-    'Looking up your domain in Schrödinger’s zone file...',
-    'Query timed out... just kidding.',
-    'Shaking hands over TCP... politely.',
 ];
 
 interface LoadingProps {
@@ -42,7 +42,7 @@ export default function Loading({ className, message }: LoadingProps) {
     return (
         <div className={cn('flex flex-col items-center justify-center gap-4 text-sm text-muted-foreground', className)}>
             <Player autoplay loop src="/loading.json" />
-            <span>{displayMessage}</span>
+            <span className="text-center">{displayMessage}</span>
         </div>
     );
 }
