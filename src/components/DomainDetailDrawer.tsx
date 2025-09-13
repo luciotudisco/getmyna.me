@@ -12,7 +12,6 @@ import DomainStatusBadge from '@/components/DomainStatusBadge';
 import DomainRegistrarButtons from '@/components/DomainRegistrarButtons';
 import { apiService } from '@/services/api';
 import { TLD } from '@/models/tld';
-import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
 interface DomainDetailDrawerProps {
     domain: Domain;
@@ -53,23 +52,6 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
         fetchData();
     }, [open, domain]);
 
-    if (loading) {
-        return (
-            <Drawer open={open} onOpenChange={(openState: boolean) => !openState && onClose()} direction="bottom">
-                <DrawerContent className="min-h-[400px]">
-                    <DrawerHeader>
-                        <VisuallyHidden>
-                            <DrawerTitle>Loading domain details</DrawerTitle>
-                        </VisuallyHidden>
-                    </DrawerHeader>
-                    <div className="flex flex-1 items-center justify-center">
-                        <Loading height={80} />
-                    </div>
-                </DrawerContent>
-            </Drawer>
-        );
-    }
-
     return (
         <Drawer open={open} onOpenChange={(openState: boolean) => !openState && onClose()} direction="bottom">
             <DrawerContent className="min-h-[400px]">
@@ -79,40 +61,46 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                         <DomainStatusBadge domain={domain} status={status} className="min-w-[8rem]" />
                     </DrawerTitle>
                 </DrawerHeader>
-                <div className="space-y-4 p-6 pt-0">
-                    {domain.isAvailable() && (
-                        <>
-                            <Separator />
-                            <DomainRegistrarButtons domainName={domain.getName()} />
-                        </>
-                    )}
+                {loading ? (
+                    <div className="flex flex-1 items-center justify-center">
+                        <Loading height={80} />
+                    </div>
+                ) : (
+                    <div className="space-y-4 p-6 pt-0">
+                        {domain.isAvailable() && (
+                            <>
+                                <Separator />
+                                <DomainRegistrarButtons domainName={domain.getName()} />
+                            </>
+                        )}
 
-                    {!domain.isAvailable() && (
-                        <>
-                            <Separator />
-                            <h3 className="text-xs font-medium uppercase text-muted-foreground">STATUS</h3>
-                            <p className="text-xs">
-                                <span className="font-bold">{status}:</span> {DOMAIN_STATUS_DESCRIPTIONS[status]}
-                            </p>
-                        </>
-                    )}
+                        {!domain.isAvailable() && (
+                            <>
+                                <Separator />
+                                <h3 className="text-xs font-medium uppercase text-muted-foreground">STATUS</h3>
+                                <p className="text-xs">
+                                    <span className="font-bold">{status}:</span> {DOMAIN_STATUS_DESCRIPTIONS[status]}
+                                </p>
+                            </>
+                        )}
 
-                    {!domain.isAvailable() && whoisInfo && (
-                        <>
-                            <Separator />
-                            <h3 className="text-xs font-medium uppercase text-muted-foreground">WHOIS INFO</h3>
-                            <WhoisInfoSection whoisInfo={whoisInfo} />
-                        </>
-                    )}
+                        {!domain.isAvailable() && whoisInfo && (
+                            <>
+                                <Separator />
+                                <h3 className="text-xs font-medium uppercase text-muted-foreground">WHOIS INFO</h3>
+                                <WhoisInfoSection whoisInfo={whoisInfo} />
+                            </>
+                        )}
 
-                    {tldInfo && (
-                        <>
-                            <Separator />
-                            <h3 className="text-xs font-medium uppercase text-muted-foreground">TLD INFO</h3>
-                            <TldSection tld={domain.getTLD()} {...tldInfo} />
-                        </>
-                    )}
-                </div>
+                        {tldInfo && (
+                            <>
+                                <Separator />
+                                <h3 className="text-xs font-medium uppercase text-muted-foreground">TLD INFO</h3>
+                                <TldSection tld={domain.getTLD()} {...tldInfo} />
+                            </>
+                        )}
+                    </div>
+                )}
             </DrawerContent>
         </Drawer>
     );

@@ -40,10 +40,23 @@ describe('DomainDetailDrawer', () => {
             registrar: 'Example Registrar',
             registrarUrl: 'https://example-registrar.com',
         });
+        mockedApiService.getTldInfo.mockResolvedValue({ description: 'Test' });
     });
 
     afterEach(() => {
         mockedApiService.getDomainWhois.mockReset();
+        mockedApiService.getTldInfo.mockReset();
+    });
+
+    it('shows header with domain name and status while loading', () => {
+        const domain = new Domain('example.com');
+        domain.setStatus(DomainStatus.inactive);
+        mockedApiService.getTldInfo.mockImplementation(() => new Promise(() => {}));
+
+        render(<DomainDetailDrawer domain={domain} status={domain.getStatus()} open={true} onClose={() => {}} />);
+
+        expect(screen.getByText(domain.getName())).toBeInTheDocument();
+        expect(screen.getByText(/Available/i)).toBeInTheDocument();
     });
 
     it('shows registrar buttons but hides status and whois info when domain is available', async () => {
