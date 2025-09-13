@@ -23,7 +23,7 @@ const REGISTRARS = [
 
 export function DomainRegistrarButtons({ domainName }: DomainRegistrarButtonsProps) {
     return (
-        <div className="space-y-2">
+        <div className="grid grid-cols-1 gap-2 lg:grid-cols-3">
             {REGISTRARS.map((registrar) => (
                 <Button
                     key={registrar.name}

@@ -77,6 +77,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     {domain.isAvailable() && (
                         <>
                             <Separator />
+                            <h3 className="text-xs font-medium uppercase text-muted-foreground">BUY DOMAIN</h3>
                             <DomainRegistrarButtons domainName={domain.getName()} />
                         </>
                     )}

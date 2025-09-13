@@ -7,7 +7,7 @@ getmyna.me is a Next.js app that helps you discover creative "domain hacks" — 
 - Generates domain hack suggestions from any input phrase using an extensive list of TLDs.
 - Checks availability and WHOIS data through RapidAPI providers.
 - Displays DNS records and TLD descriptions for deeper exploration.
-- Built with Next.js 15, TypeScript and Tailwind CSS.
+- Built with Next.js 15, Supabase, TypeScript, Tailwind CSS.
 
 ## Local development
 
@@ -28,9 +28,13 @@ npm install
 2. Create a `.env.local` file at the project root and add your RapidAPI key:
 
 ```
-RAPID_API_KEY=your_key_here
-OPENAI_API_KEY=your_key_here
-SUPABASE_SERVICE_ROLE_KEY=your_key_here
+NEXT_PUBLIC_AMPLITUDE_API_KEY=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+NEXT_PUBLIC_SUPABASE_URL=...
+OPENAI_API_KEY=...
+RAPID_API_KEY=...
+SUPABASE_JWT_SECRET=...
+SUPABASE_SERVICE_ROLE_KEY=...
 ```
 
 3. Start the development server:
@@ -64,13 +68,7 @@ The project can be deployed to [Vercel](https://vercel.com/) or any Node.js host
 ### Deploying on Vercel
 
 1. Push the repository to your Git provider.
-2. Import the project into Vercel and set the `RAPID_API_KEY` environment variable in your project settings.
+2. Import the project into Vercel and set the environment variables in your project settings.
 3. Vercel automatically builds and deploys the app.
-
-### Self-hosted Node.js
-
-1. Ensure `RAPID_API_KEY` is defined in the environment.
-2. Run `npm run build` followed by `npm start` on your server.
-3. Serve the application behind your preferred reverse proxy.
 
 ---
