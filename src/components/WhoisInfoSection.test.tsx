@@ -25,15 +25,31 @@ describe('WhoisInfoSection', () => {
         const expirationSpan = screen.getByText('January 1st, 2030');
         expect(expirationSpan).toHaveClass('font-bold');
     });
-
-    it('returns null when required info is missing', () => {
+    
+    it('renders partial whois information when some details are missing', () => {
         const partial: WhoisInfo = {
             creationDate: '2025-10-03',
             expirationDate: null,
             registrar: 'Example Registrar',
-            registrarUrl: 'https://example-registrar.com',
+            registrarUrl: null,
         };
+
         render(<WhoisInfoSection whoisInfo={partial} />);
+
+        const paragraph = screen.getByText(/This domain was created on/i);
+        expect(paragraph).toHaveTextContent(
+            'This domain was created on October 3rd, 2025. It is registered with Example Registrar.'
+        );
+    });
+
+    it('returns null when all whois information is missing', () => {
+        const empty: WhoisInfo = {
+            creationDate: null,
+            expirationDate: null,
+            registrar: null,
+            registrarUrl: null,
+        };
+        render(<WhoisInfoSection whoisInfo={empty} />);
 
         expect(screen.queryByText(/This domain was created on/i)).toBeNull();
     });

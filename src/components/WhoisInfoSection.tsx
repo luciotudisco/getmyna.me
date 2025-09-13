@@ -8,25 +8,44 @@ interface WhoisInfoSectionProps {
 export function WhoisInfoSection({ whoisInfo }: WhoisInfoSectionProps) {
     const { creationDate, registrarUrl, registrar, expirationDate } = whoisInfo;
 
-    if (!creationDate || !registrarUrl || !expirationDate) {
+    if (!creationDate && !registrarUrl && !registrar && !expirationDate) {
         return null;
     }
 
-    const formattedCreationDate = format(parseISO(creationDate), 'MMMM do, yyyy');
-    const formattedExpirationDate = format(parseISO(expirationDate), 'MMMM do, yyyy');
+    const formattedCreationDate = creationDate ? format(parseISO(creationDate), 'MMMM do, yyyy') : null;
+    const formattedExpirationDate = expirationDate ? format(parseISO(expirationDate), 'MMMM do, yyyy') : null;
 
     return (
         <p className="text-xs">
-            This domain was created on <span className="font-bold">{formattedCreationDate}</span>. It is registered with{' '}
-            <a
-                href={registrarUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-bold text-blue-600 underline"
-            >
-                {registrar ?? registrarUrl}
-            </a>
-            . It is set to expire on <span className="font-bold">{formattedExpirationDate}</span>.
+            {creationDate && (
+                <>
+                    This domain was created on <span className="font-bold">{formattedCreationDate}</span>.
+                    {(registrarUrl || registrar || expirationDate) && ' '}
+                </>
+            )}
+            {(registrarUrl || registrar) && (
+                <>
+                    It is registered with{' '}
+                    {registrarUrl ? (
+                        <a
+                            href={registrarUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-bold text-blue-600 underline"
+                        >
+                            {registrar ?? registrarUrl}
+                        </a>
+                    ) : (
+                        <span className="font-bold">{registrar}</span>
+                    )}
+                    {expirationDate && ' '}
+                </>
+            )}
+            {expirationDate && (
+                <>
+                    It is set to expire on <span className="font-bold">{formattedExpirationDate}</span>.
+                </>
+            )}
         </p>
     );
 }
