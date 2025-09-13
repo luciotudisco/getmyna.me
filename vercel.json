@@ -5,7 +5,7 @@
         "schedule": "0 5 * * *"
       },
       {
-        "path": "/api/cron/sync/enrich_tlds",
+        "path": "/api/cron/sync/enrich_tlds_with_description",
         "schedule": "0 6 * * *"
       }
     ]
