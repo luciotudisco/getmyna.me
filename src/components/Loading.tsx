@@ -30,13 +30,11 @@ const LOADING_MESSAGES = [
 
 interface LoadingProps {
     height?: number;
-    width?: number;
     className?: string;
     message?: string;
 }
 
-export default function Loading({ height = 160, width, className, message }: LoadingProps) {
-    const computedWidth = width ?? (height / 160) * 300;
+export default function Loading({ height = 160, className, message }: LoadingProps) {
     const displayMessage = useMemo(
         () => message ?? LOADING_MESSAGES[Math.floor(Math.random() * LOADING_MESSAGES.length)],
         [message],
@@ -49,7 +47,7 @@ export default function Loading({ height = 160, width, className, message }: Loa
                 className,
             )}
         >
-            <Player autoplay loop src="/loading.json" style={{ height, width: computedWidth }} />
+            <Player autoplay loop src="/loading.json" style={{ height }} />
             <span>{displayMessage}</span>
         </div>
     );
