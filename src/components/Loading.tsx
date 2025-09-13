@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useMemo } from 'react';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 
 const Player = dynamic(() => import('@lottiefiles/react-lottie-player').then((mod) => mod.Player), {
     ssr: false,
