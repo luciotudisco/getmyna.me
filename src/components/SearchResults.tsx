@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
 import NumberTicker from '@/components/ui/number-ticker';
-import { ThreeDots } from 'react-loader-spinner';
+import Loading from '@/components/Loading';
 import { Domain } from '@/models/domain';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { SearchResult } from '@/components/SearchResult';
@@ -33,7 +33,7 @@ export function SearchResults() {
     if (isPending) {
         return (
             <div className="flex min-h-screen flex-col items-center gap-5 py-24 align-middle">
-                <ThreeDots visible={true} height="50" width="50" radius="10" ariaLabel="three-dots-loading" />
+                <Loading height={80} width={80} />
                 <p className="text-md text-muted-foreground">Hang tight — your info is on the way…</p>
             </div>
         );
