@@ -62,9 +62,8 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                             <DrawerTitle>Loading domain details</DrawerTitle>
                         </VisuallyHidden>
                     </DrawerHeader>
-                    <div className="flex flex-1 flex-col items-center justify-center gap-4 text-sm text-muted-foreground">
-                        <Loading height={80} />
-                        <span>Hang tight, fetching domain details...</span>
+                    <div className="flex flex-1 items-center justify-center">
+                        <Loading height={80} message="Hang tight, fetching domain details..." />
                     </div>
                 </DrawerContent>
             </Drawer>
