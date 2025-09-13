@@ -21,11 +21,18 @@ export async function GET(): Promise<NextResponse> {
                 // Skip comments and empty lines
                 continue;
             }
+
+            const tldName = trimmed.toLowerCase();
+            const existingTld = await storageService.getTLD(tldName);
+            if (existingTld) {
+                // Skip if TLD already exists
+                continue;
+            }
+
             await storageService.createTld({
-                name: trimmed.toLowerCase(),
+                name: tldName,
             });
         }
-
         console.log('TLD import completed');
         return NextResponse.json({ message: 'TLD import completed successfully' });
     } catch (error) {
