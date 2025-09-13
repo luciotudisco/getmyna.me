@@ -36,7 +36,7 @@ interface LoadingProps {
 }
 
 export default function Loading({ height = 160, width, className, message }: LoadingProps) {
-    const computedWidth = width ?? (height / 160) * 280;
+    const computedWidth = width ?? (height / 160) * 300;
     const displayMessage = useMemo(
         () => message ?? LOADING_MESSAGES[Math.floor(Math.random() * LOADING_MESSAGES.length)],
         [message],
