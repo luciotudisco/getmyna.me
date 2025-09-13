@@ -78,7 +78,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                         <>
                             <Separator />
                             <h3 className="text-xs font-medium uppercase text-muted-foreground">BUY DOMAIN</h3>
-                            <DomainRegistrarButtons domainName={domain.getName()} />
+                            <DomainRegistrarButtons domainName={domain.getName()} pricing={tldInfo?.pricing || {}} />
                         </>
                     )}
 

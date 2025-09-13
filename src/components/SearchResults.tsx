@@ -50,7 +50,7 @@ export function SearchResults() {
     return (
         <div className="min-h-screen">
             <main className="m-auto flex flex-col items-center gap-0 p-2 md:w-3/4 md:p-10">
-                <p className="text-muted-foregroun text-foreground-muted whitespace-pre-wrap p-3 font-mono text-sm tracking-tighter dark:text-white md:p-5">
+                <p className="text-muted-foregroun text-foreground-muted whitespace-pre-wrap p-3 font-mono text-sm tracking-tighter md:p-5">
                     <NumberTicker value={domains.length} />
                     <span> results found</span>
                 </p>

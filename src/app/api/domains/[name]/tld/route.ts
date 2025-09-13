@@ -17,6 +17,7 @@ export async function GET(
             description: tldInfo?.description ?? '',
             name: tld,
             type: tldInfo?.type,
+            pricing: tldInfo?.pricing,
         });
     } catch (error) {
         console.error('Error fetching TLD info:', error);

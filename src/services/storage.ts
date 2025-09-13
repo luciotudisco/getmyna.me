@@ -43,7 +43,7 @@ class StorageService {
         }
         const { data, error } = await this.client
             .from('tld')
-            .select('name, description, type')
+            .select('name, description, type, pricing')
             .eq('name', name)
             .single();
         if (error) {
@@ -68,7 +68,7 @@ class StorageService {
 
         const { data, error } = await this.client
             .from('tld')
-            .select('name, type, description')
+            .select('name, type, description, pricing')
             .order('name', { ascending: true });
         if (error) {
             console.error('Error fetching TLDs:', error);
