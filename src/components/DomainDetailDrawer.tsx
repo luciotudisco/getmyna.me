@@ -61,7 +61,6 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                         <DomainStatusBadge domain={domain} status={status} className="min-w-[8rem]" />
                     </DrawerTitle>
                 </DrawerHeader>
-                <Separator />
                 {loading ? (
                     <div className="flex flex-1 items-center justify-center">
                         <Loading height={80} />
@@ -70,6 +69,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     <div className="space-y-4 p-6 pt-0">
                         {domain.isAvailable() && (
                             <>
+                                <Separator />
                                 <DomainRegistrarButtons domainName={domain.getName()} />
                                 <Separator />
                             </>
