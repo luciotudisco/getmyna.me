@@ -22,8 +22,8 @@ export default function Header() {
                     <Suspense fallback={null}>
                         <SearchBar />
                     </Suspense>
-                    <div className="hidden min-w-72 md:block" />
-                    <Link href="/about" className="hidden md:block">
+                    <div className="hidden min-w-72 lg:block" />
+                    <Link href="/about" className="hidden lg:block">
                         <Button type="button" variant="ghost">
                             <Info />
                         </Button>

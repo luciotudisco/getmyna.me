@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Loading from '@/components/Loading';
 import { Domain, DomainStatus as DomainStatusEnum, DOMAIN_STATUS_DESCRIPTIONS } from '@/models/domain';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { Separator } from '@/components/ui/separator';
 import TLDSection from '@/components/TldSection';
 import { WhoisInfo } from '@/models/whois';
@@ -56,6 +57,9 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
         return (
             <Drawer open={open} onOpenChange={(openState: boolean) => !openState && onClose()} direction="bottom">
                 <DrawerContent className="min-h-[400px]">
+                    <VisuallyHidden>
+                        <DrawerTitle>Loading domain details for {domain.getName()}</DrawerTitle>
+                    </VisuallyHidden>
                     <div className="flex flex-1 items-center justify-center">
                         <Loading />
                     </div>
