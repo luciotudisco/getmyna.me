@@ -25,10 +25,11 @@ export async function GET(): Promise<NextResponse> {
             const tldName = trimmed.toLowerCase();
             const existingTld = await storageService.getTLD(tldName);
             if (existingTld) {
-                // Skip if TLD already exists
+                console.log(`TLD ${tldName} already exists. Skipping...`);
                 continue;
             }
 
+            console.log(`Creating TLD ${tldName} ...`);
             await storageService.createTld({
                 name: tldName,
             });
