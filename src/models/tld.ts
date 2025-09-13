@@ -13,9 +13,10 @@ export enum TLDType {
     TEST = 'TEST',
 }
 
-export enum Registrar {
-    PORKBUN = 'PORKBUN',
+export enum     Registrar {
     DYNADOT = 'DYNADOT',
+    NAMESILO = 'NAMESILO',
+    PORKBUN = 'PORKBUN',
 }
 
 export interface TLDPricing {

@@ -17,13 +17,13 @@ const REGISTRARS = [
     },
     {
         name: 'Dynadot',
-        key: 'DYNADOT' as Registrar,
+        key: Registrar.DYNADOT,
         url: (domain: string) => `https://www.dynadot.com/domain/search?domain=${domain}`,
     },
     {
-        name: 'Name.com',
-        key: 'NAMECOM' as Registrar,
-        url: (domain: string) => `https://www.name.com/domain/search/${domain}`,
+        name: 'Namesilo',
+        key: Registrar.NAMESILO,
+        url: (domain: string) => `https://www.namesilo.com/domain/search-domains?query=${domain}`,
     },
 ];
 
