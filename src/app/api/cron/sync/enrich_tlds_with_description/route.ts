@@ -6,7 +6,7 @@ export const maxDuration = 300; // This function can run for a maximum of 5 minu
 
 export async function GET(): Promise<NextResponse> {
     try {
-        console.log('Starting TLD enrichment ...');
+        console.log('Starting TLD enrichment with description ...');
         const openaiClient = new OpenAI({ apiKey: process.env['OPENAI_API_KEY'] });
         const tlds = await storageService.listTLDs();
         for (const tld of tlds) {
@@ -35,10 +35,10 @@ export async function GET(): Promise<NextResponse> {
             const description = response.choices[0].message.content;
             await storageService.updateTLD(tld.name, { description: description ?? '' });
         }
-        console.log('TLD enrichment completed');
-        return NextResponse.json({ message: 'TLD enrichment completed successfully' });
+        console.log('TLD enrichment with description completed');
+        return NextResponse.json({ message: 'TLD enrichment with description completed successfully' });
     } catch (error) {
-        console.error('Error during TLD enrichment:', error);
-        return NextResponse.json({ error: 'Failed to enrichment TLDs' }, { status: 500 });
+        console.error('Error during TLD enrichment with description:', error);
+        return NextResponse.json({ error: 'Failed to enrich TLDs with description' }, { status: 500 });
     }
 }
