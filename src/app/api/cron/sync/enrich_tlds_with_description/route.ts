@@ -4,6 +4,11 @@ import OpenAI from 'openai';
 
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
 
+/**
+ * Enrich TLDs with their description.
+ * This function fetches the TLDs from the database and enriches them with their description.
+ * It then updates the TLDs in the database with the new description.
+ */
 export async function GET(): Promise<NextResponse> {
     try {
         console.log('Starting TLD enrichment with description ...');

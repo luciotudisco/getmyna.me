@@ -41,12 +41,7 @@ export default function Loading({ height = 160, className, message }: LoadingPro
     );
 
     return (
-        <div
-            className={cn(
-                'flex flex-col items-center justify-center gap-4 text-sm text-muted-foreground',
-                className,
-            )}
-        >
+        <div className={cn('flex flex-col items-center justify-center gap-4 text-sm text-muted-foreground', className)}>
             <Player autoplay loop src="/loading.json" style={{ height }} />
             <span>{displayMessage}</span>
         </div>

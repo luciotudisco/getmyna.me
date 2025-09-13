@@ -8,13 +8,14 @@ export const maxDuration = 300; // This function can run for a maximum of 5 minu
 /**
  * Enrich TLDs with their type.
  * This function fetches the TLDs from the database and enriches them with their type.
+ * It then updates the TLDs in the database with the new type.
  */
 export async function GET(): Promise<NextResponse> {
     try {
         console.log('Starting TLD type enrichment ...');
         const tlds = await storageService.listTLDs();
         for (const tld of tlds) {
-            if (!tld.name || tld.type !== null && tld.type !== undefined) {
+            if (!tld.name || (tld.type !== null && tld.type !== undefined)) {
                 continue;
             }
             try {
@@ -23,10 +24,7 @@ export async function GET(): Promise<NextResponse> {
                 const match = response.data.match(/<span class="tld-type">([^<]+)<\/span>/i);
                 const typeStr = match?.[1]?.trim().toUpperCase().replace(/-/g, '_');
                 console.log(`Extracted IANA type for ${tld.name}: ${typeStr ?? 'unknown'}`);
-                const type =
-                    (typeStr
-                        ? TLDType[typeStr as keyof typeof TLDType]
-                        : undefined) ?? TLDType.GENERIC;
+                const type = (typeStr ? TLDType[typeStr as keyof typeof TLDType] : undefined) ?? TLDType.GENERIC;
                 await storageService.updateTLD(tld.name, { type });
                 console.log(`Updated ${tld.name} with type ${type}`);
             } catch (error) {

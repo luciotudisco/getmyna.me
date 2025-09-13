@@ -3,7 +3,7 @@
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { useEffect, useState } from 'react';
-import { RateLimiter } from '@/lib/rate-limiter';
+import { RateLimiter } from '@/utils/rate-limiter';
 import DomainDetailDrawer from '@/components/DomainDetailDrawer';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
 import { apiService } from '@/services/api';
