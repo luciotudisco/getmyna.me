@@ -63,7 +63,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                         </VisuallyHidden>
                     </DrawerHeader>
                     <div className="flex flex-1 flex-col items-center justify-center gap-4 text-sm text-muted-foreground">
-                        <Loading height={48} />
+                        <Loading height={80} />
                         <span>Hang tight, fetching domain details...</span>
                     </div>
                 </DrawerContent>
