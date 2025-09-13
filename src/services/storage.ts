@@ -18,6 +18,7 @@ class StorageService {
             {
                 name: tldInfo.name,
                 description: tldInfo.description,
+                type: tldInfo.type,
                 created_at: new Date().toISOString(),
                 updated_at: new Date().toISOString(),
             },
@@ -40,8 +41,7 @@ class StorageService {
         if (cached !== undefined) {
             return cached as TLD | null;
         }
-
-        const { data, error } = await this.client.from('tld').select('name, description').eq('name', name).single();
+        const { data, error } = await this.client.from('tld').select('name, description, type').eq('name', name).single();
         if (error) {
             if (error.code === 'PGRST116') {
                 // No rows returned
