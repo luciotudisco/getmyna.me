@@ -20,7 +20,9 @@ export async function GET(): Promise<NextResponse> {
                 const typeStr = match?.[1]?.trim().toUpperCase().replace(/-/g, '_');
                 console.log(`Extracted IANA type for ${tld.name}: ${typeStr ?? 'unknown'}`);
                 const type =
-                    (typeStr && TLDType[typeStr as keyof typeof TLDType]) ?? TLDType.GENERIC;
+                    (typeStr
+                        ? TLDType[typeStr as keyof typeof TLDType]
+                        : undefined) ?? TLDType.GENERIC;
                 await storageService.updateTLD(tld.name, { type });
                 console.log(`Updated ${tld.name} with type ${type}`);
             } catch (error) {
