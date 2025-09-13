@@ -2,11 +2,11 @@
 
 import { TLD } from '@/models/tld';
 
-interface TldSectionProps extends TLD {
+interface TLDSectionProps extends TLD {
     tld: string;
 }
 
-export default function TldSection({ tld, description }: TldSectionProps) {
+export default function TLDSection({ tld, description }: TLDSectionProps) {
     const wikipediaUrl = `https://en.wikipedia.org/wiki/.${tld}`;
     const tldDescription = description ?? 'No additional information is available for this TLD.';
     return (

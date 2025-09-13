@@ -5,7 +5,7 @@ import Loading from '@/components/Loading';
 import { Domain, DomainStatus as DomainStatusEnum, DOMAIN_STATUS_DESCRIPTIONS } from '@/models/domain';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
-import TldSection from '@/components/TldSection';
+import TLDSection from '@/components/TLDSection';
 import { WhoisInfo } from '@/models/whois';
 import { WhoisInfoSection } from '@/components/WhoisInfoSection';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
@@ -96,7 +96,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                         {tldInfo && (
                             <>
                                 <h3 className="text-xs font-medium uppercase text-muted-foreground">TLD INFO</h3>
-                                <TldSection tld={domain.getTLD()} {...tldInfo} />
+                                <TLDSection tld={domain.getTLD()} {...tldInfo} />
                                 <Separator />
                             </>
                         )}
