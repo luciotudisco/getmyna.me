@@ -61,6 +61,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                         <DomainStatusBadge domain={domain} status={status} className="min-w-[8rem]" />
                     </DrawerTitle>
                 </DrawerHeader>
+                <Separator />
                 {loading ? (
                     <div className="flex flex-1 items-center justify-center">
                         <Loading height={80} />
@@ -69,34 +70,34 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     <div className="space-y-4 p-6 pt-0">
                         {domain.isAvailable() && (
                             <>
-                                <Separator />
                                 <DomainRegistrarButtons domainName={domain.getName()} />
+                                <Separator />
                             </>
                         )}
 
                         {!domain.isAvailable() && (
                             <>
-                                <Separator />
                                 <h3 className="text-xs font-medium uppercase text-muted-foreground">STATUS</h3>
                                 <p className="text-xs">
                                     <span className="font-bold">{status}:</span> {DOMAIN_STATUS_DESCRIPTIONS[status]}
                                 </p>
+                                <Separator />
                             </>
                         )}
 
                         {!domain.isAvailable() && whoisInfo && (
                             <>
-                                <Separator />
                                 <h3 className="text-xs font-medium uppercase text-muted-foreground">WHOIS INFO</h3>
                                 <WhoisInfoSection whoisInfo={whoisInfo} />
+                                <Separator />
                             </>
                         )}
 
                         {tldInfo && (
                             <>
-                                <Separator />
                                 <h3 className="text-xs font-medium uppercase text-muted-foreground">TLD INFO</h3>
                                 <TldSection tld={domain.getTLD()} {...tldInfo} />
+                                <Separator />
                             </>
                         )}
                     </div>
