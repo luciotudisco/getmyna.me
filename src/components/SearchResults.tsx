@@ -33,7 +33,7 @@ export function SearchResults() {
     if (isPending) {
         return (
             <div className="flex min-h-screen flex-col items-center gap-5 py-24 align-middle">
-                <Loading height={80} message="Hang tight — your info is on the way…" />
+                <Loading height={80} />
             </div>
         );
     }
