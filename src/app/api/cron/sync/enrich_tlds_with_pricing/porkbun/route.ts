@@ -45,10 +45,6 @@ export async function GET(): Promise<NextResponse> {
                 renewal: parseFloat(pricing[tld].renewal),
                 currency: 'USD',
             };
-            if (tldInfo?.pricing?.[Registrar.PORKBUN]) {
-                console.log(`TLD ${tld} already has pricing information from Porkbun. Skipping...`);
-                continue;
-            }
             const updatedPricing = { ...tldInfo?.pricing, [Registrar.PORKBUN]: tldPricing };
             await storageService.updateTLD(tld, { pricing: updatedPricing });
             console.log(`Updated ${tld} with Porkbun pricing`);

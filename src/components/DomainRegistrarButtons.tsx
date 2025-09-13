@@ -18,7 +18,7 @@ const REGISTRARS = [
     {
         name: 'Dynadot',
         key: 'DYNADOT' as Registrar,
-        url: (domain: string) => `https://www.dynadot.com/domain/search.html?domain=${domain}`,
+        url: (domain: string) => `https://www.dynadot.com/domain/search?domain=${domain}`,
     },
     {
         name: 'Name.com',

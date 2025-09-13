@@ -13,6 +13,7 @@ jobs:
               run: npm install --force
             - name: Build Next.js
               env:
+                  DYNADOT_API_KEY: ${{ secrets.DYNADOT_API_KEY }}
                   NEXT_PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.NEXT_PUBLIC_AMPLITUDE_API_KEY }}
                   NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
                   NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
