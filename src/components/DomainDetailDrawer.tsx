@@ -5,7 +5,7 @@ import Loading from '@/components/Loading';
 import { Domain, DomainStatus as DomainStatusEnum, DOMAIN_STATUS_DESCRIPTIONS } from '@/models/domain';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
-import TLDSection from '@/components/TLDSection';
+import TLDSection from '@/components/TldSection';
 import { WhoisInfo } from '@/models/whois';
 import { WhoisInfoSection } from '@/components/WhoisInfoSection';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
