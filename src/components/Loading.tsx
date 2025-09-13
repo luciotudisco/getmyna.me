@@ -12,7 +12,7 @@ interface LoadingProps {
     className?: string;
 }
 
-export default function Loading({ height = 120, width, className }: LoadingProps) {
+export default function Loading({ height = 160, width, className }: LoadingProps) {
     const computedWidth = width ?? (height / 160) * 280;
     return <Player autoplay loop src="/loading.json" style={{ height, width: computedWidth }} className={className} />;
 }
