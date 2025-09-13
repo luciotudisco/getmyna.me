@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Loader2 } from 'lucide-react';
+import Loading from '@/components/Loading';
 import { Domain, DomainStatus as DomainStatusEnum, DOMAIN_STATUS_DESCRIPTIONS } from '@/models/domain';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
@@ -63,7 +63,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                         </VisuallyHidden>
                     </DrawerHeader>
                     <div className="flex flex-1 flex-col items-center justify-center gap-4 text-sm text-muted-foreground">
-                        <Loader2 className="h-6 w-6 animate-spin" />
+                        <Loading height={48} width={48} />
                         <span>Hang tight, fetching domain details...</span>
                     </div>
                 </DrawerContent>
