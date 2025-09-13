@@ -1,6 +1,6 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { TLD } from '@/models/tld';
-import { TTLCache } from '@/utils/ttl-cache';
+import { TTLCache } from '@/utils/cache';
 
 class StorageService {
     private client: SupabaseClient;

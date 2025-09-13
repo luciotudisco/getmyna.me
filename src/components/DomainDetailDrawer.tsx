@@ -63,7 +63,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                 </DrawerHeader>
                 {loading ? (
                     <div className="flex flex-1 items-center justify-center">
-                        <Loading height={80} />
+                        <Loading />
                     </div>
                 ) : (
                     <div className="space-y-4 p-6 pt-0">
