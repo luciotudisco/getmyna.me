@@ -52,6 +52,18 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
         fetchData();
     }, [open, domain]);
 
+    if (loading) {
+        return (
+            <Drawer open={open} onOpenChange={(openState: boolean) => !openState && onClose()} direction="bottom">
+                <DrawerContent className="min-h-[400px]">
+                    <div className="flex flex-1 items-center justify-center">
+                        <Loading />
+                    </div>
+                </DrawerContent>
+            </Drawer>
+        );
+    }
+
     return (
         <Drawer open={open} onOpenChange={(openState: boolean) => !openState && onClose()} direction="bottom">
             <DrawerContent className="min-h-[400px]">
@@ -61,47 +73,40 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                         <DomainStatusBadge domain={domain} status={status} className="min-w-[8rem]" />
                     </DrawerTitle>
                 </DrawerHeader>
-                {loading ? (
-                    <div className="flex flex-1 items-center justify-center">
-                        <Loading />
-                    </div>
-                ) : (
-                    <div className="space-y-4 p-6 pt-0">
-                        {domain.isAvailable() && (
-                            <>
-                                <Separator />
-                                <DomainRegistrarButtons domainName={domain.getName()} />
-                                <Separator />
-                            </>
-                        )}
+                <div className="space-y-4 p-6 pt-0">
+                    {domain.isAvailable() && (
+                        <>
+                            <Separator />
+                            <DomainRegistrarButtons domainName={domain.getName()} />
+                        </>
+                    )}
 
-                        {!domain.isAvailable() && (
-                            <>
-                                <h3 className="text-xs font-medium uppercase text-muted-foreground">STATUS</h3>
-                                <p className="text-xs">
-                                    <span className="font-bold">{status}:</span> {DOMAIN_STATUS_DESCRIPTIONS[status]}
-                                </p>
-                                <Separator />
-                            </>
-                        )}
+                    {!domain.isAvailable() && (
+                        <>
+                            <Separator />
+                            <h3 className="text-xs font-medium uppercase text-muted-foreground">STATUS</h3>
+                            <p className="text-xs">
+                                <span className="font-bold">{status}:</span> {DOMAIN_STATUS_DESCRIPTIONS[status]}
+                            </p>
+                        </>
+                    )}
 
-                        {!domain.isAvailable() && whoisInfo && (
-                            <>
-                                <h3 className="text-xs font-medium uppercase text-muted-foreground">WHOIS INFO</h3>
-                                <WhoisInfoSection whoisInfo={whoisInfo} />
-                                <Separator />
-                            </>
-                        )}
+                    {!domain.isAvailable() && whoisInfo && (
+                        <>
+                            <Separator />
+                            <h3 className="text-xs font-medium uppercase text-muted-foreground">WHOIS INFO</h3>
+                            <WhoisInfoSection whoisInfo={whoisInfo} />
+                        </>
+                    )}
 
-                        {tldInfo && (
-                            <>
-                                <h3 className="text-xs font-medium uppercase text-muted-foreground">TLD INFO</h3>
-                                <TLDSection tld={domain.getTLD()} {...tldInfo} />
-                                <Separator />
-                            </>
-                        )}
-                    </div>
-                )}
+                    {tldInfo && (
+                        <>
+                            <Separator />
+                            <h3 className="text-xs font-medium uppercase text-muted-foreground">TLD INFO</h3>
+                            <TLDSection tld={domain.getTLD()} {...tldInfo} />
+                        </>
+                    )}
+                </div>
             </DrawerContent>
         </Drawer>
     );

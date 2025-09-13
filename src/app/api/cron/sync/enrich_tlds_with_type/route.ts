@@ -10,11 +10,11 @@ const IANA_ROOT_URL = 'https://www.iana.org/domains/root/db';
 const IANA_TLD_TYPE_MAPPING = {
     'country-code': TLDType.COUNTRY_CODE,
     'generic-restricted': TLDType.GENERIC_RESTRICTED,
-    'generic': TLDType.GENERIC,
-    'infrastructure': TLDType.INFRASTRUCTURE,
-    'sponsored': TLDType.SPONSORED,
-    'test': TLDType.TEST,
-}
+    generic: TLDType.GENERIC,
+    infrastructure: TLDType.INFRASTRUCTURE,
+    sponsored: TLDType.SPONSORED,
+    test: TLDType.TEST,
+};
 
 /**
  * Enrich TLDs with their type.
@@ -45,25 +45,25 @@ export async function GET(): Promise<NextResponse> {
 async function processRow(row: HTMLElement): Promise<void> {
     const tldName = row.querySelector('td:nth-child(1)')?.text?.trim().toLowerCase().replace(/^\./, '');
     const typeText = row.querySelector('td:nth-child(2)')?.text?.trim().toLowerCase();
-    
+
     if (!tldName || !typeText) {
         console.warn(`No TLD name or type found for ${row.text}`);
         return;
     }
-    
+
     const tldType = IANA_TLD_TYPE_MAPPING[typeText as keyof typeof IANA_TLD_TYPE_MAPPING];
     if (!tldType) {
         console.warn(`The IANA TLD type ${typeText} for TLD ${tldName} is not supported`);
         return;
     }
-    
+
     // Update the TLD in the database with the mapped enum value
     const tld = await storageService.getTLD(tldName);
     if (tld?.type === tldType) {
         console.log(`${tldName} already has type ${tldType}. Skipping...`);
         return;
     }
-    
+
     await storageService.updateTLD(tldName, { type: tldType });
     console.log(`Updated ${tldName} with type ${tldType}`);
 }

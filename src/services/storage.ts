@@ -41,7 +41,11 @@ class StorageService {
         if (cached !== undefined) {
             return cached as TLD | null;
         }
-        const { data, error } = await this.client.from('tld').select('name, description, type').eq('name', name).single();
+        const { data, error } = await this.client
+            .from('tld')
+            .select('name, description, type')
+            .eq('name', name)
+            .single();
         if (error) {
             if (error.code === 'PGRST116') {
                 // No rows returned
