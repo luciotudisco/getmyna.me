@@ -23,7 +23,9 @@ export class RateLimiter {
     }
 
     private async process() {
-        if (this.processing || this.queue.length === 0) return;
+        if (this.processing || this.queue.length === 0) {
+            return;
+        }
         this.processing = true;
 
         while (this.queue.length > 0) {
