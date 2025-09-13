@@ -77,7 +77,6 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     {domain.isAvailable() && (
                         <>
                             <Separator />
-                            <h3 className="text-xs font-medium uppercase text-muted-foreground">BUY DOMAIN</h3>
                             <DomainRegistrarButtons domainName={domain.getName()} pricing={tldInfo?.pricing || {}} />
                         </>
                     )}
@@ -85,7 +84,6 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     {!domain.isAvailable() && (
                         <>
                             <Separator />
-                            <h3 className="text-xs font-medium uppercase text-muted-foreground">STATUS</h3>
                             <p className="text-xs">
                                 <span className="font-bold">{status}:</span> {DOMAIN_STATUS_DESCRIPTIONS[status]}
                             </p>
@@ -95,7 +93,6 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     {!domain.isAvailable() && whoisInfo && (
                         <>
                             <Separator />
-                            <h3 className="text-xs font-medium uppercase text-muted-foreground">WHOIS INFO</h3>
                             <WhoisInfoSection whoisInfo={whoisInfo} />
                         </>
                     )}
@@ -103,7 +100,6 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     {tldInfo && (
                         <>
                             <Separator />
-                            <h3 className="text-xs font-medium uppercase text-muted-foreground">TLD INFO</h3>
                             <TLDSection tld={domain.getTLD()} {...tldInfo} />
                         </>
                     )}
