@@ -5,6 +5,10 @@ import { TLDType } from '@/models/tld';
 
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
 
+/**
+ * Enrich TLDs with their type.
+ * This function fetches the TLDs from the database and enriches them with their type.
+ */
 export async function GET(): Promise<NextResponse> {
     try {
         console.log('Starting TLD type enrichment ...');

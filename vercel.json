@@ -7,6 +7,10 @@
       {
         "path": "/api/cron/sync/enrich_tlds_with_description",
         "schedule": "0 6 * * *"
+      },
+      {
+        "path": "/api/cron/sync/enrich_tlds_with_type",
+        "schedule": "0 7 * * *"
       }
     ]
   }
