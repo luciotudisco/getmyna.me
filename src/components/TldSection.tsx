@@ -15,8 +15,8 @@ export default function TLDSection({ tld, description, type }: TLDSectionProps) 
                 .{tld} ({type}):
             </span>{' '}
             {tldDescription}{' '}
-            <a href={wikipediaUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
-                Learn more on Wikipedia
+            <a href={wikipediaUrl} target="_blank" rel="noopener noreferrer" className="underline">
+                Learn more
             </a>
         </p>
     );
