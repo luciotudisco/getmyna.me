@@ -7,7 +7,7 @@ interface TLDSectionProps extends TLD {
 }
 
 export default function TLDSection({ tld, description, type }: TLDSectionProps) {
-    const wikipediaUrl = `https://en.wikipedia.org/wiki/.${tld}`;
+    const ianaURL = `https://www.iana.org/domains/root/db/${tld}.html`;
     const tldDescription = description ?? 'No additional information is available for this TLD.';
     return (
         <p className="text-xs leading-relaxed">
@@ -16,7 +16,7 @@ export default function TLDSection({ tld, description, type }: TLDSectionProps) 
             </span>{' '}
             <span className="text-muted-foreground">{tldDescription}</span>{' '}
             <a
-                href={wikipediaUrl}
+                href={ianaURL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground underline"
