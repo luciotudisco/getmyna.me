@@ -47,7 +47,7 @@ export default function Loading({ className, message, size = 'medium' }: Loading
     return (
         <div className={cn('flex flex-col items-center justify-center gap-4 text-sm text-muted-foreground', className)}>
             <Player autoplay loop src="/loading.json" style={{ height }} />
-            <span className="text-center max-w-sm">{displayMessage}</span>
+            <span className="max-w-sm text-center">{displayMessage}</span>
         </div>
     );
 }

@@ -12,7 +12,7 @@ interface DomainRegistrarButtonsProps {
 export function DomainRegistrarButtons({ domainName, pricing }: DomainRegistrarButtonsProps) {
     if (Object.keys(pricing).length === 0) {
         return (
-            <div className="flex items-center gap-3 p-4 bg-red-100 rounded-md text-xs">
+            <div className="flex items-center gap-3 rounded-md bg-red-100 p-4 text-xs">
                 <LocateOffIcon className="h-5 w-5" />
                 <span>
                     Oops! This TLD seems to be flying under our radar. The registrar for this TLD is not yet supported.
@@ -20,7 +20,7 @@ export function DomainRegistrarButtons({ domainName, pricing }: DomainRegistrarB
             </div>
         );
     }
-    
+
     return (
         <div className="space-y-2">
             {Object.keys(pricing).map((registrarKey) => {
@@ -47,9 +47,7 @@ export function DomainRegistrarButtons({ domainName, pricing }: DomainRegistrarB
                                             </div>
                                         </div>
                                     ) : (
-                                        <div className="text-xs text-gray-300">
-                                            No pricing data
-                                        </div>
+                                        <div className="text-xs text-gray-300">No pricing data</div>
                                     )}
                                 </div>
                             </div>

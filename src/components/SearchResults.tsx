@@ -33,7 +33,7 @@ export function SearchResults() {
     if (isPending) {
         return (
             <div className="flex min-h-screen flex-col items-center gap-5 py-24 align-middle">
-                <Loading size='large'/>
+                <Loading size="large" />
             </div>
         );
     }
@@ -42,7 +42,9 @@ export function SearchResults() {
         return (
             <div className="flex min-h-screen flex-col items-center gap-3 py-24 align-middle">
                 <Player autoplay loop src="/sad-empty-box.json" style={{ height: '250px' }} />
-                <p className="text-md text-center text-muted-foreground max-w-sm">Ouch! Your query returned 0 results. Time to try another search pattern.</p>
+                <p className="text-md max-w-sm text-center text-muted-foreground">
+                    Ouch! Your query returned 0 results. Time to try another search pattern.
+                </p>
             </div>
         );
     }
@@ -50,7 +52,7 @@ export function SearchResults() {
     return (
         <div className="min-h-screen">
             <main className="m-auto flex flex-col items-center gap-0 p-2 md:w-3/4 md:p-10">
-                <p className="text-muted-foreground whitespace-pre-wrap p-3 font-mono text-xs tracking-tighter md:p-5">
+                <p className="whitespace-pre-wrap p-3 font-mono text-xs tracking-tighter text-muted-foreground md:p-5">
                     <NumberTicker value={domains.length} className="text-muted-foreground" />
                     <span> results found</span>
                 </p>

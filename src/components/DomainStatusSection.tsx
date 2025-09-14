@@ -12,23 +12,25 @@ interface DomainStatusSectionProps {
 
 export function DomainStatusSection({ status, whoisInfo }: DomainStatusSectionProps) {
     const formattedCreationDate = useMemo(
-        () => whoisInfo?.creationDate ? format(parseISO(whoisInfo.creationDate), 'MMMM do, yyyy') : null,
-        [whoisInfo?.creationDate]
+        () => (whoisInfo?.creationDate ? format(parseISO(whoisInfo.creationDate), 'MMMM do, yyyy') : null),
+        [whoisInfo?.creationDate],
     );
-    
+
     const formattedExpirationDate = useMemo(
-        () => whoisInfo?.expirationDate ? format(parseISO(whoisInfo.expirationDate), 'MMMM do, yyyy') : null,
-        [whoisInfo?.expirationDate]
+        () => (whoisInfo?.expirationDate ? format(parseISO(whoisInfo.expirationDate), 'MMMM do, yyyy') : null),
+        [whoisInfo?.expirationDate],
     );
 
     const domainAge = useMemo(
-        () => whoisInfo?.creationDate ? formatDistanceToNow(parseISO(whoisInfo.creationDate), { addSuffix: false }) : null,
-        [whoisInfo?.creationDate]
+        () =>
+            whoisInfo?.creationDate
+                ? formatDistanceToNow(parseISO(whoisInfo.creationDate), { addSuffix: false })
+                : null,
+        [whoisInfo?.creationDate],
     );
 
     return (
         <div className="space-y-3 text-xs">
-            
             {/* Status Description */}
             {DOMAIN_STATUS_DESCRIPTIONS[status] && (
                 <div className="flex gap-2">
@@ -36,7 +38,7 @@ export function DomainStatusSection({ status, whoisInfo }: DomainStatusSectionPr
                     <span className="font-medium">{DOMAIN_STATUS_DESCRIPTIONS[status]}</span>
                 </div>
             )}
-            
+
             {/* Creation Date */}
             {whoisInfo?.creationDate && (
                 <div className="flex gap-2">
@@ -47,7 +49,7 @@ export function DomainStatusSection({ status, whoisInfo }: DomainStatusSectionPr
                     </span>
                 </div>
             )}
-            
+
             {/* Registrar */}
             {(whoisInfo?.registrarUrl || whoisInfo?.registrar) && (
                 <div className="flex gap-2">
@@ -66,7 +68,7 @@ export function DomainStatusSection({ status, whoisInfo }: DomainStatusSectionPr
                     )}
                 </div>
             )}
-            
+
             {/* Expiration Date */}
             {whoisInfo?.expirationDate && (
                 <div className="flex gap-2">
