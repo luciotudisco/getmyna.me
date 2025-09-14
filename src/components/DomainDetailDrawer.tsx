@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import Loading from '@/components/Loading';
-import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
+import { Domain, DomainStatus as DomainStatusEnum, DOMAIN_STATUS_DESCRIPTIONS } from '@/models/domain';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { Separator } from '@/components/ui/separator';
 import TLDSection from '@/components/TldSection';
 import { WhoisInfo } from '@/models/whois';
-import DomainInfoTable from '@/components/DomainInfoTable';
+import { WhoisInfoSection } from '@/components/WhoisInfoSection';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
 import DomainRegistrarButtons from '@/components/DomainRegistrarButtons';
 import { apiService } from '@/services/api';
@@ -88,7 +88,17 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     {!domain.isAvailable() && (
                         <>
                             <Separator />
-                            <DomainInfoTable status={status} whoisInfo={whoisInfo} />
+                            <p className="text-xs">
+                                <span className="font-bold">{status}:</span> {DOMAIN_STATUS_DESCRIPTIONS[status]}
+                            </p>
+                        </>
+                    )}
+
+                    {!domain.isAvailable() && whoisInfo && (whoisInfo.creationDate || whoisInfo.registrar || whoisInfo.expirationDate) && (
+                        <>
+                            <Separator />
+                            <h3 className="text-xs font-medium uppercase text-muted-foreground">WHOIS INFO</h3>
+                            <WhoisInfoSection whoisInfo={whoisInfo} />
                         </>
                     )}
 
