@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Registrar, TLDPricing, REGISTRARS_DOMAIN_SEARCH_URLS } from '@/models/tld';
-import { ExternalLinkIcon, AlertCircle } from 'lucide-react';
+import { ExternalLinkIcon, LocateOffIcon } from 'lucide-react';
 
 interface DomainRegistrarButtonsProps {
     domainName: string;
@@ -12,10 +12,10 @@ interface DomainRegistrarButtonsProps {
 export function DomainRegistrarButtons({ domainName, pricing }: DomainRegistrarButtonsProps) {
     if (Object.keys(pricing).length === 0) {
         return (
-            <div className="flex items-center gap-3 p-4">
-                <AlertCircle className="h-5 w-5" />
-                <span className="text-sm">
-                    No known registrars available for this TLD
+            <div className="flex items-center gap-3 p-4 bg-red-100 rounded-md text-xs">
+                <LocateOffIcon className="h-5 w-5" />
+                <span>
+                    Oops! This TLD seems to be flying under our radar. The registrar for this TLD is not yet supported.
                 </span>
             </div>
         );

@@ -8,7 +8,7 @@ import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { Separator } from '@/components/ui/separator';
 import TLDSection from '@/components/TldSection';
 import { WhoisInfo } from '@/models/whois';
-import { WhoisInfoSection } from '@/components/WhoisInfoSection';
+import { DomainStatusSection } from '@/components/DomainStatusSection';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
 import DomainRegistrarButtons from '@/components/DomainRegistrarButtons';
 import { apiService } from '@/services/api';
@@ -88,17 +88,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     {!domain.isAvailable() && (
                         <>
                             <Separator />
-                            <p className="text-xs">
-                                <span className="font-bold">{status}:</span> {DOMAIN_STATUS_DESCRIPTIONS[status]}
-                            </p>
-                        </>
-                    )}
-
-                    {!domain.isAvailable() && whoisInfo && (whoisInfo.creationDate || whoisInfo.registrar || whoisInfo.expirationDate) && (
-                        <>
-                            <Separator />
-                            <h3 className="text-xs font-medium uppercase text-muted-foreground">WHOIS INFO</h3>
-                            <WhoisInfoSection whoisInfo={whoisInfo} />
+                            <DomainStatusSection status={status} whoisInfo={whoisInfo} />
                         </>
                     )}
 

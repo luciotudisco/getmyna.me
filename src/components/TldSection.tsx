@@ -1,6 +1,6 @@
 'use client';
 
-import { TLD } from '@/models/tld';
+import { TLD, TLDType } from '@/models/tld';
 
 interface TLDSectionProps extends TLD {
     tld: string;
@@ -8,14 +8,16 @@ interface TLDSectionProps extends TLD {
 
 export default function TLDSection({ tld, description, type }: TLDSectionProps) {
     const wikipediaUrl = `https://en.wikipedia.org/wiki/.${tld}`;
-    const tldDescription = description ?? 'No additional information is available for this TLD.';
+    const tldDescription = description ?? 'No additional information is available for this TLD.';    
     return (
-        <p className="text-xs text-muted-foreground">
-            <span className="font-bold">
-                .{tld} ({type}):
+        <p className="text-xs leading-relaxed">
+            <span className="font-bold text-white">
+                <span className="rounded-md p-0.5 font-bold bg-slate-600">
+                    {type} TLD
+                </span>
             </span>{' '}
-            {tldDescription}{' '}
-            <a href={wikipediaUrl} target="_blank" rel="noopener noreferrer" className="underline">
+            <span className="text-muted-foreground">{tldDescription}</span>{' '}
+            <a href={wikipediaUrl} target="_blank" rel="noopener noreferrer" className="underline text-muted-foreground">
                 Learn more
             </a>
         </p>
