@@ -10,7 +10,7 @@ export default function TLDSection({ tld, description, type }: TLDSectionProps) 
     const wikipediaUrl = `https://en.wikipedia.org/wiki/.${tld}`;
     const tldDescription = description ?? 'No additional information is available for this TLD.';
     return (
-        <p className="text-xs">
+        <p className="text-xs text-muted-foreground">
             <span className="font-bold">
                 .{tld} ({type}):
             </span>{' '}
