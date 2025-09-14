@@ -1,33 +1,32 @@
 import { Badge } from '@/components/ui/badge';
 
-const FaqItem = ({
-    question,
-    answer,
-    color,
-    index,
-}: {
-    question: string;
-    answer: string;
-    color: string;
-    index: number;
-}) => (
-    <div className="mb-8 flex gap-4">
-        <div>
-            <div className="mb-2 flex items-center gap-2">
-                <span
-                    className="flex size-5 shrink-0 items-center justify-center rounded-md font-mono text-xs font-bold"
-                    style={{ backgroundColor: color }}
-                >
-                    {index + 1}
-                </span>
-                <h2 className="font-medium lg:text-lg">{question}</h2>
-            </div>
-            <p className="text-xs text-muted-foreground lg:text-sm">{answer}</p>
-        </div>
-    </div>
-);
-
 const AboutPage = () => {
+    const FaqItem = ({
+        question,
+        answer,
+        color,
+        index,
+    }: {
+        question: string;
+        answer: string;
+        color: string;
+        index: number;
+    }) => (
+        <div className="mb-8 flex gap-4">
+            <div>
+                <div className="mb-2 flex items-center gap-2">
+                    <span
+                        className="flex size-5 shrink-0 items-center justify-center rounded-md font-mono text-xs font-bold"
+                        style={{ backgroundColor: color }}
+                    >
+                        {index + 1}
+                    </span>
+                    <h2 className="font-medium lg:text-lg">{question}</h2>
+                </div>
+                <p className="text-xs text-muted-foreground lg:text-sm">{answer}</p>
+            </div>
+        </div>
+    );
     return (
         <div className="min-h-screen">
             <main className="m-auto flex w-full max-w-4xl flex-col items-center gap-5 p-5 md:p-10">
