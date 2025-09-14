@@ -29,20 +29,25 @@ const LOADING_MESSAGES = [
 ];
 
 interface LoadingProps {
+    size?: 'small' | 'medium' | 'large';
     className?: string;
     message?: string;
 }
 
-export default function Loading({ className, message }: LoadingProps) {
+export default function Loading({ className, message, size = 'medium' }: LoadingProps) {
     const displayMessage = useMemo(
         () => message ?? LOADING_MESSAGES[Math.floor(Math.random() * LOADING_MESSAGES.length)],
         [message],
     );
 
+    const height = useMemo(() => {
+        return size === 'small' ? '100px' : size === 'medium' ? '250px' : '350px';
+    }, [size]);
+
     return (
         <div className={cn('flex flex-col items-center justify-center gap-4 text-sm text-muted-foreground', className)}>
-            <Player autoplay loop src="/loading.json" />
-            <span className="text-center">{displayMessage}</span>
+            <Player autoplay loop src="/loading.json" style={{ height }} />
+            <span className="text-center max-w-sm">{displayMessage}</span>
         </div>
     );
 }

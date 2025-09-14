@@ -33,16 +33,16 @@ export function SearchResults() {
     if (isPending) {
         return (
             <div className="flex min-h-screen flex-col items-center gap-5 py-24 align-middle">
-                <Loading />
+                <Loading size='large'/>
             </div>
         );
     }
 
     if (domains.length === 0) {
         return (
-            <div className="flex min-h-screen flex-col items-center gap-5 py-24 align-middle">
-                <Player autoplay loop src="/sad-empty-box.json" style={{ height: 120, width: 120 }} />
-                <p className="text-md text-center text-muted-foreground">No matches found! Give it another shot.</p>
+            <div className="flex min-h-screen flex-col items-center gap-3 py-24 align-middle">
+                <Player autoplay loop src="/sad-empty-box.json" style={{ height: '250px' }} />
+                <p className="text-md text-center text-muted-foreground max-w-sm">Ouch! Your query returned 0 results. Time to try another search pattern.</p>
             </div>
         );
     }
