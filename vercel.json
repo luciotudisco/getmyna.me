@@ -1,27 +1,27 @@
 {
     "crons": [
       {
-        "path": "/api/cron/sync/import_tlds",
+        "path": "/cron/import_tlds",
         "schedule": "0 5 * * *"
       },
       {
-        "path": "/api/cron/sync/enrich_tlds_with_description",
+        "path": "/cron/enrich_tlds_with_description",
         "schedule": "0 6 * * *"
       },
       {
-        "path": "/api/cron/sync/enrich_tlds_with_type",
+        "path": "/cron/enrich_tlds_with_type",
         "schedule": "0 7 * * *"
       },
       {
-        "path": "/api/cron/sync/enrich_tlds_with_pricing/porkbun",
+        "path": "/cron/enrich_tlds_with_pricing/porkbun",
         "schedule": "0 8 * * *"
       },
       {
-        "path": "/api/cron/sync/enrich_tlds_with_pricing/dynodot",
+        "path": "/cron/enrich_tlds_with_pricing/dynodot",
         "schedule": "0 9 * * *"
       },
       {
-        "path": "/api/cron/sync/enrich_tlds_with_pricing/namesilo",
+        "path": "/cron/enrich_tlds_with_pricing/namesilo",
         "schedule": "0 10 * * *"
       }
     ]
