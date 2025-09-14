@@ -41,7 +41,7 @@ export function SearchResults() {
     if (domains.length === 0) {
         return (
             <div className="flex min-h-screen flex-col items-center gap-3 py-24 align-middle">
-                <Player autoplay loop src="/sad-empty-box.json" style={{ height: '250px' }} />
+                <Player autoplay src="/sad-empty-box.json" style={{ height: '250px' }} />
                 <p className="text-md max-w-sm text-center text-muted-foreground">
                     Ouch! Your query returned 0 results. Time to try another search pattern.
                 </p>

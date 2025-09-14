@@ -1,3 +1,6 @@
+/**
+ * A rate limiter that limits the number of calls per second.
+ */
 export class RateLimiter {
     private queue: (() => Promise<void>)[] = [];
     private processing = false;
@@ -8,6 +11,14 @@ export class RateLimiter {
         this.delayMs = 1000 / callsPerSecond;
     }
 
+    /**
+     * Adds a task to the queue.
+     * 
+     * Tasks are executed in the order they are added ensuring the given rate is not exceeded.
+     * 
+     * @param task - The task to add to the queue.
+     * @returns The result of the task.
+     */
     async add<T>(task: () => Promise<T>): Promise<T> {
         return new Promise((resolve, reject) => {
             this.queue.push(async () => {
@@ -21,7 +32,6 @@ export class RateLimiter {
             this.process();
         });
     }
-
     private async process() {
         if (this.processing || this.queue.length === 0) {
             return;
