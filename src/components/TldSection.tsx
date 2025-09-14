@@ -1,6 +1,6 @@
 'use client';
 
-import { TLD, TLDType } from '@/models/tld';
+import { TLD } from '@/models/tld';
 
 interface TLDSectionProps extends TLD {
     tld: string;

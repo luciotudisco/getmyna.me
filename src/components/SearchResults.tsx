@@ -32,7 +32,7 @@ export function SearchResults() {
 
     if (isPending) {
         return (
-            <div className="flex min-h-screen flex-col items-center gap-5 py-24 align-middle">
+            <div className="flex min-h-screen flex-col items-center gap-5 py-24 px-6 align-middle">
                 <Loading size="large" />
             </div>
         );
@@ -40,7 +40,7 @@ export function SearchResults() {
 
     if (domains.length === 0) {
         return (
-            <div className="flex min-h-screen flex-col items-center gap-3 py-24 align-middle">
+            <div className="flex min-h-screen flex-col items-center gap-3 py-24 px-6 align-middle">
                 <Player autoplay keepLastFrame src="/sad-empty-box.json" style={{ height: '250px' }} />
                 <p className="text-md max-w-sm text-center text-muted-foreground">
                     Ouch! Your query returned 0 results. Time to try another search pattern.
