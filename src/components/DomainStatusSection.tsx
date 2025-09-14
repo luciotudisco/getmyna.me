@@ -33,26 +33,26 @@ export function DomainStatusSection({ status, whoisInfo }: DomainStatusSectionPr
         <div className="space-y-3 text-xs">
             {/* Status Description */}
             {DOMAIN_STATUS_DESCRIPTIONS[status] && (
-                <div className="flex gap-2">
+                <p className="flex gap-2">
                     <span className="text-muted-foreground">Status:</span>
                     <span className="font-medium">{DOMAIN_STATUS_DESCRIPTIONS[status]}</span>
-                </div>
+                </p>
             )}
 
             {/* Creation Date */}
             {whoisInfo?.creationDate && (
-                <div className="flex gap-2">
+                <p className="flex gap-2">
                     <span className="text-muted-foreground">Created:</span>
                     <span className="font-medium">
                         {formattedCreationDate}
                         {domainAge && <span className="text-muted-foreground"> ({domainAge} old)</span>}
                     </span>
-                </div>
+                </p>
             )}
 
             {/* Registrar */}
             {(whoisInfo?.registrarUrl || whoisInfo?.registrar) && (
-                <div className="flex gap-2">
+                <p className="flex gap-2">
                     <span className="text-muted-foreground">Registrar:</span>
                     {whoisInfo.registrarUrl ? (
                         <a
@@ -66,15 +66,15 @@ export function DomainStatusSection({ status, whoisInfo }: DomainStatusSectionPr
                     ) : (
                         <span className="font-medium">{whoisInfo.registrar}</span>
                     )}
-                </div>
+                </p>
             )}
 
             {/* Expiration Date */}
             {whoisInfo?.expirationDate && (
-                <div className="flex gap-2">
+                <p className="flex gap-2">
                     <span className="text-muted-foreground">Expires:</span>
                     <span className="font-medium">{formattedExpirationDate}</span>
-                </div>
+                </p>
             )}
         </div>
     );
