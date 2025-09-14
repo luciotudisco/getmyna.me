@@ -19,13 +19,13 @@ export function WhoisInfoSection({ whoisInfo }: WhoisInfoSectionProps) {
         <p className="text-xs">
             {creationDate && (
                 <>
-                    This domain was created on <span className="font-bold">{formattedCreationDate}</span>.
+                    Domain created on <span className="font-bold">{formattedCreationDate}</span>.
                     {(registrarUrl || registrar || expirationDate) && ' '}
                 </>
             )}
             {(registrarUrl || registrar) && (
                 <>
-                    It is registered with{' '}
+                    Registered with{' '}
                     {registrarUrl ? (
                         <a
                             href={registrarUrl}
@@ -43,7 +43,7 @@ export function WhoisInfoSection({ whoisInfo }: WhoisInfoSectionProps) {
             )}
             {expirationDate && (
                 <>
-                    It is set to expire on <span className="font-bold">{formattedExpirationDate}</span>.
+                    Set to expire on <span className="font-bold">{formattedExpirationDate}</span>.
                 </>
             )}
         </p>

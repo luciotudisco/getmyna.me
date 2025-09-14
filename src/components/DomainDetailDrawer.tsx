@@ -94,9 +94,10 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                         </>
                     )}
 
-                    {!domain.isAvailable() && whoisInfo && (
+                    {!domain.isAvailable() && whoisInfo && (whoisInfo.creationDate || whoisInfo.registrar || whoisInfo.expirationDate) && (
                         <>
                             <Separator />
+                            <h3 className="text-xs font-medium uppercase text-muted-foreground">WHOIS INFO</h3>
                             <WhoisInfoSection whoisInfo={whoisInfo} />
                         </>
                     )}

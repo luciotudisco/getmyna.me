@@ -19,7 +19,7 @@ class ApiService {
     async getDomainStatus(domain: string): Promise<DomainStatusEnum> {
         const response = await this.client.get(`/api/domains/${domain}/status`);
         const data = response.data as { status?: { summary?: string }[] };
-        return (data.status?.[0]?.summary as DomainStatusEnum) ?? DomainStatusEnum.error;
+        return (data.status?.at(-1)?.summary as DomainStatusEnum) ?? DomainStatusEnum.error;
     }
 
     async getDomainWhois(domain: string): Promise<WhoisInfo> {

@@ -19,7 +19,6 @@ export function SearchResult({ domain }: { domain: Domain }) {
         const fetchStatus = async () => {
             try {
                 const result = await statusRateLimiter.add(() => apiService.getDomainStatus(domain.getName()));
-
                 domain.setStatus(result);
                 setStatus(result);
             } catch (error) {
