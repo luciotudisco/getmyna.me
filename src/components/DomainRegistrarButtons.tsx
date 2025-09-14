@@ -1,50 +1,43 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Registrar, TLDPricing } from '@/models/tld';
-import { ExternalLinkIcon } from 'lucide-react';
+import { Registrar, TLDPricing, REGISTRARS_DOMAIN_SEARCH_URLS } from '@/models/tld';
+import { ExternalLinkIcon, AlertCircle } from 'lucide-react';
 
 interface DomainRegistrarButtonsProps {
     domainName: string;
     pricing: Partial<Record<Registrar, TLDPricing>>;
 }
 
-const REGISTRARS = [
-    {
-        name: 'Porkbun',
-        key: Registrar.PORKBUN,
-        url: (domain: string) => `https://porkbun.com/checkout/search?q=${domain}`,
-    },
-    {
-        name: 'Dynadot',
-        key: Registrar.DYNADOT,
-        url: (domain: string) => `https://www.dynadot.com/domain/search?domain=${domain}`,
-    },
-    {
-        name: 'Namesilo',
-        key: Registrar.NAMESILO,
-        url: (domain: string) => `https://www.namesilo.com/domain/search-domains?query=${domain}`,
-    },
-];
-
 export function DomainRegistrarButtons({ domainName, pricing }: DomainRegistrarButtonsProps) {
-    console.log(pricing);
+    if (Object.keys(pricing).length === 0) {
+        return (
+            <div className="flex items-center gap-3 p-4">
+                <AlertCircle className="h-5 w-5" />
+                <span className="text-sm">
+                    No known registrars available for this TLD
+                </span>
+            </div>
+        );
+    }
+    
     return (
         <div className="space-y-2">
-            {REGISTRARS.map((registrar) => {
-                const registrarPricing = pricing?.[registrar.key];
-
+            {Object.keys(pricing).map((registrarKey) => {
+                const registrar = registrarKey as Registrar;
+                const registrarPricing = pricing?.[registrar];
+                const searchUrl = REGISTRARS_DOMAIN_SEARCH_URLS[registrar];
                 return (
-                    <div key={registrar.name} className="flex items-center gap-3">
+                    <div key={registrar} className="flex items-center gap-3">
                         <Button
                             className="min-h-14 flex-1 bg-blue-400 text-white hover:bg-blue-600"
-                            onClick={() => window.open(registrar.url(domainName), '_blank')}
+                            onClick={() => window.open(searchUrl(domainName), '_blank')}
                         >
                             <ExternalLinkIcon className="mr-2 h-4 w-4" />
                             <div className="flex flex-1 items-center justify-between font-extrabold">
-                                {registrar.name}
-                                <div className="min-w-[100px] text-right text-xs text-gray-600">
-                                    {registrarPricing && (
+                                {registrar}
+                                <div className="min-w-[100px] text-right text-xs">
+                                    {registrarPricing ? (
                                         <div>
                                             <div className="font-extrabold text-white">
                                                 ${registrarPricing.registration}
@@ -52,6 +45,10 @@ export function DomainRegistrarButtons({ domainName, pricing }: DomainRegistrarB
                                             <div className="text-xs font-extralight text-white">
                                                 renewal ${registrarPricing.renewal}
                                             </div>
+                                        </div>
+                                    ) : (
+                                        <div className="text-xs text-gray-300">
+                                            No pricing data
                                         </div>
                                     )}
                                 </div>

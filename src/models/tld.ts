@@ -13,11 +13,17 @@ export enum TLDType {
     TEST = 'TEST',
 }
 
-export enum     Registrar {
+export enum Registrar {
     DYNADOT = 'DYNADOT',
     NAMESILO = 'NAMESILO',
     PORKBUN = 'PORKBUN',
 }
+
+export const REGISTRARS_DOMAIN_SEARCH_URLS = {
+    [Registrar.DYNADOT]: (domain: string) => `https://www.dynadot.com/domain/search?domain=${domain}`,
+    [Registrar.NAMESILO]: (domain: string) => `https://www.namesilo.com/domain/search-domains?query=${domain}`,
+    [Registrar.PORKBUN]: (domain: string) => `https://porkbun.com/checkout/search?q=${domain}`,
+};
 
 export interface TLDPricing {
     registration: number;
