@@ -34,7 +34,7 @@ export function DomainStatusSection({ status, whoisInfo }: DomainStatusSectionPr
             {/* Status Description */}
             {DOMAIN_STATUS_DESCRIPTIONS[status] && (
                 <p>
-                    <span className="text-muted-foreground">Status:</span>
+                    <span className="text-muted-foreground">Status:</span>{' '}
                     <span className="font-medium">
                         The domain is {status}. {DOMAIN_STATUS_DESCRIPTIONS[status]}
                     </span>
@@ -43,8 +43,8 @@ export function DomainStatusSection({ status, whoisInfo }: DomainStatusSectionPr
 
             {/* Creation Date */}
             {whoisInfo?.creationDate && (
-                <p className="gap-2">
-                    <span className="text-muted-foreground">Created:</span>
+                <p>
+                    <span className="text-muted-foreground">Created:</span>{' '}
                     <span className="font-medium">
                         {formattedCreationDate}
                         {domainAge && <span className="text-muted-foreground"> ({domainAge} old)</span>}
@@ -54,8 +54,8 @@ export function DomainStatusSection({ status, whoisInfo }: DomainStatusSectionPr
 
             {/* Registrar */}
             {(whoisInfo?.registrarUrl || whoisInfo?.registrar) && (
-                <p className="gap-2">
-                    <span className="text-muted-foreground">Registrar:</span>
+                <p>
+                    <span className="text-muted-foreground">Registrar:</span>{' '}
                     {whoisInfo.registrarUrl ? (
                         <a
                             href={whoisInfo.registrarUrl}
@@ -73,8 +73,8 @@ export function DomainStatusSection({ status, whoisInfo }: DomainStatusSectionPr
 
             {/* Expiration Date */}
             {whoisInfo?.expirationDate && (
-                <p className="gap-2">
-                    <span className="text-muted-foreground">Expires:</span>
+                <p>
+                    <span className="text-muted-foreground">Expires:</span>{' '}
                     <span className="font-medium">{formattedExpirationDate}</span>
                 </p>
             )}
