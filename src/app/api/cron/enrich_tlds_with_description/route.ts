@@ -16,6 +16,7 @@ export async function GET(): Promise<NextResponse> {
         const tlds = await storageService.listTLDs();
         for (const tld of tlds) {
             if (!tld.name || tld.description !== null) {
+                console.log(`Skipping TLD ${tld.name} because it already has a description`);
                 continue;
             }
             const response = await openaiClient.chat.completions.create({

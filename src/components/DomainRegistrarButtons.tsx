@@ -20,11 +20,19 @@ export function DomainRegistrarButtons({ domainName, pricing }: DomainRegistrarB
         );
     }
 
+    // Sort registrars by pricing in descending order and take first 3
+    const sortedRegistrars = Object.entries(pricing)
+        .sort(([, aPricing], [, bPricing]) => {
+            const aPrice = aPricing?.registration || 0;
+            const bPrice = bPricing?.registration || 0;
+            return bPrice - aPrice; // DESC order (highest first)
+        })
+        .slice(0, 3); // Take first 3
+
     return (
         <div className="space-y-2">
-            {Object.keys(pricing).map((registrarKey) => {
+            {sortedRegistrars.map(([registrarKey, registrarPricing]) => {
                 const registrar = registrarKey as Registrar;
-                const registrarPricing = pricing?.[registrar];
                 const searchUrl = REGISTRARS_DOMAIN_SEARCH_URLS[registrar];
                 return (
                     <div key={registrar} className="flex items-center gap-3">
@@ -36,7 +44,7 @@ export function DomainRegistrarButtons({ domainName, pricing }: DomainRegistrarB
                             <div className="flex flex-1 items-center justify-between font-extrabold">
                                 {registrar}
                                 <div className="min-w-[100px] text-right text-xs">
-                                    {registrarPricing ? (
+                                    {registrarPricing && registrarPricing.registration && registrarPricing.renewal ? (
                                         <div>
                                             <div className="font-extrabold text-white">
                                                 ${registrarPricing.registration}
@@ -46,7 +54,7 @@ export function DomainRegistrarButtons({ domainName, pricing }: DomainRegistrarB
                                             </div>
                                         </div>
                                     ) : (
-                                        <div className="text-xs text-gray-300">No pricing data</div>
+                                        <div className="text-xs text-white font-extralight">No pricing data</div>
                                     )}
                                 </div>
                             </div>
