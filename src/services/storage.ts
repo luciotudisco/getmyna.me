@@ -69,7 +69,8 @@ class StorageService {
         const { data, error } = await this.client
             .from('tld')
             .select('name, type, description, pricing')
-            .order('name', { ascending: true });
+            .order('name', { ascending: true })
+            .limit(5000);
         if (error) {
             console.error('Error fetching TLDs:', error);
             throw new Error(`Failed to fetch TLDs: ${error.message}`);

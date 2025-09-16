@@ -14,11 +14,13 @@ export async function GET(): Promise<NextResponse> {
         console.log('Starting TLD enrichment with description ...');
         const openaiClient = new OpenAI({ apiKey: process.env['OPENAI_API_KEY'] });
         const tlds = await storageService.listTLDs();
+        console.log(`Found ${tlds.length} TLDs to enrich with description`);
         for (const tld of tlds) {
             if (!tld.name || tld.description !== null) {
                 console.log(`Skipping TLD ${tld.name} because it already has a description`);
                 continue;
             }
+            console.log(`Enriching TLD ${tld.name} with description ...`);
             const response = await openaiClient.chat.completions.create({
                 model: 'gpt-5',
                 messages: [

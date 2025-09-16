@@ -43,7 +43,7 @@ export async function GET(): Promise<NextResponse> {
  * @returns A promise that resolves when the row is processed.
  */
 async function processRow(row: HTMLElement): Promise<void> {
-    const tldName = row.querySelector('td:nth-child(1)')?.text?.trim().toLowerCase().replace(/^\./, '');
+    const tldName = row.querySelector('td:nth-child(1)')?.text?.trim().toLowerCase().replace(/\./g, '');
     const typeText = row.querySelector('td:nth-child(2)')?.text?.trim().toLowerCase();
 
     if (!tldName || !typeText) {
