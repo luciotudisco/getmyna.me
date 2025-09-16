@@ -3,7 +3,10 @@
 @tailwind utilities;
 
 body {
+  display: flex;
+  flex-direction: column;
   font-family: monospace;
+  min-height: 100dvh;
 }
 
 @layer base {

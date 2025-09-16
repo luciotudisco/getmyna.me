@@ -32,7 +32,7 @@ export function SearchResults() {
 
     if (isPending) {
         return (
-            <div className="flex min-h-screen flex-col items-center gap-5 py-12 lg:py-24 px-6 align-middle">
+            <div className="flex-1 items-center p-12 align-middle">
                 <Loading size="large" />
             </div>
         );
@@ -40,9 +40,9 @@ export function SearchResults() {
 
     if (domains.length === 0) {
         return (
-            <div className="flex min-h-screen flex-col items-center gap-3 py-12 lg:py-24 px-6 align-middle">
+            <div className="flex-1 items-center gap-3 p-12 align-middle">
                 <Player autoplay keepLastFrame src="/sad-empty-box.json" style={{ height: '250px' }} />
-                <p className="text-md max-w-sm text-center text-muted-foreground">
+                <p className="text-md text-center text-muted-foreground">
                     Ouch! Your query returned 0 results. Time to try another search pattern.
                 </p>
             </div>
@@ -50,7 +50,7 @@ export function SearchResults() {
     }
 
     return (
-        <div className="min-h-screen">
+        <div className="flex-1">
             <main className="m-auto flex flex-col items-center gap-0 p-2 md:w-3/4 md:p-10">
                 <p className="whitespace-pre-wrap p-3 font-mono text-xs tracking-tighter text-muted-foreground md:p-5">
                     <NumberTicker value={domains.length} className="text-muted-foreground" />
