@@ -27,6 +27,7 @@ const AboutPage = () => {
             </div>
         </div>
     );
+
     return (
         <div className="min-h-screen">
             <main className="m-auto flex w-full max-w-4xl flex-col items-center gap-5 p-5 md:p-10">
