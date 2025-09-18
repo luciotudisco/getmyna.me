@@ -10,7 +10,7 @@ jobs:
             - name: Check out repository
               uses: actions/checkout@v3
             - name: Install dependencies
-              run: npm install --force
+              run: npm install
             - name: Build Next.js
               env:
                   DYNADOT_API_KEY: ${{ secrets.DYNADOT_API_KEY }}
