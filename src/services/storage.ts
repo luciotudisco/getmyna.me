@@ -42,18 +42,21 @@ class StorageService {
         if (cached !== undefined) {
             return cached as TLD | null;
         }
+        
+        const searchField = name.startsWith('xn--') ? 'punycode_name' : 'name';        
         const { data, error } = await this.client
             .from('tld')
             .select('name, punycode_name, description, type, pricing')
-            .eq('name', name)
+            .eq(searchField, name)
             .single();
+            
         if (error) {
             if (error.code === 'PGRST116') {
                 // No rows returned
                 this.cache.set(cacheKey, null, this.ttlMs);
                 return null;
             }
-            console.error('Error fetching TLD by name:', error);
+            console.error(`Error fetching TLD by ${searchField}:`, error);
             throw new Error(`Failed to fetch TLD: ${error.message}`);
         }
         this.cache.set(cacheKey, data as TLD, this.ttlMs);
@@ -81,12 +84,14 @@ class StorageService {
     }
 
     async updateTLD(name: string, tldInfo: TLD): Promise<void> {
+        const searchField = name.startsWith('xn--') ? 'punycode_name' : 'name';
         const { error } = await this.client
             .from('tld')
             .update({ ...tldInfo, updated_at: new Date().toISOString() })
-            .eq('name', name);
+            .eq(searchField, name);
+            
         if (error) {
-            console.error('Error updating TLD:', error);
+            console.error(`Error updating TLD by ${searchField}:`, error);
             throw new Error(`Failed to update TLD: ${error.message}`);
         }
 
