@@ -6,6 +6,7 @@ export class RateLimiter {
     private processing = false;
     private lastCallTime = 0;
     private delayMs: number;
+    private readonly maxRetries = 3;
 
     constructor(callsPerSecond: number) {
         this.delayMs = 1000 / callsPerSecond;
@@ -21,14 +22,20 @@ export class RateLimiter {
      */
     async add<T>(task: () => Promise<T>): Promise<T> {
         return new Promise((resolve, reject) => {
-            this.queue.push(async () => {
+            const attemptTask = async (attempt = 0): Promise<void> => {
                 try {
                     const result = await task();
                     resolve(result);
                 } catch (error) {
-                    reject(error);
+                    if (attempt < this.maxRetries) {
+                        this.queue.unshift(() => attemptTask(attempt + 1));
+                    } else {
+                        reject(error);
+                    }
                 }
-            });
+            };
+
+            this.queue.push(() => attemptTask());
             this.process();
         });
     }
