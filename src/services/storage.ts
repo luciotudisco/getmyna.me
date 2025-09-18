@@ -17,6 +17,7 @@ class StorageService {
         const { error } = await this.client.from('tld').upsert(
             {
                 name: tldInfo.name,
+                punycode_name: tldInfo.punycode_name,
                 description: tldInfo.description,
                 type: tldInfo.type,
                 created_at: new Date().toISOString(),
@@ -43,7 +44,7 @@ class StorageService {
         }
         const { data, error } = await this.client
             .from('tld')
-            .select('name, description, type, pricing')
+            .select('name, punycode_name, description, type, pricing')
             .eq('name', name)
             .single();
         if (error) {
@@ -68,7 +69,7 @@ class StorageService {
 
         const { data, error } = await this.client
             .from('tld')
-            .select('name, type, description, pricing')
+            .select('name, punycode_name, type, description, pricing')
             .order('name', { ascending: true })
             .limit(5000);
         if (error) {
