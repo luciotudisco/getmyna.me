@@ -1,6 +1,6 @@
 import isFQDN from 'validator/lib/isFQDN';
 import { Permutation, PowerSet } from 'js-combinatorics';
-import { storageService } from './storage';
+import { tldRepository } from './tld-repository';
 
 /**
  * Returns a (possibly empty) list of domains that are domains hacks for the given input string.
@@ -106,7 +106,7 @@ export function getSubdomains(domain: string): string[] {
  * @return A (possibly empty) list of TLDs that match the ending of the given text.
  */
 export async function getMatchingTLDs(text: string): Promise<string[]> {
-    const tlds = await storageService.listTLDs();
+    const tlds = await tldRepository.listTLDs();
     return tlds
         .filter((tld) => text.toLowerCase().endsWith(tld.name?.toLowerCase() || ''))
         .map((tld) => tld.name?.toLowerCase() || '');

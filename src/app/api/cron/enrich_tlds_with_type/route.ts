@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { NextResponse } from 'next/server';
 import { HTMLElement, parse } from 'node-html-parser';
-import { storageService } from '@/services/storage';
+import { tldRepository } from '@/services/tld-repository';
 import { TLDType } from '@/models/tld';
 
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
@@ -58,12 +58,12 @@ async function processRow(row: HTMLElement): Promise<void> {
     }
 
     // Update the TLD in the database with the mapped enum value
-    const tld = await storageService.getTLD(tldName);
+    const tld = await tldRepository.getTLD(tldName);
     if (tld?.type === tldType) {
         console.log(`${tldName} already has type ${tldType}. Skipping...`);
         return;
     }
 
-    await storageService.updateTLD(tldName, { type: tldType });
+    await tldRepository.updateTLD(tldName, { type: tldType });
     console.log(`Updated ${tldName} with type ${tldType}`);
 }

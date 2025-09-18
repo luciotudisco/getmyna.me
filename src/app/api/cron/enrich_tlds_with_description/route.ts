@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { storageService } from '@/services/storage';
+import { tldRepository } from '@/services/tld-repository';
 import OpenAI from 'openai';
 
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
@@ -13,7 +13,7 @@ export async function GET(): Promise<NextResponse> {
     try {
         console.log('Starting TLD enrichment with description ...');
         const openaiClient = new OpenAI({ apiKey: process.env['OPENAI_API_KEY'] });
-        const tlds = await storageService.listTLDs();
+        const tlds = await tldRepository.listTLDs();
         console.log(`Found ${tlds.length} TLDs to enrich with description`);
         for (const tld of tlds) {
             if (!tld.name || tld.description !== null) {
@@ -41,7 +41,7 @@ export async function GET(): Promise<NextResponse> {
                 ],
             });
             const description = response.choices[0].message.content;
-            await storageService.updateTLD(tld.name, { description: description ?? '' });
+            await tldRepository.updateTLD(tld.name, { description: description ?? '' });
         }
         console.log('TLD enrichment with description completed');
         return NextResponse.json({ message: 'TLD enrichment with description completed successfully' });

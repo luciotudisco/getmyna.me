@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { storageService } from '@/services/storage';
+import { tldRepository } from '@/services/tld-repository';
 
 export async function GET(
     _request: Request,
@@ -12,7 +12,7 @@ export async function GET(
         if (tld === undefined) {
             return NextResponse.json({ error: `The provided domain '${domain}' is not valid` }, { status: 400 });
         }
-        const tldInfo = await storageService.getTLD(tld);
+        const tldInfo = await tldRepository.getTLD(tld);
         return NextResponse.json({
             description: tldInfo?.description ?? '',
             name: tld,

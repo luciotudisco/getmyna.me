@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { NextResponse } from 'next/server';
-import { storageService } from '@/services/storage';
+import { tldRepository } from '@/services/tld-repository';
 import { toASCII, toUnicode } from 'punycode';
 
 const IANA_TLD_URL = 'https://data.iana.org/TLD/tlds-alpha-by-domain.txt';
@@ -25,14 +25,14 @@ export async function GET(): Promise<NextResponse> {
 
             const punycodeName = toASCII(trimmed.toLowerCase());
             const tldName = toUnicode(punycodeName);
-            const existingTld = await storageService.getTLD(tldName);
+            const existingTld = await tldRepository.getTLD(tldName);
             if (existingTld) {
                 console.log(`TLD ${tldName} already exists. Skipping...`);
                 continue;
             }
 
             console.log(`Creating TLD ${tldName} ...`);
-            await storageService.createTld({
+            await tldRepository.createTld({
                 name: tldName,
                 punycode_name: punycodeName,
             });

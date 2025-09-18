@@ -1,5 +1,5 @@
 /**
- * A rate limiter that limits the number of calls per second.
+ * A rate limiter that executes tasks at a given rate.
  */
 export class RateLimiter {
     private queue: (() => Promise<void>)[] = [];
@@ -32,6 +32,7 @@ export class RateLimiter {
             this.process();
         });
     }
+    
     private async process() {
         if (this.processing || this.queue.length === 0) {
             return;

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { NextResponse } from 'next/server';
-import { storageService } from '@/services/storage';
+import { tldRepository } from '@/services/tld-repository';
 import { Registrar } from '@/models/tld';
 import { toUnicode } from 'punycode';
 
@@ -31,13 +31,13 @@ export async function GET(): Promise<NextResponse> {
         const tlds = response.data;
         for (const tldData of tlds) {
             const tldName = toUnicode(tldData.name);
-            const tldInfo = await storageService.getTLD(tldName);
+             const tldInfo = await tldRepository.getTLD(tldName);
             if (!tldInfo) {
                 console.log(`TLD ${tldName} not found in database. Skipping...`);
                 continue;
             }
             const updatedPricing = { ...tldInfo?.pricing, [Registrar.GANDI]: {} };
-            await storageService.updateTLD(tldName, { pricing: updatedPricing });
+             await tldRepository.updateTLD(tldName, { pricing: updatedPricing });
             console.log(`Updated ${tldName} with Gandi pricing`);
         }
         console.log('TLD pricing enrichment from Gandi completed');

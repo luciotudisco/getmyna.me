@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { NextResponse } from 'next/server';
-import { storageService } from '@/services/storage';
+import { tldRepository } from '@/services/tld-repository';
 import { Registrar, TLDPricing } from '@/models/tld';
 
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
@@ -32,7 +32,7 @@ export async function GET(): Promise<NextResponse> {
         const response = await axios.get<NamesiloPricingResponse>(NAMESILO_PRICES_URL);
         const tlds = Object.keys(response.data.reply).map((tld) => tld.toLowerCase());
         for (const tld of tlds) {
-            const tldInfo = await storageService.getTLD(tld);
+            const tldInfo = await tldRepository.getTLD(tld);
             if (!tldInfo) {
                 console.log(`TLD ${tld} not found in database. Skipping...`);
                 continue;
@@ -43,7 +43,7 @@ export async function GET(): Promise<NextResponse> {
                 currency: 'USD',
             };
             const updatedPricing = { ...tldInfo?.pricing, [Registrar.NAMESILO]: tldPricing };
-            await storageService.updateTLD(tld, { pricing: updatedPricing });
+            await tldRepository.updateTLD(tld, { pricing: updatedPricing });
             console.log(`Updated ${tld} with Namesilo pricing`);
         }
         console.log('TLD pricing enrichment from Namesilo completed');

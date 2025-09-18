@@ -2,10 +2,16 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { TLD } from '@/models/tld';
 import { TTLCache } from '@/utils/cache';
 
-class StorageService {
+/**
+ * A repository for interacting with TLD data in the Supabase database.
+ * 
+ * This repository provides methods for creating, updating, and fetching TLDs from the database.
+ */
+class TLDRepository {
+    private readonly TTL_MILLISECONDS = 60_000;
+    private readonly POSTGREST_NO_ROWS_ERROR = 'PGRST116';
     private client: SupabaseClient;
     private cache = new TTLCache<unknown>();
-    private readonly ttlMs = 60_000;
 
     constructor() {
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -13,29 +19,41 @@ class StorageService {
         this.client = createClient(supabaseUrl, supabaseServiceKey);
     }
 
+    /**
+     * Creates a new TLD in the database.
+     * 
+     * @param tldInfo - The TLD information to create.
+     */
     async createTld(tldInfo: TLD): Promise<void> {
+        const now = new Date().toISOString();
         const { error } = await this.client.from('tld').upsert(
             {
                 name: tldInfo.name,
                 punycode_name: tldInfo.punycode_name,
                 description: tldInfo.description,
                 type: tldInfo.type,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
+                created_at: now,
+                updated_at: now,
             },
             {
-                onConflict: 'name',
+                onConflict: 'name,punycode_name',
             },
         );
         if (error) {
-            console.error('Error upserting TLD:', error);
-            throw new Error(`Failed to upsert TLD: ${error.message}`);
+            console.error(`Error upserting TLD ${tldInfo.name}:`, error);
+            throw new Error(`Failed to upsert TLD ${tldInfo.name}: ${error.message}`);
         }
 
         this.cache.delete('tlds');
         this.cache.delete(`tld:${tldInfo.name}`);
     }
 
+    /**
+     * Fetches a TLD from the database.
+     * 
+     * @param name - The name of the TLD to fetch.
+     * @returns The TLD information.
+     */
     async getTLD(name: string): Promise<TLD | null> {
         const cacheKey = `tld:${name}`;
         const cached = this.cache.get(cacheKey);
@@ -51,18 +69,23 @@ class StorageService {
             .single();
             
         if (error) {
-            if (error.code === 'PGRST116') {
+            if (error.code === this.POSTGREST_NO_ROWS_ERROR) {
                 // No rows returned
-                this.cache.set(cacheKey, null, this.ttlMs);
+                this.cache.set(cacheKey, null, this.TTL_MILLISECONDS);
                 return null;
             }
-            console.error(`Error fetching TLD by ${searchField}:`, error);
-            throw new Error(`Failed to fetch TLD: ${error.message}`);
+            console.error(`Error fetching TLD ${name}:`, error);
+            throw new Error(`Failed to fetch TLD ${name}: ${error.message}`);
         }
-        this.cache.set(cacheKey, data as TLD, this.ttlMs);
+        this.cache.set(cacheKey, data as TLD, this.TTL_MILLISECONDS);
         return data as TLD;
     }
 
+    /**
+     * Lists all TLDs from the database.
+     * 
+     * @returns A list of TLDs.
+     */
     async listTLDs(): Promise<TLD[]> {
         const cacheKey = 'tlds';
         const cached = this.cache.get(cacheKey);
@@ -79,10 +102,16 @@ class StorageService {
             console.error('Error fetching TLDs:', error);
             throw new Error(`Failed to fetch TLDs: ${error.message}`);
         }
-        this.cache.set(cacheKey, data as TLD[], this.ttlMs);
+        this.cache.set(cacheKey, data as TLD[], this.TTL_MILLISECONDS);
         return data as TLD[];
     }
 
+    /**
+     * Updates a TLD in the database.
+     * 
+     * @param name - The name of the TLD to update.
+     * @param tldInfo - The TLD information to update.
+     */
     async updateTLD(name: string, tldInfo: TLD): Promise<void> {
         const searchField = name.startsWith('xn--') ? 'punycode_name' : 'name';
         const { error } = await this.client
@@ -91,8 +120,8 @@ class StorageService {
             .eq(searchField, name);
             
         if (error) {
-            console.error(`Error updating TLD by ${searchField}:`, error);
-            throw new Error(`Failed to update TLD: ${error.message}`);
+            console.error(`Error updating TLD ${name}:`, error);
+            throw new Error(`Failed to update TLD ${name}: ${error.message}`);
         }
 
         this.cache.delete('tlds');
@@ -100,5 +129,5 @@ class StorageService {
     }
 }
 
-export const storageService = new StorageService();
-export type { StorageService };
+export const tldRepository = new TLDRepository();
+export type { TLDRepository };
