@@ -28,7 +28,7 @@ function ErrorBadge({ className }: { className?: string }) {
     return (
         <Badge className={cn(baseClasses, 'bg-yellow-400 hover:bg-yellow-500', className)}>
             <div className="flex items-center gap-2">
-                <ExclamationTriangleIcon className="h-4 w-4 text-white" />
+                <ExclamationTriangleIcon className="h-4 w-4 fill-white text-white" />
                 <span>Error</span>
             </div>
         </Badge>
@@ -39,7 +39,7 @@ function AvailableBadge({ className }: { className?: string }) {
     return (
         <Badge className={cn(baseClasses, 'bg-green-400 hover:bg-green-600', className)}>
             <div className="flex items-center gap-2">
-                <CheckIcon className="h-4 w-4 text-white" />
+                <CheckIcon className="h-4 w-4 fill-white text-white" />
                 <span className="text-white">Available</span>
             </div>
         </Badge>
@@ -50,7 +50,7 @@ function TakenBadge({ className }: { className?: string }) {
     return (
         <Badge className={cn(baseClasses, 'bg-red-400 hover:bg-red-600', className)}>
             <div className="flex items-center gap-2">
-                <LockClosedIcon className="h-4 w-4 text-white" />
+                <LockClosedIcon className="h-4 w-4 fill-white text-white" />
                 <span className="text-white">Taken</span>
             </div>
         </Badge>
