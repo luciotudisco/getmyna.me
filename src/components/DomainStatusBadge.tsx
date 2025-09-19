@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/utils/utils';
 import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { AlertCircle, Loader2 } from 'lucide-react';
+import { CheckCircledIcon, LockClosedIcon } from '@radix-ui/react-icons';
 
 interface DomainStatusBadgeProps {
     domain: Domain;
@@ -35,11 +36,25 @@ function ErrorBadge({ className }: { className?: string }) {
 }
 
 function AvailableBadge({ className }: { className?: string }) {
-    return <Badge className={cn(baseClasses, 'bg-green-400 hover:bg-green-600', className)}>Available</Badge>;
+    return (
+        <Badge className={cn(baseClasses, 'bg-green-400 hover:bg-green-600', className)}>
+            <div className="flex items-center gap-2">
+                <CheckCircledIcon className="h-4 w-4 text-white" />
+                <span className="text-white">Available</span>
+            </div>
+        </Badge>
+    );
 }
 
 function TakenBadge({ className }: { className?: string }) {
-    return <Badge className={cn(baseClasses, 'bg-red-400 hover:bg-red-600', className)}>Taken</Badge>;
+    return (
+        <Badge className={cn(baseClasses, 'bg-red-400 hover:bg-red-600', className)}>
+            <div className="flex items-center gap-2">
+                <LockClosedIcon className="h-4 w-4 text-white" />
+                <span className="text-white">Taken</span>
+            </div>
+        </Badge>
+    );
 }
 
 export function DomainStatusBadge({ domain, status, className }: DomainStatusBadgeProps) {
