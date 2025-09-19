@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Loading from '@/components/Loading';
-import { Domain, DomainStatus as DomainStatusEnum, DOMAIN_STATUS_DESCRIPTIONS } from '@/models/domain';
+import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { Separator } from '@/components/ui/separator';
@@ -95,7 +95,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                     {tldInfo && (
                         <>
                             <Separator />
-                            <TLDSection tld={domain.getTLD()} {...tldInfo} />
+                            <TLDSection {...tldInfo} />
                         </>
                     )}
                 </div>

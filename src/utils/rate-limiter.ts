@@ -13,9 +13,9 @@ export class RateLimiter {
 
     /**
      * Adds a task to the queue.
-     * 
+     *
      * Tasks are executed in the order they are added ensuring the given rate is not exceeded.
-     * 
+     *
      * @param task - The task to add to the queue.
      * @returns The result of the task.
      */
@@ -32,7 +32,7 @@ export class RateLimiter {
             this.process();
         });
     }
-    
+
     private async process() {
         if (this.processing || this.queue.length === 0) {
             return;

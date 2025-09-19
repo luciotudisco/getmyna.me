@@ -54,7 +54,7 @@ export function DomainRegistrarButtons({ domainName, pricing }: DomainRegistrarB
                                             </div>
                                         </div>
                                     ) : (
-                                        <div className="text-xs text-white font-extralight">No pricing data</div>
+                                        <div className="text-xs font-extralight text-white">No pricing data</div>
                                     )}
                                 </div>
                             </div>

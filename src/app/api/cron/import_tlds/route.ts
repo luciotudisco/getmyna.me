@@ -34,7 +34,7 @@ export async function GET(): Promise<NextResponse> {
             console.log(`Creating TLD ${tldName} ...`);
             await tldRepository.createTld({
                 name: tldName,
-                punycode_name: punycodeName,
+                punycodeName: punycodeName,
             });
         }
         console.log('TLD import completed');

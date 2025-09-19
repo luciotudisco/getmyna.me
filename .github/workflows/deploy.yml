@@ -15,6 +15,7 @@ jobs:
               env:
                   DYNADOT_API_KEY: ${{ secrets.DYNADOT_API_KEY }}
                   GANDI_API_KEY: ${{ secrets.GANDI_API_KEY }}
+                  NAMECOM_API_KEY: ${{ secrets.NAMECOM_API_KEY }}
                   NAMESILO_API_KEY: ${{ secrets.NAMESILO_API_KEY }}
                   NEXT_PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.NEXT_PUBLIC_AMPLITUDE_API_KEY }}
                   NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}

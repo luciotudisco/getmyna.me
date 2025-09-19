@@ -15,6 +15,7 @@ export async function GET(
         const tldInfo = await tldRepository.getTLD(tld);
         return NextResponse.json({
             description: tldInfo?.description ?? '',
+            punycodeName: tldInfo?.punycodeName ?? '',
             name: tld,
             type: tldInfo?.type,
             pricing: tldInfo?.pricing,

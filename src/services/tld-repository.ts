@@ -4,7 +4,7 @@ import { TTLCache } from '@/utils/cache';
 
 /**
  * A repository for interacting with TLD data in the Supabase database.
- * 
+ *
  * This repository provides methods for creating, updating, and fetching TLDs from the database.
  */
 class TLDRepository {
@@ -21,7 +21,7 @@ class TLDRepository {
 
     /**
      * Creates a new TLD in the database.
-     * 
+     *
      * @param tldInfo - The TLD information to create.
      */
     async createTld(tldInfo: TLD): Promise<void> {
@@ -29,7 +29,7 @@ class TLDRepository {
         const { error } = await this.client.from('tld').upsert(
             {
                 name: tldInfo.name,
-                punycode_name: tldInfo.punycode_name,
+                punycode_name: tldInfo.punycodeName,
                 description: tldInfo.description,
                 type: tldInfo.type,
                 created_at: now,
@@ -50,7 +50,7 @@ class TLDRepository {
 
     /**
      * Fetches a TLD from the database.
-     * 
+     *
      * @param name - The name of the TLD to fetch.
      * @returns The TLD information.
      */
@@ -60,14 +60,14 @@ class TLDRepository {
         if (cached !== undefined) {
             return cached as TLD | null;
         }
-        
-        const searchField = name.startsWith('xn--') ? 'punycode_name' : 'name';        
+
+        const searchField = name.startsWith('xn--') ? 'punycode_name' : 'name';
         const { data, error } = await this.client
             .from('tld')
             .select('name, punycode_name, description, type, pricing')
             .eq(searchField, name)
             .single();
-            
+
         if (error) {
             if (error.code === this.POSTGREST_NO_ROWS_ERROR) {
                 // No rows returned
@@ -77,13 +77,20 @@ class TLDRepository {
             console.error(`Error fetching TLD ${name}:`, error);
             throw new Error(`Failed to fetch TLD ${name}: ${error.message}`);
         }
-        this.cache.set(cacheKey, data as TLD, this.TTL_MILLISECONDS);
-        return data as TLD;
+        const tld = {
+            name: data.name,
+            punycodeName: data.punycode_name,
+            type: data.type,
+            description: data.description,
+            pricing: data.pricing,
+        } as TLD;
+        this.cache.set(cacheKey, tld, this.TTL_MILLISECONDS);
+        return tld;
     }
 
     /**
      * Lists all TLDs from the database.
-     * 
+     *
      * @returns A list of TLDs.
      */
     async listTLDs(): Promise<TLD[]> {
@@ -102,13 +109,20 @@ class TLDRepository {
             console.error('Error fetching TLDs:', error);
             throw new Error(`Failed to fetch TLDs: ${error.message}`);
         }
-        this.cache.set(cacheKey, data as TLD[], this.TTL_MILLISECONDS);
-        return data as TLD[];
+        const tlds: TLD[] = data.map((tld) => ({
+            name: tld.name,
+            punycodeName: tld.punycode_name,
+            type: tld.type,
+            description: tld.description,
+            pricing: tld.pricing,
+        }));
+        this.cache.set(cacheKey, tlds, this.TTL_MILLISECONDS);
+        return tlds;
     }
 
     /**
      * Updates a TLD in the database.
-     * 
+     *
      * @param name - The name of the TLD to update.
      * @param tldInfo - The TLD information to update.
      */
@@ -116,9 +130,16 @@ class TLDRepository {
         const searchField = name.startsWith('xn--') ? 'punycode_name' : 'name';
         const { error } = await this.client
             .from('tld')
-            .update({ ...tldInfo, updated_at: new Date().toISOString() })
+            .update({
+                name: tldInfo.name,
+                punycodeName: tldInfo.punycodeName,
+                description: tldInfo.description,
+                type: tldInfo.type,
+                pricing: tldInfo.pricing,
+                updated_at: new Date().toISOString(),
+            })
             .eq(searchField, name);
-            
+
         if (error) {
             console.error(`Error updating TLD ${name}:`, error);
             throw new Error(`Failed to update TLD ${name}: ${error.message}`);

@@ -13,10 +13,11 @@ const GANDI_TLDS_URL = 'https://api.gandi.net/v5/domain/tlds';
  * The response from the Gandi API for TLDs.
  * See https://api.gandi.net/docs/domains/#v5-domain-tlds-name for more details.
  */
-interface GandiTLDsResponse extends Array<{
-    name: string;
-    href: string;
-}> {}
+interface GandiTLDsResponse
+    extends Array<{
+        name: string;
+        href: string;
+    }> {}
 
 /**
  * Enrich TLDs with the pricing information from Gandi.
@@ -26,18 +27,18 @@ interface GandiTLDsResponse extends Array<{
 export async function GET(): Promise<NextResponse> {
     try {
         console.log('Starting TLD pricing enrichment from Gandi ...');
-        const headers = { 'Authorization': `Apikey ${GANDI_API_KEY}`,};
-        const response = await axios.get<GandiTLDsResponse>(GANDI_TLDS_URL, {headers});
+        const headers = { Authorization: `Apikey ${GANDI_API_KEY}` };
+        const response = await axios.get<GandiTLDsResponse>(GANDI_TLDS_URL, { headers });
         const tlds = response.data;
         for (const tldData of tlds) {
             const tldName = toUnicode(tldData.name);
-             const tldInfo = await tldRepository.getTLD(tldName);
+            const tldInfo = await tldRepository.getTLD(tldName);
             if (!tldInfo) {
                 console.log(`TLD ${tldName} not found in database. Skipping...`);
                 continue;
             }
             const updatedPricing = { ...tldInfo?.pricing, [Registrar.GANDI]: {} };
-             await tldRepository.updateTLD(tldName, { pricing: updatedPricing });
+            await tldRepository.updateTLD(tldName, { pricing: updatedPricing });
             console.log(`Updated ${tldName} with Gandi pricing`);
         }
         console.log('TLD pricing enrichment from Gandi completed');
