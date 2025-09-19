@@ -10,10 +10,10 @@ const IANA_ROOT_URL = 'https://www.iana.org/domains/root/db';
 const IANA_TLD_TYPE_MAPPING: Record<string, TLDType> = {
     'country-code': TLDType.COUNTRY_CODE,
     'generic-restricted': TLDType.GENERIC_RESTRICTED,
-    'generic': TLDType.GENERIC,
-    'infrastructure': TLDType.INFRASTRUCTURE,
-    'sponsored': TLDType.SPONSORED,
-    'test': TLDType.TEST,
+    generic: TLDType.GENERIC,
+    infrastructure: TLDType.INFRASTRUCTURE,
+    sponsored: TLDType.SPONSORED,
+    test: TLDType.TEST,
 };
 
 /**

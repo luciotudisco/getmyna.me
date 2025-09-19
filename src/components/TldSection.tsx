@@ -8,12 +8,10 @@ export default function TLDSection({ name, punycodeName, description, type }: TL
     const ianaURL = `https://www.iana.org/domains/root/db/${punycodeName}.html`;
     const tldDescription = description ?? 'No additional information is available for this TLD.';
     return (
-        <p className="text-xs leading-relaxed gap-2">
+        <p className="gap-2 text-xs leading-relaxed">
             {name !== punycodeName && (
                 <span className="font-bold text-white">
-                <span className="rounded-md bg-slate-600 p-0.5 font-bold">
-                    INTERNATIONALIZED DOMAIN NAME (IDN)
-                </span>{' '}
+                    <span className="rounded-md bg-slate-600 p-0.5 font-bold">INTERNATIONALIZED DOMAIN NAME (IDN)</span>{' '}
                 </span>
             )}
             <span className="font-bold text-white">
