@@ -16,7 +16,7 @@ const AboutPage = () => {
             <div>
                 <div className="mb-2 flex items-center gap-2">
                     <span
-                        className="flex size-5 shrink-0 items-center justify-center rounded-md font-mono text-xs font-bold"
+                        className="flex size-7 shrink-0 items-center justify-center rounded-md font-mono text-xs font-bold"
                         style={{ backgroundColor: color }}
                     >
                         {index + 1}
