@@ -7,15 +7,15 @@ export default function TLDSection({ name, punycodeName, description, type }: TL
     const tldDescription = description ?? 'No additional information is available for this TLD.';
     return (
         <p className="gap-2 text-xs leading-relaxed">
+            <span className="mr-1">
+                <span className="rounded-md bg-slate-100 p-0.5 font-bold px-1">{type}</span>
+            </span>
             {name !== punycodeName && (
-                <span className="font-bold text-white">
-                    <span className="rounded-md bg-slate-600 p-0.5 font-bold">INTERNATIONALIZED DOMAIN NAME (IDN)</span>{' '}
+                <span className="mr-1">
+                    <span className="rounded-md bg-slate-100 p-0.5 font-bold px-1">INTERNATIONALIZED DOMAIN NAME (IDN)</span>{' '}
                 </span>
             )}
-            <span className="font-bold text-white">
-                <span className="rounded-md bg-slate-600 p-0.5 font-bold">{type} TLD</span>
-            </span>{' '}
-            <span className="text-muted-foreground">{tldDescription}</span>{' '}
+            <span>{tldDescription}</span>{' '}
             <a href={ianaURL} target="_blank" rel="noopener noreferrer" className="text-muted-foreground underline">
                 Learn more
             </a>
