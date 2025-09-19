@@ -3,8 +3,6 @@
 import { TLD } from '@/models/tld';
 
 export default function TLDSection({ name, punycodeName, description, type }: TLD) {
-    console.log('punycodeName', punycodeName);
-    console.log('name', name);
     const ianaURL = `https://www.iana.org/domains/root/db/${punycodeName}.html`;
     const tldDescription = description ?? 'No additional information is available for this TLD.';
     return (
