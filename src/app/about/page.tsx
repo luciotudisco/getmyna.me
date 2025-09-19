@@ -21,7 +21,7 @@ const AboutPage = () => {
                     >
                         {index + 1}
                     </span>
-                    <h2 className="text-md font-semibold">{question}</h2>
+                    <h2 className="text-lg font-semibold">{question}</h2>
                 </div>
                 <p className="text-xs text-muted-foreground lg:text-sm">{answer}</p>
             </div>
