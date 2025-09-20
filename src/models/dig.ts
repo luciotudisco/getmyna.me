@@ -9,5 +9,4 @@ export enum DNSRecordType {
 
 export interface DigInfo {
     records: Partial<Record<DNSRecordType, string[]>>;
-    errors?: Partial<Record<DNSRecordType, string>>;
 }

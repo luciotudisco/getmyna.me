@@ -32,35 +32,23 @@ export async function GET(
                 }
                 return { type: recordType, records };
             } catch {
-                // Return empty records for failed types instead of failing the entire request
-                return { type: recordType, records: [], error: 'Failed to resolve' };
+                // Ignore failed types and return null
+                return null;
             }
         });
 
         const results = await Promise.all(resolvePromises);
 
-        // Build the response object
+        // Build the response object with only successful records
         const records: Partial<Record<DNSRecordType, string[]>> = {};
-        const errors: Partial<Record<DNSRecordType, string>> = {};
 
-        results.forEach(({ type, records: typeRecords, error }) => {
-            if (error) {
-                errors[type] = error;
-                records[type] = [];
-            } else {
-                records[type] = typeRecords;
+        results.forEach((result) => {
+            if (result) {
+                records[result.type] = result.records;
             }
         });
 
-        const response: {
-            records: Partial<Record<DNSRecordType, string[]>>;
-            errors?: Partial<Record<DNSRecordType, string>>;
-        } = { records };
-        if (Object.keys(errors).length > 0) {
-            response.errors = errors;
-        }
-
-        return NextResponse.json(response);
+        return NextResponse.json({ records });
     } catch {
         return NextResponse.json({ error: 'Failed to fetch DNS data' }, { status: 502 });
     }
