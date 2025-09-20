@@ -4,8 +4,8 @@ import { direction } from 'direction';
  * Text direction enumeration
  */
 export enum TextDirection {
-  LTR = 'ltr',
-  RTL = 'rtl'
+    LTR = 'ltr',
+    RTL = 'rtl',
 }
 
 /**
@@ -14,14 +14,14 @@ export enum TextDirection {
  * @returns TextDirection enum value indicating the text direction
  */
 export function getTextDirection(text: string): TextDirection {
-  if (!text || text.length === 0) {
-    return TextDirection.LTR;
-  }
+    if (!text || text.length === 0) {
+        return TextDirection.LTR;
+    }
 
-  const detectedDirection = direction(text);
-  
-  // Default neutral and unknown directions to LTR
-  return detectedDirection === 'rtl' ? TextDirection.RTL : TextDirection.LTR;
+    const detectedDirection = direction(text);
+
+    // Default neutral and unknown directions to LTR
+    return detectedDirection === 'rtl' ? TextDirection.RTL : TextDirection.LTR;
 }
 
 /**
@@ -30,7 +30,7 @@ export function getTextDirection(text: string): TextDirection {
  * @returns true if RTL, false otherwise
  */
 export function isRTL(text: string): boolean {
-  return getTextDirection(text) === TextDirection.RTL;
+    return getTextDirection(text) === TextDirection.RTL;
 }
 
 /**
@@ -39,5 +39,5 @@ export function isRTL(text: string): boolean {
  * @returns true if LTR, false otherwise
  */
 export function isLTR(text: string): boolean {
-  return getTextDirection(text) === TextDirection.LTR;
+    return getTextDirection(text) === TextDirection.LTR;
 }
