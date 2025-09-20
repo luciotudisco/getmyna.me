@@ -2,7 +2,7 @@
 
 import { CircleHelp, Flag, FlaskConical, Globe2, Handshake, type LucideIcon, Server, ShieldCheck } from 'lucide-react';
 
-import { TLD, TLDType } from '@/models/tld';
+import { TLD, TLDType, TextDirection } from '@/models/tld';
 
 import { Badge } from './ui/badge';
 
@@ -17,17 +17,26 @@ const TLD_TYPE_ICON_MAP: Record<TLDType, LucideIcon> = {
 
 const DEFAULT_TLD_TYPE_ICON = CircleHelp;
 
-export default function TLDSection({ name, punycodeName, description, type }: TLD) {
+export default function TLDSection({ name, punycodeName, description, type, direction }: TLD) {
     const ianaURL = `https://www.iana.org/domains/root/db/${punycodeName}.html`;
     const tldDescription = description ?? 'No additional information is available for this TLD.';
     const TypeIcon = type ? (TLD_TYPE_ICON_MAP[type] ?? DEFAULT_TLD_TYPE_ICON) : null;
     const formattedType = type?.replace(/_/g, ' ');
+    
+    // Determine if this is RTL text
+    const isRTL = direction === TextDirection.RIGHT_TO_LEFT;
+    
     return (
         <div className="space-y-2">
             <div className="flex justify-between">
                 <span className="font-semibold uppercase text-muted-foreground">Top Level Domain</span>
                 <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="uppercase">
+                    <Badge 
+                        variant="outline" 
+                        className="uppercase"
+                        style={{ direction: isRTL ? 'rtl' : 'ltr' }}
+                        dir={isRTL ? 'rtl' : 'ltr'}
+                    >
                         .{name}
                     </Badge>
                     {type && (
@@ -38,7 +47,11 @@ export default function TLDSection({ name, punycodeName, description, type }: TL
                     )}
                 </div>
             </div>
-            <p className="gap-2 text-xs leading-relaxed">
+            <p 
+                className="gap-2 text-xs leading-relaxed"
+                style={{ direction: isRTL ? 'rtl' : 'ltr' }}
+                dir={isRTL ? 'rtl' : 'ltr'}
+            >
                 <span>{tldDescription}</span>{' '}
                 <a href={ianaURL} target="_blank" rel="noopener noreferrer" className="text-muted-foreground underline">
                     Learn more

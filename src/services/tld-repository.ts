@@ -33,6 +33,7 @@ class TLDRepository {
                 punycode_name: tldInfo.punycodeName,
                 description: tldInfo.description,
                 type: tldInfo.type,
+                direction: tldInfo.direction,
                 created_at: now,
                 updated_at: now,
             },
@@ -65,7 +66,7 @@ class TLDRepository {
         const searchField = name.startsWith('xn--') ? 'punycode_name' : 'name';
         const { data, error } = await this.client
             .from('tld')
-            .select('name, punycode_name, description, type, pricing')
+            .select('name, punycode_name, description, type, direction, pricing')
             .eq(searchField, name)
             .single();
 
@@ -83,6 +84,7 @@ class TLDRepository {
             punycodeName: data.punycode_name,
             type: data.type,
             description: data.description,
+            direction: data.direction,
             pricing: data.pricing,
         } as TLD;
         this.cache.set(cacheKey, tld, this.TTL_MILLISECONDS);
@@ -103,7 +105,7 @@ class TLDRepository {
 
         const { data, error } = await this.client
             .from('tld')
-            .select('name, punycode_name, type, description, pricing')
+            .select('name, punycode_name, type, description, direction, pricing')
             .order('name', { ascending: true })
             .limit(5000);
         if (error) {
@@ -115,6 +117,7 @@ class TLDRepository {
             punycodeName: tld.punycode_name,
             type: tld.type,
             description: tld.description,
+            direction: tld.direction,
             pricing: tld.pricing,
         }));
         this.cache.set(cacheKey, tlds, this.TTL_MILLISECONDS);
@@ -136,6 +139,7 @@ class TLDRepository {
                 punycodeName: tldInfo.punycodeName,
                 description: tldInfo.description,
                 type: tldInfo.type,
+                direction: tldInfo.direction,
                 pricing: tldInfo.pricing,
                 updated_at: new Date().toISOString(),
             })

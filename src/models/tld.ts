@@ -13,6 +13,11 @@ export enum TLDType {
     TEST = 'TEST',
 }
 
+export enum TextDirection {
+    LEFT_TO_RIGHT = 'LTR',
+    RIGHT_TO_LEFT = 'RTL',
+}
+
 export enum Registrar {
     DYNADOT = 'DYNADOT',
     GANDI = 'GANDI',
@@ -40,5 +45,6 @@ export interface TLD {
     punycodeName?: string;
     description?: string;
     type?: TLDType;
+    direction?: TextDirection;
     pricing?: Partial<Record<Registrar, TLDPricing>>;
 }

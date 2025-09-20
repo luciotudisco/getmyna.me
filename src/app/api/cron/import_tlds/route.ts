@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { toASCII, toUnicode } from 'punycode';
 
 import { tldRepository } from '@/services/tld-repository';
+import { detectTLDDirection } from '@/utils/utils';
 
 const IANA_TLD_URL = 'https://data.iana.org/TLD/tlds-alpha-by-domain.txt';
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
@@ -32,10 +33,14 @@ export async function GET(): Promise<NextResponse> {
                 continue;
             }
 
-            console.log(`Creating TLD ${tldName} ...`);
+            // Detect text direction for the TLD
+            const direction = detectTLDDirection(tldName, punycodeName);
+
+            console.log(`Creating TLD ${tldName} with direction ${direction} ...`);
             await tldRepository.createTld({
                 name: tldName,
                 punycodeName,
+                direction,
             });
         }
         console.log('TLD import completed');
