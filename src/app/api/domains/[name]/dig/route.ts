@@ -12,24 +12,9 @@ export async function GET(
     try {
         const resolvedParams = await params;
         const domain = Array.isArray(resolvedParams?.name) ? resolvedParams?.name[0] : resolvedParams?.name;
-        const recordTypesParam = new URL(request.url).searchParams.get('types')?.toUpperCase();
 
-        // Support both 'type' (single) and 'types' (multiple) parameters for backward compatibility
-        const singleTypeParam = new URL(request.url).searchParams.get('type')?.toUpperCase();
-        const typesParam = recordTypesParam || singleTypeParam;
-
-        if (!typesParam) {
-            return NextResponse.json({ error: 'Missing record types parameter' }, { status: 400 });
-        }
-
-        // Parse record types - support both single type and comma-separated multiple types
-        const recordTypes = typesParam.split(',').map((type) => type.trim().toUpperCase()) as DNSRecordType[];
-
-        // Validate all record types
-        const invalidTypes = recordTypes.filter((type) => !Object.values(DNSRecordType).includes(type));
-        if (invalidTypes.length > 0) {
-            return NextResponse.json({ error: `Invalid record types: ${invalidTypes.join(', ')}` }, { status: 400 });
-        }
+        // Always resolve A, AAAA, and MX record types
+        const recordTypes = [DNSRecordType.A, DNSRecordType.AAAA, DNSRecordType.MX];
 
         // Resolve all record types simultaneously
         const resolvePromises = recordTypes.map(async (recordType) => {
@@ -41,9 +26,6 @@ export async function GET(
                         records = (res as Array<{ priority: number; exchange: string }>).map(
                             (mx) => `${mx.priority} ${mx.exchange}`,
                         );
-                        break;
-                    case DNSRecordType.TXT:
-                        records = (res as string[][]).map((group) => group.join(''));
                         break;
                     default:
                         records = Array.isArray(res) ? (res as string[]).map(String) : [];
