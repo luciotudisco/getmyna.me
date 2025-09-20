@@ -9,6 +9,7 @@ export default function TLDSection({ name, punycodeName, description, type }: TL
     return (
         <div className="space-y-2">
             <div className="flex items-center gap-2">
+                <Badge variant='outline' className='uppercase'>.{name}</Badge>
                 <Badge variant="outline">{type}</Badge>
                 {name !== punycodeName && <Badge variant="outline">INTERNATIONALIZED DOMAIN NAME (IDN)</Badge>}
             </div>

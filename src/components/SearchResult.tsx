@@ -35,7 +35,7 @@ export function SearchResult({ domain }: { domain: Domain }) {
         <>
             <TableRow onClick={() => setOpen(true)} className="cursor-pointer">
                 <TableCell>
-                    <p className="flex min-h-10 flex-grow flex-row items-center truncate align-middle font-extralight">
+                    <p className="flex min-h-10 flex-grow flex-row items-center truncate align-middle font-extralight max-w-[400px]">
                         {domain.getName()}
                     </p>
                 </TableCell>
