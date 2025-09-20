@@ -17,69 +17,58 @@
 
 ## 🎯 What is getmyna.me?
 
-**getmyna.me** is an intelligent domain discovery tool that helps you find creative "domain hacks" — clever domain names that spell out phrases using top-level domains (TLDs). 
+**getmyna.me** is an intelligent domain discovery tool that helps you find creative "domain hacks" — clever domain names that spell out phrases using top-level domains (TLDs).
 
-**Example:** `getmyna.me` → "get my name"
+**Example:** `instagr.am` → "instangram"
 
 Whether you're looking for a memorable personal brand, a catchy business domain, or just want to explore creative naming possibilities, getmyna.me generates thousands of domain suggestions, checks their availability, and provides detailed pricing and WHOIS information.
 
 ## ✨ Features
 
-### 🔍 **Smart Domain Generation**
-- **Extensive TLD Database**: Uses 1000+ top-level domains for maximum creativity
-- **Intelligent Matching**: Advanced algorithms to find the best domain hacks
-- **Real-time Suggestions**: Instant results as you type
-
 ### 📊 **Comprehensive Domain Intelligence**
+
+- **Extensive TLD Database**: Uses 1000+ top-level domains for maximum creativity
 - **Availability Checking**: Real-time domain availability verification
 - **WHOIS Data**: Complete domain registration information
 - **Pricing Information**: Current market prices from multiple registrars
 - **TLD Descriptions**: Learn about each top-level domain's purpose and history
 
-### 🎨 **Modern User Experience**
-- **Responsive Design**: Works perfectly on desktop, tablet, and mobile
-- **Fast Performance**: Optimized with Next.js 15 and Turbopack
-- **Beautiful UI**: Clean, modern interface built with Tailwind CSS
-- **Interactive Features**: Smooth animations and intuitive interactions
-
-### 🛠 **Developer-Friendly**
-- **TypeScript**: Full type safety and excellent developer experience
-- **Modern Stack**: Built with the latest web technologies
-- **API-First**: RESTful API for domain operations
-- **Testing**: Comprehensive test coverage with Jest
-
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- **Node.js** 18+ 
+- **Node.js** 18+
 - **npm** or **yarn**
 - **API Keys** (see [Environment Variables](#-environment-variables))
 
 ### Installation
 
 1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/getmyna.me.git
-   cd getmyna.me
-   ```
+
+    ```bash
+    git clone https://github.com/yourusername/getmyna.me.git
+    cd getmyna.me
+    ```
 
 2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+
+    ```bash
+    npm install
+    ```
 
 3. **Set up environment variables**
-   ```bash
-   cp .env.example .env.local
-   ```
-   
-   Edit `.env.local` with your API keys (see [Environment Variables](#-environment-variables))
+
+    ```bash
+    cp .env.example .env.local
+    ```
+
+    Edit `.env.local` with your API keys (see [Environment Variables](#-environment-variables))
 
 4. **Start the development server**
-   ```bash
-   npm run dev
-   ```
+
+    ```bash
+    npm run dev
+    ```
 
 5. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
@@ -157,31 +146,6 @@ src/
 └── utils/             # Utility functions
 ```
 
-## 🚀 Deployment
-
-### Vercel (Recommended)
-
-1. **Push to GitHub**
-   ```bash
-   git add .
-   git commit -m "Initial commit"
-   git push origin main
-   ```
-
-2. **Deploy on Vercel**
-   - Visit [vercel.com](https://vercel.com)
-   - Import your GitHub repository
-   - Add environment variables in project settings
-   - Deploy automatically
-
-### Other Platforms
-
-The app can be deployed to any Node.js hosting provider:
-- **Netlify**: Use the Next.js buildpack
-- **Railway**: Connect your GitHub repository
-- **DigitalOcean**: Use App Platform
-- **AWS**: Deploy with Amplify or Elastic Beanstalk
-
 ## 🧪 Testing
 
 ```bash
@@ -203,49 +167,37 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 
 1. **Fork the repository**
 2. **Create a feature branch**
-   ```bash
-   git checkout -b feature/amazing-feature
-   ```
+    ```bash
+    git checkout -b feature/amazing-feature
+    ```
 3. **Make your changes**
 4. **Run tests and linting**
-   ```bash
-   npm run code-quality
-   npm test
-   ```
+    ```bash
+    npm run code-quality
+    npm test
+    ```
 5. **Commit your changes**
-   ```bash
-   git commit -m "Add amazing feature"
-   ```
+    ```bash
+    git commit -m "Add amazing feature"
+    ```
 6. **Push to your branch**
-   ```bash
-   git push origin feature/amazing-feature
-   ```
+    ```bash
+    git push origin feature/amazing-feature
+    ```
 7. **Open a Pull Request**
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
-
-- **Next.js Team** for the amazing framework
-- **Vercel** for hosting and deployment
-- **Supabase** for the backend infrastructure
-- **Tailwind CSS** for the beautiful styling
-- **All Contributors** who help improve this project
-
 ## 📞 Support
 
-- **Documentation**: [Wiki](https://github.com/yourusername/getmyna.me/wiki)
 - **Issues**: [GitHub Issues](https://github.com/yourusername/getmyna.me/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/getmyna.me/discussions)
-- **Email**: support@getmyna.me
+- **Email**: admin@getmyna.me
 
 ---
 
 <div align="center">
-
-**Made with ❤️ by the getmyna.me team**
 
 [⭐ Star this repo](https://github.com/yourusername/getmyna.me) • [🐛 Report Bug](https://github.com/yourusername/getmyna.me/issues) • [💡 Request Feature](https://github.com/yourusername/getmyna.me/issues)
 
