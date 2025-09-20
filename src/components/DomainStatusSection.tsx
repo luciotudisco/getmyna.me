@@ -105,7 +105,10 @@ export function DomainStatusSection({ status, whoisInfo, digInfo }: DomainStatus
             {aRecords && aRecords.aRecords.length > 0 && (
                 <p>
                     <span className="text-muted-foreground">A Records:</span>{' '}
-                    <span className="font-medium">{aRecords.aRecords.join(', ')}</span>
+                    <span className="font-medium">
+                        {aRecords.aRecords.slice(0, 2).join(', ')}
+                        {aRecords.aRecords.length > 2 ? ', ...' : ''}
+                    </span>
                 </p>
             )}
 
@@ -113,7 +116,10 @@ export function DomainStatusSection({ status, whoisInfo, digInfo }: DomainStatus
             {mxRecords && mxRecords.length > 0 && (
                 <p>
                     <span className="text-muted-foreground">MX Records:</span>{' '}
-                    <span className="font-medium">{mxRecords.join(', ')}</span>
+                    <span className="font-medium">
+                        {mxRecords.slice(0, 2).join(', ')}
+                        {mxRecords.length > 2 ? ', ...' : ''}
+                    </span>
                 </p>
             )}
         </div>
