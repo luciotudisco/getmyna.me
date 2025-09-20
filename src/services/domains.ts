@@ -1,7 +1,7 @@
 import { Permutation, PowerSet } from 'js-combinatorics';
 import isFQDN from 'validator/lib/isFQDN';
 
-import { tldRepository } from './tld-repository';
+import { tldRepository } from '@/services/tld-repository';
 
 /**
  * Returns a (possibly empty) list of domains that are domains hacks for the given input string.

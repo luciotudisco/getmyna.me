@@ -3,10 +3,9 @@
 import { useMemo } from 'react';
 import { format, formatDistanceToNow, parseISO } from 'date-fns';
 
+import { Badge } from '@/components/ui/badge';
 import { DOMAIN_STATUS_DESCRIPTIONS, DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { WhoisInfo } from '@/models/whois';
-
-import { Badge } from './ui/badge';
 
 interface DomainStatusSectionProps {
     status: DomainStatusEnum;

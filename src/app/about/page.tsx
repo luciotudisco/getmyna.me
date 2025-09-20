@@ -1,3 +1,4 @@
+import TLDCounter from '@/components/TLDCounter';
 import { Badge } from '@/components/ui/badge';
 
 const AboutPage = () => {
@@ -16,12 +17,12 @@ const AboutPage = () => {
             <div>
                 <div className="mb-2 flex items-center gap-2">
                     <span
-                        className="flex size-7 shrink-0 items-center justify-center rounded-md font-mono text-xs font-bold"
+                        className="flex size-5 shrink-0 items-center justify-center rounded-md font-mono text-xs font-bold"
                         style={{ backgroundColor: color }}
                     >
                         {index + 1}
                     </span>
-                    <h2 className="text-lg font-semibold">{question}</h2>
+                    <h2 className="text-md font-semibold">{question}</h2>
                 </div>
                 <p className="text-xs text-muted-foreground lg:text-sm">{answer}</p>
             </div>
@@ -70,6 +71,7 @@ const AboutPage = () => {
                         index={4}
                     />
                 </div>
+                <TLDCounter />
             </main>
         </div>
     );

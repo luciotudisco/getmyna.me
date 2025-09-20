@@ -2,9 +2,8 @@
 
 import { CircleHelp, Flag, FlaskConical, Globe2, Handshake, type LucideIcon, Server, ShieldCheck } from 'lucide-react';
 
+import { Badge } from '@/components/ui/badge';
 import { TLD, TLDType } from '@/models/tld';
-
-import { Badge } from './ui/badge';
 
 const TLD_TYPE_ICON_MAP: Record<TLDType, LucideIcon> = {
     [TLDType.COUNTRY_CODE]: Flag,

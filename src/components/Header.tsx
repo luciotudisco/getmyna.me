@@ -6,8 +6,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { Button } from './ui/button';
-import SearchBar from './SearchBar';
+import SearchBar from '@/components/SearchBar';
+import { Button } from '@/components/ui/button';
 
 export default function Header() {
     const pathname = usePathname();
