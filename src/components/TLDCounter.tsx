@@ -29,7 +29,7 @@ export function TLDCounter() {
         <div className="flex flex-col items-center justify-center gap-2">
             <h2 className="text-muted-foreground">Powered by a collection of</h2>
             {!isPending && count > 0 && (
-                <div className="flex items-center gap-2">
+                <div className="flex items-baseline gap-2">
                     <NumberTicker value={count} className="text-2xl font-semibold tabular-nums text-primary" />
                     <span className="text-lg font-medium text-muted-foreground">TLDs</span>
                 </div>
