@@ -5,8 +5,7 @@ import { direction } from 'direction';
  */
 export enum TextDirection {
   LTR = 'ltr',
-  RTL = 'rtl',
-  NEUTRAL = 'neutral'
+  RTL = 'rtl'
 }
 
 /**
@@ -15,7 +14,7 @@ export enum TextDirection {
  */
 export class Unicode {
   /**
-   * Detects if a Unicode string is Right-to-Left (RTL), Left-to-Right (LTR), or Neutral
+   * Detects if a Unicode string is Right-to-Left (RTL) or Left-to-Right (LTR)
    * @param text - The Unicode string to analyze
    * @returns TextDirection enum value indicating the text direction
    */
@@ -26,15 +25,8 @@ export class Unicode {
 
     const detectedDirection = direction(text);
     
-    switch (detectedDirection) {
-      case 'rtl':
-        return TextDirection.RTL;
-      case 'ltr':
-        return TextDirection.LTR;
-      case 'neutral':
-      default:
-        return TextDirection.NEUTRAL;
-    }
+    // Default neutral and unknown directions to LTR
+    return detectedDirection === 'rtl' ? TextDirection.RTL : TextDirection.LTR;
   }
 
   /**
@@ -55,12 +47,4 @@ export class Unicode {
     return this.getTextDirection(text) === TextDirection.LTR;
   }
 
-  /**
-   * Checks if the text is neutral (numbers, symbols, etc.)
-   * @param text - The Unicode string to check
-   * @returns true if neutral, false otherwise
-   */
-  static isNeutral(text: string): boolean {
-    return this.getTextDirection(text) === TextDirection.NEUTRAL;
-  }
 }
