@@ -36,8 +36,7 @@ export function DomainRegistrarButtons({ domainName, pricing }: DomainRegistrarB
                 const registrar = registrarKey as Registrar;
                 const searchUrl = REGISTRARS_DOMAIN_SEARCH_URLS[registrar];
                 const registrationPrice = registrarPricing?.registration;
-                const renewalPrice = registrarPricing?.renewal;
-                const hasPricing = typeof registrationPrice === 'number' && typeof renewalPrice === 'number';
+                const hasPricing = typeof registrationPrice === 'number';
                 const roundedRegistrationPrice = hasPricing ? `$${registrationPrice.toFixed(2)}` : null;
                 return (
                     <div key={registrar} className="flex items-center gap-3">
@@ -51,9 +50,7 @@ export function DomainRegistrarButtons({ domainName, pricing }: DomainRegistrarB
                                 <div className="min-w-[100px] text-right text-xs">
                                     {hasPricing ? (
                                         <div>
-                                            <div className="font-extrabold text-white">
-                                                {roundedRegistrationPrice}
-                                            </div>
+                                            <div className="font-extrabold text-white">{roundedRegistrationPrice}</div>
                                         </div>
                                     ) : (
                                         <div className="text-xs font-extralight text-white">No pricing data</div>

@@ -1,10 +1,10 @@
 'use client';
 
+import { CircleHelp, Flag, FlaskConical, Globe2, Handshake, type LucideIcon, Server, ShieldCheck } from 'lucide-react';
+
 import { TLD, TLDType } from '@/models/tld';
 
 import { Badge } from './ui/badge';
-import type { LucideIcon } from 'lucide-react';
-import { CircleHelp, Flag, FlaskConical, Globe2, Handshake, Server, ShieldCheck } from 'lucide-react';
 
 const TLD_TYPE_ICON_MAP: Record<TLDType, LucideIcon> = {
     [TLDType.COUNTRY_CODE]: Flag,
@@ -20,7 +20,7 @@ const DEFAULT_TLD_TYPE_ICON = CircleHelp;
 export default function TLDSection({ name, punycodeName, description, type }: TLD) {
     const ianaURL = `https://www.iana.org/domains/root/db/${punycodeName}.html`;
     const tldDescription = description ?? 'No additional information is available for this TLD.';
-    const TypeIcon = type ? TLD_TYPE_ICON_MAP[type] ?? DEFAULT_TLD_TYPE_ICON : null;
+    const TypeIcon = type ? (TLD_TYPE_ICON_MAP[type] ?? DEFAULT_TLD_TYPE_ICON) : null;
     const formattedType = type?.replace(/_/g, ' ');
     return (
         <div className="space-y-2">
