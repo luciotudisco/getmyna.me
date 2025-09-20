@@ -34,12 +34,6 @@ export function TLDCounter() {
                     <span className="text-lg font-medium text-muted-foreground">TLDs</span>
                 </div>
             )}
-            {(isPending || count === 0) && (
-                <div className="flex items-center gap-2">
-                    <span className="animate-pulse text-2xl font-semibold">---</span>
-                    <span className="text-lg font-medium text-muted-foreground">TLDs</span>
-                </div>
-            )}
         </div>
     );
 }
