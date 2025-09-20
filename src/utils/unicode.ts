@@ -4,8 +4,8 @@ import { direction } from 'direction';
  * Text direction enumeration
  */
 export enum TextDirection {
-    LTR = 'ltr',
-    RTL = 'rtl',
+    LTR = 'LTR',
+    RTL = 'RTL',
 }
 
 /**

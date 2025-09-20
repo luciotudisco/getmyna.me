@@ -65,7 +65,7 @@ class TLDRepository {
         const searchField = name.startsWith('xn--') ? 'punycode_name' : 'name';
         const { data, error } = await this.client
             .from('tld')
-            .select('name, punycode_name, description, type, pricing')
+            .select('name, punycode_name, description, direction, type, pricing')
             .eq(searchField, name)
             .single();
 
@@ -103,7 +103,7 @@ class TLDRepository {
 
         const { data, error } = await this.client
             .from('tld')
-            .select('name, punycode_name, type, description, pricing')
+            .select('name, punycode_name, type, description, direction, pricing')
             .order('name', { ascending: true })
             .limit(5000);
         if (error) {
@@ -135,8 +135,9 @@ class TLDRepository {
                 name: tldInfo.name,
                 punycodeName: tldInfo.punycodeName,
                 description: tldInfo.description,
-                type: tldInfo.type,
+                direction: tldInfo.direction,
                 pricing: tldInfo.pricing,
+                type: tldInfo.type,
                 updated_at: new Date().toISOString(),
             })
             .eq(searchField, name);

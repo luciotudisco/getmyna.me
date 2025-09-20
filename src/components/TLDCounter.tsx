@@ -10,30 +10,29 @@ export function TLDCounter() {
     const [isPending, startTransition] = useTransition();
 
     useEffect(() => {
-        const fetchTLDCount = async () => {
+        startTransition(async () => {
             try {
                 const tlds = await apiService.listTLDs();
                 setCount(tlds.length);
             } catch (error) {
                 console.error('Error fetching TLD count:', error);
-                setCount(1500); // Fallback number
             }
-        };
-
-        startTransition(() => {
-            fetchTLDCount();
         });
     }, []);
 
     return (
-        <div className="flex flex-col items-center justify-center gap-2">
+        <div className="flex flex-col items-center justify-center gap-1">
             <h2 className="text-muted-foreground">Powered by a collection of</h2>
-            {!isPending && count > 0 && (
-                <div className="flex items-baseline gap-2">
-                    <NumberTicker value={count} className="text-2xl font-semibold tabular-nums text-primary" />
-                    <span className="text-lg font-medium text-muted-foreground">TLDs</span>
-                </div>
-            )}
+            <div className="flex items-baseline gap-2">
+                {isPending ? (
+                    <span className="animate-pulse text-2xl font-semibold">....</span>
+                ) : (
+                    <>
+                        <NumberTicker value={count} className="text-2xl font-semibold tabular-nums text-primary" />
+                        <span className="text-lg font-medium text-muted-foreground">TLDs</span>
+                    </>
+                )}
+            </div>
         </div>
     );
 }

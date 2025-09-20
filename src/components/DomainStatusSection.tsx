@@ -4,15 +4,17 @@ import { useMemo } from 'react';
 import { format, formatDistanceToNow, parseISO } from 'date-fns';
 
 import { Badge } from '@/components/ui/badge';
+import { DigInfo, DNSRecordType } from '@/models/dig';
 import { DOMAIN_STATUS_DESCRIPTIONS, DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { WhoisInfo } from '@/models/whois';
 
 interface DomainStatusSectionProps {
     status: DomainStatusEnum;
     whoisInfo?: WhoisInfo | null;
+    digInfo?: DigInfo | null;
 }
 
-export function DomainStatusSection({ status, whoisInfo }: DomainStatusSectionProps) {
+export function DomainStatusSection({ status, whoisInfo, digInfo }: DomainStatusSectionProps) {
     const formattedCreationDate = useMemo(
         () => (whoisInfo?.creationDate ? format(parseISO(whoisInfo.creationDate), 'MMMM do, yyyy') : null),
         [whoisInfo?.creationDate],
@@ -30,6 +32,21 @@ export function DomainStatusSection({ status, whoisInfo }: DomainStatusSectionPr
                 : null,
         [whoisInfo?.creationDate],
     );
+
+    const aRecords = useMemo(() => {
+        if (!digInfo?.records) {
+            return false;
+        }
+        const aRecords = digInfo.records[DNSRecordType.A] || [];
+        const aaaaRecords = digInfo.records[DNSRecordType.AAAA] || [];
+        return { aRecords, aaaaRecords };
+    }, [digInfo]);
+
+    const mxRecords = useMemo(() => {
+        if (!digInfo?.records) return false;
+        const mxRecords = digInfo.records[DNSRecordType.MX] || [];
+        return mxRecords;
+    }, [digInfo]);
 
     return (
         <div className="space-y-3 text-xs">
@@ -81,6 +98,22 @@ export function DomainStatusSection({ status, whoisInfo }: DomainStatusSectionPr
                 <p>
                     <span className="text-muted-foreground">Expires:</span>{' '}
                     <span className="font-medium">{formattedExpirationDate}</span>
+                </p>
+            )}
+
+            {/* A Records */}
+            {aRecords && aRecords.aRecords.length > 0 && (
+                <p>
+                    <span className="text-muted-foreground">A Records:</span>{' '}
+                    <span className="font-medium">{aRecords.aRecords.join(', ')}</span>
+                </p>
+            )}
+
+            {/* MX Records */}
+            {mxRecords && mxRecords.length > 0 && (
+                <p>
+                    <span className="text-muted-foreground">MX Records:</span>{' '}
+                    <span className="font-medium">{mxRecords.join(', ')}</span>
                 </p>
             )}
         </div>
