@@ -9,16 +9,18 @@ import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { apiService } from '@/services/api';
 import { RateLimiter } from '@/utils/rate-limiter';
 
-// Create a shared rate limiter instance (2 calls per second / 500ms delay)
-const statusRateLimiter = new RateLimiter(2);
+// Create a shared rate limiter instance (1 call per second to be more conservative)
+const statusRateLimiter = new RateLimiter(1, 500);
 
 export function SearchResult({ domain }: { domain: Domain }) {
     const [status, setStatus] = useState<DomainStatusEnum>(DomainStatusEnum.unknown);
     const [open, setOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchStatus = async () => {
             try {
+                setIsLoading(true);
                 const result = await statusRateLimiter.add(() => apiService.getDomainStatus(domain.getName()));
                 domain.setStatus(result);
                 setStatus(result);
@@ -26,6 +28,8 @@ export function SearchResult({ domain }: { domain: Domain }) {
                 console.error('Error fetching domain status:', error);
                 domain.setStatus(DomainStatusEnum.error);
                 setStatus(DomainStatusEnum.error);
+            } finally {
+                setIsLoading(false);
             }
         };
 
@@ -42,7 +46,11 @@ export function SearchResult({ domain }: { domain: Domain }) {
                 </TableCell>
                 <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2">
-                        <DomainStatusBadge domain={domain} status={status} />
+                        {isLoading ? (
+                            <div className="h-6 w-16 animate-pulse rounded bg-muted" />
+                        ) : (
+                            <DomainStatusBadge domain={domain} status={status} />
+                        )}
                     </div>
                 </TableCell>
             </TableRow>

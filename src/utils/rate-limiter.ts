@@ -6,9 +6,11 @@ export class RateLimiter {
     private processing = false;
     private lastCallTime = 0;
     private delayMs: number;
+    private maxQueueSize: number;
 
-    constructor(callsPerSecond: number) {
+    constructor(callsPerSecond: number, maxQueueSize = 1000) {
         this.delayMs = 1000 / callsPerSecond;
+        this.maxQueueSize = maxQueueSize;
     }
 
     /**
@@ -21,6 +23,12 @@ export class RateLimiter {
      */
     async add<T>(task: () => Promise<T>): Promise<T> {
         return new Promise((resolve, reject) => {
+            // Prevent memory leak by limiting queue size
+            if (this.queue.length >= this.maxQueueSize) {
+                reject(new Error('Rate limiter queue is full. Too many pending requests.'));
+                return;
+            }
+
             this.queue.push(async () => {
                 try {
                     const result = await task();
@@ -39,24 +47,26 @@ export class RateLimiter {
         }
         this.processing = true;
 
-        while (this.queue.length > 0) {
-            const now = Date.now();
-            const timeSinceLastCall = now - this.lastCallTime;
-            const delay = Math.max(0, this.delayMs - timeSinceLastCall);
+        try {
+            while (this.queue.length > 0) {
+                const now = Date.now();
+                const timeSinceLastCall = now - this.lastCallTime;
+                const delay = Math.max(0, this.delayMs - timeSinceLastCall);
 
-            if (delay > 0) {
-                await new Promise((resolve) => {
-                    setTimeout(resolve, delay);
-                });
-            }
+                if (delay > 0) {
+                    await new Promise((resolve) => {
+                        setTimeout(resolve, delay);
+                    });
+                }
 
-            const task = this.queue.shift();
-            if (task) {
-                this.lastCallTime = Date.now();
-                await task();
+                const task = this.queue.shift();
+                if (task) {
+                    this.lastCallTime = Date.now();
+                    await task();
+                }
             }
+        } finally {
+            this.processing = false;
         }
-
-        this.processing = false;
     }
 }
