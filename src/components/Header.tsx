@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense } from 'react';
-import { Info } from 'lucide-react';
+import { BarChart3, Info } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -24,20 +24,34 @@ export default function Header() {
                         <SearchBar />
                     </Suspense>
                     <div className="hidden min-w-72 lg:block" />
-                    <Link href="/about" className="hidden lg:block">
-                        <Button type="button" variant="ghost">
-                            <Info />
-                        </Button>
-                    </Link>
+                    <div className="flex gap-2">
+                        <Link href="/tlds" className="hidden lg:block">
+                            <Button type="button" variant="ghost">
+                                <BarChart3 />
+                            </Button>
+                        </Link>
+                        <Link href="/about" className="hidden lg:block">
+                            <Button type="button" variant="ghost">
+                                <Info />
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
             ) : (
                 <div className="flex flex-1 items-center justify-between">
                     <h1 className="font-mono text-xl font-extralight uppercase">GetMyNa.me</h1>
-                    <Link href="/about">
-                        <Button type="button" variant="ghost">
-                            <Info />
-                        </Button>
-                    </Link>
+                    <div className="flex gap-2">
+                        <Link href="/tlds">
+                            <Button type="button" variant="ghost">
+                                <BarChart3 />
+                            </Button>
+                        </Link>
+                        <Link href="/about">
+                            <Button type="button" variant="ghost">
+                                <Info />
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
             )}
         </header>
