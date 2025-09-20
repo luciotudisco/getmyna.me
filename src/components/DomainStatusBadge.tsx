@@ -4,7 +4,6 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/utils/utils';
 import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { Loader2 } from 'lucide-react';
-import { CheckIcon, ExclamationTriangleIcon, LockClosedIcon } from '@radix-ui/react-icons';
 
 interface DomainStatusBadgeProps {
     domain: Domain;
@@ -16,8 +15,8 @@ const baseClasses = 'inline-flex h-7 min-w-[8rem] items-center justify-center px
 
 function UnknownBadge({ className }: { className?: string }) {
     return (
-        <Badge className={cn(baseClasses, 'bg-gray-400', className)}>
-            <div className="flex items-center gap-2">
+        <Badge className={cn(baseClasses, 'bg-slate-400 hover:bg-slate-500', className)}>
+            <div className="flex items-center">
                 <Loader2 className="h-4 w-4 animate-spin text-white" />
             </div>
         </Badge>
@@ -26,33 +25,24 @@ function UnknownBadge({ className }: { className?: string }) {
 
 function ErrorBadge({ className }: { className?: string }) {
     return (
-        <Badge className={cn(baseClasses, 'bg-yellow-400 hover:bg-yellow-500', className)}>
-            <div className="flex items-center gap-2">
-                <ExclamationTriangleIcon className="h-4 w-4 fill-white text-white" />
-                <span>Error</span>
-            </div>
+        <Badge className={cn(baseClasses, 'bg-yellow-500 hover:bg-yellow-600', className)}>
+            <span className="text-white">Error</span>
         </Badge>
     );
 }
 
 function AvailableBadge({ className }: { className?: string }) {
     return (
-        <Badge className={cn(baseClasses, 'bg-green-400 hover:bg-green-600', className)}>
-            <div className="flex items-center gap-2">
-                <CheckIcon className="h-4 w-4 fill-white text-white" />
-                <span className="text-white">Available</span>
-            </div>
+        <Badge className={cn(baseClasses, 'bg-green-500 hover:bg-green-600', className)}>
+            <span className="text-white">Available</span>
         </Badge>
     );
 }
 
 function TakenBadge({ className }: { className?: string }) {
     return (
-        <Badge className={cn(baseClasses, 'bg-red-400 hover:bg-red-600', className)}>
-            <div className="flex items-center gap-2">
-                <LockClosedIcon className="h-4 w-4 fill-white text-white" />
-                <span className="text-white">Taken</span>
-            </div>
+        <Badge className={cn(baseClasses, 'bg-red-500 hover:bg-red-600', className)}>
+            <span className="text-white">Taken</span>
         </Badge>
     );
 }

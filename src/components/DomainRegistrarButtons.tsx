@@ -37,7 +37,7 @@ export function DomainRegistrarButtons({ domainName, pricing }: DomainRegistrarB
                 return (
                     <div key={registrar} className="flex items-center gap-3">
                         <Button
-                            className="min-h-14 flex-1 bg-blue-400 text-white hover:bg-blue-600"
+                            className="min-h-10 flex-1 bg-blue-400 text-white hover:bg-blue-600"
                             onClick={() => window.open(searchUrl(domainName), '_blank')}
                         >
                             <ExternalLinkIcon className="mr-2 h-4 w-4" />
@@ -48,9 +48,6 @@ export function DomainRegistrarButtons({ domainName, pricing }: DomainRegistrarB
                                         <div>
                                             <div className="font-extrabold text-white">
                                                 ${registrarPricing.registration}
-                                            </div>
-                                            <div className="text-xs font-extralight text-white">
-                                                renewal ${registrarPricing.renewal}
                                             </div>
                                         </div>
                                     ) : (

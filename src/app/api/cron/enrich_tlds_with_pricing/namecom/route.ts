@@ -32,7 +32,7 @@ export async function GET(): Promise<NextResponse> {
         const headers = { Authorization: `Basic ${NAMECOM_API_KEY}` };
         let page = 1;
         let hasMoreResults = true;
-        let MAX_PAGES = 100;
+        const MAX_PAGES = 100;
         while (hasMoreResults) {
             const response = await axios.get<NameComPricingResponse>(NAMECOM_PRICES_URL, { headers, params: { page } });
             const pricingItems = response.data.pricing;
