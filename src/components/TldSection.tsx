@@ -1,6 +1,7 @@
 'use client';
 
 import { TLD } from '@/models/tld';
+
 import { Badge } from './ui/badge';
 
 export default function TLDSection({ name, punycodeName, description, type }: TLD) {

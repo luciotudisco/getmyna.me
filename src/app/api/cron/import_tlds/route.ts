@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { NextResponse } from 'next/server';
-import { tldRepository } from '@/services/tld-repository';
 import { toASCII, toUnicode } from 'punycode';
+
+import { tldRepository } from '@/services/tld-repository';
 
 const IANA_TLD_URL = 'https://data.iana.org/TLD/tlds-alpha-by-domain.txt';
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
@@ -34,7 +35,7 @@ export async function GET(): Promise<NextResponse> {
             console.log(`Creating TLD ${tldName} ...`);
             await tldRepository.createTld({
                 name: tldName,
-                punycodeName: punycodeName,
+                punycodeName,
             });
         }
         console.log('TLD import completed');

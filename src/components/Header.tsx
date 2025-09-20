@@ -1,12 +1,13 @@
 'use client';
 
+import { Suspense } from 'react';
+import { Info } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import SearchBar from './SearchBar';
-import { Suspense } from 'react';
+
 import { Button } from './ui/button';
-import { Info } from 'lucide-react';
+import SearchBar from './SearchBar';
 
 export default function Header() {
     const pathname = usePathname();

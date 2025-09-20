@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { NextResponse } from 'next/server';
-import { tldRepository } from '@/services/tld-repository';
+
 import { Registrar, TLDPricing } from '@/models/tld';
+import { tldRepository } from '@/services/tld-repository';
 
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
 
@@ -14,11 +15,11 @@ const DYNADOT_PRICES_URL = 'https://api.dynadot.com/restful/v1/domains/get_tld_p
  */
 interface DynadotPricingResponse {
     data: {
-        tldPriceList: {
+        tldPriceList: Array<{
             tld: string;
             allYearsRegisterPrice: string[];
             allYearsRenewPrice: string[];
-        }[];
+        }>;
     };
 }
 

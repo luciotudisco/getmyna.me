@@ -1,9 +1,11 @@
-import type { Metadata } from 'next';
-import './globals.css';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import { Amplitude } from '@/components/Amplitude';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import type { Metadata } from 'next';
+
+import { Amplitude } from '@/components/Amplitude';
+import Footer from '@/components/Footer';
+import Header from '@/components/Header';
+
+import './globals.css';
 
 export const metadata: Metadata = {
     title: 'GetMyNa.me',

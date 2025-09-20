@@ -1,7 +1,8 @@
 'use client';
 
 import Autoplay from 'embla-carousel-autoplay';
-import { Carousel as CarouselRoot, CarouselItem as Item, CarouselContent } from '@/components/ui/carousel';
+
+import { Carousel as CarouselRoot, CarouselContent, CarouselItem as Item } from '@/components/ui/carousel';
 
 export default function Carousel() {
     function CarouselItem({ title, domain, color }: { title: string; domain?: string; color?: string }) {

@@ -1,11 +1,12 @@
+import { useEffect, useState, useTransition } from 'react';
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState, useTransition } from 'react';
-import NumberTicker from '@/components/ui/number-ticker';
+
 import Loading from '@/components/Loading';
-import { Domain } from '@/models/domain';
-import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { SearchResult } from '@/components/SearchResult';
+import NumberTicker from '@/components/ui/number-ticker';
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Domain } from '@/models/domain';
 import { apiService } from '@/services/api';
 
 const Player = dynamic(() => import('@lottiefiles/react-lottie-player').then((mod) => mod.Player), { ssr: false });

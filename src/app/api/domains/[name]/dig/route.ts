@@ -1,5 +1,6 @@
-import { NextResponse } from 'next/server';
 import { Resolver } from 'dns/promises';
+import { NextResponse } from 'next/server';
+
 import { DNSRecordType } from '@/models/dig';
 
 const resolver = new Resolver();
@@ -20,7 +21,7 @@ export async function GET(
         let records: string[];
         switch (recordType) {
             case DNSRecordType.MX:
-                records = (res as { priority: number; exchange: string }[]).map(
+                records = (res as Array<{ priority: number; exchange: string }>).map(
                     (mx) => `${mx.priority} ${mx.exchange}`,
                 );
                 break;

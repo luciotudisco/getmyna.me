@@ -1,9 +1,11 @@
 'use client';
 
-import { DomainStatus as DomainStatusEnum, DOMAIN_STATUS_DESCRIPTIONS } from '@/models/domain';
-import { WhoisInfo } from '@/models/whois';
-import { format, parseISO, formatDistanceToNow } from 'date-fns';
 import { useMemo } from 'react';
+import { format, formatDistanceToNow, parseISO } from 'date-fns';
+
+import { DOMAIN_STATUS_DESCRIPTIONS, DomainStatus as DomainStatusEnum } from '@/models/domain';
+import { WhoisInfo } from '@/models/whois';
+
 import { Badge } from './ui/badge';
 
 interface DomainStatusSectionProps {

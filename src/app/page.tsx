@@ -1,7 +1,8 @@
+import { Suspense } from 'react';
+
 import Carousel from '@/components/Carousel';
 import Feature from '@/components/Feature';
 import SearchBar from '@/components/SearchBar';
-import { Suspense } from 'react';
 
 export default function Home() {
     return (

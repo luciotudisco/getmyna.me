@@ -1,15 +1,15 @@
-import { NextResponse } from 'next/server';
 import axios from 'axios';
+import { NextResponse } from 'next/server';
 
 const WHOIS_URL = 'https://whois-api6.p.rapidapi.com/whois/api/v1/getData';
 const RAPID_API_KEY = process.env.RAPID_API_KEY!;
 
-type WhoisResult = {
+interface WhoisResult {
     creation_date?: string | string[];
     expiration_date?: string | string[];
     registrar?: string;
     registrar_url?: string;
-};
+}
 
 export async function GET(
     _request: Request,

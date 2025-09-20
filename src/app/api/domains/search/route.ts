@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+
 import { getDomainsHacks } from '@/services/domains';
 
 export async function GET(request: Request): Promise<NextResponse> {

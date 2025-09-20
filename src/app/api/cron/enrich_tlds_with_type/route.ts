@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { NextResponse } from 'next/server';
 import { HTMLElement, parse } from 'node-html-parser';
-import { tldRepository } from '@/services/tld-repository';
+
 import { TLDType } from '@/models/tld';
+import { tldRepository } from '@/services/tld-repository';
 
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
 

@@ -1,7 +1,7 @@
 'use client';
 
-import * as amplitude from '@amplitude/analytics-browser';
 import { useEffect } from 'react';
+import * as amplitude from '@amplitude/analytics-browser';
 
 const AMPLITUDE_API_KEY = process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY!;
 

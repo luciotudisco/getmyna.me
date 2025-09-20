@@ -1,9 +1,10 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/utils/utils';
-import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { Loader2 } from 'lucide-react';
+
+import { Badge } from '@/components/ui/badge';
+import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
+import { cn } from '@/utils/utils';
 
 interface DomainStatusBadgeProps {
     domain: Domain;

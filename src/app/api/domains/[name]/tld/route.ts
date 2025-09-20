@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+
 import { tldRepository } from '@/services/tld-repository';
 
 export async function GET(

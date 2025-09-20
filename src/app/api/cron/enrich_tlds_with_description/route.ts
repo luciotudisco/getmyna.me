@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
-import { tldRepository } from '@/services/tld-repository';
 import OpenAI from 'openai';
+
+import { tldRepository } from '@/services/tld-repository';
 
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
 

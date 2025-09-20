@@ -2,7 +2,7 @@
  * A rate limiter that executes tasks at a given rate.
  */
 export class RateLimiter {
-    private queue: (() => Promise<void>)[] = [];
+    private queue: Array<() => Promise<void>> = [];
     private processing = false;
     private lastCallTime = 0;
     private delayMs: number;
@@ -45,7 +45,9 @@ export class RateLimiter {
             const delay = Math.max(0, this.delayMs - timeSinceLastCall);
 
             if (delay > 0) {
-                await new Promise((resolve) => setTimeout(resolve, delay));
+                await new Promise((resolve) => {
+                    setTimeout(resolve, delay);
+                });
             }
 
             const task = this.queue.shift();

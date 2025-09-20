@@ -1,5 +1,6 @@
-import { WhoisInfo } from '@/models/whois';
 import { format, parseISO } from 'date-fns';
+
+import { WhoisInfo } from '@/models/whois';
 
 interface WhoisInfoSectionProps {
     whoisInfo: WhoisInfo;

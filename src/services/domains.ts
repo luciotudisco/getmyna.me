@@ -1,5 +1,6 @@
-import isFQDN from 'validator/lib/isFQDN';
 import { Permutation, PowerSet } from 'js-combinatorics';
+import isFQDN from 'validator/lib/isFQDN';
+
 import { tldRepository } from './tld-repository';
 
 /**

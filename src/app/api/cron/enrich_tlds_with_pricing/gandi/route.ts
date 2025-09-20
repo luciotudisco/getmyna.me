@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { NextResponse } from 'next/server';
-import { tldRepository } from '@/services/tld-repository';
-import { Registrar } from '@/models/tld';
 import { toUnicode } from 'punycode';
+
+import { Registrar } from '@/models/tld';
+import { tldRepository } from '@/services/tld-repository';
 
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
 
@@ -13,11 +14,10 @@ const GANDI_TLDS_URL = 'https://api.gandi.net/v5/domain/tlds';
  * The response from the Gandi API for TLDs.
  * See https://api.gandi.net/docs/domains/#v5-domain-tlds-name for more details.
  */
-interface GandiTLDsResponse
-    extends Array<{
-        name: string;
-        href: string;
-    }> {}
+type GandiTLDsResponse = Array<{
+    name: string;
+    href: string;
+}>;
 
 /**
  * Enrich TLDs with the pricing information from Gandi.

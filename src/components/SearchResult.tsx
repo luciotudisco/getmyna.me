@@ -1,12 +1,13 @@
 'use client';
 
-import { TableCell, TableRow } from '@/components/ui/table';
-import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { useEffect, useState } from 'react';
-import { RateLimiter } from '@/utils/rate-limiter';
+
 import DomainDetailDrawer from '@/components/DomainDetailDrawer';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
+import { TableCell, TableRow } from '@/components/ui/table';
+import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { apiService } from '@/services/api';
+import { RateLimiter } from '@/utils/rate-limiter';
 
 // Create a shared rate limiter instance (2 calls per second / 500ms delay)
 const statusRateLimiter = new RateLimiter(2);

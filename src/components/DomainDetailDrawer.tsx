@@ -1,18 +1,19 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Loading from '@/components/Loading';
-import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
-import { Separator } from '@/components/ui/separator';
-import TLDSection from '@/components/TldSection';
-import { WhoisInfo } from '@/models/whois';
-import { DomainStatusSection } from '@/components/DomainStatusSection';
-import DomainStatusBadge from '@/components/DomainStatusBadge';
+
 import DomainRegistrarButtons from '@/components/DomainRegistrarButtons';
-import { apiService } from '@/services/api';
+import DomainStatusBadge from '@/components/DomainStatusBadge';
+import { DomainStatusSection } from '@/components/DomainStatusSection';
+import Loading from '@/components/Loading';
+import TLDSection from '@/components/TldSection';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { Separator } from '@/components/ui/separator';
+import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { TLD } from '@/models/tld';
+import { WhoisInfo } from '@/models/whois';
+import { apiService } from '@/services/api';
 
 interface DomainDetailDrawerProps {
     domain: Domain;

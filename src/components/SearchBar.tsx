@@ -1,10 +1,11 @@
 'use client';
 
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { FormEvent, useEffect, useState } from 'react';
 import { SearchIcon, XIcon } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 export default function SearchBar() {
     const router = useRouter();
@@ -36,7 +37,6 @@ export default function SearchBar() {
                     className="rounded-sm pl-10 pr-10 !text-base shadow-sm"
                     onChange={(event) => setSearchTerm(event.target.value)}
                     value={searchTerm}
-                    autoFocus
                 />
                 {searchTerm && (
                     <Button
@@ -44,7 +44,6 @@ export default function SearchBar() {
                         type="button"
                         className="absolute right-0 hover:bg-inherit"
                         onClick={() => setSearchTerm('')}
-                        autoFocus={false}
                     >
                         <XIcon size={18} className="text-muted-foreground" />
                     </Button>

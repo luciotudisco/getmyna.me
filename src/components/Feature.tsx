@@ -1,4 +1,5 @@
 import Image from 'next/image';
+
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface FeatureProps {

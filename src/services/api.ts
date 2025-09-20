@@ -1,8 +1,9 @@
 import axios, { AxiosInstance } from 'axios';
-import { DomainStatus as DomainStatusEnum } from '@/models/domain';
+
 import { DigInfo, DNSRecordType } from '@/models/dig';
-import { WhoisInfo } from '@/models/whois';
+import { DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { TLD } from '@/models/tld';
+import { WhoisInfo } from '@/models/whois';
 
 class ApiService {
     private client: AxiosInstance;
@@ -18,7 +19,7 @@ class ApiService {
 
     async getDomainStatus(domain: string): Promise<DomainStatusEnum> {
         const response = await this.client.get(`/api/domains/${domain}/status`);
-        const data = response.data as { status?: { summary?: string }[] };
+        const data = response.data as { status?: Array<{ summary?: string }> };
         return (data.status?.at(-1)?.summary as DomainStatusEnum) ?? DomainStatusEnum.error;
     }
 

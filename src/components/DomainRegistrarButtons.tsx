@@ -1,8 +1,9 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Registrar, TLDPricing, REGISTRARS_DOMAIN_SEARCH_URLS } from '@/models/tld';
 import { ExternalLinkIcon } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
+import { Registrar, REGISTRARS_DOMAIN_SEARCH_URLS, TLDPricing } from '@/models/tld';
 
 interface DomainRegistrarButtonsProps {
     domainName: string;
