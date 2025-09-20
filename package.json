@@ -14,6 +14,7 @@
         "code-quality": "npm run lint:strict && npm run type-check",
         "prepare": "husky install",
         "test": "jest",
+        "tests": "jest",
         "test:watch": "jest --watch"
     },
     "dependencies": {
