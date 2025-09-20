@@ -112,7 +112,7 @@ class TLDRepository {
             console.error('Error fetching TLDs:', error);
             throw new Error(`Failed to fetch TLDs: ${error.message}`);
         }
-        const tlds: TLD[] = data.map((tld) => ({
+        const tlds: TLD[] = data.map((tld: Record<string, unknown>) => ({
             name: tld.name,
             punycodeName: tld.punycode_name,
             type: tld.type,

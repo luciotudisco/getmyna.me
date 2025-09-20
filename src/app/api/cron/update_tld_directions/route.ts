@@ -39,11 +39,11 @@ export async function GET(): Promise<NextResponse> {
         }
 
         console.log(`TLD direction update completed. Updated: ${updatedCount}, Skipped: ${skippedCount}`);
-        return NextResponse.json({ 
+        return NextResponse.json({
             message: 'TLD direction update completed successfully',
             updated: updatedCount,
             skipped: skippedCount,
-            total: tlds.length
+            total: tlds.length,
         });
     } catch (error) {
         console.error('Error during TLD direction update:', error);
