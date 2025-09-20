@@ -35,6 +35,10 @@ export function DomainRegistrarButtons({ domainName, pricing }: DomainRegistrarB
             {sortedRegistrars.map(([registrarKey, registrarPricing]) => {
                 const registrar = registrarKey as Registrar;
                 const searchUrl = REGISTRARS_DOMAIN_SEARCH_URLS[registrar];
+                const registrationPrice = registrarPricing?.registration;
+                const renewalPrice = registrarPricing?.renewal;
+                const hasPricing = typeof registrationPrice === 'number' && typeof renewalPrice === 'number';
+                const roundedRegistrationPrice = hasPricing ? `$${registrationPrice.toFixed(2)}` : null;
                 return (
                     <div key={registrar} className="flex items-center gap-3">
                         <Button
@@ -45,10 +49,10 @@ export function DomainRegistrarButtons({ domainName, pricing }: DomainRegistrarB
                             <div className="flex flex-1 items-center justify-between font-extrabold">
                                 {registrar}
                                 <div className="min-w-[100px] text-right text-xs">
-                                    {registrarPricing && registrarPricing.registration && registrarPricing.renewal ? (
+                                    {hasPricing ? (
                                         <div>
                                             <div className="font-extrabold text-white">
-                                                ${registrarPricing.registration}
+                                                {roundedRegistrationPrice}
                                             </div>
                                         </div>
                                     ) : (
