@@ -17,6 +17,13 @@ class ApiService {
         return response.data as DigInfo;
     }
 
+    async digDomainMultiple(domain: string, types: DNSRecordType[]): Promise<DigInfo> {
+        const response = await this.client.get(`/api/domains/${domain}/dig`, {
+            params: { types: types.join(',') },
+        });
+        return response.data as DigInfo;
+    }
+
     async getDomainStatus(domain: string): Promise<DomainStatusEnum> {
         const response = await this.client.get(`/api/domains/${domain}/status`);
         const data = response.data as { status?: Array<{ summary?: string }> };
