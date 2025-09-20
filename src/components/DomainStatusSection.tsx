@@ -4,6 +4,7 @@ import { DomainStatus as DomainStatusEnum, DOMAIN_STATUS_DESCRIPTIONS } from '@/
 import { WhoisInfo } from '@/models/whois';
 import { format, parseISO, formatDistanceToNow } from 'date-fns';
 import { useMemo } from 'react';
+import { Badge } from './ui/badge';
 
 interface DomainStatusSectionProps {
     status: DomainStatusEnum;
@@ -32,12 +33,12 @@ export function DomainStatusSection({ status, whoisInfo }: DomainStatusSectionPr
     return (
         <div className="space-y-3 text-xs">
             {/* Status Description */}
+            <Badge variant="outline" className="uppercase">
+                {status}
+            </Badge>
             {DOMAIN_STATUS_DESCRIPTIONS[status] && (
                 <p>
-                    <span className="text-muted-foreground">Status:</span>{' '}
-                    <span className="font-medium">
-                        The domain is {status}. {DOMAIN_STATUS_DESCRIPTIONS[status]}
-                    </span>
+                    <span className="font-medium">{DOMAIN_STATUS_DESCRIPTIONS[status]}</span>
                 </p>
             )}
 

@@ -73,7 +73,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
             <DrawerContent className="min-h-[400px]">
                 <DrawerHeader>
                     <DrawerTitle className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 max-w-[400px] truncate">{domain.getName()}</div>
+                        <div className="flex max-w-[400px] items-center gap-2 truncate">{domain.getName()}</div>
                         <DomainStatusBadge domain={domain} status={status} className="min-w-[8rem]" />
                     </DrawerTitle>
                 </DrawerHeader>
