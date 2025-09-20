@@ -35,9 +35,12 @@ export function DomainStatusSection({ status, whoisInfo }: DomainStatusSectionPr
     return (
         <div className="space-y-3 text-xs">
             {/* Status Description */}
-            <Badge variant="outline" className="uppercase">
-                {status}
-            </Badge>
+            <div className="flex justify-between">
+                <span className="font-semibold uppercase text-muted-foreground">Domain Status</span>
+                <Badge variant="outline" className="uppercase">
+                    {status}
+                </Badge>
+            </div>
             {DOMAIN_STATUS_DESCRIPTIONS[status] && (
                 <p>
                     <span className="font-medium">{DOMAIN_STATUS_DESCRIPTIONS[status]}</span>

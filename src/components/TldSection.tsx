@@ -24,17 +24,19 @@ export default function TLDSection({ name, punycodeName, description, type }: TL
     const formattedType = type?.replace(/_/g, ' ');
     return (
         <div className="space-y-2">
-            <div className="flex items-center gap-2">
-                <Badge variant="outline" className="uppercase">
-                    .{name}
-                </Badge>
-                {type && (
-                    <Badge variant="outline" className="flex items-center gap-1 uppercase">
-                        {TypeIcon && <TypeIcon className="h-3 w-3" aria-hidden="true" />}
-                        <span>{formattedType}</span>
+            <div className="flex justify-between">
+                <span className="font-semibold uppercase text-muted-foreground">Top Level Domain</span>
+                <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="uppercase">
+                        .{name}
                     </Badge>
-                )}
-                {name !== punycodeName && <Badge variant="outline">INTERNATIONALIZED DOMAIN NAME (IDN)</Badge>}
+                    {type && (
+                        <Badge variant="outline" className="flex items-center gap-1 uppercase">
+                            {TypeIcon && <TypeIcon className="h-3 w-3" aria-hidden="true" />}
+                            <span>{formattedType}</span>
+                        </Badge>
+                    )}
+                </div>
             </div>
             <p className="gap-2 text-xs leading-relaxed">
                 <span>{tldDescription}</span>{' '}
