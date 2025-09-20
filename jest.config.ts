@@ -13,10 +13,18 @@ const config: Config = {
     coverageDirectory: 'coverage',
     coverageProvider: 'v8',
     transform: {
-        '^.+\\.tsx?$': 'ts-jest',
+        '^.+\\.tsx?$': [
+            'ts-jest',
+            {
+                tsconfig: {
+                    jsx: 'react-jsx',
+                },
+            },
+        ],
     },
     moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/src/$1',
+        '^direction$': '<rootDir>/src/__mocks__/direction.ts',
     },
     setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
 };

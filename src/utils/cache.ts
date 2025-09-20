@@ -1,3 +1,6 @@
+/**
+ * A generic cache entry with a TTL.
+ */
 export interface CacheEntry<T> {
     value: T;
     expiresAt: number;

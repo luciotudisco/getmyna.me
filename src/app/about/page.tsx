@@ -1,5 +1,6 @@
 import TLDCounter from '@/components/TLDCounter';
 import { Badge } from '@/components/ui/badge';
+import { Highlighter } from '@/components/ui/highlighter';
 
 const AboutPage = () => {
     const FaqItem = ({
@@ -36,7 +37,15 @@ const AboutPage = () => {
                     <Badge className="text-xs font-medium">ABOUT</Badge>
                     <h1 className="mt-4 text-2xl font-semibold lg:text-4xl">Domain Hacks</h1>
                     <p className="lg:text-md mt-4 text-sm font-medium text-muted-foreground lg:mt-6">
-                        Discover how to create memorable, brandable domains that stand out.
+                        Discover how to create{' '}
+                        <Highlighter action="underline" color="#e5b3fe">
+                            memorable
+                        </Highlighter>{' '}
+                        domains that{' '}
+                        <Highlighter action="highlight" color="#fde2e4">
+                            stand out
+                        </Highlighter>
+                        .
                     </p>
                 </div>
                 <div className="mx-auto mt-6 max-w-xl lg:mt-14">
