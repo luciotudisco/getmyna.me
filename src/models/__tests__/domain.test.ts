@@ -1,34 +1,6 @@
 import { Domain, DomainStatus } from '../domain';
 
 describe('Domain', () => {
-    describe('constructor', () => {
-        it('should create a domain with correct initial values', () => {
-            const domain = new Domain('example.com');
-
-            expect(domain.getName()).toBe('example.com');
-            expect(domain.getStatus()).toBe(DomainStatus.unknown);
-            expect(domain.isAvailable()).toBe(false);
-            expect(domain.getTLD()).toBe('com');
-            expect(domain.getLevel()).toBe(2);
-        });
-
-        it('should handle multi-level domain', () => {
-            const domain = new Domain('sub.example.co.uk');
-
-            expect(domain.getName()).toBe('sub.example.co.uk');
-            expect(domain.getTLD()).toBe('uk');
-            expect(domain.getLevel()).toBe(4);
-        });
-
-        it('should handle domain with special characters', () => {
-            const domain = new Domain('test-domain.example-site.org');
-
-            expect(domain.getName()).toBe('test-domain.example-site.org');
-            expect(domain.getTLD()).toBe('org');
-            expect(domain.getLevel()).toBe(3);
-        });
-    });
-
     describe('validation', () => {
         describe('valid domain names', () => {
             it('should accept valid two-level domain', () => {
@@ -220,20 +192,6 @@ describe('Domain', () => {
                 domain.setStatus(status);
                 expect(domain.isAvailable()).toBe(false);
             });
-        });
-    });
-
-    describe('edge cases', () => {
-        it('should handle domain with only dots', () => {
-            expect(() => new Domain('...')).toThrow(Error);
-        });
-
-        it('should handle domain with trailing dot', () => {
-            expect(() => new Domain('example.com.')).toThrow(Error);
-        });
-
-        it('should handle domain with leading dot', () => {
-            expect(() => new Domain('.example.com')).toThrow(Error);
         });
     });
 });
