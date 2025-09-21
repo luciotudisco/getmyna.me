@@ -51,7 +51,7 @@ export async function GET(): Promise<NextResponse> {
         logger.info('TLD pricing enrichment from Namesilo completed');
         return NextResponse.json({ message: 'TLD pricing enrichment from Namesilo completed successfully' });
     } catch (error) {
-        logger.error('Error during TLD pricing enrichment from Namesilo:', error);
+        logger.error({ error }, 'Error during TLD pricing enrichment from Namesilo');
         return NextResponse.json({ error: 'Failed to enrich TLD pricing from Namesilo' }, { status: 500 });
     }
 }

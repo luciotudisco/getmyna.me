@@ -29,7 +29,7 @@ export async function GET(
                 }
                 return { type: recordType, records };
             } catch (error) {
-                logger.error(`Ignoring ${recordType} for ${domain}:`, error);
+                logger.error({ error }, `Ignoring ${recordType} for ${domain}`);
                 return null;
             }
         });

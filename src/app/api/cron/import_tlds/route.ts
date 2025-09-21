@@ -45,7 +45,7 @@ export async function GET(): Promise<NextResponse> {
         logger.info('TLD import completed');
         return NextResponse.json({ message: 'TLD import completed successfully' });
     } catch (error) {
-        logger.error('Error during TLD import:', error);
+        logger.error({ error }, 'Error during TLD import');
         return NextResponse.json({ error: 'Failed to import TLDs' }, { status: 500 });
     }
 }

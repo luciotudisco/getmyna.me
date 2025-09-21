@@ -42,7 +42,7 @@ class TLDRepository {
             },
         );
         if (error) {
-            logger.error(`Error upserting TLD ${tldInfo.name}:`, error);
+            logger.error({ error }, `Error upserting TLD ${tldInfo.name}`);
             throw new Error(`Failed to upsert TLD ${tldInfo.name}: ${error.message}`);
         }
 
@@ -76,7 +76,7 @@ class TLDRepository {
                 this.cache.set(cacheKey, null, this.TTL_MILLISECONDS);
                 return null;
             }
-            logger.error(`Error fetching TLD ${name}:`, error);
+            logger.error({ error }, `Error fetching TLD ${name}`);
             throw new Error(`Failed to fetch TLD ${name}: ${error.message}`);
         }
         const tld = {
@@ -108,7 +108,7 @@ class TLDRepository {
             .order('name', { ascending: true })
             .limit(5000);
         if (error) {
-            logger.error('Error fetching TLDs:', error);
+            logger.error({ error }, 'Error fetching TLDs');
             throw new Error(`Failed to fetch TLDs: ${error.message}`);
         }
         const tlds: TLD[] = data.map((tld) => ({
@@ -144,7 +144,7 @@ class TLDRepository {
             .eq(searchField, name);
 
         if (error) {
-            logger.error(`Error updating TLD ${name}:`, error);
+            logger.error({ error }, `Error updating TLD ${name}`);
             throw new Error(`Failed to update TLD ${name}: ${error.message}`);
         }
 

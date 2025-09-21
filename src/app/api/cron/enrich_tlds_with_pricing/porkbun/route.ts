@@ -54,7 +54,7 @@ export async function GET(): Promise<NextResponse> {
         logger.info('TLD pricing enrichment from Porkbun completed');
         return NextResponse.json({ message: 'TLD pricing enrichment from Porkbun completed successfully' });
     } catch (error) {
-        logger.error('Error during TLD pricing enrichment from Porkbun:', error);
+        logger.error({ error }, 'Error during TLD pricing enrichment from Porkbun');
         return NextResponse.json({ error: 'Failed to enrich TLD pricing from Porkbun' }, { status: 500 });
     }
 }

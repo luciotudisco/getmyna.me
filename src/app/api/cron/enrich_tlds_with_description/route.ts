@@ -48,7 +48,7 @@ export async function GET(): Promise<NextResponse> {
         logger.info('TLD enrichment with description completed');
         return NextResponse.json({ message: 'TLD enrichment with description completed successfully' });
     } catch (error) {
-        logger.error('Error during TLD enrichment with description:', error);
+        logger.error({ error }, 'Error during TLD enrichment with description');
         return NextResponse.json({ error: 'Failed to enrich TLDs with description' }, { status: 500 });
     }
 }

@@ -23,7 +23,7 @@ export async function GET(
             pricing: tldInfo?.pricing,
         });
     } catch (error) {
-        logger.error('Error fetching TLD info:', error);
+        logger.error({ error }, 'Error fetching TLD info');
         return NextResponse.json({});
     }
 }

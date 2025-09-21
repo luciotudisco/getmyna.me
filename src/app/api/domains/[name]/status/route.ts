@@ -18,7 +18,7 @@ export async function GET(
         const response = await axios.get(url, headers);
         return NextResponse.json(response.data);
     } catch (error) {
-        logger.error('Error fetching data:', error);
+        logger.error({ error }, 'Error fetching data');
         return NextResponse.json({ error: 'Failed to fetch data' }, { status: 500 });
     }
 }
