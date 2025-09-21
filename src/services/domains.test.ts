@@ -5,16 +5,16 @@ jest.mock('@/services/tld-repository', () => ({
     tldRepository: {
         async listTLDs() {
             return [
-                { name: 'com', punycodeName: 'com', type: 'GENERIC', description: 'Commercial' },
-                { name: 'org', punycodeName: 'org', type: 'GENERIC', description: 'Organization' },
-                { name: 'net', punycodeName: 'net', type: 'GENERIC', description: 'Network' },
-                { name: 'io', punycodeName: 'io', type: 'COUNTRY_CODE', description: 'British Indian Ocean Territory' },
-                { name: 'co', punycodeName: 'co', type: 'COUNTRY_CODE', description: 'Colombia' },
-                { name: 'es', punycodeName: 'es', type: 'COUNTRY_CODE', description: 'Spain' },
-                { name: 'ing', punycodeName: 'ing', type: 'GENERIC', description: 'ING Group' },
-                { name: 'ng', punycodeName: 'ng', type: 'COUNTRY_CODE', description: 'Nigeria' },
-                { name: 'man', punycodeName: 'man', type: 'GENERIC', description: 'Manchester' },
-                { name: 'gle', punycodeName: 'gle', type: 'GENERIC', description: 'Google' },
+                { name: 'com' },
+                { name: 'org' },
+                { name: 'net' },
+                { name: 'io' },
+                { name: 'co' },
+                { name: 'es' },
+                { name: 'ing' },
+                { name: 'ng' },
+                { name: 'man' },
+                { name: 'gle' },
             ];
         },
         async getTLD(name: string) {
