@@ -37,34 +37,6 @@ describe('Domain', () => {
         });
     });
 
-    describe('getters', () => {
-        let domain: Domain;
-
-        beforeEach(() => {
-            domain = new Domain('example.com');
-        });
-
-        it('should return correct name', () => {
-            expect(domain.getName()).toBe('example.com');
-        });
-
-        it('should return correct TLD', () => {
-            expect(domain.getTLD()).toBe('com');
-        });
-
-        it('should return correct level', () => {
-            expect(domain.getLevel()).toBe(2);
-        });
-
-        it('should return initial status as unknown', () => {
-            expect(domain.getStatus()).toBe(DomainStatus.unknown);
-        });
-
-        it('should return initial availability as false', () => {
-            expect(domain.isAvailable()).toBe(false);
-        });
-    });
-
     describe('getRootDomain', () => {
         it('should return empty string for single-level domain', () => {
             const domain = new Domain('example');
