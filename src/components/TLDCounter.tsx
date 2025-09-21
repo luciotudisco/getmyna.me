@@ -5,7 +5,7 @@ import { useEffect, useState, useTransition } from 'react';
 import NumberTicker from '@/components/ui/number-ticker';
 import { apiClient } from '@/services/api';
 
-export function TLDCounter() {
+function TLDCounter() {
     const [count, setCount] = useState(0);
     const [isPending, startTransition] = useTransition();
 

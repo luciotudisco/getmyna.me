@@ -48,7 +48,7 @@ function TakenBadge({ className }: { className?: string }) {
     );
 }
 
-export function DomainStatusBadge({ domain, status, className }: DomainStatusBadgeProps) {
+function DomainStatusBadge({ domain, status, className }: DomainStatusBadgeProps) {
     if (status === DomainStatusEnum.unknown) {
         return <UnknownBadge className={className} />;
     }

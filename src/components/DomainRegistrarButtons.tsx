@@ -20,7 +20,7 @@ interface DomainRegistrarButtonsProps {
     pricing: Partial<Record<Registrar, TLDPricing>>;
 }
 
-export function DomainRegistrarButtons({ domainName, pricing }: DomainRegistrarButtonsProps) {
+function DomainRegistrarButtons({ domainName, pricing }: DomainRegistrarButtonsProps) {
     if (Object.keys(pricing).length === 0) {
         return (
             <div className="flex items-center rounded-md bg-red-100 p-4 text-xs">
