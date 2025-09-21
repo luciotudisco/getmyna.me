@@ -12,8 +12,8 @@ function TLDCounter() {
     useEffect(() => {
         startTransition(async () => {
             try {
-                const tlds = await apiClient.getTlds();
-                setCount(tlds.length);
+                const count = await apiClient.getTldCount();
+                setCount(count);
             } catch {
                 // Silently handle error
             }

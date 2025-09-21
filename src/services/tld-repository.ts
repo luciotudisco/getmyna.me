@@ -12,6 +12,7 @@ import logger from '@/utils/logger';
 class TLDRepository {
     private readonly TTL_MILLISECONDS = 60_000;
     private readonly POSTGREST_NO_ROWS_ERROR = 'PGRST116';
+    private readonly TLD_LIMIT = 5000;
     private client: SupabaseClient;
     private cache = new TTLCache<unknown>();
 
@@ -47,6 +48,7 @@ class TLDRepository {
         }
 
         this.cache.delete('tlds');
+        this.cache.delete('tld-count');
         this.cache.delete(`tld:${tldInfo.name}`);
     }
 
@@ -106,7 +108,7 @@ class TLDRepository {
             .from('tld')
             .select('name, punycode_name, type, description, direction, pricing')
             .order('name', { ascending: true })
-            .limit(5000);
+            .limit(this.TLD_LIMIT);
         if (error) {
             logger.error({ error }, 'Error fetching TLDs');
             throw new Error(`Failed to fetch TLDs: ${error.message}`);
@@ -120,6 +122,32 @@ class TLDRepository {
         }));
         this.cache.set(cacheKey, tlds, this.TTL_MILLISECONDS);
         return tlds;
+    }
+
+    /**
+     * Counts the total number of TLDs in the database.
+     *
+     * @returns The total count of TLDs.
+     */
+    async countTLDs(): Promise<number> {
+        const cacheKey = 'tld-count';
+        const cached = this.cache.get(cacheKey);
+        if (cached !== undefined) {
+            return cached as number;
+        }
+
+        const { count, error } = await this.client
+            .from('tld')
+            .select('*', { count: 'exact', head: true });
+        
+        if (error) {
+            logger.error({ error }, 'Error counting TLDs');
+            throw new Error(`Failed to count TLDs: ${error.message}`);
+        }
+        
+        const totalCount = count ?? 0;
+        this.cache.set(cacheKey, totalCount, this.TTL_MILLISECONDS);
+        return totalCount;
     }
 
     /**
@@ -149,6 +177,7 @@ class TLDRepository {
         }
 
         this.cache.delete('tlds');
+        this.cache.delete('tld-count');
         this.cache.delete(`tld:${name}`);
     }
 }

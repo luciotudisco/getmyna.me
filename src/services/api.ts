@@ -52,6 +52,14 @@ class APIClient {
     }
 
     /**
+     * Gets the total count of TLDs.
+     */
+    async getTldCount(): Promise<number> {
+        const response = await this.client.get('/api/tlds?action=count');
+        return response.data.count ?? 0;
+    }
+
+    /**
      * Gets WHOIS data for a registered domain.
      */
     async getWhoisInfo(domain: string): Promise<WhoisInfo> {
