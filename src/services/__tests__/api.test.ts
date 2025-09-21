@@ -50,7 +50,7 @@ describe('APIClient', () => {
     });
 
     describe('getDomainStatus', () => {
-        it('should return domain status from API response', async () => {
+        it('should return the highest priority status from API response', async () => {
             const mockResponse = {
                 status: [{ summary: 'active' }, { summary: 'claimed' }],
             };
@@ -59,7 +59,63 @@ describe('APIClient', () => {
 
             const result = await apiClient.getDomainStatus('example.com');
 
-            expect(result).toBe(DomainStatus.claimed);
+            // 'active' should have higher priority than 'claimed'
+            expect(result).toBe(DomainStatus.active);
+        });
+
+        it('should handle single status response', async () => {
+            const mockResponse = {
+                status: [{ summary: 'inactive' }],
+            };
+
+            mockAdapter.onGet('/api/domains/example.com/status').reply(200, mockResponse);
+
+            const result = await apiClient.getDomainStatus('example.com');
+
+            expect(result).toBe(DomainStatus.inactive);
+        });
+
+        it('should handle empty status array', async () => {
+            const mockResponse = {
+                status: [],
+            };
+
+            mockAdapter.onGet('/api/domains/example.com/status').reply(200, mockResponse);
+
+            const result = await apiClient.getDomainStatus('example.com');
+
+            expect(result).toBe(DomainStatus.unknown);
+        });
+
+        it('should handle invalid status values', async () => {
+            const mockResponse = {
+                status: [{ summary: 'invalid_status' }, { summary: 'active' }],
+            };
+
+            mockAdapter.onGet('/api/domains/example.com/status').reply(200, mockResponse);
+
+            const result = await apiClient.getDomainStatus('example.com');
+
+            // Should return the valid status, ignoring invalid ones
+            expect(result).toBe(DomainStatus.active);
+        });
+
+        it('should handle missing status field', async () => {
+            const mockResponse = {};
+
+            mockAdapter.onGet('/api/domains/example.com/status').reply(200, mockResponse);
+
+            const result = await apiClient.getDomainStatus('example.com');
+
+            expect(result).toBe(DomainStatus.error);
+        });
+
+        it('should handle API errors gracefully', async () => {
+            mockAdapter.onGet('/api/domains/example.com/status').reply(500, { error: 'Internal Server Error' });
+
+            const result = await apiClient.getDomainStatus('example.com');
+
+            expect(result).toBe(DomainStatus.error);
         });
     });
 

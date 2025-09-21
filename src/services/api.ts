@@ -4,6 +4,8 @@ import { DigInfo } from '@/models/dig';
 import { DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { TLD } from '@/models/tld';
 import { WhoisInfo } from '@/models/whois';
+import { parseDomainStatusFromResponse } from '@/utils/domain-status-utils';
+import logger from '@/utils/logger';
 
 /**
  * API client for domain-related endpoints.
@@ -30,9 +32,22 @@ class APIClient {
      * Gets domain availability status.
      */
     async getDomainStatus(domain: string): Promise<DomainStatusEnum> {
-        const response = await this.client.get(`/api/domains/${domain}/status`);
-        const data = response.data as { status?: Array<{ summary?: string }> };
-        return (data.status?.at(-1)?.summary as DomainStatusEnum) ?? DomainStatusEnum.error;
+        try {
+            const response = await this.client.get(`/api/domains/${domain}/status`);
+            
+            // Log the raw response for debugging
+            logger.debug({ domain, response: response.data }, 'Domain status API response');
+            
+            const status = parseDomainStatusFromResponse(response.data);
+            
+            // Log the parsed status
+            logger.debug({ domain, status }, 'Parsed domain status');
+            
+            return status;
+        } catch (error) {
+            logger.error({ error, domain }, 'Error fetching domain status');
+            return DomainStatusEnum.error;
+        }
     }
 
     /**
