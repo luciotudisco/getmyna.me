@@ -14,7 +14,7 @@ export class Domain {
         this._name = trimmedName;
         this._status = DomainStatus.unknown;
         this._isAvailable = false;
-        this._tld = this._name.split('.').pop()!;
+        this._tld = this._name.split('.').pop() || '';
         this._level = this._name.split('.').length;
     }
 
