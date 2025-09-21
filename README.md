@@ -190,11 +190,6 @@ We welcome contributions!
 
 This project is licensed under the GPL 3.0 License - see the [LICENSE](LICENSE) file for details.
 
-## 📞 Support
-
-- **Issues**: [GitHub Issues](https://github.com/yourusername/getmyna.me/issues)
-- **Email**: admin@getmyna.me
-
 ---
 
 <div align="center">
