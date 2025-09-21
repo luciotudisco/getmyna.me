@@ -7,7 +7,10 @@ import logger from '@/utils/logger';
 
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
 
-const DYNADOT_API_KEY = process.env.DYNADOT_API_KEY!;
+const DYNADOT_API_KEY = process.env.DYNADOT_API_KEY;
+if (!DYNADOT_API_KEY) {
+    throw new Error('DYNADOT_API_KEY environment variable is not set');
+}
 const DYNADOT_PRICES_URL = 'https://api.dynadot.com/restful/v1/domains/get_tld_price?currency=USD';
 
 /**
