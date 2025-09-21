@@ -3,7 +3,20 @@
 import { ExternalLinkIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Registrar, REGISTRARS_DOMAIN_SEARCH_URLS, TLDPricing } from '@/models/tld';
+import { Registrar, TLDPricing } from '@/models/tld';
+
+// Type that ensures all registrars have a URL function
+type RegistrarUrls = {
+    [K in Registrar]: (domain: string) => string;
+};
+
+const REGISTRARS_DOMAIN_SEARCH_URLS: RegistrarUrls = {
+    [Registrar.DYNADOT]: (domain: string) => `https://www.dynadot.com/domain/search?domain=${domain}`,
+    [Registrar.GANDI]: (domain: string) => `https://shop.gandi.net/domain/suggest?search=${domain}`,
+    [Registrar.NAMECOM]: (domain: string) => `https://www.name.com/domain/search/${domain}`,
+    [Registrar.NAMESILO]: (domain: string) => `https://www.namesilo.com/domain/search-domains?query=${domain}`,
+    [Registrar.PORKBUN]: (domain: string) => `https://porkbun.com/checkout/search?q=${domain}`,
+};
 
 interface DomainRegistrarButtonsProps {
     domainName: string;
