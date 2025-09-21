@@ -31,7 +31,7 @@ describe('APIClient', () => {
         mockAdapter.restore();
     });
 
-    describe('digDomain', () => {
+    describe('getDigInfo', () => {
         it('should return dig information for a domain', async () => {
             const mockDigInfo: DigInfo = {
                 records: {
@@ -43,7 +43,7 @@ describe('APIClient', () => {
 
             mockAdapter.onGet('/api/domains/example.com/dig').reply(200, mockDigInfo);
 
-            const result = await apiClient.digDomain('example.com');
+            const result = await apiClient.getDigInfo('example.com');
 
             expect(result).toEqual(mockDigInfo);
         });
@@ -63,7 +63,7 @@ describe('APIClient', () => {
         });
     });
 
-    describe('getDomainWhois', () => {
+    describe('getWhoisInfo', () => {
         it('should return whois information for a domain', async () => {
             const mockWhoisInfo: WhoisInfo = {
                 creationDate: '2020-01-01T00:00:00Z',
@@ -75,13 +75,13 @@ describe('APIClient', () => {
 
             mockAdapter.onGet('/api/domains/example.com/whois').reply(200, mockWhoisInfo);
 
-            const result = await apiClient.getDomainWhois('example.com');
+            const result = await apiClient.getWhoisInfo('example.com');
 
             expect(result).toEqual(mockWhoisInfo);
         });
     });
 
-    describe('getTldInfo', () => {
+    describe('getTld', () => {
         it('should return TLD information for a domain', async () => {
             const mockTldInfo: TLD = {
                 name: 'com',
@@ -104,13 +104,13 @@ describe('APIClient', () => {
 
             mockAdapter.onGet('/api/domains/example.com/tld').reply(200, mockTldInfo);
 
-            const result = await apiClient.getTldInfo('example.com');
+            const result = await apiClient.getTld('example.com');
 
             expect(result).toEqual(mockTldInfo);
         });
     });
 
-    describe('listTLDs', () => {
+    describe('getTlds', () => {
         it('should return list of TLDs', async () => {
             const mockTlds: TLD[] = [
                 { name: 'com', description: 'Commercial' },
@@ -122,7 +122,7 @@ describe('APIClient', () => {
 
             mockAdapter.onGet('/api/tlds').reply(200, mockResponse);
 
-            const result = await apiClient.listTLDs();
+            const result = await apiClient.getTlds();
 
             expect(result).toEqual(mockTlds);
         });

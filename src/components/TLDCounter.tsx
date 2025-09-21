@@ -12,7 +12,7 @@ export function TLDCounter() {
     useEffect(() => {
         startTransition(async () => {
             try {
-                const tlds = await apiClient.listTLDs();
+                const tlds = await apiClient.getTlds();
                 setCount(tlds.length);
             } catch (error) {
                 console.error('Error fetching TLD count:', error);

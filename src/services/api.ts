@@ -12,7 +12,7 @@ class APIClient {
         this.client = axios.create();
     }
 
-    async digDomain(domain: string): Promise<DigInfo> {
+    async getDigInfo(domain: string): Promise<DigInfo> {
         const response = await this.client.get(`/api/domains/${domain}/dig`);
         return response.data as DigInfo;
     }
@@ -23,17 +23,17 @@ class APIClient {
         return (data.status?.at(-1)?.summary as DomainStatusEnum) ?? DomainStatusEnum.error;
     }
 
-    async getDomainWhois(domain: string): Promise<WhoisInfo> {
+    async getWhoisInfo(domain: string): Promise<WhoisInfo> {
         const response = await this.client.get(`/api/domains/${domain}/whois`);
         return response.data as WhoisInfo;
     }
 
-    async getTldInfo(domain: string): Promise<TLD> {
+    async getTld(domain: string): Promise<TLD> {
         const response = await this.client.get(`/api/domains/${domain}/tld`);
         return response.data as TLD;
     }
 
-    async listTLDs(): Promise<TLD[]> {
+    async getTlds(): Promise<TLD[]> {
         const response = await this.client.get('/api/tlds');
         return response.data.tlds ?? [];
     }
