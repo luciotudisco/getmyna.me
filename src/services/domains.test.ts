@@ -1,7 +1,6 @@
 import { DomainsService } from '@/services/domains';
 
-// Create test TLD data
-const testTLDs = [
+const TEST_TLDS = [
     { name: 'com' },
     { name: 'org' },
     { name: 'net' },
@@ -14,8 +13,7 @@ const testTLDs = [
     { name: 'gle' },
 ];
 
-// Create a test instance with mock TLD data
-const domainsService = new DomainsService(testTLDs);
+const domainsService = new DomainsService(TEST_TLDS);
 
 describe('getDomainsHacks', () => {
     it('should return correct domains for uppercase input', () => {

@@ -4,10 +4,7 @@ import isFQDN from 'validator/lib/isFQDN';
 import { TLD } from '@/models/tld';
 
 /**
- * A service class for domain-related operations that caches TLD data for performance.
- *
- * This class ensures that the TLD list is retrieved only once and cached for the lifetime
- * of the service instance, improving performance for multiple domain operations.
+ * A service class that powers the search for domain hacks.
  */
 export class DomainsService {
     private tlds: TLD[];
@@ -130,5 +127,3 @@ export class DomainsService {
             .map((tld) => tld.name?.toLowerCase() || '');
     }
 }
-
-// Export only the class (no factory function needed)
