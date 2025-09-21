@@ -16,7 +16,6 @@ export async function GET(): Promise<NextResponse> {
         logger.info('Starting TLD enrichment with description ...');
         const openaiClient = new OpenAI({ apiKey: process.env['OPENAI_API_KEY'] });
         const tlds = await tldRepository.listTLDs();
-        logger.info(`Found ${tlds.length} TLDs to enrich with description`);
         for (const tld of tlds) {
             if (!tld.name || tld.description !== null) {
                 logger.info(`Skipping TLD ${tld.name} because it already has a description`);
