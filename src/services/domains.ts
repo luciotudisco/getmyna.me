@@ -2,7 +2,6 @@ import { Permutation, PowerSet } from 'js-combinatorics';
 import isFQDN from 'validator/lib/isFQDN';
 
 import { TLD } from '@/models/tld';
-import { tldRepository } from '@/services/tld-repository';
 
 /**
  * A service class for domain-related operations that caches TLD data for performance.
@@ -11,52 +10,15 @@ import { tldRepository } from '@/services/tld-repository';
  * of the service instance, improving performance for multiple domain operations.
  */
 export class DomainsService {
-    private tlds: TLD[] | null = null;
-    private tldsPromise: Promise<TLD[]> | null = null;
+    private tlds: TLD[];
 
     /**
      * Initializes the service with TLD data.
      *
-     * @param tlds - Optional array of TLDs to use. If not provided, will fetch from repository.
+     * @param tlds - Array of TLDs to use for domain operations.
      */
-    constructor(tlds?: TLD[]) {
-        if (tlds) {
-            this.tlds = tlds;
-        } else {
-            this.initializeTLDs();
-        }
-    }
-
-    /**
-     * Initializes the TLD cache by fetching TLDs from the repository.
-     * This method is called once during construction and ensures TLDs are available
-     * for all subsequent operations without additional database calls.
-     */
-    private async initializeTLDs(): Promise<void> {
-        if (this.tldsPromise) {
-            await this.tldsPromise;
-            return;
-        }
-
-        this.tldsPromise = tldRepository.listTLDs();
-        this.tlds = await this.tldsPromise;
-    }
-
-    /**
-     * Ensures TLDs are loaded before performing operations.
-     */
-    private async ensureTLDsLoaded(): Promise<TLD[]> {
-        if (this.tlds) {
-            return this.tlds;
-        }
-
-        if (this.tldsPromise) {
-            this.tlds = await this.tldsPromise;
-            return this.tlds;
-        }
-
-        await this.initializeTLDs();
-        return this.tlds!;
+    constructor(tlds: TLD[]) {
+        this.tlds = tlds;
     }
 
     /**
@@ -68,7 +30,7 @@ export class DomainsService {
      * @param input - The input string.
      * @returns A (possibly empty) list of vanity domains for the given input string.
      */
-    async getDomainsHacks(input: string, includeSubdomains = true): Promise<string[]> {
+    getDomainsHacks(input: string, includeSubdomains = true): string[] {
         input = input.trim().toLowerCase();
 
         // Split the input into words
@@ -94,7 +56,7 @@ export class DomainsService {
 
         const domains: string[] = [];
         for (const candidateName of candidateNames) {
-            const matchingDomains = await this.getMatchingDomains(candidateName);
+            const matchingDomains = this.getMatchingDomains(candidateName);
             for (const domain of matchingDomains) {
                 const level = domain.split('.').length - 1;
                 if (includeSubdomains ? level <= 2 : level <= 1) {
@@ -115,8 +77,8 @@ export class DomainsService {
      * @param text  - The text.
      * @returns A (possibly empty) list of valid first level domains that match the given text.
      */
-    async getMatchingDomains(text: string): Promise<string[]> {
-        const matchingTLDs = await this.getMatchingTLDs(text);
+    getMatchingDomains(text: string): string[] {
+        const matchingTLDs = this.getMatchingTLDs(text);
         const domains: string[] = [];
         for (const tld of matchingTLDs) {
             const domain = text.slice(0, -tld.length);
@@ -162,16 +124,11 @@ export class DomainsService {
      * @param text - The text.
      * @return A (possibly empty) list of TLDs that match the ending of the given text.
      */
-    async getMatchingTLDs(text: string): Promise<string[]> {
-        const tlds = await this.ensureTLDsLoaded();
-        return tlds
+    getMatchingTLDs(text: string): string[] {
+        return this.tlds
             .filter((tld) => text.toLowerCase().endsWith(tld.name?.toLowerCase() || ''))
             .map((tld) => tld.name?.toLowerCase() || '');
     }
 }
 
-// Create a singleton instance that fetches TLDs from repository
-const domainsService = new DomainsService();
-
-// Export only the class and singleton instance
-export { domainsService };
+// Export only the class (no factory function needed)
