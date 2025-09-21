@@ -1,4 +1,4 @@
-import { Domain, DOMAIN_STATUS_DESCRIPTIONS, DomainStatus } from '../domain';
+import { Domain, DomainStatus } from '../domain';
 
 describe('Domain', () => {
     describe('constructor', () => {
@@ -241,15 +241,6 @@ describe('DomainStatus', () => {
         });
     });
 
-    it('should have descriptions for all statuses', () => {
-        const allStatuses = Object.values(DomainStatus);
-
-        allStatuses.forEach((status) => {
-            expect(DOMAIN_STATUS_DESCRIPTIONS[status]).toBeDefined();
-            expect(DOMAIN_STATUS_DESCRIPTIONS[status]).toBeTruthy();
-            expect(typeof DOMAIN_STATUS_DESCRIPTIONS[status]).toBe('string');
-        });
-    });
 
     it('should have unique status values', () => {
         const statusValues = Object.values(DomainStatus);
@@ -258,31 +249,3 @@ describe('DomainStatus', () => {
     });
 });
 
-describe('DOMAIN_STATUS_DESCRIPTIONS', () => {
-    it('should contain descriptions for all domain statuses', () => {
-        const allStatuses = Object.values(DomainStatus);
-        const descriptionKeys = Object.keys(DOMAIN_STATUS_DESCRIPTIONS);
-
-        allStatuses.forEach((status) => {
-            expect(descriptionKeys).toContain(status);
-        });
-    });
-
-    it('should have meaningful descriptions', () => {
-        Object.values(DomainStatus).forEach((status) => {
-            const description = DOMAIN_STATUS_DESCRIPTIONS[status];
-            expect(description.length).toBeGreaterThan(10); // Ensure descriptions are substantial
-            expect(description).toMatch(/[a-zA-Z]/); // Ensure descriptions contain letters
-        });
-    });
-
-    it('should have consistent description format', () => {
-        Object.values(DomainStatus).forEach((status) => {
-            const description = DOMAIN_STATUS_DESCRIPTIONS[status];
-            // Descriptions should start with a capital letter
-            expect(description[0]).toMatch(/[A-Z]/);
-            // Descriptions should end with a period
-            expect(description.endsWith('.')).toBe(true);
-        });
-    });
-});
