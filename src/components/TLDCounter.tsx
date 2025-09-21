@@ -21,7 +21,7 @@ export function TLDCounter() {
     }, []);
 
     return (
-        <div className="flex flex-col items-center justify-center gap-1">
+        <div className="flex flex-col items-center justify-center gap-1 pb-8">
             <h2 className="text-muted-foreground">Powered by a collection of</h2>
             <div className="flex items-baseline gap-2">
                 {isPending ? (

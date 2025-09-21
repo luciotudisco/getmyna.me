@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 import { DNSRecordType } from '@/models/dig';
 
 const resolver = new Resolver();
+const RECORD_TYPES = [DNSRecordType.A, DNSRecordType.AAAA, DNSRecordType.MX];
 
 export async function GET(
     request: Request,
@@ -12,36 +13,28 @@ export async function GET(
     try {
         const resolvedParams = await params;
         const domain = Array.isArray(resolvedParams?.name) ? resolvedParams?.name[0] : resolvedParams?.name;
-
-        // Always resolve A, AAAA, and MX record types
-        const recordTypes = [DNSRecordType.A, DNSRecordType.AAAA, DNSRecordType.MX];
-
-        // Resolve all record types simultaneously
-        const resolvePromises = recordTypes.map(async (recordType) => {
+        const resolvePromises = RECORD_TYPES.map(async (recordType) => {
             try {
-                const res = (await resolver.resolve(domain, recordType)) as unknown;
+                const resolvedRecords = (await resolver.resolve(domain, recordType)) as unknown;
                 let records: string[];
                 switch (recordType) {
                     case DNSRecordType.MX:
-                        records = (res as Array<{ priority: number; exchange: string }>).map(
-                            (mx) => `${mx.priority} ${mx.exchange}`,
-                        );
+                        const exchangeRecords = resolvedRecords as Array<{ priority: number; exchange: string }>;
+                        exchangeRecords.sort((a, b) => a.priority - b.priority);
+                        records = [...new Set(exchangeRecords.map((mx) => mx.exchange))];
                         break;
                     default:
-                        records = Array.isArray(res) ? (res as string[]).map(String) : [];
+                        records = Array.isArray(resolvedRecords) ? [...new Set(resolvedRecords as string[])] : [];
                 }
                 return { type: recordType, records };
-            } catch {
-                // Ignore failed types and return null
+            } catch (error) {
+                console.error(`Ignoring ${recordType} for ${domain}:`, error);
                 return null;
             }
         });
 
         const results = await Promise.all(resolvePromises);
-
-        // Build the response object with only successful records
         const records: Partial<Record<DNSRecordType, string[]>> = {};
-
         results.forEach((result) => {
             if (result) {
                 records[result.type] = result.records;

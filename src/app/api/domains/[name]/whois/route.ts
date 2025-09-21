@@ -25,7 +25,7 @@ export async function GET(
         const result = (response.data as { result?: WhoisResult }).result;
         const creationRaw = result?.creation_date;
         const expirationRaw = result?.expiration_date;
-        const updatedRaw = result?.updated_date || result?.last_updated;
+        const updatedRaw = result?.updated_date;
         const registrar = result?.registrar ?? null;
         const registrarUrl = result?.registrar_url ?? null;
         const creationDate = Array.isArray(creationRaw) ? creationRaw[0] : (creationRaw ?? null);

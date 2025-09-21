@@ -36,7 +36,7 @@ const AboutPage = () => {
                 <div className="text-center">
                     <Badge className="text-xs font-medium">ABOUT</Badge>
                     <h1 className="mt-4 text-2xl font-semibold lg:text-4xl">Domain Hacks</h1>
-                    <p className="lg:text-md mt-4 text-sm font-medium text-muted-foreground lg:mt-6">
+                    <p className="lg:text-md mt-4 text-sm font-medium leading-loose text-muted-foreground lg:mt-6">
                         Discover how to create{' '}
                         <Highlighter action="underline" color="#e5b3fe">
                             memorable
