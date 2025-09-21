@@ -4,10 +4,7 @@ import { NextResponse } from 'next/server';
 import logger from '@/utils/logger';
 
 const WHOIS_URL = 'https://whois-api6.p.rapidapi.com/whois/api/v1/getData';
-const RAPID_API_KEY = process.env.RAPID_API_KEY;
-if (!RAPID_API_KEY) {
-    throw new Error('RAPID_API_KEY environment variable is not set');
-}
+const RAPID_API_KEY = process.env.RAPID_API_KEY!;
 
 interface WhoisResult {
     creation_date?: string | string[];
