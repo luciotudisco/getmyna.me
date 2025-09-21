@@ -6,7 +6,7 @@ import { TLD } from '@/models/tld';
 /**
  * A service class that powers the search for domain hacks.
  */
-export class DomainHackGenerator {
+export class DomainHacksGenerator {
     private tlds: TLD[];
 
     /**
