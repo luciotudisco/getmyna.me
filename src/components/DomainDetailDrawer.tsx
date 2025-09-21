@@ -16,6 +16,8 @@ import { TLD } from '@/models/tld';
 import { WhoisInfo } from '@/models/whois';
 import { apiClient } from '@/services/api';
 
+import { DomainWhoisSection } from './DomainWhoisSection';
+
 interface DomainDetailDrawerProps {
     domain: Domain;
     status: DomainStatusEnum;
@@ -94,7 +96,14 @@ function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawe
                     {!domain.isAvailable() && (
                         <>
                             <Separator />
-                            <DomainStatusSection status={status} whoisInfo={whoisInfo} digInfo={digInfo} />
+                            <DomainStatusSection status={status} />
+                        </>
+                    )}
+
+                    {!domain.isAvailable() && whoisInfo && (
+                        <>
+                            <Separator />
+                            <DomainWhoisSection whoisInfo={whoisInfo} digInfo={digInfo} />
                         </>
                     )}
 

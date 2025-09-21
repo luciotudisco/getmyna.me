@@ -22,8 +22,8 @@ export default function TLDSection({ name, punycodeName, description, type }: TL
     const TypeIcon = type ? (TLD_TYPE_ICON_MAP[type] ?? DEFAULT_TLD_TYPE_ICON) : null;
 
     return (
-        <div className="space-y-2">
-            <div className="flex justify-between">
+        <div className="space-y-2 text-xs">
+            <div className="flex items-center justify-between">
                 <span className="font-semibold uppercase text-muted-foreground">Top Level Domain</span>
                 <div className="flex items-center gap-2">
                     <Badge variant="outline" className="uppercase">
