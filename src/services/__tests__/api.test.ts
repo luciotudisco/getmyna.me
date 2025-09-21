@@ -1,17 +1,17 @@
 import axios, { AxiosInstance } from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
-import { APIClient } from '@/services/api';
 import { DigInfo, DNSRecordType } from '@/models/dig';
 import { DomainStatus } from '@/models/domain';
-import { TLD, TLDType, Registrar } from '@/models/tld';
+import { Registrar, TLD, TLDType } from '@/models/tld';
 import { WhoisInfo } from '@/models/whois';
+import { APIClient } from '@/services/api';
 
 // Mock the APIClient to use a shared axios instance for testing
 class TestableAPIClient extends APIClient {
     constructor(axiosInstance: AxiosInstance) {
         super();
-        // @ts-ignore - Access private property for testing
+        // @ts-expect-error - Access private property for testing
         this.client = axiosInstance;
     }
 }
@@ -52,10 +52,7 @@ describe('APIClient', () => {
     describe('getDomainStatus', () => {
         it('should return domain status from API response', async () => {
             const mockResponse = {
-                status: [
-                    { summary: 'active' },
-                    { summary: 'claimed' },
-                ],
+                status: [{ summary: 'active' }, { summary: 'claimed' }],
             };
 
             mockAdapter.onGet('/api/domains/example.com/status').reply(200, mockResponse);
@@ -136,7 +133,9 @@ describe('APIClient', () => {
             const mockDomains = ['example.com', 'test.com', 'demo.com'];
             const mockResponse = { domains: mockDomains };
 
-            mockAdapter.onGet('/api/domains/search', { params: { term: 'example', include_subdomains: false } }).reply(200, mockResponse);
+            mockAdapter
+                .onGet('/api/domains/search', { params: { term: 'example', include_subdomains: false } })
+                .reply(200, mockResponse);
 
             const result = await apiClient.searchDomains('example');
 
@@ -147,7 +146,9 @@ describe('APIClient', () => {
             const mockDomains = ['example.com', 'sub.example.com', 'test.example.com'];
             const mockResponse = { domains: mockDomains };
 
-            mockAdapter.onGet('/api/domains/search', { params: { term: 'example', include_subdomains: true } }).reply(200, mockResponse);
+            mockAdapter
+                .onGet('/api/domains/search', { params: { term: 'example', include_subdomains: true } })
+                .reply(200, mockResponse);
 
             const result = await apiClient.searchDomains('example', true);
 
@@ -158,12 +159,13 @@ describe('APIClient', () => {
             const mockDomains = ['test-domain.com'];
             const mockResponse = { domains: mockDomains };
 
-            mockAdapter.onGet('/api/domains/search', { params: { term: 'test-domain', include_subdomains: false } }).reply(200, mockResponse);
+            mockAdapter
+                .onGet('/api/domains/search', { params: { term: 'test-domain', include_subdomains: false } })
+                .reply(200, mockResponse);
 
             const result = await apiClient.searchDomains('test-domain');
 
             expect(result).toEqual(mockDomains);
         });
     });
-
 });
