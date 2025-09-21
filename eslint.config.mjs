@@ -49,7 +49,7 @@ const eslintConfig = [
       // 🚀 TypeScript Rules
       "@typescript-eslint/no-unused-vars": "off", // Handled by unused-imports
       "@typescript-eslint/no-explicit-any": "warn",
-      "@typescript-eslint/no-non-null-assertion": "warn",
+      "@typescript-eslint/no-non-null-assertion": "off",
       "@typescript-eslint/prefer-as-const": "error",
       "@typescript-eslint/array-type": ["error", { default: "array-simple" }],
       "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
