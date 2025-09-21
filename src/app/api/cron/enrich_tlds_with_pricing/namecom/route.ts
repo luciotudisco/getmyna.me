@@ -29,7 +29,7 @@ interface NameComPricingResponse {
  */
 export async function GET(): Promise<NextResponse> {
     try {
-        console.log('Starting TLD pricing enrichment from Name.com ...');
+        console.warn('Starting TLD pricing enrichment from Name.com ...');
         const headers = { Authorization: `Basic ${NAMECOM_API_KEY}` };
         let page = 1;
         let hasMoreResults = true;
@@ -39,10 +39,10 @@ export async function GET(): Promise<NextResponse> {
             const pricingItems = response.data.pricing;
             for (const pricingItem of pricingItems) {
                 const tld = pricingItem.tld;
-                console.log(`TLD ${tld} found in Name.com pricing`);
+                console.warn(`TLD ${tld} found in Name.com pricing`);
                 const tldInfo = await tldRepository.getTLD(tld);
                 if (!tldInfo) {
-                    console.log(`TLD ${tld} not found in database. Skipping...`);
+                    console.warn(`TLD ${tld} not found in database. Skipping...`);
                     continue;
                 }
                 const tldPricing: TLDPricing = {
@@ -52,12 +52,12 @@ export async function GET(): Promise<NextResponse> {
                 };
                 const updatedPricing = { ...tldInfo?.pricing, [Registrar.NAMECOM]: tldPricing };
                 await tldRepository.updateTLD(tld, { pricing: updatedPricing });
-                console.log(`Updated ${tld} with Name.com pricing`);
+                console.warn(`Updated ${tld} with Name.com pricing`);
             }
             hasMoreResults = response.data.nextPage !== null && page < MAX_PAGES;
             page += 1;
         }
-        console.log('TLD pricing enrichment from Name.com completed');
+        console.warn('TLD pricing enrichment from Name.com completed');
         return NextResponse.json({ message: 'TLD pricing enrichment from Name.com completed successfully' });
     } catch (error) {
         console.error('Error during TLD pricing enrichment from Name.com:', error);

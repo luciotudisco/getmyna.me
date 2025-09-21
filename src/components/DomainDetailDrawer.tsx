@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
-import DomainRegistrarButtons from '@/components/DomainRegistrarButtons';
-import DomainStatusBadge from '@/components/DomainStatusBadge';
+import { DomainRegistrarButtons } from '@/components/DomainRegistrarButtons';
+import { DomainStatusBadge } from '@/components/DomainStatusBadge';
 import { DomainStatusSection } from '@/components/DomainStatusSection';
 import Loading from '@/components/Loading';
 import TLDSection from '@/components/TldSection';

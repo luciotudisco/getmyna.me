@@ -26,7 +26,7 @@ type GandiTLDsResponse = Array<{
  */
 export async function GET(): Promise<NextResponse> {
     try {
-        console.log('Starting TLD pricing enrichment from Gandi ...');
+        console.warn('Starting TLD pricing enrichment from Gandi ...');
         const headers = { Authorization: `Apikey ${GANDI_API_KEY}` };
         const response = await axios.get<GandiTLDsResponse>(GANDI_TLDS_URL, { headers });
         const tlds = response.data;
@@ -34,14 +34,14 @@ export async function GET(): Promise<NextResponse> {
             const tldName = toUnicode(tldData.name);
             const tldInfo = await tldRepository.getTLD(tldName);
             if (!tldInfo) {
-                console.log(`TLD ${tldName} not found in database. Skipping...`);
+                console.warn(`TLD ${tldName} not found in database. Skipping...`);
                 continue;
             }
             const updatedPricing = { ...tldInfo?.pricing, [Registrar.GANDI]: {} };
             await tldRepository.updateTLD(tldName, { pricing: updatedPricing });
-            console.log(`Updated ${tldName} with Gandi pricing`);
+            console.warn(`Updated ${tldName} with Gandi pricing`);
         }
-        console.log('TLD pricing enrichment from Gandi completed');
+        console.warn('TLD pricing enrichment from Gandi completed');
         return NextResponse.json({ message: 'TLD pricing enrichment from Gandi completed successfully' });
     } catch (error) {
         console.error('Error during TLD pricing enrichment from Gandi:', error);

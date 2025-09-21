@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
-import DomainDetailDrawer from '@/components/DomainDetailDrawer';
-import DomainStatusBadge from '@/components/DomainStatusBadge';
+import { DomainDetailDrawer } from '@/components/DomainDetailDrawer';
+import { DomainStatusBadge } from '@/components/DomainStatusBadge';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { apiClient } from '@/services/api-client';

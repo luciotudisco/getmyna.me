@@ -24,13 +24,13 @@ const IANA_TLD_TYPE_MAPPING: Record<string, TLDType> = {
  */
 export async function GET(): Promise<NextResponse> {
     try {
-        console.log('Starting TLD type enrichment ...');
+        console.warn('Starting TLD type enrichment ...');
         const response = await axios.get<string>(IANA_ROOT_URL);
         const root = parse(response.data);
         const tldTable = root.querySelector('#tld-table');
         const tldRows = tldTable?.querySelectorAll('tbody tr') ?? [];
         await Promise.all(tldRows.map(processRow));
-        console.log('TLD type enrichment completed');
+        console.warn('TLD type enrichment completed');
         return NextResponse.json({ message: 'TLD type enrichment completed successfully' });
     } catch (error) {
         console.error('Error during TLD type enrichment:', error);
@@ -61,10 +61,10 @@ async function processRow(row: HTMLElement): Promise<void> {
     // Update the TLD in the database with the mapped enum value
     const tld = await tldRepository.getTLD(tldName);
     if (tld?.type === tldType) {
-        console.log(`${tldName} already has type ${tldType}. Skipping...`);
+        console.warn(`${tldName} already has type ${tldType}. Skipping...`);
         return;
     }
 
     await tldRepository.updateTLD(tldName, { type: tldType });
-    console.log(`Updated ${tldName} with type ${tldType}`);
+    console.warn(`Updated ${tldName} with type ${tldType}`);
 }

@@ -2,7 +2,10 @@ import axios from 'axios';
 import { NextResponse } from 'next/server';
 
 const DOMAINR_BASE_URL = 'https://domainr.p.rapidapi.com/v2/status';
-const RAPID_API_KEY = process.env.RAPID_API_KEY!;
+const RAPID_API_KEY = process.env.RAPID_API_KEY;
+if (!RAPID_API_KEY) {
+    throw new Error('RAPID_API_KEY environment variable is not set');
+}
 
 export async function GET(
     _request: Request,

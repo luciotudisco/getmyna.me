@@ -31,14 +31,14 @@ interface PorkbunPricingResponse {
  */
 export async function GET(): Promise<NextResponse> {
     try {
-        console.log('Starting TLD pricing enrichment from Porkbun ...');
+        console.warn('Starting TLD pricing enrichment from Porkbun ...');
         const response = await axios.get<PorkbunPricingResponse>(PORKBUN_PRICES_URL);
         const pricing = response.data.pricing;
         const tlds = Object.keys(pricing).map((tld) => tld.toLowerCase());
         for (const tld of tlds) {
             const tldInfo = await tldRepository.getTLD(tld);
             if (!tldInfo) {
-                console.log(`TLD ${tld} not found in database. Skipping...`);
+                console.warn(`TLD ${tld} not found in database. Skipping...`);
                 continue;
             }
             const tldPricing: TLDPricing = {
@@ -48,9 +48,9 @@ export async function GET(): Promise<NextResponse> {
             };
             const updatedPricing = { ...tldInfo?.pricing, [Registrar.PORKBUN]: tldPricing };
             await tldRepository.updateTLD(tld, { pricing: updatedPricing });
-            console.log(`Updated ${tld} with Porkbun pricing`);
+            console.warn(`Updated ${tld} with Porkbun pricing`);
         }
-        console.log('TLD pricing enrichment from Porkbun completed');
+        console.warn('TLD pricing enrichment from Porkbun completed');
         return NextResponse.json({ message: 'TLD pricing enrichment from Porkbun completed successfully' });
     } catch (error) {
         console.error('Error during TLD pricing enrichment from Porkbun:', error);

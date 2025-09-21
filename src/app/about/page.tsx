@@ -1,4 +1,4 @@
-import TLDCounter from '@/components/TLDCounter';
+import { TLDCounter } from '@/components/TLDCounter';
 import { Badge } from '@/components/ui/badge';
 import { Highlighter } from '@/components/ui/highlighter';
 

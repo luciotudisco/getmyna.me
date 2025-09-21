@@ -29,13 +29,13 @@ interface NamesiloPricingResponse {
  */
 export async function GET(): Promise<NextResponse> {
     try {
-        console.log('Starting TLD pricing enrichment from Namesilo ...');
+        console.warn('Starting TLD pricing enrichment from Namesilo ...');
         const response = await axios.get<NamesiloPricingResponse>(NAMESILO_PRICES_URL);
         const tlds = Object.keys(response.data.reply).map((tld) => tld.toLowerCase());
         for (const tld of tlds) {
             const tldInfo = await tldRepository.getTLD(tld);
             if (!tldInfo) {
-                console.log(`TLD ${tld} not found in database. Skipping...`);
+                console.warn(`TLD ${tld} not found in database. Skipping...`);
                 continue;
             }
             const tldPricing: TLDPricing = {
@@ -45,9 +45,9 @@ export async function GET(): Promise<NextResponse> {
             };
             const updatedPricing = { ...tldInfo?.pricing, [Registrar.NAMESILO]: tldPricing };
             await tldRepository.updateTLD(tld, { pricing: updatedPricing });
-            console.log(`Updated ${tld} with Namesilo pricing`);
+            console.warn(`Updated ${tld} with Namesilo pricing`);
         }
-        console.log('TLD pricing enrichment from Namesilo completed');
+        console.warn('TLD pricing enrichment from Namesilo completed');
         return NextResponse.json({ message: 'TLD pricing enrichment from Namesilo completed successfully' });
     } catch (error) {
         console.error('Error during TLD pricing enrichment from Namesilo:', error);

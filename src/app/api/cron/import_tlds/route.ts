@@ -10,7 +10,7 @@ export const maxDuration = 300; // This function can run for a maximum of 5 minu
 
 export async function GET(): Promise<NextResponse> {
     try {
-        console.log('Starting TLD import from IANA ...');
+        console.warn('Starting TLD import from IANA ...');
 
         // Fetch TLD data from IANA
         const response = await axios.get(IANA_TLD_URL);
@@ -30,18 +30,18 @@ export async function GET(): Promise<NextResponse> {
             const direction = getTextDirection(tldName);
             const existingTld = await tldRepository.getTLD(tldName);
             if (existingTld) {
-                console.log(`TLD ${tldName} already exists. Skipping...`);
+                console.warn(`TLD ${tldName} already exists. Skipping...`);
                 continue;
             }
 
-            console.log(`Creating TLD ${tldName} ...`);
+            console.warn(`Creating TLD ${tldName} ...`);
             await tldRepository.createTld({
                 name: tldName,
                 punycodeName,
                 direction,
             });
         }
-        console.log('TLD import completed');
+        console.warn('TLD import completed');
         return NextResponse.json({ message: 'TLD import completed successfully' });
     } catch (error) {
         console.error('Error during TLD import:', error);

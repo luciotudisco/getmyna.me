@@ -2,7 +2,10 @@ import axios from 'axios';
 import { NextResponse } from 'next/server';
 
 const WHOIS_URL = 'https://whois-api6.p.rapidapi.com/whois/api/v1/getData';
-const RAPID_API_KEY = process.env.RAPID_API_KEY!;
+const RAPID_API_KEY = process.env.RAPID_API_KEY;
+if (!RAPID_API_KEY) {
+    throw new Error('RAPID_API_KEY environment variable is not set');
+}
 
 interface WhoisResult {
     creation_date?: string | string[];
