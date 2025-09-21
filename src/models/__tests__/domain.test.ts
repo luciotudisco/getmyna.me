@@ -1,4 +1,4 @@
-import { Domain, DomainStatus } from '../domain';
+import { Domain, DomainStatus, DomainValidationError } from '../domain';
 
 describe('Domain', () => {
     describe('constructor', () => {
@@ -10,14 +10,6 @@ describe('Domain', () => {
             expect(domain.isAvailable()).toBe(false);
             expect(domain.getTLD()).toBe('com');
             expect(domain.getLevel()).toBe(2);
-        });
-
-        it('should handle single-level domain', () => {
-            const domain = new Domain('example');
-
-            expect(domain.getName()).toBe('example');
-            expect(domain.getTLD()).toBe('example');
-            expect(domain.getLevel()).toBe(1);
         });
 
         it('should handle multi-level domain', () => {
@@ -37,12 +29,59 @@ describe('Domain', () => {
         });
     });
 
-    describe('getRootDomain', () => {
-        it('should return empty string for single-level domain', () => {
-            const domain = new Domain('example');
-            expect(domain.getRootDomain()).toBe('');
+    describe('validation', () => {
+        describe('valid domain names', () => {
+            it('should accept valid two-level domain', () => {
+                expect(() => new Domain('example.com')).not.toThrow();
+            });
+
+            it('should accept valid multi-level domain', () => {
+                expect(() => new Domain('sub.example.co.uk')).not.toThrow();
+            });
+
+            it('should accept domain with hyphens', () => {
+                expect(() => new Domain('test-domain.example-site.org')).not.toThrow();
+            });
+
+            it('should accept domain with numbers', () => {
+                expect(() => new Domain('test123.example456.com')).not.toThrow();
+            });
+
+            it('should trim whitespace from domain name', () => {
+                const domain = new Domain('  example.com  ');
+                expect(domain.getName()).toBe('example.com');
+            });
         });
 
+        describe('invalid domain names', () => {
+            it('should throw error for empty string', () => {
+                expect(() => new Domain('')).toThrow(DomainValidationError);
+                expect(() => new Domain('')).toThrow('Domain name cannot be empty');
+            });
+
+            it('should throw error for whitespace only', () => {
+                expect(() => new Domain('   ')).toThrow(DomainValidationError);
+                expect(() => new Domain('   ')).toThrow('Domain name cannot be empty');
+            });
+
+            it('should throw error for non-string input', () => {
+                expect(() => new Domain(123 as any)).toThrow(DomainValidationError);
+                expect(() => new Domain({} as any)).toThrow(DomainValidationError);
+            });
+
+            it('should throw error for single word without dot', () => {
+                expect(() => new Domain('example')).toThrow(DomainValidationError);
+                expect(() => new Domain('example')).toThrow('Invalid domain name format');
+            });
+
+            it('should throw error for invalid characters', () => {
+                expect(() => new Domain('example@com')).toThrow(DomainValidationError);
+                expect(() => new Domain('example@com')).toThrow('Invalid domain name format');
+            });
+        });
+    });
+
+    describe('getRootDomain', () => {
         it('should return root domain for two-level domain', () => {
             const domain = new Domain('example.com');
             expect(domain.getRootDomain()).toBe('example');
@@ -178,33 +217,16 @@ describe('Domain', () => {
     });
 
     describe('edge cases', () => {
-        it('should handle empty string domain', () => {
-            const domain = new Domain('');
-            expect(domain.getName()).toBe('');
-            expect(domain.getTLD()).toBe('');
-            expect(domain.getLevel()).toBe(1);
-            expect(domain.getRootDomain()).toBe('');
-        });
-
         it('should handle domain with only dots', () => {
-            const domain = new Domain('...');
-            expect(domain.getName()).toBe('...');
-            expect(domain.getTLD()).toBe('');
-            expect(domain.getLevel()).toBe(4);
+            expect(() => new Domain('...')).toThrow(DomainValidationError);
         });
 
         it('should handle domain with trailing dot', () => {
-            const domain = new Domain('example.com.');
-            expect(domain.getName()).toBe('example.com.');
-            expect(domain.getTLD()).toBe('');
-            expect(domain.getLevel()).toBe(3);
+            expect(() => new Domain('example.com.')).toThrow(DomainValidationError);
         });
 
         it('should handle domain with leading dot', () => {
-            const domain = new Domain('.example.com');
-            expect(domain.getName()).toBe('.example.com');
-            expect(domain.getTLD()).toBe('com');
-            expect(domain.getLevel()).toBe(3);
+            expect(() => new Domain('.example.com')).toThrow(DomainValidationError);
         });
     });
 });
@@ -241,11 +263,9 @@ describe('DomainStatus', () => {
         });
     });
 
-
     it('should have unique status values', () => {
         const statusValues = Object.values(DomainStatus);
         const uniqueValues = new Set(statusValues);
         expect(uniqueValues.size).toBe(statusValues.length);
     });
 });
-
