@@ -17,29 +17,6 @@ export class Domain {
         this._level = this._name.split('.').length;
     }
 
-    /**
-     * Validates a domain name.
-     * @param name The domain name to validate
-     * @throws Error if the domain name is invalid
-     */
-    private _validateDomainName(name: string): void {
-        if (typeof name !== 'string') {
-            throw new Error('Domain name must be a string');
-        }
-
-        const trimmedName = name.trim();
-        if (!trimmedName) {
-            throw new Error('Domain name cannot be empty');
-        }
-
-        // Simple regex: must contain at least one dot and valid characters, no leading/trailing dots
-        // Supports Unicode characters for internationalized domain names
-        const domainRegex = /^[\p{L}\p{N}][\p{L}\p{N}-]*(\.[\p{L}\p{N}][\p{L}\p{N}-]*)+$/u;
-        if (!domainRegex.test(trimmedName)) {
-            throw new Error('Invalid domain name format. Must contain at least one dot (e.g., example.com)');
-        }
-    }
-
     public getName(): string {
         return this._name;
     }
@@ -67,6 +44,29 @@ export class Domain {
 
     public isAvailable(): boolean {
         return this._isAvailable;
+    }
+
+    /**
+     * Validates a domain name.
+     * @param name The domain name to validate
+     * @throws Error if the domain name is invalid
+     */
+    private _validateDomainName(name: string): void {
+        if (typeof name !== 'string') {
+            throw new Error('Domain name must be a string');
+        }
+
+        const trimmedName = name.trim();
+        if (!trimmedName) {
+            throw new Error('Domain name cannot be empty');
+        }
+
+        // Simple regex: must contain at least one dot and valid characters, no leading/trailing dots
+        // Supports Unicode characters for internationalized domain names
+        const domainRegex = /^[\p{L}\p{N}][\p{L}\p{N}-]*(\.[\p{L}\p{N}][\p{L}\p{N}-]*)+$/u;
+        if (!domainRegex.test(trimmedName)) {
+            throw new Error('Invalid domain name format. Must contain at least one dot (e.g., example.com)');
+        }
     }
 }
 
