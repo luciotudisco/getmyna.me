@@ -9,12 +9,19 @@ jobs:
         steps:
             - name: 📥 Check out repository
               uses: actions/checkout@v3
+
             - name: 📦 Install dependencies
               run: npm install
+
             - name: 🔍 Run ESLint
               run: npm run lint
+
             - name: 🔧 Type check
               run: npm run type-check
+
+            - name: 🧪 Run tests
+              run: npm test
+
             - name: 🏗️ Build Next.js
               env:
                   DYNADOT_API_KEY: ${{ secrets.DYNADOT_API_KEY }}
@@ -28,5 +35,6 @@ jobs:
                   RAPID_API_KEY: ${{ secrets.RAPID_API_KEY }}
                   SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
               run: npm run build
+
             - name: 🚀 Deploy to Vercel
               run: npx vercel --prod --token ${{ secrets.VERCEL_TOKEN }} --confirm

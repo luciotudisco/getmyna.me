@@ -8,7 +8,6 @@ on:
 
 jobs:
     code-quality:
-        name: 🔍 ESLint & TypeScript
         runs-on: ubuntu-latest
 
         steps:
