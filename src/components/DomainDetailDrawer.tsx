@@ -15,6 +15,7 @@ import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { TLD } from '@/models/tld';
 import { WhoisInfo } from '@/models/whois';
 import { apiClient } from '@/services/api';
+import clientLogger from '@/utils/client-logger';
 
 interface DomainDetailDrawerProps {
     domain: Domain;
@@ -50,7 +51,7 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                 setTldInfo(tldData as TLD);
                 setDigInfo(digData as DigInfo);
             } catch (error) {
-                console.error('Error fetching domain details:', error);
+                clientLogger.error('Error fetching domain details:', error);
             } finally {
                 setLoading(false);
             }

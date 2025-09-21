@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 
 import { Registrar, TLDPricing } from '@/models/tld';
 import { tldRepository } from '@/services/tld-repository';
+import logger from '@/utils/logger';
 
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
 
@@ -30,7 +31,7 @@ interface DynadotPricingResponse {
  */
 export async function GET(): Promise<NextResponse> {
     try {
-        console.log('Starting TLD pricing enrichment from Dynadot ...');
+        logger.info('Starting TLD pricing enrichment from Dynadot ...');
         const headers = { Authorization: `Bearer ${DYNADOT_API_KEY}`, Accept: 'application/json' };
         const response = await axios.get<DynadotPricingResponse>(DYNADOT_PRICES_URL, { headers });
         const tldPriceList = response.data.data.tldPriceList;
@@ -38,7 +39,7 @@ export async function GET(): Promise<NextResponse> {
             const tld = tldPrice.tld.toLowerCase().replace(/^\./, '');
             const tldInfo = await tldRepository.getTLD(tld);
             if (!tldInfo) {
-                console.log(`TLD ${tld} not found in database. Skipping...`);
+                logger.info(`TLD ${tld} not found in database. Skipping...`);
                 continue;
             }
             const tldPricing: TLDPricing = {
@@ -48,12 +49,12 @@ export async function GET(): Promise<NextResponse> {
             };
             const updatedPricing = { ...tldInfo?.pricing, [Registrar.DYNADOT]: tldPricing };
             await tldRepository.updateTLD(tld, { pricing: updatedPricing });
-            console.log(`Updated ${tld} with Dynadot pricing`);
+            logger.info(`Updated ${tld} with Dynadot pricing`);
         }
-        console.log('TLD pricing enrichment from Dynadot completed');
+        logger.info('TLD pricing enrichment from Dynadot completed');
         return NextResponse.json({ message: 'TLD pricing enrichment from Dynadot completed successfully' });
     } catch (error) {
-        console.error('Error during TLD pricing enrichment from Dynadot:', error);
+        logger.error('Error during TLD pricing enrichment from Dynadot:', error);
         return NextResponse.json({ error: 'Failed to enrich TLD pricing from Dynadot' }, { status: 500 });
     }
 }

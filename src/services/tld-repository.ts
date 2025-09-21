@@ -2,6 +2,7 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 import { TLD } from '@/models/tld';
 import { TTLCache } from '@/utils/cache';
+import logger from '@/utils/logger';
 
 /**
  * A repository for interacting with TLD data in the Supabase database.
@@ -41,7 +42,7 @@ class TLDRepository {
             },
         );
         if (error) {
-            console.error(`Error upserting TLD ${tldInfo.name}:`, error);
+            logger.error(`Error upserting TLD ${tldInfo.name}:`, error);
             throw new Error(`Failed to upsert TLD ${tldInfo.name}: ${error.message}`);
         }
 
@@ -75,7 +76,7 @@ class TLDRepository {
                 this.cache.set(cacheKey, null, this.TTL_MILLISECONDS);
                 return null;
             }
-            console.error(`Error fetching TLD ${name}:`, error);
+            logger.error(`Error fetching TLD ${name}:`, error);
             throw new Error(`Failed to fetch TLD ${name}: ${error.message}`);
         }
         const tld = {
@@ -107,7 +108,7 @@ class TLDRepository {
             .order('name', { ascending: true })
             .limit(5000);
         if (error) {
-            console.error('Error fetching TLDs:', error);
+            logger.error('Error fetching TLDs:', error);
             throw new Error(`Failed to fetch TLDs: ${error.message}`);
         }
         const tlds: TLD[] = data.map((tld) => ({
@@ -143,7 +144,7 @@ class TLDRepository {
             .eq(searchField, name);
 
         if (error) {
-            console.error(`Error updating TLD ${name}:`, error);
+            logger.error(`Error updating TLD ${name}:`, error);
             throw new Error(`Failed to update TLD ${name}: ${error.message}`);
         }
 

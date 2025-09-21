@@ -8,6 +8,7 @@ import NumberTicker from '@/components/ui/number-ticker';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Domain } from '@/models/domain';
 import { apiClient } from '@/services/api';
+import clientLogger from '@/utils/client-logger';
 
 const Player = dynamic(() => import('@lottiefiles/react-lottie-player').then((mod) => mod.Player), { ssr: false });
 
@@ -25,7 +26,7 @@ export function SearchResults() {
                 const initialDomains = names.map((name: string) => new Domain(name));
                 setDomains(initialDomains);
             } catch (error) {
-                console.error('Error fetching domains:', error);
+                clientLogger.error('Error fetching domains:', error);
                 setDomains([]);
             }
         });

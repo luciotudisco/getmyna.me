@@ -2,6 +2,7 @@ import { Resolver } from 'dns/promises';
 import { NextResponse } from 'next/server';
 
 import { DNSRecordType } from '@/models/dig';
+import logger from '@/utils/logger';
 
 const resolver = new Resolver();
 const RECORD_TYPES = [DNSRecordType.A, DNSRecordType.AAAA, DNSRecordType.MX];
@@ -28,7 +29,7 @@ export async function GET(
                 }
                 return { type: recordType, records };
             } catch (error) {
-                console.error(`Ignoring ${recordType} for ${domain}:`, error);
+                logger.error(`Ignoring ${recordType} for ${domain}:`, error);
                 return null;
             }
         });

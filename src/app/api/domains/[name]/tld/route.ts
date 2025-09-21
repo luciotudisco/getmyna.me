@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import { tldRepository } from '@/services/tld-repository';
+import logger from '@/utils/logger';
 
 export async function GET(
     _request: Request,
@@ -22,7 +23,7 @@ export async function GET(
             pricing: tldInfo?.pricing,
         });
     } catch (error) {
-        console.error('Error fetching TLD info:', error);
+        logger.error('Error fetching TLD info:', error);
         return NextResponse.json({});
     }
 }
