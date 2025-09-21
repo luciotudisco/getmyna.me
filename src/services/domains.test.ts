@@ -1,30 +1,35 @@
-// Mock the TLD repository before any imports
-import { domainsService } from '@/services/domains';
+// Mock the TLD repository to prevent Supabase initialization
+import { DomainsService } from '@/services/domains';
 
 jest.mock('@/services/tld-repository', () => ({
     tldRepository: {
         async listTLDs() {
-            return [
-                { name: 'com' },
-                { name: 'org' },
-                { name: 'net' },
-                { name: 'io' },
-                { name: 'co' },
-                { name: 'es' },
-                { name: 'ing' },
-                { name: 'ng' },
-                { name: 'man' },
-                { name: 'gle' },
-            ];
+            return [];
         },
-        async getTLD(name: string) {
-            const tlds = await this.listTLDs();
-            return tlds.find((t) => t.name === name) || null;
+        async getTLD() {
+            return null;
         },
         async createTld() {},
         async updateTLD() {},
     },
 }));
+
+// Create test TLD data
+const testTLDs = [
+    { name: 'com' },
+    { name: 'org' },
+    { name: 'net' },
+    { name: 'io' },
+    { name: 'co' },
+    { name: 'es' },
+    { name: 'ing' },
+    { name: 'ng' },
+    { name: 'man' },
+    { name: 'gle' },
+];
+
+// Create a test instance with mock TLD data
+const domainsService = new DomainsService(testTLDs);
 
 describe('getDomainsHacks', () => {
     it('should return correct domains for uppercase input', async () => {

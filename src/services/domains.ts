@@ -15,10 +15,16 @@ export class DomainsService {
     private tldsPromise: Promise<TLD[]> | null = null;
 
     /**
-     * Initializes the service by pre-loading TLD data.
+     * Initializes the service with TLD data.
+     *
+     * @param tlds - Optional array of TLDs to use. If not provided, will fetch from repository.
      */
-    constructor() {
-        this.initializeTLDs();
+    constructor(tlds?: TLD[]) {
+        if (tlds) {
+            this.tlds = tlds;
+        } else {
+            this.initializeTLDs();
+        }
     }
 
     /**
@@ -164,7 +170,7 @@ export class DomainsService {
     }
 }
 
-// Create a singleton instance
+// Create a singleton instance that fetches TLDs from repository
 const domainsService = new DomainsService();
 
 // Export only the class and singleton instance
