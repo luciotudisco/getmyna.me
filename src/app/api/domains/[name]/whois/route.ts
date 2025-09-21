@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { NextResponse } from 'next/server';
 
+import logger from '@/utils/logger';
+
 const WHOIS_URL = 'https://whois-api6.p.rapidapi.com/whois/api/v1/getData';
 const RAPID_API_KEY = process.env.RAPID_API_KEY!;
 
@@ -33,7 +35,7 @@ export async function GET(
         const lastUpdatedDate = Array.isArray(updatedRaw) ? updatedRaw[0] : (updatedRaw ?? null);
         return NextResponse.json({ creationDate, expirationDate, lastUpdatedDate, registrar, registrarUrl });
     } catch (error) {
-        console.error('Error fetching whois data:', error);
+        logger.error({ error }, 'Error fetching whois data');
         return NextResponse.json({ error: 'Failed to fetch whois data' }, { status: 500 });
     }
 }

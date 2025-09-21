@@ -14,8 +14,8 @@ export function TLDCounter() {
             try {
                 const tlds = await apiClient.getTlds();
                 setCount(tlds.length);
-            } catch (error) {
-                console.error('Error fetching TLD count:', error);
+            } catch {
+                // Silently handle error
             }
         });
     }, []);

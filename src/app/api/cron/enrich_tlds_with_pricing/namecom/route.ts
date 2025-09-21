@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 
 import { Registrar, TLDPricing } from '@/models/tld';
 import { tldRepository } from '@/services/tld-repository';
+import logger from '@/utils/logger';
 
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
 
@@ -29,7 +30,7 @@ interface NameComPricingResponse {
  */
 export async function GET(): Promise<NextResponse> {
     try {
-        console.log('Starting TLD pricing enrichment from Name.com ...');
+        logger.info('Starting TLD pricing enrichment from Name.com ...');
         const headers = { Authorization: `Basic ${NAMECOM_API_KEY}` };
         let page = 1;
         let hasMoreResults = true;
@@ -39,10 +40,10 @@ export async function GET(): Promise<NextResponse> {
             const pricingItems = response.data.pricing;
             for (const pricingItem of pricingItems) {
                 const tld = pricingItem.tld;
-                console.log(`TLD ${tld} found in Name.com pricing`);
+                logger.info(`TLD ${tld} found in Name.com pricing`);
                 const tldInfo = await tldRepository.getTLD(tld);
                 if (!tldInfo) {
-                    console.log(`TLD ${tld} not found in database. Skipping...`);
+                    logger.info(`TLD ${tld} not found in database. Skipping...`);
                     continue;
                 }
                 const tldPricing: TLDPricing = {
@@ -52,15 +53,15 @@ export async function GET(): Promise<NextResponse> {
                 };
                 const updatedPricing = { ...tldInfo?.pricing, [Registrar.NAMECOM]: tldPricing };
                 await tldRepository.updateTLD(tld, { pricing: updatedPricing });
-                console.log(`Updated ${tld} with Name.com pricing`);
+                logger.info(`Updated ${tld} with Name.com pricing`);
             }
             hasMoreResults = response.data.nextPage !== null && page < MAX_PAGES;
             page += 1;
         }
-        console.log('TLD pricing enrichment from Name.com completed');
+        logger.info('TLD pricing enrichment from Name.com completed');
         return NextResponse.json({ message: 'TLD pricing enrichment from Name.com completed successfully' });
     } catch (error) {
-        console.error('Error during TLD pricing enrichment from Name.com:', error);
+        logger.error({ error }, 'Error during TLD pricing enrichment from Name.com');
         return NextResponse.json({ error: 'Failed to enrich TLD pricing from Name.com' }, { status: 500 });
     }
 }

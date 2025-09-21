@@ -49,8 +49,8 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
                 setWhoisInfo(whoisData as WhoisInfo);
                 setTldInfo(tldData as TLD);
                 setDigInfo(digData as DigInfo);
-            } catch (error) {
-                console.error('Error fetching domain details:', error);
+            } catch {
+                // Silently handle error
             } finally {
                 setLoading(false);
             }

@@ -4,6 +4,7 @@ import { HTMLElement, parse } from 'node-html-parser';
 
 import { TLDType } from '@/models/tld';
 import { tldRepository } from '@/services/tld-repository';
+import logger from '@/utils/logger';
 
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
 
@@ -24,16 +25,16 @@ const IANA_TLD_TYPE_MAPPING: Record<string, TLDType> = {
  */
 export async function GET(): Promise<NextResponse> {
     try {
-        console.log('Starting TLD type enrichment ...');
+        logger.info('Starting TLD type enrichment ...');
         const response = await axios.get<string>(IANA_ROOT_URL);
         const root = parse(response.data);
         const tldTable = root.querySelector('#tld-table');
         const tldRows = tldTable?.querySelectorAll('tbody tr') ?? [];
         await Promise.all(tldRows.map(processRow));
-        console.log('TLD type enrichment completed');
+        logger.info('TLD type enrichment completed');
         return NextResponse.json({ message: 'TLD type enrichment completed successfully' });
     } catch (error) {
-        console.error('Error during TLD type enrichment:', error);
+        logger.error({ error }, 'Error during TLD type enrichment');
         return NextResponse.json({ error: 'Failed to enrich TLD types' }, { status: 500 });
     }
 }
@@ -48,23 +49,23 @@ async function processRow(row: HTMLElement): Promise<void> {
     const typeText = row.querySelector('td:nth-child(2)')?.text?.trim().toLowerCase();
 
     if (!tldName || !typeText) {
-        console.warn(`No TLD name or type found for ${row.text}`);
+        logger.warn(`No TLD name or type found for ${row.text}`);
         return;
     }
 
     const tldType = IANA_TLD_TYPE_MAPPING[typeText as keyof typeof IANA_TLD_TYPE_MAPPING];
     if (!tldType) {
-        console.warn(`The IANA TLD type ${typeText} for TLD ${tldName} is not supported`);
+        logger.warn(`The IANA TLD type ${typeText} for TLD ${tldName} is not supported`);
         return;
     }
 
     // Update the TLD in the database with the mapped enum value
     const tld = await tldRepository.getTLD(tldName);
     if (tld?.type === tldType) {
-        console.log(`${tldName} already has type ${tldType}. Skipping...`);
+        logger.info(`${tldName} already has type ${tldType}. Skipping...`);
         return;
     }
 
     await tldRepository.updateTLD(tldName, { type: tldType });
-    console.log(`Updated ${tldName} with type ${tldType}`);
+    logger.info(`Updated ${tldName} with type ${tldType}`);
 }

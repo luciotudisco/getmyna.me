@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 
 import { Registrar, TLDPricing } from '@/models/tld';
 import { tldRepository } from '@/services/tld-repository';
+import logger from '@/utils/logger';
 
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
 
@@ -29,13 +30,13 @@ interface NamesiloPricingResponse {
  */
 export async function GET(): Promise<NextResponse> {
     try {
-        console.log('Starting TLD pricing enrichment from Namesilo ...');
+        logger.info('Starting TLD pricing enrichment from Namesilo ...');
         const response = await axios.get<NamesiloPricingResponse>(NAMESILO_PRICES_URL);
         const tlds = Object.keys(response.data.reply).map((tld) => tld.toLowerCase());
         for (const tld of tlds) {
             const tldInfo = await tldRepository.getTLD(tld);
             if (!tldInfo) {
-                console.log(`TLD ${tld} not found in database. Skipping...`);
+                logger.info(`TLD ${tld} not found in database. Skipping...`);
                 continue;
             }
             const tldPricing: TLDPricing = {
@@ -45,12 +46,12 @@ export async function GET(): Promise<NextResponse> {
             };
             const updatedPricing = { ...tldInfo?.pricing, [Registrar.NAMESILO]: tldPricing };
             await tldRepository.updateTLD(tld, { pricing: updatedPricing });
-            console.log(`Updated ${tld} with Namesilo pricing`);
+            logger.info(`Updated ${tld} with Namesilo pricing`);
         }
-        console.log('TLD pricing enrichment from Namesilo completed');
+        logger.info('TLD pricing enrichment from Namesilo completed');
         return NextResponse.json({ message: 'TLD pricing enrichment from Namesilo completed successfully' });
     } catch (error) {
-        console.error('Error during TLD pricing enrichment from Namesilo:', error);
+        logger.error({ error }, 'Error during TLD pricing enrichment from Namesilo');
         return NextResponse.json({ error: 'Failed to enrich TLD pricing from Namesilo' }, { status: 500 });
     }
 }

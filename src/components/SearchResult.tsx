@@ -22,8 +22,7 @@ export function SearchResult({ domain }: { domain: Domain }) {
                 const result = await statusRateLimiter.add(() => apiClient.getDomainStatus(domain.getName()));
                 domain.setStatus(result);
                 setStatus(result);
-            } catch (error) {
-                console.error('Error fetching domain status:', error);
+            } catch {
                 domain.setStatus(DomainStatusEnum.error);
                 setStatus(DomainStatusEnum.error);
             }

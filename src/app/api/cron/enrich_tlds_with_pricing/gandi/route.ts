@@ -4,6 +4,7 @@ import { toUnicode } from 'punycode';
 
 import { Registrar } from '@/models/tld';
 import { tldRepository } from '@/services/tld-repository';
+import logger from '@/utils/logger';
 
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
 
@@ -26,7 +27,7 @@ type GandiTLDsResponse = Array<{
  */
 export async function GET(): Promise<NextResponse> {
     try {
-        console.log('Starting TLD pricing enrichment from Gandi ...');
+        logger.info('Starting TLD pricing enrichment from Gandi ...');
         const headers = { Authorization: `Apikey ${GANDI_API_KEY}` };
         const response = await axios.get<GandiTLDsResponse>(GANDI_TLDS_URL, { headers });
         const tlds = response.data;
@@ -34,17 +35,17 @@ export async function GET(): Promise<NextResponse> {
             const tldName = toUnicode(tldData.name);
             const tldInfo = await tldRepository.getTLD(tldName);
             if (!tldInfo) {
-                console.log(`TLD ${tldName} not found in database. Skipping...`);
+                logger.info(`TLD ${tldName} not found in database. Skipping...`);
                 continue;
             }
             const updatedPricing = { ...tldInfo?.pricing, [Registrar.GANDI]: {} };
             await tldRepository.updateTLD(tldName, { pricing: updatedPricing });
-            console.log(`Updated ${tldName} with Gandi pricing`);
+            logger.info(`Updated ${tldName} with Gandi pricing`);
         }
-        console.log('TLD pricing enrichment from Gandi completed');
+        logger.info('TLD pricing enrichment from Gandi completed');
         return NextResponse.json({ message: 'TLD pricing enrichment from Gandi completed successfully' });
     } catch (error) {
-        console.error('Error during TLD pricing enrichment from Gandi:', error);
+        logger.error({ error }, 'Error during TLD pricing enrichment from Gandi');
         return NextResponse.json({ error: 'Failed to enrich TLD pricing from Gandi' }, { status: 500 });
     }
 }

@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { toASCII, toUnicode } from 'punycode';
 
 import { tldRepository } from '@/services/tld-repository';
+import logger from '@/utils/logger';
 import { getTextDirection } from '@/utils/unicode';
 
 const IANA_TLD_URL = 'https://data.iana.org/TLD/tlds-alpha-by-domain.txt';
@@ -10,7 +11,7 @@ export const maxDuration = 300; // This function can run for a maximum of 5 minu
 
 export async function GET(): Promise<NextResponse> {
     try {
-        console.log('Starting TLD import from IANA ...');
+        logger.info('Starting TLD import from IANA ...');
 
         // Fetch TLD data from IANA
         const response = await axios.get(IANA_TLD_URL);
@@ -30,21 +31,21 @@ export async function GET(): Promise<NextResponse> {
             const direction = getTextDirection(tldName);
             const existingTld = await tldRepository.getTLD(tldName);
             if (existingTld) {
-                console.log(`TLD ${tldName} already exists. Skipping...`);
+                logger.info(`TLD ${tldName} already exists. Skipping...`);
                 continue;
             }
 
-            console.log(`Creating TLD ${tldName} ...`);
+            logger.info(`Creating TLD ${tldName} ...`);
             await tldRepository.createTld({
                 name: tldName,
                 punycodeName,
                 direction,
             });
         }
-        console.log('TLD import completed');
+        logger.info('TLD import completed');
         return NextResponse.json({ message: 'TLD import completed successfully' });
     } catch (error) {
-        console.error('Error during TLD import:', error);
+        logger.error({ error }, 'Error during TLD import');
         return NextResponse.json({ error: 'Failed to import TLDs' }, { status: 500 });
     }
 }

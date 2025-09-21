@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { NextResponse } from 'next/server';
 
+import logger from '@/utils/logger';
+
 const DOMAINR_BASE_URL = 'https://domainr.p.rapidapi.com/v2/status';
 const RAPID_API_KEY = process.env.RAPID_API_KEY!;
 
@@ -16,7 +18,7 @@ export async function GET(
         const response = await axios.get(url, headers);
         return NextResponse.json(response.data);
     } catch (error) {
-        console.error('Error fetching data:', error);
+        logger.error({ error }, 'Error fetching data');
         return NextResponse.json({ error: 'Failed to fetch data' }, { status: 500 });
     }
 }

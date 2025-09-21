@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
 import { tldRepository } from '@/services/tld-repository';
+import logger from '@/utils/logger';
 
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
 
@@ -12,16 +13,16 @@ export const maxDuration = 300; // This function can run for a maximum of 5 minu
  */
 export async function GET(): Promise<NextResponse> {
     try {
-        console.log('Starting TLD enrichment with description ...');
+        logger.info('Starting TLD enrichment with description ...');
         const openaiClient = new OpenAI({ apiKey: process.env['OPENAI_API_KEY'] });
         const tlds = await tldRepository.listTLDs();
-        console.log(`Found ${tlds.length} TLDs to enrich with description`);
+        logger.info(`Found ${tlds.length} TLDs to enrich with description`);
         for (const tld of tlds) {
             if (!tld.name || tld.description !== null) {
-                console.log(`Skipping TLD ${tld.name} because it already has a description`);
+                logger.info(`Skipping TLD ${tld.name} because it already has a description`);
                 continue;
             }
-            console.log(`Enriching TLD ${tld.name} with description ...`);
+            logger.info(`Enriching TLD ${tld.name} with description ...`);
             const response = await openaiClient.chat.completions.create({
                 model: 'gpt-5',
                 messages: [
@@ -44,10 +45,10 @@ export async function GET(): Promise<NextResponse> {
             const description = response.choices[0].message.content;
             await tldRepository.updateTLD(tld.name, { description: description ?? '' });
         }
-        console.log('TLD enrichment with description completed');
+        logger.info('TLD enrichment with description completed');
         return NextResponse.json({ message: 'TLD enrichment with description completed successfully' });
     } catch (error) {
-        console.error('Error during TLD enrichment with description:', error);
+        logger.error({ error }, 'Error during TLD enrichment with description');
         return NextResponse.json({ error: 'Failed to enrich TLDs with description' }, { status: 500 });
     }
 }
