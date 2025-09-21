@@ -1,4 +1,30 @@
+// Mock the TLD repository before any imports
 import { domainsService } from '@/services/domains';
+
+jest.mock('@/services/tld-repository', () => ({
+    tldRepository: {
+        async listTLDs() {
+            return [
+                { name: 'com', punycodeName: 'com', type: 'GENERIC', description: 'Commercial' },
+                { name: 'org', punycodeName: 'org', type: 'GENERIC', description: 'Organization' },
+                { name: 'net', punycodeName: 'net', type: 'GENERIC', description: 'Network' },
+                { name: 'io', punycodeName: 'io', type: 'COUNTRY_CODE', description: 'British Indian Ocean Territory' },
+                { name: 'co', punycodeName: 'co', type: 'COUNTRY_CODE', description: 'Colombia' },
+                { name: 'es', punycodeName: 'es', type: 'COUNTRY_CODE', description: 'Spain' },
+                { name: 'ing', punycodeName: 'ing', type: 'GENERIC', description: 'ING Group' },
+                { name: 'ng', punycodeName: 'ng', type: 'COUNTRY_CODE', description: 'Nigeria' },
+                { name: 'man', punycodeName: 'man', type: 'GENERIC', description: 'Manchester' },
+                { name: 'gle', punycodeName: 'gle', type: 'GENERIC', description: 'Google' },
+            ];
+        },
+        async getTLD(name: string) {
+            const tlds = await this.listTLDs();
+            return tlds.find((t) => t.name === name) || null;
+        },
+        async createTld() {},
+        async updateTLD() {},
+    },
+}));
 
 describe('getDomainsHacks', () => {
     it('should return correct domains for uppercase input', async () => {
