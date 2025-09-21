@@ -8,6 +8,6 @@ export async function GET(request: Request): Promise<NextResponse> {
     const includeSubdomains = url.searchParams.get('include_subdomains') === 'true';
     const tlds = await tldRepository.listTLDs();
     const domainHacksGenerator = new DomainHacksGenerator(tlds);
-    const domains = domainHacksGenerator.getDomainsHacks(url.searchParams.get('term') || '', includeSubdomains);
-    return NextResponse.json({ domains });
+    const domainHacks = domainHacksGenerator.getDomainsHacks(url.searchParams.get('term') || '', includeSubdomains);
+    return NextResponse.json({ domainHacks });
 }

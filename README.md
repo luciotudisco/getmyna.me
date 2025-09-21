@@ -110,7 +110,7 @@ RAPID_API_KEY=your_rapid_api_key
 # Development
 npm run dev          # Start development server with Turbopack
 npm run build        # Build for production
-npm start           # Start production server
+npm start            # Start production server
 
 # Code Quality
 npm run lint         # Run ESLint
