@@ -7,14 +7,15 @@ interface WhoisInfoSectionProps {
 }
 
 export function WhoisInfoSection({ whoisInfo }: WhoisInfoSectionProps) {
-    const { creationDate, registrarUrl, registrar, expirationDate } = whoisInfo;
+    const { creationDate, registrarUrl, registrar, expirationDate, lastUpdatedDate } = whoisInfo;
 
-    if (!creationDate && !registrarUrl && !registrar && !expirationDate) {
+    if (!creationDate && !registrarUrl && !registrar && !expirationDate && !lastUpdatedDate) {
         return null;
     }
 
     const formattedCreationDate = creationDate ? format(parseISO(creationDate), 'MMMM do, yyyy') : null;
     const formattedExpirationDate = expirationDate ? format(parseISO(expirationDate), 'MMMM do, yyyy') : null;
+    const formattedLastUpdatedDate = lastUpdatedDate ? format(parseISO(lastUpdatedDate), 'MMMM do, yyyy') : null;
 
     return (
         <p className="text-xs">
@@ -45,6 +46,12 @@ export function WhoisInfoSection({ whoisInfo }: WhoisInfoSectionProps) {
             {expirationDate && (
                 <>
                     Set to expire on <span className="font-bold">{formattedExpirationDate}</span>.
+                    {lastUpdatedDate && ' '}
+                </>
+            )}
+            {lastUpdatedDate && (
+                <>
+                    Last updated on <span className="font-bold">{formattedLastUpdatedDate}</span>.
                 </>
             )}
         </p>

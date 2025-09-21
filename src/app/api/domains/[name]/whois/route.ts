@@ -7,6 +7,8 @@ const RAPID_API_KEY = process.env.RAPID_API_KEY!;
 interface WhoisResult {
     creation_date?: string | string[];
     expiration_date?: string | string[];
+    updated_date?: string | string[];
+    last_updated?: string | string[];
     registrar?: string;
     registrar_url?: string;
 }
@@ -23,11 +25,13 @@ export async function GET(
         const result = (response.data as { result?: WhoisResult }).result;
         const creationRaw = result?.creation_date;
         const expirationRaw = result?.expiration_date;
+        const updatedRaw = result?.updated_date || result?.last_updated;
         const registrar = result?.registrar ?? null;
         const registrarUrl = result?.registrar_url ?? null;
         const creationDate = Array.isArray(creationRaw) ? creationRaw[0] : (creationRaw ?? null);
         const expirationDate = Array.isArray(expirationRaw) ? expirationRaw[0] : (expirationRaw ?? null);
-        return NextResponse.json({ creationDate, expirationDate, registrar, registrarUrl });
+        const lastUpdatedDate = Array.isArray(updatedRaw) ? updatedRaw[0] : (updatedRaw ?? null);
+        return NextResponse.json({ creationDate, expirationDate, lastUpdatedDate, registrar, registrarUrl });
     } catch (error) {
         console.error('Error fetching whois data:', error);
         return NextResponse.json({ error: 'Failed to fetch whois data' }, { status: 500 });
