@@ -42,9 +42,9 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
             setLoading(true);
             try {
                 const isAvailable = domain.isAvailable();
-                const whoisPromise = isAvailable ? Promise.resolve(null) : apiClient.getDomainWhois(domain.getName());
-                const tldPromise = apiClient.getTldInfo(domain.getName());
-                const digPromise = !isAvailable ? apiClient.digDomain(domain.getName()) : Promise.resolve(null);
+                const whoisPromise = isAvailable ? Promise.resolve(null) : apiClient.getWhoisInfo(domain.getName());
+                const tldPromise = apiClient.getTld(domain.getName());
+                const digPromise = !isAvailable ? apiClient.getDigInfo(domain.getName()) : Promise.resolve(null);
                 const [whoisData, tldData, digData] = await Promise.all([whoisPromise, tldPromise, digPromise]);
                 setWhoisInfo(whoisData as WhoisInfo);
                 setTldInfo(tldData as TLD);
