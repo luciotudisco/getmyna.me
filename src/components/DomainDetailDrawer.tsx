@@ -23,7 +23,7 @@ interface DomainDetailDrawerProps {
     onClose: () => void;
 }
 
-export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawerProps) {
+function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawerProps) {
     const [whoisInfo, setWhoisInfo] = useState<WhoisInfo | null>(null);
     const [tldInfo, setTldInfo] = useState<TLD | null>(null);
     const [digInfo, setDigInfo] = useState<DigInfo | null>(null);
