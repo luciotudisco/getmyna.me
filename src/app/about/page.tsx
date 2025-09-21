@@ -36,12 +36,8 @@ const AboutPage = () => {
                 <div className="text-center">
                     <Badge className="text-xs font-medium">ABOUT</Badge>
                     <h1 className="mt-4 text-2xl font-semibold lg:text-4xl">Domain Hacks</h1>
-                    <p className="lg:text-md mt-4 text-sm font-medium leading-loose text-muted-foreground lg:mt-6">
-                        Discover how to create{' '}
-                        <Highlighter action="highlight" color="#e5b3fe">
-                            memorable
-                        </Highlighter>{' '}
-                        domains that{' '}
+                    <p className="lg:text-md mt-4 text-sm font-medium text-muted-foreground lg:mt-6">
+                        Discover how to create memorable domains that{' '}
                         <Highlighter action="highlight" color="#fde2e4">
                             stand out
                         </Highlighter>
