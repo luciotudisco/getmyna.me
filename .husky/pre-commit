@@ -7,7 +7,8 @@ npx lint-staged
 echo "🔧 Type checking..."
 npm run type-check
 
-# Run buil
-npm run build
+# Run tests
+echo "🧪 Running tests..."
+npm run test
 
 echo "✅ Pre-commit checks passed!"
