@@ -59,7 +59,7 @@ const AboutPage = () => {
                     />
                     <FaqItem
                         question="Can I build my brand around a domain hack?"
-                        answer="Absolutely! A memorable domain hack can become a powerful centerpiece for your brand. By leveraging domain hacks, you can give your site a more appealing identity that resonates with modern users and transform a standard web address into an interactive part of your brand story."
+                        answer="Absolutely! A domain hack can give your site a more appealing identity that resonates with modern users and transform a standard web address into an interactive part of your brand story."
                         color="#e5b3fe"
                         index={2}
                     />
