@@ -1,14 +1,4 @@
 /**
- * Custom error class for domain validation failures.
- */
-export class DomainValidationError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = 'DomainValidationError';
-    }
-}
-
-/**
  * Represents a domain.
  */
 export class Domain {
@@ -30,24 +20,23 @@ export class Domain {
     /**
      * Validates a domain name.
      * @param name The domain name to validate
-     * @throws DomainValidationError if the domain name is invalid
+     * @throws Error if the domain name is invalid
      */
     private _validateDomainName(name: string): void {
         if (typeof name !== 'string') {
-            throw new DomainValidationError('Domain name must be a string');
+            throw new Error('Domain name must be a string');
         }
 
         const trimmedName = name.trim();
         if (!trimmedName) {
-            throw new DomainValidationError('Domain name cannot be empty');
+            throw new Error('Domain name cannot be empty');
         }
 
         // Simple regex: must contain at least one dot and valid characters, no leading/trailing dots
-        const domainRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]*(\.[a-zA-Z0-9][a-zA-Z0-9-]*)+$/;
+        // Supports Unicode characters for internationalized domain names
+        const domainRegex = /^[\p{L}\p{N}][\p{L}\p{N}-]*(\.[\p{L}\p{N}][\p{L}\p{N}-]*)+$/u;
         if (!domainRegex.test(trimmedName)) {
-            throw new DomainValidationError(
-                'Invalid domain name format. Must contain at least one dot (e.g., example.com)',
-            );
+            throw new Error('Invalid domain name format. Must contain at least one dot (e.g., example.com)');
         }
     }
 
