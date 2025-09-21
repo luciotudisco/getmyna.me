@@ -8,7 +8,6 @@ import { TableCell, TableRow } from '@/components/ui/table';
 import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { apiClient } from '@/services/api';
 import { RateLimiter } from '@/utils/rate-limiter';
-import clientLogger from '@/utils/client-logger';
 
 // Create a shared rate limiter instance (2 calls per second / 500ms delay)
 const statusRateLimiter = new RateLimiter(2);
@@ -24,7 +23,6 @@ export function SearchResult({ domain }: { domain: Domain }) {
                 domain.setStatus(result);
                 setStatus(result);
             } catch (error) {
-                clientLogger.error('Error fetching domain status:', error);
                 domain.setStatus(DomainStatusEnum.error);
                 setStatus(DomainStatusEnum.error);
             }

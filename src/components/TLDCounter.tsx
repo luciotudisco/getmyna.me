@@ -4,7 +4,6 @@ import { useEffect, useState, useTransition } from 'react';
 
 import NumberTicker from '@/components/ui/number-ticker';
 import { apiClient } from '@/services/api';
-import clientLogger from '@/utils/client-logger';
 
 export function TLDCounter() {
     const [count, setCount] = useState(0);
@@ -16,7 +15,7 @@ export function TLDCounter() {
                 const tlds = await apiClient.listTLDs();
                 setCount(tlds.length);
             } catch (error) {
-                clientLogger.error('Error fetching TLD count:', error);
+                // Silently handle error
             }
         });
     }, []);
