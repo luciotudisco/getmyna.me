@@ -36,14 +36,6 @@ class APIClient {
     }
 
     /**
-     * Gets WHOIS data for a registered domain.
-     */
-    async getWhoisInfo(domain: string): Promise<WhoisInfo> {
-        const response = await this.client.get(`/api/domains/${domain}/whois`);
-        return response.data as WhoisInfo;
-    }
-
-    /**
      * Gets TLD info for a domain.
      */
     async getTld(domain: string): Promise<TLD> {
@@ -57,6 +49,14 @@ class APIClient {
     async getTlds(): Promise<TLD[]> {
         const response = await this.client.get('/api/tlds');
         return response.data.tlds ?? [];
+    }
+
+    /**
+     * Gets WHOIS data for a registered domain.
+     */
+    async getWhoisInfo(domain: string): Promise<WhoisInfo> {
+        const response = await this.client.get(`/api/domains/${domain}/whois`);
+        return response.data as WhoisInfo;
     }
 
     /**
