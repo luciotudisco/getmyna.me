@@ -164,18 +164,8 @@ export class DomainsService {
     }
 }
 
-// Create a singleton instance for backward compatibility
+// Create a singleton instance
 const domainsService = new DomainsService();
 
-// Export the singleton instance and individual methods for backward compatibility
-export const getDomainsHacks = (input: string, includeSubdomains = true) =>
-    domainsService.getDomainsHacks(input, includeSubdomains);
-
-export const getMatchingDomains = (text: string) => domainsService.getMatchingDomains(text);
-
-export const getSubdomains = (domain: string) => domainsService.getSubdomains(domain);
-
-export const getMatchingTLDs = (text: string) => domainsService.getMatchingTLDs(text);
-
-// Export the class and instance for direct usage
+// Export only the class and singleton instance
 export { domainsService };
