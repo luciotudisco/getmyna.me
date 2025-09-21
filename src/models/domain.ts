@@ -9,8 +9,9 @@ export class Domain {
     private _level: number;
 
     public constructor(name: string) {
-        this._validateDomainName(name);
-        this._name = name.trim();
+        const trimmedName = name.trim();
+        this._validateDomainName(trimmedName);
+        this._name = trimmedName;
         this._status = DomainStatus.unknown;
         this._isAvailable = false;
         this._tld = this._name.split('.').pop()!;
@@ -56,15 +57,14 @@ export class Domain {
             throw new Error('Domain name must be a string');
         }
 
-        const trimmedName = name.trim();
-        if (!trimmedName) {
+        if (!name) {
             throw new Error('Domain name cannot be empty');
         }
 
         // Simple regex: must contain at least one dot and valid characters, no leading/trailing dots
         // Supports Unicode characters for internationalized domain names
         const domainRegex = /^[\p{L}\p{N}][\p{L}\p{N}-]*(\.[\p{L}\p{N}][\p{L}\p{N}-]*)+$/u;
-        if (!domainRegex.test(trimmedName)) {
+        if (!domainRegex.test(name)) {
             throw new Error('Invalid domain name format. Must contain at least one dot (e.g., example.com)');
         }
     }
