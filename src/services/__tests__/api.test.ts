@@ -131,7 +131,7 @@ describe('APIClient', () => {
     describe('searchDomains', () => {
         it('should search domains with default parameters', async () => {
             const mockDomains = ['example.com', 'test.com', 'demo.com'];
-            const mockResponse = { domains: mockDomains };
+            const mockResponse = { domainHacks: mockDomains };
 
             mockAdapter
                 .onGet('/api/domains/search', { params: { term: 'example', include_subdomains: false } })
@@ -144,7 +144,7 @@ describe('APIClient', () => {
 
         it('should search domains with subdomains included', async () => {
             const mockDomains = ['example.com', 'sub.example.com', 'test.example.com'];
-            const mockResponse = { domains: mockDomains };
+            const mockResponse = { domainHacks: mockDomains };
 
             mockAdapter
                 .onGet('/api/domains/search', { params: { term: 'example', include_subdomains: true } })
@@ -157,7 +157,7 @@ describe('APIClient', () => {
 
         it('should handle special characters in search term', async () => {
             const mockDomains = ['test-domain.com'];
-            const mockResponse = { domains: mockDomains };
+            const mockResponse = { domainHacks: mockDomains };
 
             mockAdapter
                 .onGet('/api/domains/search', { params: { term: 'test-domain', include_subdomains: false } })
