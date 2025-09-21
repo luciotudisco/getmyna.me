@@ -35,12 +35,6 @@ Whether you're looking for a memorable personal brand, a catchy business domain,
 
 ## 🚀 Quick Start
 
-### Prerequisites
-
-- **Node.js** 18+
-- **npm** or **yarn**
-- **API Keys** (see [Environment Variables](#-environment-variables))
-
 ### Installation
 
 1. **Clone the repository**
