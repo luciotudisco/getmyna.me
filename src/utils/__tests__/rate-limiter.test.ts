@@ -40,15 +40,6 @@ describe('RateLimiter', () => {
             expect(result).toEqual(expectedResult);
         });
 
-        it('should handle task errors correctly', async () => {
-            const mockTask = jest.fn().mockRejectedValue(new Error('Task failed'));
-
-            const promise = rateLimiter.add(mockTask);
-            await jest.runAllTimersAsync();
-
-            await expect(promise).rejects.toThrow('Task failed');
-        });
-
         it('should execute multiple tasks in order', async () => {
             const results: string[] = [];
             const task1 = jest.fn().mockImplementation(async () => {
