@@ -3,8 +3,8 @@ import { NextResponse } from 'next/server';
 import { toASCII, toUnicode } from 'punycode';
 
 import { tldRepository } from '@/services/tld-repository';
-import { getTextDirection } from '@/utils/unicode';
 import logger from '@/utils/logger';
+import { getTextDirection } from '@/utils/unicode';
 
 const IANA_TLD_URL = 'https://data.iana.org/TLD/tlds-alpha-by-domain.txt';
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
