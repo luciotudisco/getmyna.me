@@ -25,6 +25,11 @@ export function DomainStatusSection({ status, whoisInfo, digInfo }: DomainStatus
         [whoisInfo?.expirationDate],
     );
 
+    const formattedLastUpdatedDate = useMemo(
+        () => (whoisInfo?.lastUpdatedDate ? format(parseISO(whoisInfo.lastUpdatedDate), 'MMMM do, yyyy') : null),
+        [whoisInfo?.lastUpdatedDate],
+    );
+
     const domainAge = useMemo(
         () =>
             whoisInfo?.creationDate
@@ -98,6 +103,14 @@ export function DomainStatusSection({ status, whoisInfo, digInfo }: DomainStatus
                 <p>
                     <span className="text-muted-foreground">Expires:</span>{' '}
                     <span className="font-medium">{formattedExpirationDate}</span>
+                </p>
+            )}
+
+            {/* Last Updated Date */}
+            {whoisInfo?.lastUpdatedDate && (
+                <p>
+                    <span className="text-muted-foreground">Last Updated:</span>{' '}
+                    <span className="font-medium">{formattedLastUpdatedDate}</span>
                 </p>
             )}
 
