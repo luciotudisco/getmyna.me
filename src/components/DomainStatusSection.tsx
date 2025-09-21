@@ -10,13 +10,11 @@ import { WhoisInfo } from '@/models/whois';
 
 const DOMAIN_STATUS_DESCRIPTIONS: Record<DomainStatusEnum, string> = {
     [DomainStatusEnum.active]: 'This domain is alive and kicking, fully set up, and doing its job on the internet.',
-    [DomainStatusEnum.claimed]:
-        "Someone already owns this domain, so you'll need to wait, buy, or trade if you want it.",
+    [DomainStatusEnum.claimed]: "Someone owns this domain, so you'll need to wait, buy, or trade if you want it.",
     [DomainStatusEnum.deleting]: 'The domain is currently being deleted and soon heading back into the wild.',
     [DomainStatusEnum.disallowed]: "This domain is off-limits by rules or policy, so it can't be registered by anyone.",
     [DomainStatusEnum.dpml]: 'Locked down by the DPML. IT is shielded to protect trademarks from squatters.',
-    [DomainStatusEnum.expiring]:
-        'The timer is ticking. The registration is almost up, and it may soon be up for grabs.',
+    [DomainStatusEnum.expiring]: 'Time is ticking. The registration is almost up, and it may soon be up for grabs.',
     [DomainStatusEnum.inactive]: "Wide open and ready—this domain isn't owned yet and can be registered right away.",
     [DomainStatusEnum.invalid]: "Oops—this one doesn't even count as a proper domain name, so it's not usable.",
     [DomainStatusEnum.marketed]: 'This domain is up for sale and being advertised like digital real estate.',

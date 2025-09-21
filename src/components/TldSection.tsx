@@ -18,9 +18,9 @@ const DEFAULT_TLD_TYPE_ICON = CircleHelp;
 
 export default function TLDSection({ name, punycodeName, description, type }: TLD) {
     const ianaURL = `https://www.iana.org/domains/root/db/${punycodeName}.html`;
-    const tldDescription = description ?? 'No additional information is available for this TLD.';
+    const tldDescription = description ?? 'No additional information is available for this TLD, just yet.';
     const TypeIcon = type ? (TLD_TYPE_ICON_MAP[type] ?? DEFAULT_TLD_TYPE_ICON) : null;
-    const formattedType = type?.replace(/_/g, ' ');
+
     return (
         <div className="space-y-2">
             <div className="flex justify-between">
@@ -32,7 +32,7 @@ export default function TLDSection({ name, punycodeName, description, type }: TL
                     {type && (
                         <Badge variant="outline" className="flex items-center gap-1 uppercase">
                             {TypeIcon && <TypeIcon className="h-3 w-3" aria-hidden="true" />}
-                            <span>{formattedType}</span>
+                            <span>{type.replace(/_/g, ' ')}</span>
                         </Badge>
                     )}
                 </div>
