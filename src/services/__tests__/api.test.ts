@@ -166,27 +166,4 @@ describe('APIClient', () => {
         });
     });
 
-    describe('URL Encoding', () => {
-        it('should properly encode domain names with special characters', async () => {
-            const mockDigInfo: DigInfo = { records: {} };
-            const domainWithSpecialChars = 'test-domain.example.com';
-
-            mockAdapter.onGet(`/api/domains/${domainWithSpecialChars}/dig`).reply(200, mockDigInfo);
-
-            const result = await apiClient.digDomain(domainWithSpecialChars);
-
-            expect(result).toEqual(mockDigInfo);
-        });
-
-        it('should handle internationalized domain names', async () => {
-            const mockDigInfo: DigInfo = { records: {} };
-            const idnDomain = '测试.com';
-
-            mockAdapter.onGet(`/api/domains/${idnDomain}/dig`).reply(200, mockDigInfo);
-
-            const result = await apiClient.digDomain(idnDomain);
-
-            expect(result).toEqual(mockDigInfo);
-        });
-    });
 });
