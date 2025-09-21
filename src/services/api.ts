@@ -66,7 +66,7 @@ class APIClient {
         const response = await this.client.get('/api/domains/search', {
             params: { term, include_subdomains: includeSubdomains },
         });
-        return response.data.domains ?? [];
+        return response.data.domainHacks ?? [];
     }
 }
 

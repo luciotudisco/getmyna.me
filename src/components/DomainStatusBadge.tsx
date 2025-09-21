@@ -16,9 +16,9 @@ const baseClasses = 'inline-flex h-7 min-w-[8rem] items-center justify-center px
 
 function UnknownBadge({ className }: { className?: string }) {
     return (
-        <Badge className={cn(baseClasses, 'bg-slate-400 hover:bg-slate-500', className)}>
+        <Badge className={cn(baseClasses, 'border-none bg-transparent shadow-none', className)}>
             <div className="flex items-center">
-                <Loader2 className="h-4 w-4 animate-spin text-white" />
+                <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
             </div>
         </Badge>
     );
@@ -42,7 +42,7 @@ function AvailableBadge({ className }: { className?: string }) {
 
 function TakenBadge({ className }: { className?: string }) {
     return (
-        <Badge className={cn(baseClasses, 'bg-red-500 hover:bg-red-600', className)}>
+        <Badge className={cn(baseClasses, 'bg-slate-400 hover:bg-slate-500', className)}>
             <span className="text-white">Taken</span>
         </Badge>
     );
