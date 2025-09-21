@@ -3,7 +3,7 @@
 import { useEffect, useState, useTransition } from 'react';
 
 import NumberTicker from '@/components/ui/number-ticker';
-import { apiService } from '@/services/api';
+import { apiClient } from '@/services/api-client';
 
 export function TLDCounter() {
     const [count, setCount] = useState(0);
@@ -12,7 +12,7 @@ export function TLDCounter() {
     useEffect(() => {
         startTransition(async () => {
             try {
-                const tlds = await apiService.listTLDs();
+                const tlds = await apiClient.listTLDs();
                 setCount(tlds.length);
             } catch (error) {
                 console.error('Error fetching TLD count:', error);

@@ -5,7 +5,7 @@ import { DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { TLD } from '@/models/tld';
 import { WhoisInfo } from '@/models/whois';
 
-class ApiService {
+class ApiClient {
     private client: AxiosInstance;
 
     constructor() {
@@ -46,5 +46,5 @@ class ApiService {
     }
 }
 
-export const apiService = new ApiService();
-export type { ApiService };
+export const apiClient = new ApiClient();
+export type { ApiClient };

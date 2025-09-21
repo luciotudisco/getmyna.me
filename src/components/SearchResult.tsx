@@ -6,7 +6,7 @@ import DomainDetailDrawer from '@/components/DomainDetailDrawer';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
-import { apiService } from '@/services/api';
+import { apiClient } from '@/services/api-client';
 import { RateLimiter } from '@/utils/rate-limiter';
 
 // Create a shared rate limiter instance (2 calls per second / 500ms delay)
@@ -19,7 +19,7 @@ export function SearchResult({ domain }: { domain: Domain }) {
     useEffect(() => {
         const fetchStatus = async () => {
             try {
-                const result = await statusRateLimiter.add(() => apiService.getDomainStatus(domain.getName()));
+                const result = await statusRateLimiter.add(() => apiClient.getDomainStatus(domain.getName()));
                 domain.setStatus(result);
                 setStatus(result);
             } catch (error) {

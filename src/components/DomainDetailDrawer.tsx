@@ -14,7 +14,7 @@ import { DigInfo } from '@/models/dig';
 import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { TLD } from '@/models/tld';
 import { WhoisInfo } from '@/models/whois';
-import { apiService } from '@/services/api';
+import { apiClient } from '@/services/api-client';
 
 interface DomainDetailDrawerProps {
     domain: Domain;
@@ -42,9 +42,9 @@ export function DomainDetailDrawer({ domain, status, open, onClose }: DomainDeta
             setLoading(true);
             try {
                 const isAvailable = domain.isAvailable();
-                const whoisPromise = isAvailable ? Promise.resolve(null) : apiService.getDomainWhois(domain.getName());
-                const tldPromise = apiService.getTldInfo(domain.getName());
-                const digPromise = !isAvailable ? apiService.digDomain(domain.getName()) : Promise.resolve(null);
+                const whoisPromise = isAvailable ? Promise.resolve(null) : apiClient.getDomainWhois(domain.getName());
+                const tldPromise = apiClient.getTldInfo(domain.getName());
+                const digPromise = !isAvailable ? apiClient.digDomain(domain.getName()) : Promise.resolve(null);
                 const [whoisData, tldData, digData] = await Promise.all([whoisPromise, tldPromise, digPromise]);
                 setWhoisInfo(whoisData as WhoisInfo);
                 setTldInfo(tldData as TLD);

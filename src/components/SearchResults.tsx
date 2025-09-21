@@ -7,7 +7,7 @@ import { SearchResult } from '@/components/SearchResult';
 import NumberTicker from '@/components/ui/number-ticker';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Domain } from '@/models/domain';
-import { apiService } from '@/services/api';
+import { apiClient } from '@/services/api-client';
 
 const Player = dynamic(() => import('@lottiefiles/react-lottie-player').then((mod) => mod.Player), { ssr: false });
 
@@ -21,7 +21,7 @@ export function SearchResults() {
             try {
                 const term = searchParams.get('term');
                 const includeSubdomains = searchParams.get('include_subdomains') === 'true';
-                const names = await apiService.searchDomains(term ?? '', includeSubdomains);
+                const names = await apiClient.searchDomains(term ?? '', includeSubdomains);
                 const initialDomains = names.map((name: string) => new Domain(name));
                 setDomains(initialDomains);
             } catch (error) {
