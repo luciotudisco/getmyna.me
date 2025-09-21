@@ -47,4 +47,4 @@ class APIClient {
 }
 
 export const apiClient = new APIClient();
-export type { APIClient };
+export { APIClient };
