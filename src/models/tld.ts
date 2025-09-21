@@ -23,14 +23,6 @@ export enum Registrar {
     PORKBUN = 'PORKBUN',
 }
 
-export const REGISTRARS_DOMAIN_SEARCH_URLS = {
-    [Registrar.DYNADOT]: (domain: string) => `https://www.dynadot.com/domain/search?domain=${domain}`,
-    [Registrar.GANDI]: (domain: string) => `https://shop.gandi.net/domain/suggest?search=${domain}`,
-    [Registrar.NAMECOM]: (domain: string) => `https://www.name.com/domain/search/${domain}`,
-    [Registrar.NAMESILO]: (domain: string) => `https://www.namesilo.com/domain/search-domains?query=${domain}`,
-    [Registrar.PORKBUN]: (domain: string) => `https://porkbun.com/checkout/search?q=${domain}`,
-};
-
 export interface TLDPricing {
     registration?: number;
     renewal?: number;
