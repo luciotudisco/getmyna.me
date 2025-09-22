@@ -36,7 +36,7 @@ const AboutPage = () => {
                 <div className="text-center">
                     <Badge className="text-xs font-medium">ABOUT</Badge>
                     <h1 className="mt-4 text-2xl font-semibold lg:text-4xl">Domain Hacks</h1>
-                    <p className="lg:text-md mt-4 text-sm font-medium text-muted-foreground lg:mt-6">
+                    <p className="lg:text-base mt-4 text-sm font-medium text-muted-foreground lg:mt-6">
                         Discover how to create memorable domains that{' '}
                         <Highlighter action="highlight" color="#fde2e4">
                             stand out
@@ -47,7 +47,7 @@ const AboutPage = () => {
                 <div className="mx-auto mt-6 max-w-xl lg:mt-14">
                     <FaqItem
                         question="What's a domain hack?"
-                        answer="Domain hacks are clever ways of constructing domain names by combining words with TLDs (Top-Level Domains) to to creatively spell out brand names or phrases."
+                        answer="Domain hacks are clever ways of constructing domain names by combining words with TLDs (Top-Level Domains) to creatively spell out brand names or phrases."
                         color="#fde2e4"
                         index={0}
                     />
