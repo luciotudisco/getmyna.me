@@ -59,19 +59,19 @@ const AboutPage = () => {
                     />
                     <FaqItem
                         question="Can I build my brand around a domain hack?"
-                        answer="Absolutely! A domain hack can give your site a more appealing identity that resonates with modern users and transform a standard web address into an interactive part of your brand story."
+                        answer="Absolutely! A domain hack can transform a standard web address into part of your brand story."
                         color="#e5b3fe"
                         index={2}
                     />
                     <FaqItem
                         question="What are some popular examples of domain hacks?"
-                        answer="Popular examples include bit.ly (bitly), del.icio.us (delicious), and goo.gl (Google). These domains are memorable because of their distinctive and playful appearance, making them perfect for sharing and word-of-mouth marketing."
+                        answer="Popular examples include bit.ly (bitly) and del.icio.us (delicious), and goo.gl (Google). These domains are memorable because of their distinctive and playful appearance."
                         color="#ffd6a5"
                         index={3}
                     />
                     <FaqItem
                         question="How do I find the perfect domain hack?"
-                        answer="Use our domain search tool to explore creative possibilities and check availability across hundreds of TLDs. Remember, the best domain hacks are short, memorable, and relevant to your brand."
+                        answer="Use GetMyNa.me to explore creative possibilities. Remember, the best domain hacks are short, memorable, and relevant to your brand."
                         color="#bcd4e6"
                         index={4}
                     />
