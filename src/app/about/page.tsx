@@ -65,7 +65,7 @@ const AboutPage = () => {
                     />
                     <FaqItem
                         question="What are some popular examples of domain hacks?"
-                        answer="Popular examples include bit.ly (bitly) and del.icio.us (delicious), and goo.gl (Google). These domains are memorable because of their distinctive and playful appearance."
+                        answer="Popular examples include bit.ly (bitly), del.icio.us (delicious), and goo.gl (Google). These domains are memorable because of their distinctive and playful appearance."
                         color="#ffd6a5"
                         index={3}
                     />
