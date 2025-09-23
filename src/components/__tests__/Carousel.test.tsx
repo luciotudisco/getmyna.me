@@ -2,12 +2,6 @@ import { render, screen } from '@testing-library/react';
 
 import Carousel from '@/components/Carousel';
 
-// Mock embla-carousel-autoplay
-jest.mock('embla-carousel-autoplay', () => ({
-    __esModule: true,
-    default: jest.fn(() => ({})),
-}));
-
 // Mock the UI carousel components
 jest.mock('@/components/ui/carousel', () => ({
     Carousel: ({ children, className, ...props }: any) => (
