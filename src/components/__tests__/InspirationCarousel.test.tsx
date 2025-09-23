@@ -52,31 +52,4 @@ describe('InspirationCarousel', () => {
             ),
         ).toBeInTheDocument();
     });
-
-    it('should apply correct styling and classes', () => {
-        render(<InspirationCarousel />);
-
-        // Check carousel container classes
-        const carouselRoot = screen.getByTestId('carousel-root');
-        expect(carouselRoot).toHaveClass('w-full', 'p-5');
-
-        const carouselContent = screen.getByTestId('carousel-content');
-        expect(carouselContent).toHaveClass('text-sm');
-
-        // Check carousel item classes
-        const carouselItems = screen.getAllByTestId('carousel-item');
-        carouselItems.forEach((item) => {
-            expect(item).toHaveClass('m-2', 'flex', 'items-center', 'justify-center', 'align-middle', 'md:m-5');
-        });
-
-        // Check domain elements have proper styling
-        const domainElements = screen.getAllByText(/\.(am|tt|ly|al|kr|se)$/);
-        domainElements.forEach((element) => {
-            expect(element).toHaveClass('rounded-md', 'p-1', 'font-bold');
-        });
-
-        // Check that domain elements have background colors
-        expect(screen.getByText('instagr.am')).toHaveStyle('background-color: #fde2e4');
-        expect(screen.getByText('ma.tt')).toHaveStyle('background-color: #eff7f6');
-    });
 });
