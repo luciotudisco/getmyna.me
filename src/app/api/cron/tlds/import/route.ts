@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { NextResponse } from 'next/server';
-import { toASCII, toUnicode } from 'punycode';
+import { toUnicode } from 'punycode';
 
 import { tldRepository } from '@/services/tld-repository';
 import logger from '@/utils/logger';
