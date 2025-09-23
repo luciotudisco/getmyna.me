@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 
-import Carousel from '@/components/Carousel';
+import InspirationCarousel from '@/components/InspirationCarousel';
 
 // Mock the UI carousel components
 jest.mock('@/components/ui/carousel', () => ({
@@ -21,9 +21,9 @@ jest.mock('@/components/ui/carousel', () => ({
     ),
 }));
 
-describe('Carousel', () => {
+describe('InspirationCarousel', () => {
     it('should render carousel component with all items', () => {
-        render(<Carousel />);
+        render(<InspirationCarousel />);
 
         // Check carousel structure
         expect(screen.getByTestId('carousel-root')).toBeInTheDocument();
@@ -35,7 +35,7 @@ describe('Carousel', () => {
     });
 
     it('should render domain hack examples with proper content', () => {
-        render(<Carousel />);
+        render(<InspirationCarousel />);
 
         // Check that domain examples are present
         expect(screen.getByText('instagr.am')).toBeInTheDocument();
@@ -54,7 +54,7 @@ describe('Carousel', () => {
     });
 
     it('should apply correct styling and classes', () => {
-        render(<Carousel />);
+        render(<InspirationCarousel />);
 
         // Check carousel container classes
         const carouselRoot = screen.getByTestId('carousel-root');

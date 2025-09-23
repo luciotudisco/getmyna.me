@@ -4,7 +4,7 @@ import Autoplay from 'embla-carousel-autoplay';
 
 import { Carousel as CarouselRoot, CarouselContent, CarouselItem as Item } from '@/components/ui/carousel';
 
-export default function Carousel() {
+export default function InspirationCarousel() {
     function CarouselItem({ title, domain, color }: { title: string; domain?: string; color?: string }) {
         return (
             <Item className="m-2 flex items-center justify-center align-middle md:m-5">
