@@ -2,7 +2,7 @@
 
 import Autoplay from 'embla-carousel-autoplay';
 
-import { Carousel as CarouselRoot, CarouselContent, CarouselItem as Item } from '@/components/ui/carousel';
+import { Carousel, CarouselContent, CarouselItem as Item } from '@/components/ui/carousel';
 
 export default function InspirationCarousel() {
     function CarouselItem({ title, domain, color }: { title: string; domain?: string; color?: string }) {
@@ -19,7 +19,7 @@ export default function InspirationCarousel() {
     }
 
     return (
-        <CarouselRoot opts={{ loop: true }} plugins={[Autoplay({ delay: 4000 })]} className="w-full p-5">
+        <Carousel opts={{ loop: true }} plugins={[Autoplay({ delay: 4000 })]} className="w-full p-5">
             <CarouselContent className="text-sm">
                 <CarouselItem title="A domain hack is a clever twist where the domain and extension merge together. Perfect for creating short, catchy, and brandable web addresses." />
                 <CarouselItem
@@ -53,6 +53,6 @@ export default function InspirationCarousel() {
                     color="#cbf3f0"
                 />
             </CarouselContent>
-        </CarouselRoot>
+        </Carousel>
     );
 }
