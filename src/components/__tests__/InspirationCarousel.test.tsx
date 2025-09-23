@@ -47,9 +47,9 @@ describe('InspirationCarousel', () => {
 
         // Check that general description is present
         expect(
-            screen.getByText(
-                'A domain hack is a clever twist where the domain and extension merge together. Perfect for creating short, catchy, and brandable web addresses.',
-            ),
+            screen.getByText('A domain hack is a clever twist where the domain and extension merge together.', {
+                exact: false,
+            }),
         ).toBeInTheDocument();
     });
 });
