@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 
-import Carousel from '@/components/Carousel';
 import Feature from '@/components/Feature';
+import InspirationCarousel from '@/components/InspirationCarousel';
 import SearchBar from '@/components/SearchBar';
 
 export default function Home() {
@@ -11,7 +11,7 @@ export default function Home() {
                 <Suspense fallback={null}>
                     <SearchBar />
                 </Suspense>
-                <Carousel />
+                <InspirationCarousel />
                 <Feature
                     color="#fcf6bd"
                     description="A domain hack is always easy to recall and keeps you top-of-mind."

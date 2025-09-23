@@ -2,10 +2,10 @@
 
 import Autoplay from 'embla-carousel-autoplay';
 
-import { Carousel as CarouselRoot, CarouselContent, CarouselItem as Item } from '@/components/ui/carousel';
+import { Carousel, CarouselContent, CarouselItem as Item } from '@/components/ui/carousel';
 
-export default function Carousel() {
-    function CarouselItem({ title, domain, color }: { title: string; domain?: string; color?: string }) {
+export default function InspirationCarousel() {
+    function CarouselItem({ title, domain, color }: { title: string; domain?: string | null; color?: string }) {
         return (
             <Item className="m-2 flex items-center justify-center align-middle md:m-5">
                 <p className="text-balance text-center text-sm leading-loose">
@@ -19,9 +19,13 @@ export default function Carousel() {
     }
 
     return (
-        <CarouselRoot opts={{ loop: true }} plugins={[Autoplay({ delay: 4000 })]} className="w-full p-5">
+        <Carousel opts={{ loop: true }} plugins={[Autoplay({ delay: 4000 })]} className="w-full p-5">
             <CarouselContent className="text-sm">
-                <CarouselItem title="A domain hack is a clever twist where the domain and extension merge together. Perfect for creating short, catchy, and brandable web addresses." />
+                <CarouselItem
+                    title="A domain hack is a clever twist where the domain and extension merge together. Perfect for creating short, catchy, and brandable web addresses."
+                    domain={null}
+                    color="transparent"
+                />
                 <CarouselItem
                     title="The original domain for Instagram utilized the TLD of Armenia (.am) to form a memorable and brand-aligned name"
                     domain="instagr.am"
@@ -53,6 +57,6 @@ export default function Carousel() {
                     color="#cbf3f0"
                 />
             </CarouselContent>
-        </CarouselRoot>
+        </Carousel>
     );
 }
