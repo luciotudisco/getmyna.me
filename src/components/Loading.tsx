@@ -41,7 +41,7 @@ export default function Loading({ className, message, size = 'medium' }: Loading
     );
 
     const height = useMemo(() => {
-        return size === 'small' ? '80px' : size === 'medium' ? '150px' : '250px';
+        return size === 'small' ? '60px' : size === 'medium' ? '80px' : '120px';
     }, [size]);
 
     return (
