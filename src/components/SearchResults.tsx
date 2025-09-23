@@ -1,15 +1,13 @@
 import { useEffect, useState, useTransition } from 'react';
-import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
 
 import Loading from '@/components/Loading';
+import NoResults from '@/components/NoResults';
 import { SearchResult } from '@/components/SearchResult';
 import NumberTicker from '@/components/ui/number-ticker';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Domain } from '@/models/domain';
 import { apiClient } from '@/services/api';
-
-const Player = dynamic(() => import('@lottiefiles/react-lottie-player').then((mod) => mod.Player), { ssr: false });
 
 export function SearchResults() {
     const searchParams = useSearchParams();
@@ -39,14 +37,7 @@ export function SearchResults() {
     }
 
     if (domains.length === 0) {
-        return (
-            <div className="flex-1 items-center gap-3 p-12 align-middle">
-                <Player autoplay keepLastFrame src="/sad-empty-box.json" style={{ height: '250px' }} />
-                <p className="text-md text-center text-muted-foreground">
-                    Ouch! Your query returned 0 results. Time to try another search pattern.
-                </p>
-            </div>
-        );
+        return <NoResults />;
     }
 
     return (
