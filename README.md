@@ -27,7 +27,7 @@ Whether you're looking for a memorable personal brand, a catchy business domain,
 
 ### 📊 **Comprehensive Domain Intelligence**
 
-- **Extensive TLD Database**: Uses 1000+ top-level domains for maximum creativity
+- **Extensive TLD Database**: Uses 1000+ top-level domains for maximum creativity, kept up to date regularly using [IANA TLD data](https://data.iana.org/TLD/tlds-alpha-by-domain.txt) as the authoritative source
 - **Availability Checking**: Real-time domain availability verification
 - **WHOIS Data**: Complete domain registration information
 - **Pricing Information**: Current market prices from multiple registrars
