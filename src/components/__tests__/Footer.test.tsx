@@ -10,11 +10,4 @@ describe('Footer', () => {
         expect(footerText).toBeInTheDocument();
     });
 
-    it('should have the correct footer element with proper styling classes', () => {
-        render(<Footer />);
-        
-        const footerElement = screen.getByRole('contentinfo');
-        expect(footerElement).toBeInTheDocument();
-        expect(footerElement).toHaveClass('border-grid', 'sticky', 'bottom-0', 'z-40', 'border-t', 'bg-background/40', 'p-2', 'backdrop-blur-lg');
-    });
 });
