@@ -26,16 +26,16 @@ export async function GET(): Promise<NextResponse> {
                 continue;
             }
 
-            const punycodeName = toASCII(trimmed.toLowerCase());
+            const punycodeName = trimmed.toLowerCase();
             const tldName = toUnicode(punycodeName);
             const direction = getTextDirection(tldName);
-            const existingTld = await tldRepository.getTLD(tldName);
+            const existingTld = await tldRepository.getTLD(punycodeName);
             if (existingTld) {
-                logger.info(`TLD ${tldName} already exists. Skipping...`);
+                logger.info(`TLD ${punycodeName} already exists. Skipping...`);
                 continue;
             }
 
-            logger.info(`Creating TLD ${tldName} ...`);
+            logger.info(`Creating TLD ${punycodeName} ...`);
             await tldRepository.createTld({
                 name: tldName,
                 punycodeName,
