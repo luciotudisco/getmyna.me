@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import dynamic from 'next/dynamic';
 
+import { stripBidiIndicators } from '@/utils/text';
 import { cn } from '@/utils/utils';
 
 const Player = dynamic(() => import('@lottiefiles/react-lottie-player').then((mod) => mod.Player), {
@@ -22,10 +23,10 @@ interface NoResultsProps {
 }
 
 export default function NoResults({ className, message }: NoResultsProps) {
-    const displayMessage = useMemo(
-        () => message ?? NO_RESULTS_MESSAGES[Math.floor(Math.random() * NO_RESULTS_MESSAGES.length)],
-        [message],
-    );
+    const displayMessage = useMemo(() => {
+        const selectedMessage = message ?? NO_RESULTS_MESSAGES[Math.floor(Math.random() * NO_RESULTS_MESSAGES.length)];
+        return stripBidiIndicators(selectedMessage);
+    }, [message]);
     return (
         <div className={cn('flex flex-1 flex-col items-center gap-4 p-16', className)}>
             <Player autoplay keepLastFrame src="/sad-empty-box.json" style={{ height: '260px' }} />

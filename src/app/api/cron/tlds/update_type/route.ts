@@ -45,27 +45,33 @@ export async function GET(): Promise<NextResponse> {
  * @returns A promise that resolves when the row is processed.
  */
 async function processRow(row: HTMLElement): Promise<void> {
-    const tldName = row.querySelector('td:nth-child(1)')?.text?.trim().toLowerCase().replace(/\./g, '');
-    const typeText = row.querySelector('td:nth-child(2)')?.text?.trim().toLowerCase();
+    const tldLink = row.querySelector('td:nth-child(1) a');
+    const punycodeName = tldLink
+        ?.getAttribute('href')
+        ?.split('/')
+        .pop()
+        ?.replace(/\.html$/, '')
+        ?.toLowerCase();
+    const typeText = row.querySelector('td:nth-child(2)')?.textContent?.trim().toLowerCase();
 
-    if (!tldName || !typeText) {
+    if (!punycodeName || !typeText) {
         logger.warn(`No TLD name or type found for ${row.text}`);
         return;
     }
 
     const tldType = IANA_TLD_TYPE_MAPPING[typeText as keyof typeof IANA_TLD_TYPE_MAPPING];
     if (!tldType) {
-        logger.warn(`The IANA TLD type ${typeText} for TLD ${tldName} is not supported`);
+        logger.warn(`The IANA TLD type ${typeText} for TLD ${punycodeName} is not supported`);
         return;
     }
 
     // Update the TLD in the database with the mapped enum value
-    const tld = await tldRepository.getTLD(tldName);
+    const tld = await tldRepository.getTLD(punycodeName);
     if (tld?.type === tldType) {
-        logger.info(`${tldName} already has type ${tldType}. Skipping...`);
+        logger.info(`${punycodeName} already has type ${tldType}. Skipping...`);
         return;
     }
 
-    await tldRepository.updateTLD(tldName, { type: tldType });
-    logger.info(`Updated ${tldName} with type ${tldType}`);
+    await tldRepository.updateTLD(punycodeName, { type: tldType });
+    logger.info(`Updated ${punycodeName} with type ${tldType}`);
 }
