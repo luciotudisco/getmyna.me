@@ -46,11 +46,12 @@ export async function GET(): Promise<NextResponse> {
  */
 async function processRow(row: HTMLElement): Promise<void> {
     const tldLink = row.querySelector('td:nth-child(1) a');
-    const href = tldLink?.getAttribute('href');
-    const punycode = href!
-        .split('/')
-        .pop()!
-        .replace(/\.html$/, '');
+    const punycode =
+        tldLink
+            ?.getAttribute('href')
+            ?.split('/')
+            .pop()
+            ?.replace(/\.html$/, '') ?? '';
     const typeText = row.querySelector('td:nth-child(2)')?.textContent?.trim().toLowerCase();
 
     if (!punycode || !typeText) {
