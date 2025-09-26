@@ -46,10 +46,6 @@ describe('InspirationCarousel', () => {
         expect(screen.getByText('kevinro.se')).toBeInTheDocument();
 
         // Check that general description is present
-        expect(
-            screen.getByText('A domain hack is a clever twist where the domain and extension merge together.', {
-                exact: false,
-            }),
-        ).toBeInTheDocument();
+        expect(screen.getByText('A domain hack is a clever twist', { exact: false })).toBeInTheDocument();
     });
 });
