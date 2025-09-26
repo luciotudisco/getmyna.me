@@ -22,7 +22,7 @@ interface NoResultsProps {
     message?: string;
 }
 
-export default function NoResults({ className, message }: NoResultsProps) {
+export default function NoResultsMessage({ className, message }: NoResultsProps) {
     const displayMessage = useMemo(() => {
         const selectedMessage = message ?? NO_RESULTS_MESSAGES[Math.floor(Math.random() * NO_RESULTS_MESSAGES.length)];
         return stripBidiIndicators(selectedMessage);

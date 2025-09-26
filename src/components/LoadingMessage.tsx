@@ -34,7 +34,7 @@ interface LoadingProps {
     message?: string;
 }
 
-export default function Loading({ className, message }: LoadingProps) {
+export default function LoadingMessage({ className, message }: LoadingProps) {
     const [displayMessage, setDisplayMessage] = useState(stripBidiIndicators(message || LOADING_MESSAGES[0]));
 
     useEffect(() => {

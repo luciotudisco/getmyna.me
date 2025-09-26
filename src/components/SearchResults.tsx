@@ -2,8 +2,8 @@ import { useEffect, useState, useTransition } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 import ErrorMessage from '@/components/ErrorMessage';
-import Loading from '@/components/Loading';
-import NoResults from '@/components/NoResults';
+import LoadingMessage from '@/components/LoadingMessage';
+import NoResults from '@/components/NoResultsMessage';
 import { SearchResult } from '@/components/SearchResult';
 import NumberTicker from '@/components/ui/number-ticker';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -33,7 +33,7 @@ export function SearchResults() {
     }, [searchParams]);
 
     if (isPending) {
-        return <Loading />;
+        return <LoadingMessage />;
     }
 
     if (hasError) {

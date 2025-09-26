@@ -8,7 +8,7 @@ import DomainStatusBadge from '@/components/DomainStatusBadge';
 import { DomainStatusSection } from '@/components/DomainStatusSection';
 import { DomainWhoisSection } from '@/components/DomainWhoisSection';
 import ErrorMessage from '@/components/ErrorMessage';
-import Loading from '@/components/Loading';
+import LoadingMessage from '@/components/LoadingMessage';
 import TLDSection from '@/components/TldSection';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
@@ -71,7 +71,7 @@ function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawe
                         <DrawerTitle>Loading domain details for {domain.getName()}</DrawerTitle>
                     </VisuallyHidden>
                     <div className="flex flex-1 items-center justify-center">
-                        <Loading />
+                        <LoadingMessage />
                     </div>
                 </DrawerContent>
             </Drawer>
