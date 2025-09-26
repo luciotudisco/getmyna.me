@@ -1,6 +1,7 @@
 import { useEffect, useState, useTransition } from 'react';
 import { useSearchParams } from 'next/navigation';
 
+import ErrorMessage from '@/components/ErrorMessage';
 import Loading from '@/components/Loading';
 import NoResults from '@/components/NoResults';
 import { SearchResult } from '@/components/SearchResult';
@@ -12,17 +13,20 @@ import { apiClient } from '@/services/api';
 export function SearchResults() {
     const searchParams = useSearchParams();
     const [domains, setDomains] = useState<Domain[]>([]);
+    const [hasError, setHasError] = useState(false);
     const [isPending, startTransition] = useTransition();
 
     useEffect(() => {
         startTransition(async () => {
             try {
+                setHasError(false);
                 const term = searchParams.get('term');
                 const includeSubdomains = searchParams.get('include_subdomains') === 'true';
                 const names = await apiClient.searchDomains(term ?? '', includeSubdomains);
                 const initialDomains = names.map((name: string) => new Domain(name));
                 setDomains(initialDomains);
-            } catch {
+            } catch (err) {
+                setHasError(true);
                 setDomains([]);
             }
         });
@@ -30,6 +34,10 @@ export function SearchResults() {
 
     if (isPending) {
         return <Loading />;
+    }
+
+    if (hasError) {
+        return <ErrorMessage />;
     }
 
     if (domains.length === 0) {

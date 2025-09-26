@@ -6,6 +6,8 @@ import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import DomainRegistrarButtons from '@/components/DomainRegistrarButtons';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
 import { DomainStatusSection } from '@/components/DomainStatusSection';
+import { DomainWhoisSection } from '@/components/DomainWhoisSection';
+import ErrorMessage from '@/components/ErrorMessage';
 import Loading from '@/components/Loading';
 import TLDSection from '@/components/TldSection';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -16,8 +18,6 @@ import { TLD } from '@/models/tld';
 import { WhoisInfo } from '@/models/whois';
 import { apiClient } from '@/services/api';
 
-import { DomainWhoisSection } from './DomainWhoisSection';
-
 interface DomainDetailDrawerProps {
     domain: Domain;
     status: DomainStatusEnum;
@@ -26,10 +26,11 @@ interface DomainDetailDrawerProps {
 }
 
 function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawerProps) {
-    const [whoisInfo, setWhoisInfo] = useState<WhoisInfo | null>(null);
-    const [tldInfo, setTldInfo] = useState<TLD | null>(null);
     const [digInfo, setDigInfo] = useState<DigInfo | null>(null);
+    const [hasError, setHasError] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [tldInfo, setTldInfo] = useState<TLD | null>(null);
+    const [whoisInfo, setWhoisInfo] = useState<WhoisInfo | null>(null);
 
     useEffect(() => {
         if (!open) {
@@ -43,6 +44,7 @@ function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawe
         const fetchData = async () => {
             setLoading(true);
             try {
+                setHasError(false);
                 const isAvailable = domain.isAvailable();
                 const whoisPromise = isAvailable ? Promise.resolve(null) : apiClient.getWhoisInfo(domain.getName());
                 const tldPromise = apiClient.getTld(domain.getName());
@@ -52,7 +54,7 @@ function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawe
                 setTldInfo(tldData as TLD);
                 setDigInfo(digData as DigInfo);
             } catch {
-                // Silently handle error
+                setHasError(true);
             } finally {
                 setLoading(false);
             }
@@ -70,6 +72,21 @@ function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawe
                     </VisuallyHidden>
                     <div className="flex flex-1 items-center justify-center">
                         <Loading />
+                    </div>
+                </DrawerContent>
+            </Drawer>
+        );
+    }
+
+    if (hasError) {
+        return (
+            <Drawer open={open} onOpenChange={(openState: boolean) => !openState && onClose()} direction="bottom">
+                <DrawerContent className="min-h-[400px]">
+                    <VisuallyHidden>
+                        <DrawerTitle>Loading domain details for {domain.getName()}</DrawerTitle>
+                    </VisuallyHidden>
+                    <div className="flex flex-1 items-center justify-center">
+                        <ErrorMessage />
                     </div>
                 </DrawerContent>
             </Drawer>
