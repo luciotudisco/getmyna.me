@@ -17,25 +17,19 @@ const NO_RESULTS_MESSAGES = [
 ];
 
 interface NoResultsProps {
-    size?: 'small' | 'medium' | 'large';
     className?: string;
     message?: string;
 }
 
-export default function NoResults({ className, message, size = 'large' }: NoResultsProps) {
+export default function NoResults({ className, message }: NoResultsProps) {
     const displayMessage = useMemo(
         () => message ?? NO_RESULTS_MESSAGES[Math.floor(Math.random() * NO_RESULTS_MESSAGES.length)],
         [message],
     );
-
-    const height = useMemo(() => {
-        return size === 'small' ? '60px' : size === 'medium' ? '80px' : '120px';
-    }, [size]);
-
     return (
-        <div className={cn('flex flex-1 flex-col items-center gap-3 p-12 align-middle', className)}>
-            <Player autoplay keepLastFrame src="/sad-empty-box.json" style={{ minHeight: height }} />
-            <p className="text-md text-center text-muted-foreground">{displayMessage}</p>
+        <div className={cn('flex flex-1 flex-col items-center gap-4 p-16', className)}>
+            <Player autoplay keepLastFrame src="/sad-empty-box.json" style={{ height: '260px' }} />
+            <span className="max-w-sm text-center text-sm text-muted-foreground">{displayMessage}</span>
         </div>
     );
 }

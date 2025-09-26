@@ -29,11 +29,7 @@ export function SearchResults() {
     }, [searchParams]);
 
     if (isPending) {
-        return (
-            <div className="flex-1 items-center p-12 align-middle">
-                <Loading size="large" />
-            </div>
-        );
+        return <Loading />;
     }
 
     if (domains.length === 0) {
