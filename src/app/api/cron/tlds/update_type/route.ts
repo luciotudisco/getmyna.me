@@ -46,12 +46,9 @@ export async function GET(): Promise<NextResponse> {
  */
 async function processRow(row: HTMLElement): Promise<void> {
     const tldLink = row.querySelector('td:nth-child(1) a');
-    const punycode =
-        tldLink
-            ?.getAttribute('href')
-            ?.split('/')
-            .pop()
-            ?.replace(/\.html$/, '') ?? '';
+    const href = tldLink?.getAttribute('href');
+    const htmlPath = href?.split('/').pop();
+    const punycode = htmlPath?.replace(/\.html$/, '') ?? '';
     const typeText = row.querySelector('td:nth-child(2)')?.textContent?.trim().toLowerCase();
 
     if (!punycode || !typeText) {
