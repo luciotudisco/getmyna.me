@@ -9,7 +9,7 @@ import { DomainStatusSection } from '@/components/DomainStatusSection';
 import { DomainWhoisSection } from '@/components/DomainWhoisSection';
 import ErrorMessage from '@/components/ErrorMessage';
 import LoadingMessage from '@/components/LoadingMessage';
-import TLDSection from '@/components/TldSection';
+import TLDSection from '@/components/TLDSection';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
 import { DigInfo } from '@/models/dig';
