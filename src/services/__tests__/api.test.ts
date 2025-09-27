@@ -122,6 +122,103 @@ describe('APIClient', () => {
 
             expect(result).toEqual(mockCount);
         });
+
+        it('should return zero when count is zero', async () => {
+            const mockCount = 0;
+
+            const mockResponse = { count: mockCount };
+
+            mockAdapter.onGet('/api/tlds/count').reply(200, mockResponse);
+
+            const result = await apiClient.getTLDsCount();
+
+            expect(result).toEqual(0);
+        });
+
+        it('should return zero when response has no count field', async () => {
+            const mockResponse = {};
+
+            mockAdapter.onGet('/api/tlds/count').reply(200, mockResponse);
+
+            const result = await apiClient.getTLDsCount();
+
+            expect(result).toEqual(0);
+        });
+
+        it('should return zero when count is null', async () => {
+            const mockResponse = { count: null };
+
+            mockAdapter.onGet('/api/tlds/count').reply(200, mockResponse);
+
+            const result = await apiClient.getTLDsCount();
+
+            expect(result).toEqual(0);
+        });
+
+        it('should return zero when count is undefined', async () => {
+            const mockResponse = { count: undefined };
+
+            mockAdapter.onGet('/api/tlds/count').reply(200, mockResponse);
+
+            const result = await apiClient.getTLDsCount();
+
+            expect(result).toEqual(0);
+        });
+
+        it('should handle large count values', async () => {
+            const mockCount = 999999;
+
+            const mockResponse = { count: mockCount };
+
+            mockAdapter.onGet('/api/tlds/count').reply(200, mockResponse);
+
+            const result = await apiClient.getTLDsCount();
+
+            expect(result).toEqual(mockCount);
+        });
+
+        it('should handle string count values', async () => {
+            const mockResponse = { count: '1500' };
+
+            mockAdapter.onGet('/api/tlds/count').reply(200, mockResponse);
+
+            const result = await apiClient.getTLDsCount();
+
+            expect(result).toEqual('1500');
+        });
+
+        it('should handle 404 error response', async () => {
+            mockAdapter.onGet('/api/tlds/count').reply(404, { error: 'Not found' });
+
+            await expect(apiClient.getTLDsCount()).rejects.toThrow();
+        });
+
+        it('should handle 500 error response', async () => {
+            mockAdapter.onGet('/api/tlds/count').reply(500, { error: 'Internal server error' });
+
+            await expect(apiClient.getTLDsCount()).rejects.toThrow();
+        });
+
+        it('should handle network timeout', async () => {
+            mockAdapter.onGet('/api/tlds/count').timeout();
+
+            await expect(apiClient.getTLDsCount()).rejects.toThrow();
+        });
+
+        it('should handle network error', async () => {
+            mockAdapter.onGet('/api/tlds/count').networkError();
+
+            await expect(apiClient.getTLDsCount()).rejects.toThrow();
+        });
+
+
+        it('should handle empty response body', async () => {
+            mockAdapter.onGet('/api/tlds/count').reply(200, {});
+
+            const result = await apiClient.getTLDsCount();
+
+            expect(result).toEqual(0);
+        });
     });
 
     describe('searchDomains', () => {
