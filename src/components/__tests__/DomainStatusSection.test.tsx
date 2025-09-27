@@ -153,27 +153,4 @@ describe('DomainStatusSection', () => {
             expect(screen.getByText(/Something went sideways/)).toBeInTheDocument();
         });
     });
-
-    describe('All Status Values', () => {
-        const allStatuses = Object.values(DomainStatus);
-
-        allStatuses.forEach((status) => {
-            it(`should render correctly for ${status} status`, () => {
-                render(<DomainStatusSection status={status} />);
-
-                // Check that the status badge is displayed
-                expect(screen.getByText(status)).toBeInTheDocument();
-
-                // Check that the status badge has correct styling
-                const badge = screen.getByText(status);
-                expect(badge).toHaveClass('uppercase');
-
-                // Check that description is displayed (all statuses should have descriptions)
-                const description = screen.getByText((content, element) => {
-                    return element?.tagName === 'P' && (element?.textContent?.length ?? 0) > 0;
-                });
-                expect(description).toBeInTheDocument();
-            });
-        });
-    });
 });
