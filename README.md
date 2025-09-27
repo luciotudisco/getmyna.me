@@ -26,13 +26,8 @@
 - `bitly` → `bit.ly` (using .ly from Libya)
 - `google` → `goo.gl` (using .gl from Greenland)
 - `youtube` → `youtu.be` (using .be from Belgium)
-- `twitter` → `t.co` (using .co from Colombia)
-- `lastfm` → `last.fm` (using .fm from Federated States of Micronesia)
 - `flickr` → `flic.kr` (using .kr from South Korea)
-- `tumblr` → `tmblr.co` (using .co from Colombia)
 - `reddit` → `redd.it` (using .it from Italy)
-- `imgur` → `imgu.rs` (using .rs from Serbia)
-- `medium` → `medi.um` (using .um from United States Minor Outlying Islands)
 
 Whether you're looking for a memorable personal brand, a catchy business domain, or just want to explore creative naming possibilities, getmyna.me generates thousands of domain suggestions, checks their availability, and provides detailed pricing and WHOIS information.
 
