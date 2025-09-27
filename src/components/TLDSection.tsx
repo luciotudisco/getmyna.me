@@ -1,11 +1,11 @@
 'use client';
 
-import { CircleHelp, Flag, FlaskConical, Globe2, Handshake, type LucideIcon, Server, ShieldCheck } from 'lucide-react';
+import { Flag, FlaskConical, Globe2, Handshake, type LucideIcon, Server, ShieldCheck } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { TLD, TLDType } from '@/models/tld';
 
-const TLD_TYPE_ICON_MAP: Record<TLDType, LucideIcon> = {
+const TLD_TYPE_ICONS: Record<TLDType, LucideIcon> = {
     [TLDType.COUNTRY_CODE]: Flag,
     [TLDType.GENERIC]: Globe2,
     [TLDType.GENERIC_RESTRICTED]: ShieldCheck,
@@ -14,12 +14,20 @@ const TLD_TYPE_ICON_MAP: Record<TLDType, LucideIcon> = {
     [TLDType.TEST]: FlaskConical,
 };
 
-const DEFAULT_TLD_TYPE_ICON = CircleHelp;
+const TLD_TYPE_DISPLAY_NAMES: Record<TLDType, string> = {
+    [TLDType.COUNTRY_CODE]: 'Country Code',
+    [TLDType.GENERIC]: 'Generic',
+    [TLDType.GENERIC_RESTRICTED]: 'Generic Restricted',
+    [TLDType.INFRASTRUCTURE]: 'Infrastructure',
+    [TLDType.SPONSORED]: 'Sponsored',
+    [TLDType.TEST]: 'Test',
+};
 
 export default function TLDSection({ name, punycodeName, description, type }: TLD) {
     const ianaURL = `https://www.iana.org/domains/root/db/${punycodeName}.html`;
     const tldDescription = description ?? 'No additional information is available for this TLD, just yet.';
-    const TypeIcon = type ? (TLD_TYPE_ICON_MAP[type] ?? DEFAULT_TLD_TYPE_ICON) : null;
+    const tldDisplayName = type ? TLD_TYPE_DISPLAY_NAMES[type] : null;
+    const Icon = type ? TLD_TYPE_ICONS[type] : null;
 
     return (
         <div className="space-y-2 text-xs">
@@ -31,8 +39,8 @@ export default function TLDSection({ name, punycodeName, description, type }: TL
                     </Badge>
                     {type && (
                         <Badge variant="outline" className="flex items-center gap-1 uppercase">
-                            {TypeIcon && <TypeIcon className="h-3 w-3" aria-hidden="true" />}
-                            <span>{type.replace(/_/g, ' ')}</span>
+                            {Icon && <Icon className="h-3 w-3" aria-hidden="true" />}
+                            <span>{tldDisplayName}</span>
                         </Badge>
                     )}
                 </div>
