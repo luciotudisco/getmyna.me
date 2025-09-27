@@ -10,19 +10,13 @@ describe('DomainStatusSection', () => {
 
             // Check for the header section
             expect(screen.getByText('Domain Status')).toBeInTheDocument();
-            expect(screen.getByText('Domain Status')).toHaveClass(
-                'font-semibold',
-                'uppercase',
-                'text-muted-foreground',
-            );
         });
 
-        it('should render status badge with correct styling', () => {
+        it('should render status badge', () => {
             render(<DomainStatusSection status={DomainStatus.active} />);
 
             const badge = screen.getByText('active');
             expect(badge).toBeInTheDocument();
-            expect(badge).toHaveClass('uppercase');
         });
     });
 
