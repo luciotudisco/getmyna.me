@@ -22,6 +22,20 @@ class TLDRepository {
     }
 
     /**
+     * Returns the number of TLDs in the database.
+     *
+     * @returns The number of TLDs.
+     */
+    async countTLDs(): Promise<number> {
+        const { data, error } = await this.client.from('tld').select('*', { count: 'exact' });
+        if (error) {
+            logger.error({ error }, 'Error counting TLDs');
+            throw new Error(`Failed to count TLDs: ${error.message}`);
+        }
+        return data.length;
+    }
+
+    /**
      * Creates a new TLD in the database.
      *
      * @param tldInfo - The TLD information to create.

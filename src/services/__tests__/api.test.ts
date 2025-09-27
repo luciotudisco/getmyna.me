@@ -104,27 +104,23 @@ describe('APIClient', () => {
 
             mockAdapter.onGet('/api/domains/example.com/tld').reply(200, mockTldInfo);
 
-            const result = await apiClient.getTld('example.com');
+            const result = await apiClient.getTLD('example.com');
 
             expect(result).toEqual(mockTldInfo);
         });
     });
 
-    describe('getTlds', () => {
-        it('should return list of TLDs', async () => {
-            const mockTlds: TLD[] = [
-                { name: 'com', description: 'Commercial' },
-                { name: 'org', description: 'Organization' },
-                { name: 'net', description: 'Network' },
-            ];
+    describe('getTLDsCount', () => {
+        it('should return the number of TLDs', async () => {
+            const mockCount = 100;
 
-            const mockResponse = { tlds: mockTlds };
+            const mockResponse = { count: mockCount };
 
-            mockAdapter.onGet('/api/tlds').reply(200, mockResponse);
+            mockAdapter.onGet('/api/tlds/count').reply(200, mockResponse);
 
-            const result = await apiClient.getTlds();
+            const result = await apiClient.getTLDsCount();
 
-            expect(result).toEqual(mockTlds);
+            expect(result).toEqual(mockCount);
         });
     });
 

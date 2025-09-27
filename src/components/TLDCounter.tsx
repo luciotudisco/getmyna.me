@@ -36,8 +36,8 @@ function TLDCounter() {
         startTransition(async () => {
             try {
                 setHasError(false);
-                const tlds = await apiClient.getTlds();
-                setCount(tlds.length);
+                const count = await apiClient.getTLDsCount();
+                setCount(count);
             } catch {
                 setHasError(true);
                 setCount(0);
