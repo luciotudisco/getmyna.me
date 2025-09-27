@@ -52,8 +52,8 @@ export default function InspirationCarousel() {
                     color="#bcd4e6"
                 />
                 <CarouselItem
-                    title="Kevin Rose - founder of Digg - uses Sweden's TLD (.se) to complete his last name."
-                    domain="kevinro.se"
+                    title="Melanie C - English singer and former member of the Spice Girls - uses Ireland's TLD (.ie) to complete her first name."
+                    domain="melan.ie"
                     color="#cbf3f0"
                 />
             </CarouselContent>

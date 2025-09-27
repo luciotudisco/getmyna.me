@@ -43,7 +43,7 @@ describe('InspirationCarousel', () => {
         expect(screen.getByText('bit.ly')).toBeInTheDocument();
         expect(screen.getByText('nav.al')).toBeInTheDocument();
         expect(screen.getByText('flic.kr')).toBeInTheDocument();
-        expect(screen.getByText('kevinro.se')).toBeInTheDocument();
+        expect(screen.getByText('melan.ie')).toBeInTheDocument();
 
         // Check that general description is present
         expect(screen.getByText('A domain hack is a clever twist', { exact: false })).toBeInTheDocument();
