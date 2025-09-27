@@ -3,7 +3,6 @@
 import { useMemo } from 'react';
 import dynamic from 'next/dynamic';
 
-import { stripBidiIndicators } from '@/utils/text';
 import { cn } from '@/utils/utils';
 
 const Player = dynamic(() => import('@lottiefiles/react-lottie-player').then((mod) => mod.Player), {
@@ -24,8 +23,7 @@ interface ErrorResultsProps {
 
 export default function ErrorMessage({ className, message }: ErrorResultsProps) {
     const displayMessage = useMemo(() => {
-        const selectedMessage = message ?? ERROR_MESSAGES[Math.floor(Math.random() * ERROR_MESSAGES.length)];
-        return stripBidiIndicators(selectedMessage);
+        return message ?? ERROR_MESSAGES[Math.floor(Math.random() * ERROR_MESSAGES.length)];
     }, [message]);
     return (
         <div className={cn('flex flex-1 flex-col items-center gap-4 p-16', className)}>

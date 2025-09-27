@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import dynamic from 'next/dynamic';
 
-import { stripBidiIndicators } from '@/utils/text';
 import { cn } from '@/utils/utils';
 
 const Player = dynamic(() => import('@lottiefiles/react-lottie-player').then((mod) => mod.Player), {
@@ -35,13 +34,8 @@ interface LoadingProps {
 }
 
 export default function LoadingMessage({ className, message }: LoadingProps) {
-    const [displayMessage, setDisplayMessage] = useState(stripBidiIndicators(message || LOADING_MESSAGES[0]));
-
-    useEffect(() => {
-        if (!message) {
-            const randomMessage = LOADING_MESSAGES[Math.floor(Math.random() * LOADING_MESSAGES.length)];
-            setDisplayMessage(stripBidiIndicators(randomMessage));
-        }
+    const displayMessage = useMemo(() => {
+        return message ?? LOADING_MESSAGES[Math.floor(Math.random() * LOADING_MESSAGES.length)];
     }, [message]);
 
     return (
