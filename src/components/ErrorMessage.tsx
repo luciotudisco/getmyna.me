@@ -10,10 +10,13 @@ const Player = dynamic(() => import('@lottiefiles/react-lottie-player').then((mo
 });
 
 const ERROR_MESSAGES = [
-    'Oops! Something went wrong. Please try again later.',
-    'Oops! Our servers are having a coffee break. Please try again later.',
+    'Hang tight! Our servers are busy chasing a runaway packet.',
+    'Hmm... The backend got lost in a maze of JSON. We will guide it back shortly.',
+    'Oh no! The API went out for a byte to eat. Try again in a moment.',
     'Oops! Our microservices are having a macro breakdown. Please try again later.',
-    'Oops! The backend went to get milk and never came back. Please try again later.',
+    'Oops! The backend went to get milk and never came back. Please try again later. ',
+    'Whoops! The system tripped over its own wires. Give it another shot soon.',
+    'Yikes! The code gremlins are staging a rebellion. Please try again later.',
 ];
 
 interface ErrorResultsProps {

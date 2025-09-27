@@ -20,10 +20,10 @@ function CountDisplay({ isPending, hasError, count }: { isPending: boolean; hasE
     }
 
     return (
-        <>
+        <div className="flex items-center gap-2">
             <NumberTicker value={count} className="min-w-20 text-2xl font-semibold tabular-nums text-primary" />
             <span className="text-lg font-medium text-muted-foreground">TLDs</span>
-        </>
+        </div>
     );
 }
 
