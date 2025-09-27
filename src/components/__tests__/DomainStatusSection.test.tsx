@@ -8,15 +8,13 @@ describe('DomainStatusSection', () => {
         it('should render the component with correct structure', () => {
             render(<DomainStatusSection status={DomainStatus.active} />);
 
-            // Check for the header section
             expect(screen.getByText('Domain Status')).toBeInTheDocument();
         });
 
         it('should render status badge', () => {
             render(<DomainStatusSection status={DomainStatus.active} />);
 
-            const badge = screen.getByText('active');
-            expect(badge).toBeInTheDocument();
+            expect(screen.getByText('active')).toBeInTheDocument();
         });
     });
 
