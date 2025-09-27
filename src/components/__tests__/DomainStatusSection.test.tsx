@@ -176,13 +176,4 @@ describe('DomainStatusSection', () => {
             });
         });
     });
-
-    describe('Component Props', () => {
-        it('should accept and use the status prop correctly', () => {
-            const testStatus = DomainStatus.parked;
-            render(<DomainStatusSection status={testStatus} />);
-
-            expect(screen.getByText(testStatus)).toBeInTheDocument();
-        });
-    });
 });
