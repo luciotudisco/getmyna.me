@@ -37,7 +37,7 @@ const AboutPage = () => {
                     <Badge className="text-xs font-medium">ABOUT</Badge>
                     <h1 className="mt-4 text-2xl font-semibold lg:text-4xl">Domain Hacks</h1>
                     <p className="mt-4 text-sm font-medium text-muted-foreground lg:mt-6 lg:text-base">
-                        Forget ".com" Get a domain that truly{' '}
+                        Forget ".com". Get a domain that truly{' '}
                         <Highlighter action="highlight" color="#fde2e4">
                             stand out
                         </Highlighter>
