@@ -37,11 +37,10 @@ const AboutPage = () => {
                     <Badge className="text-xs font-medium">ABOUT</Badge>
                     <h1 className="mt-4 text-2xl font-semibold lg:text-4xl">Domain Hacks</h1>
                     <p className="mt-4 text-sm font-medium text-muted-foreground lg:mt-6 lg:text-base">
-                        Forget <span className="font-medium">.com</span>! Get a domain that truly{' '}
+                        Discover how to create memorable domains that{' '}
                         <Highlighter action="highlight" color="#fde2e4">
                             stand out
                         </Highlighter>
-                        .
                     </p>
                 </div>
                 <div className="mx-auto mt-6 max-w-xl lg:mt-14">
