@@ -1,6 +1,5 @@
+import { GET } from '@/app/api/tlds/count/route';
 import { tldRepository } from '@/services/tld-repository';
-
-import { GET } from '../route';
 
 jest.mock('@/services/tld-repository');
 const mockTldRepository = tldRepository as jest.Mocked<typeof tldRepository>;
@@ -23,7 +22,7 @@ describe('/api/tlds/count', () => {
             expect(mockTldRepository.countTLDs).toHaveBeenCalledTimes(1);
         });
 
-        it('should return 500 error when repository throws', async () => {
+        it('should throw 500 when request fails', async () => {
             const mockError = new Error('Database connection failed');
             mockTldRepository.countTLDs.mockRejectedValue(mockError);
 
@@ -31,7 +30,7 @@ describe('/api/tlds/count', () => {
             const responseData = await response.json();
 
             expect(response.status).toBe(500);
-            expect(responseData).toEqual({ error: 'Failed to count TLDs' });
+            expect(responseData).toEqual({ error: 'Internal server error' });
         });
     });
 });

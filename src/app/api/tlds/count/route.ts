@@ -9,6 +9,6 @@ export async function GET(): Promise<NextResponse> {
         return NextResponse.json({ count });
     } catch (error) {
         logger.error({ error }, 'Error counting TLDs');
-        return NextResponse.json({ error: 'Failed to count TLDs' }, { status: 500 });
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
