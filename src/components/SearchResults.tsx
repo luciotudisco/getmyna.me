@@ -25,7 +25,7 @@ export function SearchResults() {
                 const names = await apiClient.searchDomains(term ?? '', includeSubdomains);
                 const initialDomains = names.map((name: string) => new Domain(name));
                 setDomains(initialDomains);
-            } catch (err) {
+            } catch {
                 setHasError(true);
                 setDomains([]);
             }

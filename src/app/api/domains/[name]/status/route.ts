@@ -12,7 +12,6 @@ export async function GET(_request: Request, ctx: { params: Promise<{ name: stri
         const { name: domain } = await ctx.params;
         const config = { headers: { 'x-rapidapi-key': RAPID_API_KEY }, params: { domain } };
         const response = await axios.get(DOMAINR_BASE_URL, config);
-        console.log(response.data);
         if (!response.data.status || response.data.status.length === 0) {
             logger.error({ domain }, `No valid status found for domain ${domain}`);
             return NextResponse.json({ status: DomainStatus.error });

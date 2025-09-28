@@ -26,7 +26,6 @@ export async function GET(
         const headers = { headers: { 'x-rapidapi-key': RAPID_API_KEY } };
         const response = await axios.post(WHOIS_URL, { query: domain }, headers);
         const result = (response.data as { result?: WhoisResult }).result;
-        console.log(result);
         const creationRaw = result?.creation_date;
         const expirationRaw = result?.expiration_date;
         const updatedRaw = result?.updated_date;
