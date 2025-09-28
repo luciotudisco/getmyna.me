@@ -40,7 +40,7 @@ const AboutPage = () => {
                         Forget <span className="font-medium line-through">.com</span>. Get a domain that truly{' '}
                         <Highlighter action="highlight" color="#fde2e4">
                             stand out
-                        </Highlighter>
+                        </Highlighter>!
                     </p>
                 </div>
                 <div className="mx-auto mt-6 max-w-xl lg:mt-14">
