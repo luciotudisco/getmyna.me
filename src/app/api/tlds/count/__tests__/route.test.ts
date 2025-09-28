@@ -1,23 +1,13 @@
-// Mock Next.js environment
-global.Request = global.Request || class MockRequest {};
-global.Response = global.Response || class MockResponse {};
+import { tldRepository } from '@/services/tld-repository';
+import logger from '@/utils/logger';
 
-// Mock the dependencies before importing
-jest.mock('@/services/tld-repository', () => ({
-    tldRepository: {
-        countTLDs: jest.fn(),
-    },
-}));
+import { GET } from '../route';
 
+// Mock the dependencies
+jest.mock('@/services/tld-repository');
 jest.mock('@/utils/logger', () => ({
     error: jest.fn(),
 }));
-
-import { NextResponse } from 'next/server';
-
-import { GET } from '../route';
-import { tldRepository } from '@/services/tld-repository';
-import logger from '@/utils/logger';
 
 const mockTldRepository = tldRepository as jest.Mocked<typeof tldRepository>;
 const mockLogger = logger as jest.Mocked<typeof logger>;
@@ -49,10 +39,7 @@ describe('/api/tlds/count', () => {
 
             expect(response.status).toBe(500);
             expect(responseData).toEqual({ error: 'Failed to count TLDs' });
-            expect(mockLogger.error).toHaveBeenCalledWith(
-                { error: mockError },
-                'Error counting TLDs'
-            );
+            expect(mockLogger.error).toHaveBeenCalledWith({ error: mockError }, 'Error counting TLDs');
         });
 
         it('should handle repository returning zero count', async () => {
@@ -89,10 +76,7 @@ describe('/api/tlds/count', () => {
 
             expect(response.status).toBe(500);
             expect(responseData).toEqual({ error: 'Failed to count TLDs' });
-            expect(mockLogger.error).toHaveBeenCalledWith(
-                { error: timeoutError },
-                'Error counting TLDs'
-            );
+            expect(mockLogger.error).toHaveBeenCalledWith({ error: timeoutError }, 'Error counting TLDs');
         });
 
         it('should handle database connection error', async () => {
@@ -105,10 +89,18 @@ describe('/api/tlds/count', () => {
 
             expect(response.status).toBe(500);
             expect(responseData).toEqual({ error: 'Failed to count TLDs' });
-            expect(mockLogger.error).toHaveBeenCalledWith(
-                { error: connectionError },
-                'Error counting TLDs'
-            );
+            expect(mockLogger.error).toHaveBeenCalledWith({ error: connectionError }, 'Error counting TLDs');
+        });
+
+        it('should handle repository returning null/undefined count', async () => {
+            mockTldRepository.countTLDs.mockResolvedValue(0);
+
+            const response = await GET();
+            const responseData = await response.json();
+
+            expect(response.status).toBe(200);
+            expect(responseData).toEqual({ count: 0 });
+            expect(mockTldRepository.countTLDs).toHaveBeenCalledTimes(1);
         });
     });
 });
