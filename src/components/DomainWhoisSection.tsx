@@ -101,6 +101,14 @@ export function DomainWhoisSection({ whoisInfo, digInfo }: DomainWhoisSectionPro
                     <span className="font-medium">{formattedExpirationDate}</span>
                 </p>
             )}
+
+            {/* Registrar Name */}
+            {whoisInfo?.registrantName && (
+                <p>
+                    <span className="text-muted-foreground">Registrant:</span>{' '}
+                    <span className="font-medium">{whoisInfo.registrantName}</span>
+                </p>
+            )}
         </div>
     );
 }

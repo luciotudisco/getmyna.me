@@ -9,10 +9,11 @@ const RAPID_API_KEY = process.env.RAPID_API_KEY!;
 interface WhoisResult {
     creation_date?: string | string[];
     expiration_date?: string | string[];
-    updated_date?: string | string[];
     last_updated?: string | string[];
-    registrar?: string;
+    registrant_name?: string | string[];
     registrar_url?: string;
+    registrar?: string;
+    updated_date?: string | string[];
 }
 
 export async function GET(
@@ -25,6 +26,7 @@ export async function GET(
         const headers = { headers: { 'x-rapidapi-key': RAPID_API_KEY } };
         const response = await axios.post(WHOIS_URL, { query: domain }, headers);
         const result = (response.data as { result?: WhoisResult }).result;
+        console.log(result);
         const creationRaw = result?.creation_date;
         const expirationRaw = result?.expiration_date;
         const updatedRaw = result?.updated_date;
@@ -33,7 +35,15 @@ export async function GET(
         const creationDate = Array.isArray(creationRaw) ? creationRaw[0] : (creationRaw ?? null);
         const expirationDate = Array.isArray(expirationRaw) ? expirationRaw[0] : (expirationRaw ?? null);
         const lastUpdatedDate = Array.isArray(updatedRaw) ? updatedRaw[0] : (updatedRaw ?? null);
-        return NextResponse.json({ creationDate, expirationDate, lastUpdatedDate, registrar, registrarUrl });
+        const registrantName = result?.registrant_name ?? null;
+        return NextResponse.json({
+            creationDate,
+            expirationDate,
+            lastUpdatedDate,
+            registrar,
+            registrarUrl,
+            registrantName,
+        });
     } catch (error) {
         logger.error({ error }, 'Error fetching whois data');
         return NextResponse.json({ error: 'Failed to fetch whois data' }, { status: 500 });
