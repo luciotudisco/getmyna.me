@@ -117,7 +117,7 @@ function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawe
                         </>
                     )}
 
-                    {!domain.isAvailable() && whoisInfo && (
+                    {!domain.isAvailable() && whoisInfo && whoisInfo.creationDate && (
                         <>
                             <Separator />
                             <DomainWhoisSection whoisInfo={whoisInfo} digInfo={digInfo} />
