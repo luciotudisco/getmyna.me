@@ -168,4 +168,4 @@ class TLDRepository {
 }
 
 export const tldRepository = new TLDRepository();
-export { TLDRepository };
+export type { TLDRepository };
