@@ -2,9 +2,7 @@ import { tldRepository } from '@/services/tld-repository';
 
 import { GET } from '../route';
 
-// Mock the dependencies
 jest.mock('@/services/tld-repository');
-
 const mockTldRepository = tldRepository as jest.Mocked<typeof tldRepository>;
 
 describe('/api/tlds/count', () => {
