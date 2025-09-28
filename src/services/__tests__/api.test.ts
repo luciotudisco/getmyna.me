@@ -51,9 +51,7 @@ describe('APIClient', () => {
 
     describe('getDomainStatus', () => {
         it('should return domain status from API response', async () => {
-            const mockResponse = {
-                status: [{ summary: 'active' }, { summary: 'claimed' }],
-            };
+            const mockResponse = { status: 'claimed' };
 
             mockAdapter.onGet('/api/domains/example.com/status').reply(200, mockResponse);
 

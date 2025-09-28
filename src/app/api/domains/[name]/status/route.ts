@@ -1,24 +1,26 @@
 import axios from 'axios';
 import { NextResponse } from 'next/server';
 
+import { DomainStatus } from '@/models/domain';
 import logger from '@/utils/logger';
 
 const DOMAINR_BASE_URL = 'https://domainr.p.rapidapi.com/v2/status';
 const RAPID_API_KEY = process.env.RAPID_API_KEY!;
 
-export async function GET(
-    _request: Request,
-    { params }: { params: Promise<Record<string, string | string[]>> },
-): Promise<NextResponse> {
+export async function GET(_request: Request, ctx: { params: Promise<{ name: string }> }): Promise<NextResponse> {
     try {
-        const resolvedParams = await params;
-        const domain = Array.isArray(resolvedParams?.name) ? resolvedParams?.name[0] : resolvedParams?.name;
-        const headers = { headers: { 'x-rapidapi-key': RAPID_API_KEY } };
-        const url = `${DOMAINR_BASE_URL}?${new URLSearchParams({ domain }).toString()}`;
-        const response = await axios.get(url, headers);
-        return NextResponse.json(response.data);
+        const { name: domain } = await ctx.params;
+        const config = { headers: { 'x-rapidapi-key': RAPID_API_KEY }, params: { domain } };
+        const response = await axios.get(DOMAINR_BASE_URL, config);
+        console.log(response.data);
+        if (!response.data.status || response.data.status.length === 0) {
+            logger.error({ domain }, `No valid status found for domain ${domain}`);
+            return NextResponse.json({ status: DomainStatus.error });
+        }
+        const status = response.data.status[0].status.split(' ').at(-1) as DomainStatus;
+        return NextResponse.json({ status });
     } catch (error) {
         logger.error({ error }, 'Error fetching data');
-        return NextResponse.json({ error: 'Failed to fetch data' }, { status: 500 });
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

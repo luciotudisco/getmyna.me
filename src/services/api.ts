@@ -31,8 +31,7 @@ class APIClient {
      */
     async getDomainStatus(domain: string): Promise<DomainStatusEnum> {
         const response = await this.client.get(`/api/domains/${domain}/status`);
-        const data = response.data as { status?: Array<{ summary?: string }> };
-        return (data.status?.at(-1)?.summary as DomainStatusEnum) ?? DomainStatusEnum.error;
+        return response.data.status as DomainStatusEnum;
     }
 
     /**
