@@ -12,11 +12,11 @@ export async function GET(_request: Request, ctx: { params: Promise<{ name: stri
         const { name: domain } = await ctx.params;
         const config = { headers: { 'x-rapidapi-key': RAPID_API_KEY }, params: { domain } };
         const response = await axios.get(DOMAINR_BASE_URL, config);
-        if (!response.data.status || response.data.status.length === 0) {
+        if (!response.data.status || response.data.status.length === 0 || !response.data.status[0].status) {
             logger.error({ domain }, `No valid status found for domain ${domain}`);
-            return NextResponse.json({ status: DomainStatus.error });
+            return NextResponse.json({ status: DomainStatus.ERROR });
         }
-        const status = response.data.status[0].status.split(' ').at(-1) as DomainStatus;
+        const status = response.data.status[0].status.split(' ')[1].toUpperCase() as DomainStatus;
         return NextResponse.json({ status });
     } catch (error) {
         logger.error({ error }, 'Error fetching data');

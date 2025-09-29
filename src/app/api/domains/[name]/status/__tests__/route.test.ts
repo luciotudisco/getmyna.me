@@ -25,7 +25,7 @@ describe('/api/domains/[name]/status', () => {
             const responseData = await response.json();
 
             expect(response.status).toBe(200);
-            expect(responseData).toEqual({ status: DomainStatus.inactive });
+            expect(responseData).toEqual({ status: DomainStatus.INACTIVE });
         });
 
         it('should return error status when status array is empty', async () => {
@@ -38,7 +38,7 @@ describe('/api/domains/[name]/status', () => {
             const responseData = await response.json();
 
             expect(response.status).toBe(200);
-            expect(responseData).toEqual({ status: DomainStatus.error });
+            expect(responseData).toEqual({ status: DomainStatus.ERROR });
         });
 
         it('should return 500 when axios request fails', async () => {

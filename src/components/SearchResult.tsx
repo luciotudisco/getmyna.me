@@ -13,7 +13,7 @@ import { RateLimiter } from '@/utils/rate-limiter';
 const statusRateLimiter = new RateLimiter(2);
 
 export function SearchResult({ domain }: { domain: Domain }) {
-    const [status, setStatus] = useState<DomainStatusEnum>(DomainStatusEnum.unknown);
+    const [status, setStatus] = useState<DomainStatusEnum>(DomainStatusEnum.UNKNOWN);
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
@@ -23,8 +23,8 @@ export function SearchResult({ domain }: { domain: Domain }) {
                 domain.setStatus(result);
                 setStatus(result);
             } catch {
-                domain.setStatus(DomainStatusEnum.error);
-                setStatus(DomainStatusEnum.error);
+                domain.setStatus(DomainStatusEnum.ERROR);
+                setStatus(DomainStatusEnum.ERROR);
             }
         };
 

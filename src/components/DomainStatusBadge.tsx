@@ -49,11 +49,11 @@ function TakenBadge({ className }: { className?: string }) {
 }
 
 function DomainStatusBadge({ domain, status, className }: DomainStatusBadgeProps) {
-    if (status === DomainStatusEnum.unknown) {
+    if (status === DomainStatusEnum.UNKNOWN) {
         return <UnknownBadge className={className} />;
     }
 
-    if (status === DomainStatusEnum.error) {
+    if (status === DomainStatusEnum.ERROR) {
         return <ErrorBadge className={className} />;
     }
 

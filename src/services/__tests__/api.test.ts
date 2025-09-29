@@ -57,7 +57,7 @@ describe('APIClient', () => {
 
             const result = await apiClient.getDomainStatus('example.com');
 
-            expect(result).toBe(DomainStatus.claimed);
+            expect(result).toBe(DomainStatus.CLAIMED);
         });
     });
 

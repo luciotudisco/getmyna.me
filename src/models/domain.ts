@@ -2,6 +2,13 @@
  * Represents a domain.
  */
 export class Domain {
+    /**
+     * Regular expression for validating domain names.
+     * Simple regex: must contain at least one dot and valid characters, no leading/trailing dots.
+     * Supports Unicode characters for internationalized domain names.
+     */
+    private static readonly DOMAIN_REGEX = /^[\p{L}\p{N}][\p{L}\p{N}-]*(\.[\p{L}\p{N}][\p{L}\p{N}-]*)+$/u;
+
     private _name: string;
     private _status: DomainStatus;
     private _isAvailable: boolean;
@@ -10,9 +17,14 @@ export class Domain {
 
     public constructor(name: string) {
         const trimmedName = name.trim();
-        this._validateDomainName(trimmedName);
+        if (!trimmedName) {
+            throw new Error('Domain name cannot be empty');
+        }
+        if (!Domain.DOMAIN_REGEX.test(trimmedName)) {
+            throw new Error(`Invalid domain name: ${trimmedName}`);
+        }
         this._name = trimmedName;
-        this._status = DomainStatus.unknown;
+        this._status = DomainStatus.UNKNOWN;
         this._isAvailable = false;
         this._tld = this._name.split('.').pop() || '';
         this._level = this._name.split('.').length;
@@ -50,23 +62,10 @@ export class Domain {
     /**
      * Validates a domain name.
      * @param name The domain name to validate
-     * @throws Error if the domain name is invalid
+     * @returns true if the domain name is valid, false otherwise
      */
-    private _validateDomainName(name: string): void {
-        if (typeof name !== 'string') {
-            throw new Error('Domain name must be a string');
-        }
-
-        if (!name) {
-            throw new Error('Domain name cannot be empty');
-        }
-
-        // Simple regex: must contain at least one dot and valid characters, no leading/trailing dots
-        // Supports Unicode characters for internationalized domain names
-        const domainRegex = /^[\p{L}\p{N}][\p{L}\p{N}-]*(\.[\p{L}\p{N}][\p{L}\p{N}-]*)+$/u;
-        if (!domainRegex.test(name)) {
-            throw new Error('Invalid domain name format. Must contain at least one dot (e.g., example.com)');
-        }
+    public static isValidDomain(name: string): boolean {
+        return typeof name === 'string' && !!name.trim() && Domain.DOMAIN_REGEX.test(name);
     }
 }
 
@@ -76,31 +75,31 @@ export class Domain {
  * See https://domainr.com/docs/api/v2/status for more information.
  */
 export enum DomainStatus {
-    active = 'active',
-    claimed = 'claimed',
-    deleting = 'deleting',
-    disallowed = 'disallowed',
-    dpml = 'dpml',
-    expiring = 'expiring',
-    inactive = 'inactive',
-    invalid = 'invalid',
-    marketed = 'marketed',
-    parked = 'parked',
-    pending = 'pending',
-    premium = 'premium',
-    priced = 'priced',
-    reserved = 'reserved',
-    suffix = 'suffix',
-    tld = 'tld',
-    transferable = 'transferable',
-    undelegated = 'undelegated',
-    unknown = 'unknown',
-    zone = 'zone',
-    error = 'error',
+    ACTIVE = 'ACTIVE',
+    CLAIMED = 'CLAIMED',
+    DELETING = 'DELETING',
+    DISALLOWED = 'DISALLOWED',
+    DPML = 'DPML',
+    EXPIRING = 'EXPIRING',
+    INACTIVE = 'INACTIVE',
+    INVALID = 'INVALID',
+    MARKETED = 'MARKETED',
+    PARKED = 'PARKED',
+    PENDING = 'PENDING',
+    PREMIUM = 'PREMIUM',
+    PRICED = 'PRICED',
+    RESERVED = 'RESERVED',
+    SUFFIX = 'SUFFIX',
+    TLD = 'TLD',
+    TRANSFERABLE = 'TRANSFERABLE',
+    UNDELEGATED = 'UNDELEGATED',
+    UNKNOWN = 'UNKNOWN',
+    ZONE = 'ZONE',
+    ERROR = 'ERROR',
 }
 
 const DOMAIN_AVAILABLE_STATUS_VALUES = new Set([
-    DomainStatus.inactive,
-    DomainStatus.premium,
-    DomainStatus.transferable,
+    DomainStatus.INACTIVE,
+    DomainStatus.PREMIUM,
+    DomainStatus.TRANSFERABLE,
 ]);

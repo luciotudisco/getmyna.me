@@ -50,12 +50,12 @@ describe('Domain', () => {
 
             it('should throw error for single word without dot', () => {
                 expect(() => new Domain('example')).toThrow(Error);
-                expect(() => new Domain('example')).toThrow('Invalid domain name format');
+                expect(() => new Domain('example')).toThrow('Invalid domain name: example');
             });
 
             it('should throw error for invalid characters', () => {
                 expect(() => new Domain('example@com')).toThrow(Error);
-                expect(() => new Domain('example@com')).toThrow('Invalid domain name format');
+                expect(() => new Domain('example@com')).toThrow('Invalid domain name: example@com');
             });
         });
     });
@@ -85,34 +85,34 @@ describe('Domain', () => {
         });
 
         it('should set status and update availability for available statuses', () => {
-            domain.setStatus(DomainStatus.inactive);
-            expect(domain.getStatus()).toBe(DomainStatus.inactive);
+            domain.setStatus(DomainStatus.INACTIVE);
+            expect(domain.getStatus()).toBe(DomainStatus.INACTIVE);
             expect(domain.isAvailable()).toBe(true);
 
-            domain.setStatus(DomainStatus.premium);
-            expect(domain.getStatus()).toBe(DomainStatus.premium);
+            domain.setStatus(DomainStatus.PREMIUM);
+            expect(domain.getStatus()).toBe(DomainStatus.PREMIUM);
             expect(domain.isAvailable()).toBe(true);
 
-            domain.setStatus(DomainStatus.transferable);
-            expect(domain.getStatus()).toBe(DomainStatus.transferable);
+            domain.setStatus(DomainStatus.TRANSFERABLE);
+            expect(domain.getStatus()).toBe(DomainStatus.TRANSFERABLE);
             expect(domain.isAvailable()).toBe(true);
         });
 
         it('should set status and keep availability false for unavailable statuses', () => {
-            domain.setStatus(DomainStatus.active);
-            expect(domain.getStatus()).toBe(DomainStatus.active);
+            domain.setStatus(DomainStatus.ACTIVE);
+            expect(domain.getStatus()).toBe(DomainStatus.ACTIVE);
             expect(domain.isAvailable()).toBe(false);
 
-            domain.setStatus(DomainStatus.claimed);
-            expect(domain.getStatus()).toBe(DomainStatus.claimed);
+            domain.setStatus(DomainStatus.CLAIMED);
+            expect(domain.getStatus()).toBe(DomainStatus.CLAIMED);
             expect(domain.isAvailable()).toBe(false);
 
-            domain.setStatus(DomainStatus.parked);
-            expect(domain.getStatus()).toBe(DomainStatus.parked);
+            domain.setStatus(DomainStatus.PARKED);
+            expect(domain.getStatus()).toBe(DomainStatus.PARKED);
             expect(domain.isAvailable()).toBe(false);
 
-            domain.setStatus(DomainStatus.reserved);
-            expect(domain.getStatus()).toBe(DomainStatus.reserved);
+            domain.setStatus(DomainStatus.RESERVED);
+            expect(domain.getStatus()).toBe(DomainStatus.RESERVED);
             expect(domain.isAvailable()).toBe(false);
         });
 
@@ -127,15 +127,15 @@ describe('Domain', () => {
 
         it('should maintain availability state correctly when switching between statuses', () => {
             // Start with unavailable status
-            domain.setStatus(DomainStatus.active);
+            domain.setStatus(DomainStatus.ACTIVE);
             expect(domain.isAvailable()).toBe(false);
 
             // Switch to available status
-            domain.setStatus(DomainStatus.inactive);
+            domain.setStatus(DomainStatus.INACTIVE);
             expect(domain.isAvailable()).toBe(true);
 
             // Switch back to unavailable status
-            domain.setStatus(DomainStatus.claimed);
+            domain.setStatus(DomainStatus.CLAIMED);
             expect(domain.isAvailable()).toBe(false);
         });
     });
@@ -152,40 +152,40 @@ describe('Domain', () => {
         });
 
         it('should return true for inactive status', () => {
-            domain.setStatus(DomainStatus.inactive);
+            domain.setStatus(DomainStatus.INACTIVE);
             expect(domain.isAvailable()).toBe(true);
         });
 
         it('should return true for premium status', () => {
-            domain.setStatus(DomainStatus.premium);
+            domain.setStatus(DomainStatus.PREMIUM);
             expect(domain.isAvailable()).toBe(true);
         });
 
         it('should return true for transferable status', () => {
-            domain.setStatus(DomainStatus.transferable);
+            domain.setStatus(DomainStatus.TRANSFERABLE);
             expect(domain.isAvailable()).toBe(true);
         });
 
         it('should return false for all other statuses', () => {
             const unavailableStatuses = [
-                DomainStatus.active,
-                DomainStatus.claimed,
-                DomainStatus.deleting,
-                DomainStatus.disallowed,
-                DomainStatus.dpml,
-                DomainStatus.expiring,
-                DomainStatus.invalid,
-                DomainStatus.marketed,
-                DomainStatus.parked,
-                DomainStatus.pending,
-                DomainStatus.priced,
-                DomainStatus.reserved,
-                DomainStatus.suffix,
-                DomainStatus.tld,
-                DomainStatus.undelegated,
-                DomainStatus.unknown,
-                DomainStatus.zone,
-                DomainStatus.error,
+                DomainStatus.ACTIVE,
+                DomainStatus.CLAIMED,
+                DomainStatus.DELETING,
+                DomainStatus.DISALLOWED,
+                DomainStatus.DPML,
+                DomainStatus.EXPIRING,
+                DomainStatus.INVALID,
+                DomainStatus.MARKETED,
+                DomainStatus.PARKED,
+                DomainStatus.PENDING,
+                DomainStatus.PRICED,
+                DomainStatus.RESERVED,
+                DomainStatus.SUFFIX,
+                DomainStatus.TLD,
+                DomainStatus.UNDELEGATED,
+                DomainStatus.UNKNOWN,
+                DomainStatus.ZONE,
+                DomainStatus.ERROR,
             ];
 
             unavailableStatuses.forEach((status) => {
