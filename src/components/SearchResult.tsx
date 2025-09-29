@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import DomainDetailDrawer from '@/components/DomainDetailDrawer';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
@@ -9,17 +9,15 @@ import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { apiClient } from '@/services/api';
 import { RateLimiter } from '@/utils/rate-limiter';
 
-// Create a shared rate limiter instance (2 calls per second / 500ms delay)
-const statusRateLimiter = new RateLimiter(2);
-
 export function SearchResult({ domain }: { domain: Domain }) {
     const [status, setStatus] = useState<DomainStatusEnum>(DomainStatusEnum.UNKNOWN);
     const [open, setOpen] = useState(false);
+    const rateLimiter = useRef(new RateLimiter(2));
 
     useEffect(() => {
         const fetchStatus = async () => {
             try {
-                const result = await statusRateLimiter.add(() => apiClient.getDomainStatus(domain.getName()));
+                const result = await rateLimiter.current.add(() => apiClient.getDomainStatus(domain.getName()));
                 domain.setStatus(result);
                 setStatus(result);
             } catch {
