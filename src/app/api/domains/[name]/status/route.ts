@@ -16,7 +16,7 @@ export async function GET(_request: Request, ctx: { params: Promise<{ name: stri
             logger.error({ domain }, `No valid status found for domain ${domain}`);
             return NextResponse.json({ status: DomainStatus.ERROR });
         }
-        const status = response.data.status[0].status.split(' ')[1].toUpperCase() as DomainStatus;
+        const status = response.data.status[0].status.split(' ').at(-1)?.toUpperCase() as DomainStatus;
         return NextResponse.json({ status });
     } catch (error) {
         logger.error({ error }, 'Error fetching data');
