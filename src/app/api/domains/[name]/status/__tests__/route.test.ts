@@ -41,6 +41,17 @@ describe('/api/domains/[name]/status', () => {
             expect(responseData).toEqual({ status: DomainStatus.ERROR });
         });
 
+        it('should raise 400 for invalid domain name', async () => {
+            const invalidDomainCtx = { params: Promise.resolve({ name: 'invalid-domain' }) };
+
+            const request = new Request('https://example.com/api/domains/invalid-domain/status');
+            const response = await GET(request, invalidDomainCtx);
+            const responseData = await response.json();
+
+            expect(response.status).toBe(400);
+            expect(responseData).toEqual({ error: "The provided domain 'invalid-domain' is not valid" });
+        });
+
         it('should return 500 when axios request fails', async () => {
             const mockError = new Error('Network error');
             mockAxios.get.mockRejectedValue(mockError);
