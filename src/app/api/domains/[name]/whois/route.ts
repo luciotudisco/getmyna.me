@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { NextResponse } from 'next/server';
 
+import { Domain } from '@/models/domain';
 import logger from '@/utils/logger';
 
 const WHOIS_URL = 'https://whois-api6.p.rapidapi.com/whois/api/v1/getData';
@@ -16,15 +17,14 @@ interface WhoisResult {
     updated_date?: string | string[];
 }
 
-export async function GET(
-    _request: Request,
-    { params }: { params: Promise<Record<string, string | string[]>> },
-): Promise<NextResponse> {
+export async function GET(_request: Request, ctx: { params: Promise<{ name: string }> }): Promise<NextResponse> {
     try {
-        const resolvedParams = await params;
-        const domain = Array.isArray(resolvedParams?.name) ? resolvedParams?.name[0] : resolvedParams?.name;
-        const headers = { headers: { 'x-rapidapi-key': RAPID_API_KEY } };
-        const response = await axios.post(WHOIS_URL, { query: domain }, headers);
+        const { name: domain } = await ctx.params;
+        if (!Domain.isValidDomain(domain)) {
+            return NextResponse.json({ error: `The provided domain '${domain}' is not valid` }, { status: 400 });
+        }
+        const config = { headers: { 'x-rapidapi-key': RAPID_API_KEY } };
+        const response = await axios.post(WHOIS_URL, { query: domain }, config);
         const result = (response.data as { result?: WhoisResult }).result;
         const creationRaw = result?.creation_date;
         const expirationRaw = result?.expiration_date;
@@ -45,6 +45,6 @@ export async function GET(
         });
     } catch (error) {
         logger.error({ error }, 'Error fetching whois data');
-        return NextResponse.json({ error: 'Failed to fetch whois data' }, { status: 500 });
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

@@ -2,18 +2,18 @@ import { Resolver } from 'dns/promises';
 import { NextResponse } from 'next/server';
 
 import { DNSRecordType } from '@/models/dig';
+import { Domain } from '@/models/domain';
 import logger from '@/utils/logger';
 
 const resolver = new Resolver();
 const RECORD_TYPES = [DNSRecordType.A, DNSRecordType.AAAA, DNSRecordType.MX];
 
-export async function GET(
-    request: Request,
-    { params }: { params: Promise<Record<string, string | string[]>> },
-): Promise<NextResponse> {
+export async function GET(_request: Request, ctx: { params: Promise<{ name: string }> }): Promise<NextResponse> {
     try {
-        const resolvedParams = await params;
-        const domain = Array.isArray(resolvedParams?.name) ? resolvedParams?.name[0] : resolvedParams?.name;
+        const { name: domain } = await ctx.params;
+        if (!Domain.isValidDomain(domain)) {
+            return NextResponse.json({ error: `The provided domain '${domain}' is not valid` }, { status: 400 });
+        }
         const resolvePromises = RECORD_TYPES.map(async (recordType) => {
             try {
                 const resolvedRecords = (await resolver.resolve(domain, recordType)) as unknown;
@@ -43,7 +43,8 @@ export async function GET(
         });
 
         return NextResponse.json({ records });
-    } catch {
-        return NextResponse.json({ error: 'Failed to fetch DNS data' }, { status: 502 });
+    } catch (error) {
+        logger.error({ error }, 'Error fetching DNS data');
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
