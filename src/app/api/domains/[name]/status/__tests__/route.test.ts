@@ -14,54 +14,52 @@ describe('/api/domains/[name]/status', () => {
         jest.clearAllMocks();
     });
 
-    describe('GET', () => {
-        it('should extract last word from status string', async () => {
-            const mockApiResponse = { data: { status: [{ status: 'undelegated inactive' }] } };
+    it('should extract last word from status string', async () => {
+        const mockApiResponse = { data: { status: [{ status: 'undelegated inactive' }] } };
 
-            mockAxios.get.mockResolvedValue(mockApiResponse);
+        mockAxios.get.mockResolvedValue(mockApiResponse);
 
-            const request = new Request('https://example.com/api/domains/example.com/status');
-            const response = await GET(request, mockCtx);
-            const responseData = await response.json();
+        const request = new Request('https://example.com/api/domains/example.com/status');
+        const response = await GET(request, mockCtx);
+        const responseData = await response.json();
 
-            expect(response.status).toBe(200);
-            expect(responseData).toEqual({ status: DomainStatus.INACTIVE });
-        });
+        expect(response.status).toBe(200);
+        expect(responseData).toEqual({ status: DomainStatus.INACTIVE });
+    });
 
-        it('should return error status when status array is empty', async () => {
-            const mockApiResponse = { data: { status: [] } };
+    it('should return error status when status array is empty', async () => {
+        const mockApiResponse = { data: { status: [] } };
 
-            mockAxios.get.mockResolvedValue(mockApiResponse);
+        mockAxios.get.mockResolvedValue(mockApiResponse);
 
-            const request = new Request('https://example.com/api/domains/example.com/status');
-            const response = await GET(request, mockCtx);
-            const responseData = await response.json();
+        const request = new Request('https://example.com/api/domains/example.com/status');
+        const response = await GET(request, mockCtx);
+        const responseData = await response.json();
 
-            expect(response.status).toBe(200);
-            expect(responseData).toEqual({ status: DomainStatus.ERROR });
-        });
+        expect(response.status).toBe(200);
+        expect(responseData).toEqual({ status: DomainStatus.ERROR });
+    });
 
-        it('should raise 400 for invalid domain name', async () => {
-            const invalidDomainCtx = { params: Promise.resolve({ name: 'invalid-domain' }) };
+    it('should raise 400 for invalid domain names', async () => {
+        const invalidDomainCtx = { params: Promise.resolve({ name: 'invalid-domain' }) };
 
-            const request = new Request('https://example.com/api/domains/invalid-domain/status');
-            const response = await GET(request, invalidDomainCtx);
-            const responseData = await response.json();
+        const request = new Request('https://example.com/api/domains/invalid-domain/status');
+        const response = await GET(request, invalidDomainCtx);
+        const responseData = await response.json();
 
-            expect(response.status).toBe(400);
-            expect(responseData).toEqual({ error: "The provided domain 'invalid-domain' is not valid" });
-        });
+        expect(response.status).toBe(400);
+        expect(responseData).toEqual({ error: "The domain 'invalid-domain' is not a valid domain" });
+    });
 
-        it('should return 500 when axios request fails', async () => {
-            const mockError = new Error('Network error');
-            mockAxios.get.mockRejectedValue(mockError);
+    it('should return 500 when axios request fails', async () => {
+        const mockError = new Error('Network error');
+        mockAxios.get.mockRejectedValue(mockError);
 
-            const request = new Request('https://example.com/api/domains/example.com/status');
-            const response = await GET(request, mockCtx);
-            const responseData = await response.json();
+        const request = new Request('https://example.com/api/domains/example.com/status');
+        const response = await GET(request, mockCtx);
+        const responseData = await response.json();
 
-            expect(response.status).toBe(500);
-            expect(responseData).toEqual({ error: 'Internal server error' });
-        });
+        expect(response.status).toBe(500);
+        expect(responseData).toEqual({ error: 'Internal server error' });
     });
 });

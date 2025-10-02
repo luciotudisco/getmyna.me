@@ -11,7 +11,7 @@ export async function GET(_request: Request, ctx: { params: Promise<{ name: stri
     try {
         const { name: domain } = await ctx.params;
         if (!Domain.isValidDomain(domain)) {
-            return NextResponse.json({ error: `The provided domain '${domain}' is not valid` }, { status: 400 });
+            return NextResponse.json({ error: `The domain '${domain}' is not a valid domain` }, { status: 400 });
         }
         const config = { headers: { 'x-rapidapi-key': RAPID_API_KEY }, params: { domain } };
         const response = await axios.get(DOMAINR_BASE_URL, config);

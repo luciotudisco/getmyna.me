@@ -13,65 +13,63 @@ describe('/api/domains/search', () => {
         jest.clearAllMocks();
     });
 
-    describe('GET', () => {
-        it('should return domain hacks when repository succeeds', async () => {
-            const mockTLDs = [{ name: 'io' }];
-            const mockDomainHacks = ['luc.io'];
+    it('should return domain hacks when repository succeeds', async () => {
+        const mockTLDs = [{ name: 'io' }];
+        const mockDomainHacks = ['luc.io'];
 
-            mockTldRepository.listTLDs.mockResolvedValue(mockTLDs);
-            mockDomainHacksGenerator.prototype.getDomainsHacks.mockReturnValue(mockDomainHacks);
+        mockTldRepository.listTLDs.mockResolvedValue(mockTLDs);
+        mockDomainHacksGenerator.prototype.getDomainsHacks.mockReturnValue(mockDomainHacks);
 
-            const request = new Request('https://example.com/api/domains/search?term=lucio');
-            const response = await GET(request);
-            const responseData = await response.json();
+        const request = new Request('https://example.com/api/domains/search?term=lucio');
+        const response = await GET(request);
+        const responseData = await response.json();
 
-            expect(response.status).toBe(200);
-            expect(responseData).toEqual({ domainHacks: mockDomainHacks });
-            expect(mockTldRepository.listTLDs).toHaveBeenCalledTimes(1);
-            expect(mockDomainHacksGenerator.prototype.getDomainsHacks).toHaveBeenCalledWith('lucio', false);
-        });
+        expect(response.status).toBe(200);
+        expect(responseData).toEqual({ domainHacks: mockDomainHacks });
+        expect(mockTldRepository.listTLDs).toHaveBeenCalledTimes(1);
+        expect(mockDomainHacksGenerator.prototype.getDomainsHacks).toHaveBeenCalledWith('lucio', false);
+    });
 
-        it('should handle include_subdomains parameter', async () => {
-            const mockTLDs = [{ name: 'io' }];
-            const mockDomainHacks = ['luc.io', 'lu.c.io', 'l.uc.io'];
+    it('should handle include_subdomains parameter', async () => {
+        const mockTLDs = [{ name: 'io' }];
+        const mockDomainHacks = ['luc.io', 'lu.c.io', 'l.uc.io'];
 
-            mockTldRepository.listTLDs.mockResolvedValue(mockTLDs);
-            mockDomainHacksGenerator.prototype.getDomainsHacks.mockReturnValue(mockDomainHacks);
+        mockTldRepository.listTLDs.mockResolvedValue(mockTLDs);
+        mockDomainHacksGenerator.prototype.getDomainsHacks.mockReturnValue(mockDomainHacks);
 
-            const request = new Request('https://example.com/api/domains/search?term=lucio&include_subdomains=true');
-            const response = await GET(request);
-            const responseData = await response.json();
+        const request = new Request('https://example.com/api/domains/search?term=lucio&include_subdomains=true');
+        const response = await GET(request);
+        const responseData = await response.json();
 
-            expect(response.status).toBe(200);
-            expect(responseData).toEqual({ domainHacks: mockDomainHacks });
-            expect(mockDomainHacksGenerator.prototype.getDomainsHacks).toHaveBeenCalledWith('lucio', true);
-        });
+        expect(response.status).toBe(200);
+        expect(responseData).toEqual({ domainHacks: mockDomainHacks });
+        expect(mockDomainHacksGenerator.prototype.getDomainsHacks).toHaveBeenCalledWith('lucio', true);
+    });
 
-        it('should handle empty search results', async () => {
-            const mockTLDs = [{ name: 'io' }];
-            const mockDomainHacks: string[] = [];
+    it('should handle empty search results', async () => {
+        const mockTLDs = [{ name: 'io' }];
+        const mockDomainHacks: string[] = [];
 
-            mockTldRepository.listTLDs.mockResolvedValue(mockTLDs);
-            mockDomainHacksGenerator.prototype.getDomainsHacks.mockReturnValue(mockDomainHacks);
+        mockTldRepository.listTLDs.mockResolvedValue(mockTLDs);
+        mockDomainHacksGenerator.prototype.getDomainsHacks.mockReturnValue(mockDomainHacks);
 
-            const request = new Request('https://example.com/api/domains/search?term=test');
-            const response = await GET(request);
-            const responseData = await response.json();
+        const request = new Request('https://example.com/api/domains/search?term=test');
+        const response = await GET(request);
+        const responseData = await response.json();
 
-            expect(response.status).toBe(200);
-            expect(responseData).toEqual({ domainHacks: [] });
-            expect(mockDomainHacksGenerator.prototype.getDomainsHacks).toHaveBeenCalledWith('test', false);
-        });
+        expect(response.status).toBe(200);
+        expect(responseData).toEqual({ domainHacks: [] });
+        expect(mockDomainHacksGenerator.prototype.getDomainsHacks).toHaveBeenCalledWith('test', false);
+    });
 
-        it('should throw 500 when request fails', async () => {
-            mockTldRepository.listTLDs.mockRejectedValue(new Error('Database connection failed'));
+    it('should throw 500 when request fails', async () => {
+        mockTldRepository.listTLDs.mockRejectedValue(new Error('Database connection failed'));
 
-            const request = new Request('https://example.com/api/domains/search?term=test');
-            const response = await GET(request);
-            const responseData = await response.json();
+        const request = new Request('https://example.com/api/domains/search?term=test');
+        const response = await GET(request);
+        const responseData = await response.json();
 
-            expect(response.status).toBe(500);
-            expect(responseData).toEqual({ error: 'Internal server error' });
-        });
+        expect(response.status).toBe(500);
+        expect(responseData).toEqual({ error: 'Internal server error' });
     });
 });
