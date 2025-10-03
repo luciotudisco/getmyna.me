@@ -13,20 +13,14 @@ export async function GET(): Promise<NextResponse> {
     try {
         logger.info('Starting TLD import from IANA ...');
 
-        // Fetch TLD data from IANA
-        const response = await axios.get(IANA_TLD_URL);
-        const tldData = response.data as string;
+        // Fetch TLD data from IANA, parse it, and filter out comments and empty lines
+        const response = await axios.get<string>(IANA_TLD_URL);
+        const tldsRaw = response.data;
+        const tlds = tldsRaw.split('\n').filter((line) => line.trim() && !line.startsWith('#'));
 
-        // Parse the data and store in Supabase
-        const lines = tldData.split('\n');
-        for (const line of lines) {
-            const trimmed = line.trim();
-            if (!trimmed || trimmed.startsWith('#')) {
-                // Skip comments and empty lines
-                continue;
-            }
-
-            const punycodeName = trimmed.toLowerCase();
+        // Store TLDs in Supabase, if they don't already exist
+        for (const tld of tlds) {
+            const punycodeName = tld.toLowerCase();
             const tldName = toUnicode(punycodeName);
             const direction = getTextDirection(tldName);
             const existingTld = await tldRepository.getTLD(punycodeName);
@@ -35,17 +29,18 @@ export async function GET(): Promise<NextResponse> {
                 continue;
             }
 
-            logger.info(`Creating TLD ${punycodeName} ...`);
+            logger.info(`Creating new TLD ${punycodeName} ...`);
             await tldRepository.createTld({
                 name: tldName,
                 punycodeName,
                 direction,
             });
         }
+
         logger.info('TLD import completed');
         return NextResponse.json({ message: 'TLD import completed successfully' });
     } catch (error) {
         logger.error({ error }, 'Error during TLD import');
-        return NextResponse.json({ error: 'Failed to import TLDs' }, { status: 500 });
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
