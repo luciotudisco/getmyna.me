@@ -10,36 +10,37 @@ import SearchBar from '@/components/SearchBar';
 import { Button } from '@/components/ui/button';
 
 export default function Header() {
-    const pathname = usePathname();
-    const showSearchBar = pathname !== '/';
+    const isHome = usePathname() === '/';
 
     return (
-        <header className="supports-backdrop-blur:bg-background/90 border-grid sticky top-0 z-40 flex min-h-16 w-full flex-row items-center gap-5 border-b bg-background/40 p-2 px-5 backdrop-blur-lg">
-            <Link href="/">
-                <Image src="/logo.svg" alt="GetMyNa.me logo" width={28} height={28} />{' '}
+        <header
+            role="banner"
+            className="supports-backdrop-blur:bg-background/90 border-grid sticky top-0 z-40 flex min-h-16 w-full items-center gap-5 border-b bg-background/40 p-2 px-5 backdrop-blur-lg"
+        >
+            <Link href="/" aria-label="Go to homepage" className="shrink-0">
+                <Image src="/logo.svg" alt="GetMyNa.me" width={28} height={28} priority />
             </Link>
-            {showSearchBar ? (
-                <div className="flex flex-1 items-center justify-between">
-                    <Suspense fallback={null}>
+
+            <div className="flex w-full items-center gap-4">
+                {/* Title on home page, search bar on other pages */}
+                {isHome ? (
+                    <h1 className="font-mono text-xl font-extralight uppercase">GetMyNa.me</h1>
+                ) : (
+                    <Suspense>
                         <SearchBar />
                     </Suspense>
-                    <div className="hidden min-w-72 lg:block" />
-                    <Link href="/about" className="hidden lg:block">
-                        <Button type="button" variant="ghost">
-                            <Info />
-                        </Button>
+                )}
+
+                {/* Spacer */}
+                <div className="flex-1" aria-hidden />
+
+                {/* About button */}
+                <Button asChild variant="ghost" size="icon" aria-label="About GetMyNa.me">
+                    <Link href="/about" prefetch>
+                        <Info aria-hidden className="size-5" />
                     </Link>
-                </div>
-            ) : (
-                <div className="flex flex-1 items-center justify-between">
-                    <h1 className="font-mono text-xl font-extralight uppercase">GetMyNa.me</h1>
-                    <Link href="/about">
-                        <Button type="button" variant="ghost">
-                            <Info />
-                        </Button>
-                    </Link>
-                </div>
-            )}
+                </Button>
+            </div>
         </header>
     );
 }
