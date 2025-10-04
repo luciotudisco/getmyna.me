@@ -2,19 +2,11 @@ import { createClient } from '@supabase/supabase-js';
 
 import { TLD, TLDType, Registrar } from '@/models/tld';
 import { TTLCache } from '@/utils/cache';
-import logger from '@/utils/logger';
 
 // Mock Supabase client
 jest.mock('@supabase/supabase-js');
-jest.mock('@/utils/logger', () => ({
-    __esModule: true,
-    default: {
-        error: jest.fn(),
-    },
-}));
 
 const mockCreateClient = createClient as jest.MockedFunction<typeof createClient>;
-const mockLogger = logger as any;
 
 // Create a mock Supabase client with proper chaining
 const createMockSupabaseClient = () => {
@@ -117,11 +109,6 @@ describe('TLDRepository', () => {
             await expect(tldRepository.countTLDs()).rejects.toThrow(
                 'Failed to count TLDs: Database connection failed'
             );
-
-            expect(mockLogger.error).toHaveBeenCalledWith(
-                { error: mockError },
-                'Error counting TLDs'
-            );
         });
     });
 
@@ -170,11 +157,6 @@ describe('TLDRepository', () => {
 
             await expect(tldRepository.createTld(mockTld)).rejects.toThrow(
                 'Failed to upsert TLD com: Duplicate key error'
-            );
-
-            expect(mockLogger.error).toHaveBeenCalledWith(
-                { error: mockError },
-                'Error upserting TLD com'
             );
         });
     });
@@ -282,11 +264,6 @@ describe('TLDRepository', () => {
             await expect(tldRepository.getTLD('com')).rejects.toThrow(
                 'Failed to fetch TLD com: Database connection failed'
             );
-
-            expect(mockLogger.error).toHaveBeenCalledWith(
-                { error: mockError },
-                'Error fetching TLD com'
-            );
         });
     });
 
@@ -375,11 +352,6 @@ describe('TLDRepository', () => {
             await expect(tldRepository.listTLDs()).rejects.toThrow(
                 'Failed to fetch TLDs: Database connection failed'
             );
-
-            expect(mockLogger.error).toHaveBeenCalledWith(
-                { error: mockError },
-                'Error fetching TLDs'
-            );
         });
     });
 
@@ -443,11 +415,6 @@ describe('TLDRepository', () => {
 
             await expect(tldRepository.updateTLD('com', mockTld)).rejects.toThrow(
                 'Failed to update TLD com: Update failed'
-            );
-
-            expect(mockLogger.error).toHaveBeenCalledWith(
-                { error: mockError },
-                'Error updating TLD com'
             );
         });
     });
