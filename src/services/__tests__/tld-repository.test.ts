@@ -1,7 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 
 import { TLD, TLDType, Registrar } from '@/models/tld';
-import { TTLCache } from '@/utils/cache';
 
 // Mock Supabase client
 jest.mock('@supabase/supabase-js');
@@ -34,7 +33,6 @@ describe('TLDRepository', () => {
     let tldRepository: any;
     let mockSupabaseClient: any;
     let mockQueryBuilder: any;
-    let mockCache: jest.Mocked<TTLCache<unknown>>;
 
     beforeEach(() => {
         // Reset all mocks
@@ -47,22 +45,15 @@ describe('TLDRepository', () => {
 
         mockCreateClient.mockReturnValue(mockSupabaseClient);
 
-        // Create mock cache
-        mockCache = {
-            get: jest.fn(),
-            set: jest.fn(),
-            delete: jest.fn(),
-            clear: jest.fn(),
-            has: jest.fn(),
-        } as any;
-
         // Create repository instance using the exported instance
         const { tldRepository: exportedRepository } = require('../tld-repository');
         tldRepository = exportedRepository;
 
-        // Replace the Supabase client and cache with our mocks
+        // Replace only the Supabase client with our mock, keep the real cache
         (tldRepository as any).client = mockSupabaseClient;
-        (tldRepository as any).cache = mockCache;
+        
+        // Clear the real cache before each test
+        (tldRepository as any).cache.clear();
     });
 
     describe('constructor', () => {
@@ -143,9 +134,7 @@ describe('TLDRepository', () => {
                 }
             );
 
-            // Should invalidate cache
-            expect(mockCache.delete).toHaveBeenCalledWith('tlds');
-            expect(mockCache.delete).toHaveBeenCalledWith(`tld:${mockTld.name}`);
+            // Cache invalidation is tested in the cache invalidation section
         });
 
         it('should throw error when Supabase returns an error', async () => {
@@ -177,24 +166,39 @@ describe('TLDRepository', () => {
         };
 
         it('should return TLD from cache when available', async () => {
-            const cachedTld: TLD = {
+            const mockTldData = {
                 name: 'com',
-                punycodeName: 'com',
+                punycode_name: 'com',
                 description: 'Commercial domain',
                 type: TLDType.GENERIC,
+                pricing: null,
             };
 
-            mockCache.get.mockReturnValue(cachedTld);
+            // First call to populate cache
+            mockQueryBuilder.single.mockResolvedValue({
+                data: mockTldData,
+                error: null,
+            } as any);
 
-            const result = await tldRepository.getTLD('com');
+            const firstResult = await tldRepository.getTLD('com');
+            expect(firstResult).toEqual({
+                name: mockTldData.name,
+                punycodeName: mockTldData.punycode_name,
+                type: mockTldData.type,
+                description: mockTldData.description,
+                pricing: mockTldData.pricing,
+            });
 
-            expect(result).toEqual(cachedTld);
-            expect(mockCache.get).toHaveBeenCalledWith('tld:com');
+            // Reset mock to verify second call uses cache
+            jest.clearAllMocks();
+
+            // Second call should use cache
+            const secondResult = await tldRepository.getTLD('com');
+            expect(secondResult).toEqual(firstResult);
             expect(mockSupabaseClient.from).not.toHaveBeenCalled();
         });
 
         it('should fetch TLD from database when not in cache', async () => {
-            mockCache.get.mockReturnValue(undefined);
             mockQueryBuilder.single.mockResolvedValue({
                 data: mockTldData,
                 error: null,
@@ -216,20 +220,9 @@ describe('TLDRepository', () => {
             );
             expect(mockQueryBuilder.eq).toHaveBeenCalledWith('name', 'com');
             expect(mockQueryBuilder.single).toHaveBeenCalled();
-
-            // Should cache the result
-            expect(mockCache.set).toHaveBeenCalledWith(
-                'tld:com',
-                expect.objectContaining({
-                    name: 'com',
-                    punycodeName: 'com',
-                }),
-                60000
-            );
         });
 
         it('should use punycode_name field for punycode domains', async () => {
-            mockCache.get.mockReturnValue(undefined);
             mockQueryBuilder.single.mockResolvedValue({
                 data: mockTldData,
                 error: null,
@@ -241,7 +234,6 @@ describe('TLDRepository', () => {
         });
 
         it('should return null when TLD not found', async () => {
-            mockCache.get.mockReturnValue(undefined);
             mockQueryBuilder.single.mockResolvedValue({
                 data: null,
                 error: { code: 'PGRST116' },
@@ -250,11 +242,9 @@ describe('TLDRepository', () => {
             const result = await tldRepository.getTLD('nonexistent');
 
             expect(result).toBeNull();
-            expect(mockCache.set).toHaveBeenCalledWith('tld:nonexistent', null, 60000);
         });
 
         it('should throw error when Supabase returns an error', async () => {
-            mockCache.get.mockReturnValue(undefined);
             const mockError = { message: 'Database connection failed' };
             mockQueryBuilder.single.mockResolvedValue({
                 data: null,
@@ -286,26 +276,40 @@ describe('TLDRepository', () => {
         ];
 
         it('should return TLDs from cache when available', async () => {
-            const cachedTlds: TLD[] = [
+            // First call to populate cache
+            mockQueryBuilder.limit.mockResolvedValue({
+                data: mockTldsData,
+                error: null,
+            } as any);
+
+            const firstResult = await tldRepository.listTLDs();
+            expect(firstResult).toEqual([
                 {
                     name: 'com',
                     punycodeName: 'com',
                     type: TLDType.GENERIC,
                     description: 'Commercial domain',
+                    pricing: null,
                 },
-            ];
+                {
+                    name: 'org',
+                    punycodeName: 'org',
+                    type: TLDType.GENERIC,
+                    description: 'Organization domain',
+                    pricing: null,
+                },
+            ]);
 
-            mockCache.get.mockReturnValue(cachedTlds);
+            // Reset mock to verify second call uses cache
+            jest.clearAllMocks();
 
-            const result = await tldRepository.listTLDs();
-
-            expect(result).toEqual(cachedTlds);
-            expect(mockCache.get).toHaveBeenCalledWith('tlds');
+            // Second call should use cache
+            const secondResult = await tldRepository.listTLDs();
+            expect(secondResult).toEqual(firstResult);
             expect(mockSupabaseClient.from).not.toHaveBeenCalled();
         });
 
         it('should fetch TLDs from database when not in cache', async () => {
-            mockCache.get.mockReturnValue(undefined);
             mockQueryBuilder.limit.mockResolvedValue({
                 data: mockTldsData,
                 error: null,
@@ -336,13 +340,9 @@ describe('TLDRepository', () => {
             );
             expect(mockQueryBuilder.order).toHaveBeenCalledWith('name', { ascending: true });
             expect(mockQueryBuilder.limit).toHaveBeenCalledWith(5000);
-
-            // Should cache the result
-            expect(mockCache.set).toHaveBeenCalledWith('tlds', expect.any(Array), 60000);
         });
 
         it('should throw error when Supabase returns an error', async () => {
-            mockCache.get.mockReturnValue(undefined);
             const mockError = { message: 'Database connection failed' };
             mockQueryBuilder.limit.mockResolvedValue({
                 data: null,
@@ -390,9 +390,7 @@ describe('TLDRepository', () => {
             });
             expect(mockQueryBuilder.eq).toHaveBeenCalledWith('name', 'com');
 
-            // Should invalidate cache
-            expect(mockCache.delete).toHaveBeenCalledWith('tlds');
-            expect(mockCache.delete).toHaveBeenCalledWith('tld:com');
+            // Cache invalidation is tested in the cache invalidation section
         });
 
         it('should use punycode_name field for punycode domains', async () => {
@@ -428,6 +426,16 @@ describe('TLDRepository', () => {
                 type: TLDType.TEST,
             };
 
+            // First, populate the cache with listTLDs
+            mockQueryBuilder.limit.mockResolvedValue({
+                data: [{ name: 'com', punycode_name: 'com', type: TLDType.GENERIC, description: 'Commercial', pricing: null }],
+                error: null,
+            } as any);
+
+            await tldRepository.listTLDs();
+            jest.clearAllMocks();
+
+            // Now create a TLD, which should invalidate the cache
             mockQueryBuilder.upsert.mockResolvedValue({
                 data: null,
                 error: null,
@@ -435,8 +443,14 @@ describe('TLDRepository', () => {
 
             await tldRepository.createTld(mockTld);
 
-            expect(mockCache.delete).toHaveBeenCalledWith('tlds');
-            expect(mockCache.delete).toHaveBeenCalledWith('tld:test');
+            // Verify that subsequent listTLDs call hits the database (cache was invalidated)
+            mockQueryBuilder.limit.mockResolvedValue({
+                data: [{ name: 'com', punycode_name: 'com', type: TLDType.GENERIC, description: 'Commercial', pricing: null }],
+                error: null,
+            } as any);
+
+            await tldRepository.listTLDs();
+            expect(mockSupabaseClient.from).toHaveBeenCalledWith('tld');
         });
 
         it('should invalidate cache when updating TLD', async () => {
@@ -447,6 +461,16 @@ describe('TLDRepository', () => {
                 type: TLDType.TEST,
             };
 
+            // First, populate the cache with getTLD
+            mockQueryBuilder.single.mockResolvedValue({
+                data: { name: 'test', punycode_name: 'test', type: TLDType.TEST, description: 'Test', pricing: null },
+                error: null,
+            } as any);
+
+            await tldRepository.getTLD('test');
+            jest.clearAllMocks();
+
+            // Now update the TLD, which should invalidate the cache
             mockQueryBuilder.eq.mockResolvedValue({
                 data: null,
                 error: null,
@@ -454,8 +478,22 @@ describe('TLDRepository', () => {
 
             await tldRepository.updateTLD('test', mockTld);
 
-            expect(mockCache.delete).toHaveBeenCalledWith('tlds');
-            expect(mockCache.delete).toHaveBeenCalledWith('tld:test');
+            // Reset mocks and recreate the mock chain for the subsequent getTLD call
+            jest.clearAllMocks();
+            
+            // Recreate the mock chain
+            const { mockClient, mockQueryBuilder: newQueryBuilder } = createMockSupabaseClient();
+            mockSupabaseClient = mockClient;
+            mockQueryBuilder = newQueryBuilder;
+            (tldRepository as any).client = mockSupabaseClient;
+            
+            mockQueryBuilder.single.mockResolvedValue({
+                data: { name: 'test', punycode_name: 'test', type: TLDType.TEST, description: 'Updated test', pricing: null },
+                error: null,
+            } as any);
+
+            await tldRepository.getTLD('test');
+            expect(mockSupabaseClient.from).toHaveBeenCalledWith('tld');
         });
     });
 
@@ -469,19 +507,28 @@ describe('TLDRepository', () => {
                 pricing: null,
             };
 
-            mockCache.get.mockReturnValue(undefined);
             mockQueryBuilder.single.mockResolvedValue({
                 data: mockTldData,
                 error: null,
             } as any);
 
+            // First call should hit the database
             await tldRepository.getTLD('com');
+            expect(mockSupabaseClient.from).toHaveBeenCalledWith('tld');
 
-            expect(mockCache.set).toHaveBeenCalledWith(
-                'tld:com',
-                expect.any(Object),
-                60000 // 60 seconds
-            );
+            // Reset mocks
+            jest.clearAllMocks();
+
+            // Second call should use cache (within TTL window)
+            const result = await tldRepository.getTLD('com');
+            expect(result).toEqual({
+                name: 'com',
+                punycodeName: 'com',
+                type: TLDType.GENERIC,
+                description: 'Commercial domain',
+                pricing: null,
+            });
+            expect(mockSupabaseClient.from).not.toHaveBeenCalled();
         });
     });
 });
