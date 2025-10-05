@@ -37,8 +37,9 @@ export async function GET(): Promise<NextResponse> {
             } catch (error) {
                 if (isAxiosError(error) && error.response?.status === 404) {
                     logger.warn(`ICANN wiki page not found for TLD ${tld.name}.`);
+                } else {
+                    throw error;
                 }
-                throw error;
             }
 
             try {
@@ -47,8 +48,9 @@ export async function GET(): Promise<NextResponse> {
             } catch (error) {
                 if (isAxiosError(error) && error.response?.status === 404) {
                     logger.warn(`IANA wiki page not found for TLD ${tld.name}.`);
+                } else {
+                    throw error;
                 }
-                throw error;
             }
 
             const response = await openaiClient.chat.completions.create({
