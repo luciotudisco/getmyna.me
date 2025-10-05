@@ -108,7 +108,7 @@ const TLD_SCHEMA = {
                     'The description should be non-technical and easy to understand.',
                     'The description should include a brief history of the TLD, its intended use and any other interesting facts.',
                     'If it is a brand TLD, note the sponsoring organization.',
-                    'Highlight if registrations are restricted',
+                    'Highlight if registrations are restricted.',
                     'Spell out acronyms and abbreviations at first mention.',
                 ].join(' '),
             },
