@@ -7,22 +7,14 @@ const AboutPage = () => {
         question,
         answer,
         color,
-        index,
     }: {
         question: string;
         answer: string;
         color: string;
-        index: number;
     }) => (
         <div className="mb-8 flex gap-4">
             <div>
-                <div className="mb-2 flex items-end gap-2">
-                    <span
-                        className="flex size-6 shrink-0 items-center justify-center rounded-sm font-mono text-xs font-semibold uppercase"
-                        style={{ backgroundColor: color }}
-                    >
-                        {index + 1}
-                    </span>
+                <div className="mb-2">
                     <h2 className="text-md text-balance font-semibold leading-relaxed underline">{question}</h2>
                 </div>
                 <p className="text-xs text-muted-foreground lg:text-sm">{answer}</p>
@@ -48,31 +40,26 @@ const AboutPage = () => {
                         question="What's a domain hack?"
                         answer="Domain hacks are clever ways of constructing domain names by combining words with TLDs (Top-Level Domains) to creatively spell out brand names or phrases."
                         color="#fde2e4"
-                        index={0}
                     />
                     <FaqItem
                         question="Why are domain hacks so effective?"
                         answer="In a sea of standard '.com' addresses, a domain hack can help your website stand out, pique curiosity, and convey a more modern, tech-savvy image."
                         color="#eff7f6"
-                        index={1}
                     />
                     <FaqItem
                         question="Can I build my brand around a domain hack?"
                         answer="Absolutely! A domain hack can transform a standard web address into part of your brand story."
                         color="#e5b3fe"
-                        index={2}
                     />
                     <FaqItem
                         question="What are some popular examples of domain hacks?"
                         answer="Popular examples include bit.ly (bitly), del.icio.us (delicious), and goo.gl (Google). These domains are memorable because of their distinctive and playful appearance."
                         color="#ffd6a5"
-                        index={3}
                     />
                     <FaqItem
                         question="How do I find the perfect domain hack?"
                         answer="Use GetMyNa.me to explore creative possibilities. Remember, the best domain hacks are short, memorable, and relevant to your brand."
                         color="#bcd4e6"
-                        index={4}
                     />
                 </div>
                 <TLDCounter />
