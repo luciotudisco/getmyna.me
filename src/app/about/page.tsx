@@ -4,13 +4,9 @@ import { Highlighter } from '@/components/ui/highlighter';
 
 const AboutPage = () => {
     const FaqItem = ({ question, answer }: { question: string; answer: string }) => (
-        <div className="mb-8 flex gap-4">
-            <div>
-                <div className="mb-2">
-                    <h2 className="text-md text-balance font-semibold leading-relaxed underline">{question}</h2>
-                </div>
-                <p className="text-xs text-muted-foreground lg:text-sm">{answer}</p>
-            </div>
+        <div className="mb-8 flex gap-2">
+           <h2 className="text-md text-balance font-semibold leading-relaxed uppercase">{question}</>
+            <p className="text-xs text-muted-foreground lg:text-sm">{answer}</p>
         </div>
     );
 
