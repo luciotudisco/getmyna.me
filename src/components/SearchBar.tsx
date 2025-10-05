@@ -32,18 +32,19 @@ export default function SearchBar() {
             <div className="relative flex w-full flex-row items-center align-middle">
                 <SearchIcon size={18} className="absolute left-2 text-muted-foreground" />
                 <Input
-                    type="text"
-                    placeholder="Find the perfect domain hack"
                     className="rounded-sm pl-10 pr-10 !text-base shadow-sm"
                     onChange={(event) => setSearchTerm(event.target.value)}
+                    placeholder="Find the perfect domain hack"
+                    type="text"
                     value={searchTerm}
                 />
                 {searchTerm && (
                     <Button
-                        variant="ghost"
-                        type="button"
+                        aria-label="Clear search"
                         className="absolute right-0 hover:bg-inherit"
                         onClick={() => setSearchTerm('')}
+                        type="button"
+                        variant="ghost"
                     >
                         <XIcon size={18} className="text-muted-foreground" />
                     </Button>

@@ -3,8 +3,8 @@
 import { Loader2 } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
+import { cn } from '@/components/ui/utils';
 import { DOMAIN_AVAILABLE_STATUS_VALUES, DomainStatus } from '@/models/domain';
-import { cn } from '@/utils/utils';
 
 interface DomainStatusBadgeProps {
     status: DomainStatus;

@@ -1,4 +1,4 @@
-import { Domain, DomainStatus } from '../domain';
+import { Domain, DomainStatus } from '@/models/domain';
 
 describe('Domain', () => {
     describe('validation', () => {
