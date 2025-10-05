@@ -1,8 +1,26 @@
 import { Suspense } from 'react';
+import type { Metadata } from 'next';
 
 import Feature from '@/components/Feature';
 import InspirationCarousel from '@/components/InspirationCarousel';
 import SearchBar from '@/components/SearchBar';
+
+export const metadata: Metadata = {
+    title: 'Find the Perfect Domain Hack',
+    description: 'Discover creative domain names that combine your brand with clever TLD combinations. Find memorable, unique, and catchy domain hacks.',
+    openGraph: {
+        title: 'Find the Perfect Domain Hack | GetMyNa.me',
+        description: 'Discover creative domain names that combine your brand with clever TLD combinations. Find memorable, unique, and catchy domain hacks.',
+        url: 'https://getmyna.me',
+    },
+    twitter: {
+        title: 'Find the Perfect Domain Hack | GetMyNa.me',
+        description: 'Discover creative domain names that combine your brand with clever TLD combinations. Find memorable, unique, and catchy domain hacks.',
+    },
+    alternates: {
+        canonical: 'https://getmyna.me',
+    },
+};
 
 export default function Home() {
     return (

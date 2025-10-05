@@ -8,8 +8,78 @@ import Header from '@/components/Header';
 import './globals.css';
 
 export const metadata: Metadata = {
-    title: 'GetMyNa.me',
-    description: 'Find the perfect domain hack.',
+    metadataBase: new URL('https://getmyna.me'),
+    title: {
+        default: 'GetMyNa.me',
+        template: '%s | GetMyNa.me',
+    },
+    description: 'Find the perfect domain hack. Discover creative domain names that combine your brand with clever TLD combinations.',
+    keywords: ['domain hack', 'domain names', 'creative domains', 'brand domains', 'TLD', 'domain search'],
+    authors: [{ name: 'GetMyNa.me' }],
+    creator: 'GetMyNa.me',
+    publisher: 'GetMyNa.me',
+    formatDetection: {
+        email: false,
+        address: false,
+        telephone: false,
+    },
+    openGraph: {
+        type: 'website',
+        locale: 'en_US',
+        url: 'https://getmyna.me',
+        siteName: 'GetMyNa.me',
+        title: 'GetMyNa.me - Find the Perfect Domain Hack',
+        description: 'Discover creative domain names that combine your brand with clever TLD combinations. Find memorable, unique, and catchy domain hacks.',
+        images: [
+            {
+                url: '/og-image.svg',
+                width: 1200,
+                height: 630,
+                alt: 'GetMyNa.me - Find the Perfect Domain Hack',
+            },
+        ],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        site: '@getmyname',
+        creator: '@getmyname',
+        title: 'GetMyNa.me - Find the Perfect Domain Hack',
+        description: 'Discover creative domain names that combine your brand with clever TLD combinations.',
+        images: ['/twitter-image.svg'],
+    },
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+            index: true,
+            follow: true,
+            'max-video-preview': -1,
+            'max-image-preview': 'large',
+            'max-snippet': -1,
+        },
+    },
+    icons: {
+        icon: [
+            { url: '/favicon.svg', type: 'image/svg+xml' },
+            { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+            { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+        ],
+        apple: [
+            { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+        ],
+        other: [
+            {
+                rel: 'mask-icon',
+                url: '/safari-pinned-tab.svg',
+                color: '#3a86ff',
+            },
+        ],
+    },
+    manifest: '/site.webmanifest',
+    alternates: {
+        canonical: 'https://getmyna.me',
+    },
+    category: 'technology',
 };
 
 export default function RootLayout({
