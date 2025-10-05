@@ -3,15 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Highlighter } from '@/components/ui/highlighter';
 
 const AboutPage = () => {
-    const FaqItem = ({
-        question,
-        answer,
-        color,
-    }: {
-        question: string;
-        answer: string;
-        color: string;
-    }) => (
+    const FaqItem = ({ question, answer }: { question: string; answer: string }) => (
         <div className="mb-8 flex gap-4">
             <div>
                 <div className="mb-2">
@@ -39,27 +31,22 @@ const AboutPage = () => {
                     <FaqItem
                         question="What's a domain hack?"
                         answer="Domain hacks are clever ways of constructing domain names by combining words with TLDs (Top-Level Domains) to creatively spell out brand names or phrases."
-                        color="#fde2e4"
                     />
                     <FaqItem
                         question="Why are domain hacks so effective?"
                         answer="In a sea of standard '.com' addresses, a domain hack can help your website stand out, pique curiosity, and convey a more modern, tech-savvy image."
-                        color="#eff7f6"
                     />
                     <FaqItem
                         question="Can I build my brand around a domain hack?"
                         answer="Absolutely! A domain hack can transform a standard web address into part of your brand story."
-                        color="#e5b3fe"
                     />
                     <FaqItem
                         question="What are some popular examples of domain hacks?"
                         answer="Popular examples include bit.ly (bitly), del.icio.us (delicious), and goo.gl (Google). These domains are memorable because of their distinctive and playful appearance."
-                        color="#ffd6a5"
                     />
                     <FaqItem
                         question="How do I find the perfect domain hack?"
                         answer="Use GetMyNa.me to explore creative possibilities. Remember, the best domain hacks are short, memorable, and relevant to your brand."
-                        color="#bcd4e6"
                     />
                 </div>
                 <TLDCounter />
