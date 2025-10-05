@@ -29,7 +29,7 @@ describe('TLDCounter', () => {
         mockGetTLDsCount.mockReset();
     });
 
-    it('should render the main container with proper structure', () => {
+    it('should render the main container with proper structure', async () => {
         mockGetTLDsCount.mockResolvedValue(1234);
 
         render(<TLDCounter />);
@@ -37,6 +37,11 @@ describe('TLDCounter', () => {
         // Check heading text
         const heading = screen.getByText('Powered by a collection of');
         expect(heading).toBeInTheDocument();
+
+        // Wait for async state update to complete
+        await waitFor(() => {
+            expect(screen.getByTestId('number-ticker')).toBeInTheDocument();
+        });
     });
 
     it('should display TLD count when API call succeeds', async () => {

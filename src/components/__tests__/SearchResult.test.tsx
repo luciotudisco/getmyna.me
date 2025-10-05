@@ -1,6 +1,8 @@
+import { createPortal } from 'react-dom';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { SearchResult } from '@/components/SearchResult';
+import { Table, TableBody } from '@/components/ui/table';
 import { Domain, DomainStatus } from '@/models/domain';
 import { apiClient } from '@/services/api';
 import { rateLimiter } from '@/utils/rate-limiter';
@@ -29,12 +31,13 @@ jest.mock('@/components/DomainDetailDrawer', () => {
         open: boolean;
         onClose: () => void;
     }) {
-        return (
+        return createPortal(
             <div data-testid="domain-detail-drawer" data-open={open} data-domain={domain.getName()}>
                 <button data-testid="close-drawer" onClick={onClose}>
                     Close
                 </button>
-            </div>
+            </div>,
+            document.body,
         );
     };
 });
@@ -48,20 +51,25 @@ describe('SearchResult', () => {
         mockRateLimiterAdd.mockImplementation((task) => task());
     });
 
-    it('should render with UNKNOWN status initially', () => {
+    it('should render with UNKNOWN status initially', async () => {
+        // Mock a pending promise to keep the component in loading state
+        mockGetDomainStatus.mockImplementation(() => new Promise(() => {}));
+
         const exampleDomain = new Domain('example.com');
-        render(<SearchResult domain={exampleDomain} />);
+        renderSearchResult(exampleDomain);
 
         // For UNKNOWN status, we should see a loading spinner
-        const loadingSpinner = document.querySelector('.animate-spin');
-        expect(loadingSpinner).toBeInTheDocument();
+        await waitFor(() => {
+            const loadingSpinner = document.querySelector('.animate-spin');
+            expect(loadingSpinner).toBeInTheDocument();
+        });
     });
 
     it('should update status when API call succeeds', async () => {
         mockGetDomainStatus.mockResolvedValue(DomainStatus.ACTIVE);
 
         const exampleDomain = new Domain('example.com');
-        render(<SearchResult domain={exampleDomain} />);
+        renderSearchResult(exampleDomain);
 
         // ACTIVE status is displayed as "Taken" in the UI
         await waitFor(() => expect(screen.getByText('Taken')).toBeInTheDocument());
@@ -73,7 +81,7 @@ describe('SearchResult', () => {
         mockGetDomainStatus.mockRejectedValue(new Error('API Error'));
 
         const exampleDomain = new Domain('example.com');
-        render(<SearchResult domain={exampleDomain} />);
+        renderSearchResult(exampleDomain);
 
         // ERROR status is displayed as "Error" in the UI
         await waitFor(() => expect(screen.getByText('Error')).toBeInTheDocument());
@@ -85,7 +93,7 @@ describe('SearchResult', () => {
         mockGetDomainStatus.mockResolvedValue(DomainStatus.ACTIVE);
 
         const exampleDomain = new Domain('example.com');
-        render(<SearchResult domain={exampleDomain} />);
+        renderSearchResult(exampleDomain);
 
         await waitFor(() => expect(screen.getByText('Taken')).toBeInTheDocument());
 
@@ -103,4 +111,14 @@ describe('SearchResult', () => {
         drawer = screen.getByTestId('domain-detail-drawer');
         expect(drawer).toHaveAttribute('data-open', 'false');
     });
+
+    const renderSearchResult = (domain: Domain) => {
+        return render(
+            <Table>
+                <TableBody>
+                    <SearchResult domain={domain} />
+                </TableBody>
+            </Table>,
+        );
+    };
 });
