@@ -4,8 +4,8 @@ import { Highlighter } from '@/components/ui/highlighter';
 
 const AboutPage = () => {
     const FaqItem = ({ question, answer }: { question: string; answer: string }) => (
-        <div className="mb-8 flex gap-2">
-            <h2 className="text-md text-balance font-semibold uppercase leading-relaxed">{question}</h2>
+        <div className="mb-8 flex flex-col gap-2">
+            <h2 className="text-md text-balance font-semibold uppercase leading-relaxed underline">{question}</h2>
             <p className="text-xs text-muted-foreground lg:text-sm">{answer}</p>
         </div>
     );
