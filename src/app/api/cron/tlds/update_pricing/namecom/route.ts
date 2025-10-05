@@ -62,6 +62,6 @@ export async function GET(): Promise<NextResponse> {
         return NextResponse.json({ message: 'TLD pricing enrichment from Name.com completed successfully' });
     } catch (error) {
         logger.error({ error }, 'Error during TLD pricing enrichment from Name.com');
-        return NextResponse.json({ error: 'Failed to enrich TLD pricing from Name.com' }, { status: 500 });
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

@@ -55,6 +55,6 @@ export async function GET(): Promise<NextResponse> {
         return NextResponse.json({ message: 'TLD pricing enrichment from Dynadot completed successfully' });
     } catch (error) {
         logger.error({ error }, 'Error during TLD pricing enrichment from Dynadot');
-        return NextResponse.json({ error: 'Failed to enrich TLD pricing from Dynadot' }, { status: 500 });
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
