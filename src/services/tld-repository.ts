@@ -46,7 +46,6 @@ class TLDRepository {
             {
                 created_at: now,
                 description: tldInfo.description,
-                direction: tldInfo.direction,
                 name: tldInfo.name,
                 pricing: tldInfo.pricing,
                 punycode_name: tldInfo.punycodeName,
@@ -82,7 +81,7 @@ class TLDRepository {
         const searchField = name.startsWith('xn--') ? 'punycode_name' : 'name';
         const { data, error } = await this.client
             .from('tld')
-            .select('description, direction, name, pricing, punycode_name, type')
+            .select('description, name, pricing, punycode_name, type')
             .eq(searchField, name)
             .single();
 
@@ -97,7 +96,6 @@ class TLDRepository {
         }
         const tld = {
             description: data.description,
-            direction: data.direction,
             name: data.name,
             pricing: data.pricing,
             punycodeName: data.punycode_name,
@@ -121,7 +119,7 @@ class TLDRepository {
 
         const { data, error } = await this.client
             .from('tld')
-            .select('description, direction, name, pricing, punycode_name, type')
+            .select('description, name, pricing, punycode_name, type')
             .order('name', { ascending: true })
             .limit(5000);
         if (error) {
@@ -133,7 +131,6 @@ class TLDRepository {
             punycodeName: tld.punycode_name,
             type: tld.type,
             description: tld.description,
-            direction: tld.direction,
             pricing: tld.pricing,
         }));
         this.cache.set(cacheKey, tlds, this.TTL_MILLISECONDS);
@@ -152,7 +149,6 @@ class TLDRepository {
             .from('tld')
             .update({
                 description: tldInfo.description,
-                direction: tldInfo.direction,
                 name: tldInfo.name,
                 pricing: tldInfo.pricing,
                 punycodeName: tldInfo.punycodeName,

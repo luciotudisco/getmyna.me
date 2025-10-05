@@ -1,7 +1,7 @@
 /**
  * A rate limiter that executes tasks at a given rate.
  */
-export class RateLimiter {
+class RateLimiter {
     private queue: Array<() => Promise<void>> = [];
     private processing = false;
     private lastCallTime = 0;
@@ -60,3 +60,6 @@ export class RateLimiter {
         this.processing = false;
     }
 }
+
+export const rateLimiter = new RateLimiter(2);
+export { RateLimiter };
