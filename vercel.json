@@ -9,10 +9,6 @@
             "schedule": "0 1 * * *"
         },
         {
-            "path": "/api/cron/tlds/update_type",
-            "schedule": "0 2 * * *"
-        },
-        {
             "path": "/api/cron/tlds/update_pricing/porkbun",
             "schedule": "0 3 * * *"
         },

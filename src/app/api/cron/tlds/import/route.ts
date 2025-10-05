@@ -28,7 +28,6 @@ export async function GET(): Promise<NextResponse> {
                 logger.info(`TLD ${punycodeName} already exists. Skipping...`);
                 continue;
             }
-
             logger.info(`Creating new TLD ${punycodeName} ...`);
             await tldRepository.createTld({
                 name: tldName,

@@ -44,11 +44,13 @@ class TLDRepository {
         const now = new Date().toISOString();
         const { error } = await this.client.from('tld').upsert(
             {
-                name: tldInfo.name,
-                punycode_name: tldInfo.punycodeName,
-                description: tldInfo.description,
-                type: tldInfo.type,
                 created_at: now,
+                description: tldInfo.description,
+                direction: tldInfo.direction,
+                name: tldInfo.name,
+                pricing: tldInfo.pricing,
+                punycode_name: tldInfo.punycodeName,
+                type: tldInfo.type,
                 updated_at: now,
             },
             {
@@ -80,7 +82,7 @@ class TLDRepository {
         const searchField = name.startsWith('xn--') ? 'punycode_name' : 'name';
         const { data, error } = await this.client
             .from('tld')
-            .select('name, punycode_name, description, direction, type, pricing')
+            .select('description, direction, name, pricing, punycode_name, type')
             .eq(searchField, name)
             .single();
 
@@ -94,11 +96,12 @@ class TLDRepository {
             throw new Error(`Failed to fetch TLD ${name}: ${error.message}`);
         }
         const tld = {
+            description: data.description,
+            direction: data.direction,
             name: data.name,
+            pricing: data.pricing,
             punycodeName: data.punycode_name,
             type: data.type,
-            description: data.description,
-            pricing: data.pricing,
         } as TLD;
         this.cache.set(cacheKey, tld, this.TTL_MILLISECONDS);
         return tld;
@@ -118,7 +121,7 @@ class TLDRepository {
 
         const { data, error } = await this.client
             .from('tld')
-            .select('name, punycode_name, type, description, direction, pricing')
+            .select('description, direction, name, pricing, punycode_name, type')
             .order('name', { ascending: true })
             .limit(5000);
         if (error) {
@@ -130,6 +133,7 @@ class TLDRepository {
             punycodeName: tld.punycode_name,
             type: tld.type,
             description: tld.description,
+            direction: tld.direction,
             pricing: tld.pricing,
         }));
         this.cache.set(cacheKey, tlds, this.TTL_MILLISECONDS);
@@ -147,11 +151,11 @@ class TLDRepository {
         const { error } = await this.client
             .from('tld')
             .update({
-                name: tldInfo.name,
-                punycodeName: tldInfo.punycodeName,
                 description: tldInfo.description,
                 direction: tldInfo.direction,
+                name: tldInfo.name,
                 pricing: tldInfo.pricing,
+                punycodeName: tldInfo.punycodeName,
                 type: tldInfo.type,
                 updated_at: new Date().toISOString(),
             })

@@ -30,10 +30,10 @@ export interface TLDPricing {
 }
 
 export interface TLD {
-    name?: string;
-    punycodeName?: string;
     description?: string;
-    type?: TLDType;
-    pricing?: Partial<Record<Registrar, TLDPricing>>;
     direction?: TextDirection;
+    name?: string;
+    pricing?: Partial<Record<Registrar, TLDPricing>>;
+    punycodeName?: string;
+    type?: TLDType;
 }
