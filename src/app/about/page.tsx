@@ -1,25 +1,6 @@
-import type { Metadata } from 'next';
-
 import TLDCounter from '@/components/TLDCounter';
 import { Badge } from '@/components/ui/badge';
 import { Highlighter } from '@/components/ui/highlighter';
-
-export const metadata: Metadata = {
-    title: 'About Domain Hacks',
-    description: 'Learn about domain hacks and how to create memorable domains that stand out. Discover the power of creative TLD combinations.',
-    openGraph: {
-        title: 'About Domain Hacks | GetMyNa.me',
-        description: 'Learn about domain hacks and how to create memorable domains that stand out. Discover the power of creative TLD combinations.',
-        url: 'https://getmyna.me/about',
-    },
-    twitter: {
-        title: 'About Domain Hacks | GetMyNa.me',
-        description: 'Learn about domain hacks and how to create memorable domains that stand out. Discover the power of creative TLD combinations.',
-    },
-    alternates: {
-        canonical: 'https://getmyna.me/about',
-    },
-};
 
 const AboutPage = () => {
     const FaqItem = ({ question, answer }: { question: string; answer: string }) => (
