@@ -23,8 +23,8 @@ export function SearchResults() {
                 const term = searchParams.get('term');
                 const includeSubdomains = searchParams.get('include_subdomains') === 'true';
                 const names = await apiClient.searchDomains(term ?? '', includeSubdomains);
-                const initialDomains = names.map((name: string) => new Domain(name));
-                setDomains(initialDomains);
+                const matchingDomains = names.map((name: string) => new Domain(name));
+                setDomains(matchingDomains);
             } catch {
                 setHasError(true);
                 setDomains([]);
