@@ -1,5 +1,3 @@
-import { TextDirection } from '../utils/unicode';
-
 export enum TLDType {
     // Two-letter country codes (e.g., .uk).
     COUNTRY_CODE = 'COUNTRY_CODE',
@@ -31,7 +29,6 @@ export interface TLDPricing {
 
 export interface TLD {
     description?: string;
-    direction?: TextDirection;
     name?: string;
     pricing?: Partial<Record<Registrar, TLDPricing>>;
     punycodeName?: string;

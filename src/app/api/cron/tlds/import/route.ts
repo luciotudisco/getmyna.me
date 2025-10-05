@@ -4,7 +4,6 @@ import { toUnicode } from 'punycode';
 
 import { tldRepository } from '@/services/tld-repository';
 import logger from '@/utils/logger';
-import { getTextDirection } from '@/utils/unicode';
 
 const IANA_TLD_URL = 'https://data.iana.org/TLD/tlds-alpha-by-domain.txt';
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
@@ -22,18 +21,13 @@ export async function GET(): Promise<NextResponse> {
         for (const tld of tlds) {
             const punycodeName = tld.toLowerCase();
             const tldName = toUnicode(punycodeName);
-            const direction = getTextDirection(tldName);
             const existingTld = await tldRepository.getTLD(punycodeName);
             if (existingTld) {
                 logger.info(`TLD ${punycodeName} already exists. Skipping...`);
                 continue;
             }
             logger.info(`Creating new TLD ${punycodeName} ...`);
-            await tldRepository.createTld({
-                name: tldName,
-                punycodeName,
-                direction,
-            });
+            await tldRepository.createTld({ name: tldName, punycodeName });
         }
 
         logger.info('TLD import completed');
