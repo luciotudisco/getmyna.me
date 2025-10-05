@@ -18,13 +18,15 @@ describe('/api/cron/tlds/update_pricing/dynodot', () => {
     it('should successfully update TLD pricing from Dynadot', async () => {
         const mockDynadotResponse = {
             data: {
-                tldPriceList: [
-                    {
-                        tld: '.com',
-                        allYearsRegisterPrice: ['12.95'],
-                        allYearsRenewPrice: ['12.95'],
-                    },
-                ],
+                data: {
+                    tldPriceList: [
+                        {
+                            tld: '.com',
+                            allYearsRegisterPrice: ['12.95'],
+                            allYearsRenewPrice: ['12.95'],
+                        },
+                    ],
+                },
             },
         };
 
