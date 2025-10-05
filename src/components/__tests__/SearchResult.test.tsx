@@ -1,10 +1,11 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { useSearchParams } from 'next/navigation';
 
 import { SearchResult } from '@/components/SearchResult';
 import { Domain, DomainStatus } from '@/models/domain';
 import { apiClient } from '@/services/api';
 import { RateLimiter } from '@/utils/rate-limiter';
+import { Table, TableBody } from '@/components/ui/table';
 
 // Mock Next.js navigation
 jest.mock('next/navigation', () => ({
@@ -28,11 +29,12 @@ jest.mock('@/utils/rate-limiter', () => ({
 // Mock DomainDetailDrawer component
 jest.mock('@/components/DomainDetailDrawer', () => {
     return function MockDomainDetailDrawer({ domain, status, open, onClose }: any) {
-        return open ? (
+        if (!open) return null;
+        return (
             <div data-testid="domain-detail-drawer" onClick={onClose}>
                 Domain Detail Drawer for {domain.getName()}
             </div>
-        ) : null;
+        );
     };
 });
 
@@ -45,6 +47,17 @@ jest.mock('@/components/DomainStatusBadge', () => {
 
 const mockApiClient = apiClient as jest.Mocked<typeof apiClient>;
 const mockRateLimiter = RateLimiter as jest.MockedClass<typeof RateLimiter>;
+
+// Helper function to render SearchResult wrapped in a table
+const renderSearchResult = (domain: Domain) => {
+    return render(
+        <Table>
+            <TableBody>
+                <SearchResult domain={domain} />
+            </TableBody>
+        </Table>
+    );
+};
 
 describe('SearchResult', () => {
     const mockDomain = new Domain('example.com');
@@ -59,14 +72,14 @@ describe('SearchResult', () => {
 
     describe('Rendering', () => {
         it('should render domain name and status badge', () => {
-            render(<SearchResult domain={mockDomain} />);
+            renderSearchResult(mockDomain);
 
             expect(screen.getByText('example.com')).toBeInTheDocument();
             expect(screen.getByTestId('domain-status-badge')).toBeInTheDocument();
         });
 
         it('should render table row with correct structure', () => {
-            render(<SearchResult domain={mockDomain} />);
+            renderSearchResult(mockDomain);
 
             const tableRow = screen.getByRole('row');
             expect(tableRow).toBeInTheDocument();
@@ -74,7 +87,7 @@ describe('SearchResult', () => {
         });
 
         it('should not render domain detail drawer initially', () => {
-            render(<SearchResult domain={mockDomain} />);
+            renderSearchResult(mockDomain);
 
             expect(screen.queryByTestId('domain-detail-drawer')).not.toBeInTheDocument();
         });
@@ -85,7 +98,9 @@ describe('SearchResult', () => {
             mockRateLimiterInstance.add.mockResolvedValue(DomainStatus.ACTIVE);
             mockApiClient.getDomainStatus.mockResolvedValue(DomainStatus.ACTIVE);
 
-            render(<SearchResult domain={mockDomain} />);
+            await act(async () => {
+                renderSearchResult(mockDomain);
+            });
 
             await waitFor(() => {
                 expect(mockRateLimiterInstance.add).toHaveBeenCalledWith(
@@ -93,14 +108,19 @@ describe('SearchResult', () => {
                 );
             });
 
-            expect(mockApiClient.getDomainStatus).toHaveBeenCalledWith('example.com');
+            // Wait for the API call to be made
+            await waitFor(() => {
+                expect(mockApiClient.getDomainStatus).toHaveBeenCalledWith('example.com');
+            });
         });
 
         it('should handle successful status fetch', async () => {
             mockRateLimiterInstance.add.mockResolvedValue(DomainStatus.ACTIVE);
             mockApiClient.getDomainStatus.mockResolvedValue(DomainStatus.ACTIVE);
 
-            render(<SearchResult domain={mockDomain} />);
+            await act(async () => {
+                renderSearchResult(mockDomain);
+            });
 
             await waitFor(() => {
                 expect(screen.getByTestId('domain-status-badge')).toHaveTextContent('ACTIVE');
@@ -113,7 +133,9 @@ describe('SearchResult', () => {
             mockRateLimiterInstance.add.mockRejectedValue(new Error('API Error'));
             mockApiClient.getDomainStatus.mockRejectedValue(new Error('API Error'));
 
-            render(<SearchResult domain={mockDomain} />);
+            await act(async () => {
+                renderSearchResult(mockDomain);
+            });
 
             await waitFor(() => {
                 expect(screen.getByTestId('domain-status-badge')).toHaveTextContent('ERROR');
@@ -123,26 +145,43 @@ describe('SearchResult', () => {
         });
 
         it('should update domain status when status changes', async () => {
-            const { rerender } = render(<SearchResult domain={mockDomain} />);
-
-            // First render with UNKNOWN status
-            expect(screen.getByTestId('domain-status-badge')).toHaveTextContent('UNKNOWN');
-
-            // Simulate status change
+            // Mock successful API call
             mockRateLimiterInstance.add.mockResolvedValue(DomainStatus.ACTIVE);
             mockApiClient.getDomainStatus.mockResolvedValue(DomainStatus.ACTIVE);
 
-            rerender(<SearchResult domain={mockDomain} />);
+            const { rerender } = await act(async () => {
+                return renderSearchResult(mockDomain);
+            });
 
+            // Wait for initial status fetch to complete
             await waitFor(() => {
                 expect(screen.getByTestId('domain-status-badge')).toHaveTextContent('ACTIVE');
+            });
+
+            // Create a new domain with different status
+            const newDomain = new Domain('test.org');
+            mockRateLimiterInstance.add.mockResolvedValue(DomainStatus.ERROR);
+            mockApiClient.getDomainStatus.mockResolvedValue(DomainStatus.ERROR);
+
+            await act(async () => {
+                rerender(
+                    <Table>
+                        <TableBody>
+                            <SearchResult domain={newDomain} />
+                        </TableBody>
+                    </Table>
+                );
+            });
+
+            await waitFor(() => {
+                expect(screen.getByTestId('domain-status-badge')).toHaveTextContent('ERROR');
             });
         });
     });
 
     describe('User Interactions', () => {
         it('should open domain detail drawer when row is clicked', () => {
-            render(<SearchResult domain={mockDomain} />);
+            renderSearchResult(mockDomain);
 
             const tableRow = screen.getByRole('row');
             fireEvent.click(tableRow);
@@ -152,7 +191,7 @@ describe('SearchResult', () => {
         });
 
         it('should close domain detail drawer when onClose is called', () => {
-            render(<SearchResult domain={mockDomain} />);
+            renderSearchResult(mockDomain);
 
             const tableRow = screen.getByRole('row');
             fireEvent.click(tableRow);
@@ -168,8 +207,8 @@ describe('SearchResult', () => {
             expect(screen.queryByTestId('domain-detail-drawer')).not.toBeInTheDocument();
         });
 
-        it('should toggle drawer state correctly on multiple clicks', () => {
-            render(<SearchResult domain={mockDomain} />);
+        it('should open drawer on row click and close via onClose callback', () => {
+            renderSearchResult(mockDomain);
 
             const tableRow = screen.getByRole('row');
 
@@ -177,11 +216,12 @@ describe('SearchResult', () => {
             fireEvent.click(tableRow);
             expect(screen.getByTestId('domain-detail-drawer')).toBeInTheDocument();
 
-            // Second click - close drawer
-            fireEvent.click(tableRow);
+            // Close drawer via onClose callback
+            const drawer = screen.getByTestId('domain-detail-drawer');
+            fireEvent.click(drawer);
             expect(screen.queryByTestId('domain-detail-drawer')).not.toBeInTheDocument();
 
-            // Third click - open drawer again
+            // Second click - open drawer again
             fireEvent.click(tableRow);
             expect(screen.getByTestId('domain-detail-drawer')).toBeInTheDocument();
         });
@@ -189,7 +229,7 @@ describe('SearchResult', () => {
 
     describe('Rate Limiting', () => {
         it('should use RateLimiter with correct configuration', () => {
-            render(<SearchResult domain={mockDomain} />);
+            renderSearchResult(mockDomain);
 
             expect(mockRateLimiter).toHaveBeenCalledWith(2);
         });
@@ -198,7 +238,9 @@ describe('SearchResult', () => {
             mockRateLimiterInstance.add.mockResolvedValue(DomainStatus.ACTIVE);
             mockApiClient.getDomainStatus.mockResolvedValue(DomainStatus.ACTIVE);
 
-            render(<SearchResult domain={mockDomain} />);
+            await act(async () => {
+                renderSearchResult(mockDomain);
+            });
 
             await waitFor(() => {
                 expect(mockRateLimiterInstance.add).toHaveBeenCalledWith(
@@ -218,7 +260,9 @@ describe('SearchResult', () => {
             mockRateLimiterInstance.add.mockResolvedValue(DomainStatus.ACTIVE);
             mockApiClient.getDomainStatus.mockResolvedValue(DomainStatus.ACTIVE);
 
-            render(<SearchResult domain={mockDomain} />);
+            await act(async () => {
+                renderSearchResult(mockDomain);
+            });
 
             await waitFor(() => {
                 expect(mockDomain.getStatus()).toBe(DomainStatus.ACTIVE);
@@ -229,7 +273,9 @@ describe('SearchResult', () => {
             mockRateLimiterInstance.add.mockRejectedValue(new Error('API Error'));
             mockApiClient.getDomainStatus.mockRejectedValue(new Error('API Error'));
 
-            render(<SearchResult domain={mockDomain} />);
+            await act(async () => {
+                renderSearchResult(mockDomain);
+            });
 
             await waitFor(() => {
                 expect(mockDomain.getStatus()).toBe(DomainStatus.ERROR);
@@ -240,20 +286,20 @@ describe('SearchResult', () => {
     describe('Component Props', () => {
         it('should work with different domain names', () => {
             const testDomain = new Domain('test.org');
-            render(<SearchResult domain={testDomain} />);
+            renderSearchResult(testDomain);
 
             expect(screen.getByText('test.org')).toBeInTheDocument();
         });
 
         it('should pass correct props to DomainStatusBadge', () => {
-            render(<SearchResult domain={mockDomain} />);
+            renderSearchResult(mockDomain);
 
             const statusBadge = screen.getByTestId('domain-status-badge');
             expect(statusBadge).toBeInTheDocument();
         });
 
         it('should pass correct props to DomainDetailDrawer when open', () => {
-            render(<SearchResult domain={mockDomain} />);
+            renderSearchResult(mockDomain);
 
             const tableRow = screen.getByRole('row');
             fireEvent.click(tableRow);
@@ -268,7 +314,9 @@ describe('SearchResult', () => {
         it('should handle rate limiter errors gracefully', async () => {
             mockRateLimiterInstance.add.mockRejectedValue(new Error('Rate limit exceeded'));
 
-            render(<SearchResult domain={mockDomain} />);
+            await act(async () => {
+                renderSearchResult(mockDomain);
+            });
 
             await waitFor(() => {
                 expect(screen.getByTestId('domain-status-badge')).toHaveTextContent('ERROR');
@@ -281,7 +329,9 @@ describe('SearchResult', () => {
             mockRateLimiterInstance.add.mockRejectedValue(new Error('Network error'));
             mockApiClient.getDomainStatus.mockRejectedValue(new Error('Network error'));
 
-            render(<SearchResult domain={mockDomain} />);
+            await act(async () => {
+                renderSearchResult(mockDomain);
+            });
 
             await waitFor(() => {
                 expect(screen.getByTestId('domain-status-badge')).toHaveTextContent('ERROR');

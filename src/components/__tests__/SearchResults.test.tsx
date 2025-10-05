@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import { useSearchParams } from 'next/navigation';
 
 import { SearchResults } from '@/components/SearchResults';
@@ -36,11 +36,11 @@ jest.mock('@/components/NoResultsMessage', () => {
     };
 });
 
-jest.mock('@/components/SearchResult', () => {
-    return function MockSearchResult({ domain }: { domain: Domain }) {
+jest.mock('@/components/SearchResult', () => ({
+    SearchResult: function MockSearchResult({ domain }: { domain: Domain }) {
         return <div data-testid="search-result">{domain.getName()}</div>;
-    };
-});
+    },
+}));
 
 jest.mock('@/components/ui/number-ticker', () => {
     return function MockNumberTicker({ value }: { value: number }) {
@@ -56,7 +56,7 @@ describe('SearchResults', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        mockUseSearchParams.mockReturnValue(mockSearchParams);
+        mockUseSearchParams.mockReturnValue(mockSearchParams as any);
     });
 
     describe('Loading State', () => {
@@ -77,7 +77,9 @@ describe('SearchResults', () => {
         it('should show error message when API call fails', async () => {
             mockApiClient.searchDomains.mockRejectedValue(new Error('API Error'));
 
-            render(<SearchResults />);
+            await act(async () => {
+                render(<SearchResults />);
+            });
 
             await waitFor(() => {
                 expect(screen.getByTestId('error-message')).toBeInTheDocument();
@@ -88,7 +90,9 @@ describe('SearchResults', () => {
         it('should clear domains array when error occurs', async () => {
             mockApiClient.searchDomains.mockRejectedValue(new Error('API Error'));
 
-            render(<SearchResults />);
+            await act(async () => {
+                render(<SearchResults />);
+            });
 
             await waitFor(() => {
                 expect(screen.queryByTestId('search-result')).not.toBeInTheDocument();
@@ -100,7 +104,9 @@ describe('SearchResults', () => {
         it('should show no results message when domains array is empty', async () => {
             mockApiClient.searchDomains.mockResolvedValue([]);
 
-            render(<SearchResults />);
+            await act(async () => {
+                render(<SearchResults />);
+            });
 
             await waitFor(() => {
                 expect(screen.getByTestId('no-results-message')).toBeInTheDocument();
@@ -114,7 +120,9 @@ describe('SearchResults', () => {
             const mockDomains = ['example.com', 'test.org', 'sample.net'];
             mockApiClient.searchDomains.mockResolvedValue(mockDomains);
 
-            render(<SearchResults />);
+            await act(async () => {
+                render(<SearchResults />);
+            });
 
             await waitFor(() => {
                 expect(screen.getByTestId('number-ticker')).toHaveTextContent('3');
@@ -131,7 +139,9 @@ describe('SearchResults', () => {
             const mockDomains = ['example.com'];
             mockApiClient.searchDomains.mockResolvedValue(mockDomains);
 
-            render(<SearchResults />);
+            await act(async () => {
+                render(<SearchResults />);
+            });
 
             await waitFor(() => {
                 expect(screen.getByRole('table')).toBeInTheDocument();
@@ -144,7 +154,9 @@ describe('SearchResults', () => {
             const mockDomains = ['example.com', 'test.org'];
             mockApiClient.searchDomains.mockResolvedValue(mockDomains);
 
-            render(<SearchResults />);
+            await act(async () => {
+                render(<SearchResults />);
+            });
 
             await waitFor(() => {
                 expect(screen.getByTestId('number-ticker')).toHaveTextContent('2');
@@ -158,7 +170,9 @@ describe('SearchResults', () => {
             mockSearchParams.set('term', 'example');
             mockApiClient.searchDomains.mockResolvedValue([]);
 
-            render(<SearchResults />);
+            await act(async () => {
+                render(<SearchResults />);
+            });
 
             await waitFor(() => {
                 expect(mockApiClient.searchDomains).toHaveBeenCalledWith('example', false);
@@ -170,7 +184,9 @@ describe('SearchResults', () => {
             mockSearchParams.set('include_subdomains', 'true');
             mockApiClient.searchDomains.mockResolvedValue([]);
 
-            render(<SearchResults />);
+            await act(async () => {
+                render(<SearchResults />);
+            });
 
             await waitFor(() => {
                 expect(mockApiClient.searchDomains).toHaveBeenCalledWith('example', true);
@@ -180,7 +196,9 @@ describe('SearchResults', () => {
         it('should handle missing search term', async () => {
             mockApiClient.searchDomains.mockResolvedValue([]);
 
-            render(<SearchResults />);
+            await act(async () => {
+                render(<SearchResults />);
+            });
 
             await waitFor(() => {
                 expect(mockApiClient.searchDomains).toHaveBeenCalledWith('', false);
@@ -191,7 +209,9 @@ describe('SearchResults', () => {
             mockSearchParams.set('term', 'example');
             mockApiClient.searchDomains.mockResolvedValue([]);
 
-            render(<SearchResults />);
+            await act(async () => {
+                render(<SearchResults />);
+            });
 
             await waitFor(() => {
                 expect(mockApiClient.searchDomains).toHaveBeenCalledWith('example', false);
@@ -204,7 +224,9 @@ describe('SearchResults', () => {
             const mockDomains = ['example.com', 'test.org'];
             mockApiClient.searchDomains.mockResolvedValue(mockDomains);
 
-            render(<SearchResults />);
+            await act(async () => {
+                render(<SearchResults />);
+            });
 
             await waitFor(() => {
                 // Verify that Domain objects are created and passed to SearchResult
@@ -218,7 +240,9 @@ describe('SearchResults', () => {
             mockApiClient.searchDomains.mockResolvedValue(mockDomains);
 
             // This should not throw an error, but might filter out invalid domains
-            render(<SearchResults />);
+            await act(async () => {
+                render(<SearchResults />);
+            });
 
             await waitFor(() => {
                 expect(screen.getByText('example.com')).toBeInTheDocument();
@@ -228,10 +252,13 @@ describe('SearchResults', () => {
 
     describe('Component Re-rendering', () => {
         it('should re-fetch data when search params change', async () => {
-            const { rerender } = render(<SearchResults />);
+            mockApiClient.searchDomains.mockResolvedValue(['example.com']);
+            
+            const { rerender } = await act(async () => {
+                return render(<SearchResults />);
+            });
 
             // First render
-            mockApiClient.searchDomains.mockResolvedValue(['example.com']);
             await waitFor(() => {
                 expect(mockApiClient.searchDomains).toHaveBeenCalledTimes(1);
             });
@@ -240,7 +267,9 @@ describe('SearchResults', () => {
             mockSearchParams.set('term', 'test');
             mockApiClient.searchDomains.mockResolvedValue(['test.org']);
 
-            rerender(<SearchResults />);
+            await act(async () => {
+                rerender(<SearchResults />);
+            });
 
             await waitFor(() => {
                 expect(mockApiClient.searchDomains).toHaveBeenCalledTimes(2);
@@ -251,7 +280,9 @@ describe('SearchResults', () => {
         it('should clear error state on successful re-render', async () => {
             // First render with error
             mockApiClient.searchDomains.mockRejectedValue(new Error('API Error'));
-            const { rerender } = render(<SearchResults />);
+            const { rerender } = await act(async () => {
+                return render(<SearchResults />);
+            });
 
             await waitFor(() => {
                 expect(screen.getByTestId('error-message')).toBeInTheDocument();
@@ -259,7 +290,9 @@ describe('SearchResults', () => {
 
             // Second render with success
             mockApiClient.searchDomains.mockResolvedValue(['example.com']);
-            rerender(<SearchResults />);
+            await act(async () => {
+                rerender(<SearchResults />);
+            });
 
             await waitFor(() => {
                 expect(screen.queryByTestId('error-message')).not.toBeInTheDocument();
@@ -273,7 +306,9 @@ describe('SearchResults', () => {
             const mockDomains = ['example.com'];
             mockApiClient.searchDomains.mockResolvedValue(mockDomains);
 
-            render(<SearchResults />);
+            await act(async () => {
+                render(<SearchResults />);
+            });
 
             await waitFor(() => {
                 const main = screen.getByRole('main');
@@ -286,7 +321,9 @@ describe('SearchResults', () => {
             const mockDomains = ['example.com', 'test.org'];
             mockApiClient.searchDomains.mockResolvedValue(mockDomains);
 
-            render(<SearchResults />);
+            await act(async () => {
+                render(<SearchResults />);
+            });
 
             await waitFor(() => {
                 const counter = screen.getByText('results found');
@@ -301,7 +338,9 @@ describe('SearchResults', () => {
             const largeDomainList = Array.from({ length: 1000 }, (_, i) => `domain${i}.com`);
             mockApiClient.searchDomains.mockResolvedValue(largeDomainList);
 
-            render(<SearchResults />);
+            await act(async () => {
+                render(<SearchResults />);
+            });
 
             await waitFor(() => {
                 expect(screen.getByTestId('number-ticker')).toHaveTextContent('1000');
@@ -312,7 +351,9 @@ describe('SearchResults', () => {
             const mockDomains = ['example.com', 'test-site.org', 'sub.domain.co.uk'];
             mockApiClient.searchDomains.mockResolvedValue(mockDomains);
 
-            render(<SearchResults />);
+            await act(async () => {
+                render(<SearchResults />);
+            });
 
             await waitFor(() => {
                 expect(screen.getByText('example.com')).toBeInTheDocument();
@@ -324,7 +365,9 @@ describe('SearchResults', () => {
         it('should handle API returning null or undefined', async () => {
             mockApiClient.searchDomains.mockResolvedValue(null as any);
 
-            render(<SearchResults />);
+            await act(async () => {
+                render(<SearchResults />);
+            });
 
             await waitFor(() => {
                 expect(screen.getByTestId('no-results-message')).toBeInTheDocument();
@@ -336,7 +379,9 @@ describe('SearchResults', () => {
         it('should use useTransition for non-blocking updates', async () => {
             mockApiClient.searchDomains.mockResolvedValue(['example.com']);
 
-            render(<SearchResults />);
+            await act(async () => {
+                render(<SearchResults />);
+            });
 
             // The component should render without blocking the main thread
             expect(screen.getByTestId('loading-message')).toBeInTheDocument();
