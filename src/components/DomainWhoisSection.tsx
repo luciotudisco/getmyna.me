@@ -1,6 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
 import { format, formatDistanceToNow, parseISO } from 'date-fns';
 
 import { WhoisInfo } from '@/models/whois';
@@ -10,23 +9,19 @@ interface DomainWhoisSectionProps {
 }
 
 export function DomainWhoisSection({ whoisInfo }: DomainWhoisSectionProps) {
-    const formattedCreationDate = useMemo(
-        () => (whoisInfo?.creationDate ? format(parseISO(whoisInfo.creationDate), 'MMMM do, yyyy') : null),
-        [whoisInfo?.creationDate],
-    );
+    const formattedCreationDate = formatDate(whoisInfo?.creationDate);
+    const formattedExpirationDate = formatDate(whoisInfo?.expirationDate);
+    const domainAge = getDomainAge(whoisInfo?.creationDate);
 
-    const formattedExpirationDate = useMemo(
-        () => (whoisInfo?.expirationDate ? format(parseISO(whoisInfo.expirationDate), 'MMMM do, yyyy') : null),
-        [whoisInfo?.expirationDate],
-    );
+    function formatDate(dateString: string | undefined): string | null {
+        if (!dateString) return null;
+        return format(parseISO(dateString), 'MMMM do, yyyy');
+    }
 
-    const domainAge = useMemo(
-        () =>
-            whoisInfo?.creationDate
-                ? formatDistanceToNow(parseISO(whoisInfo.creationDate), { addSuffix: false })
-                : null,
-        [whoisInfo?.creationDate],
-    );
+    function getDomainAge(dateString: string | undefined): string | null {
+        if (!dateString) return null;
+        return formatDistanceToNow(parseISO(dateString), { addSuffix: false });
+    }
 
     return (
         <div className="space-y-2 text-xs">
@@ -34,8 +29,7 @@ export function DomainWhoisSection({ whoisInfo }: DomainWhoisSectionProps) {
                 <span className="font-semibold uppercase text-muted-foreground">Domain Whois</span>
             </div>
 
-            {/* Creation Date */}
-            {whoisInfo?.creationDate && (
+            {formattedCreationDate && (
                 <p>
                     <span className="text-muted-foreground">Created:</span>{' '}
                     <span className="font-medium">
@@ -45,7 +39,6 @@ export function DomainWhoisSection({ whoisInfo }: DomainWhoisSectionProps) {
                 </p>
             )}
 
-            {/* Registrar */}
             {(whoisInfo?.registrarUrl || whoisInfo?.registrar) && (
                 <p>
                     <span className="text-muted-foreground">Registrar:</span>{' '}
@@ -64,15 +57,13 @@ export function DomainWhoisSection({ whoisInfo }: DomainWhoisSectionProps) {
                 </p>
             )}
 
-            {/* Expiration Date */}
-            {whoisInfo?.expirationDate && (
+            {formattedExpirationDate && (
                 <p>
                     <span className="text-muted-foreground">Expires:</span>{' '}
                     <span className="font-medium">{formattedExpirationDate}</span>
                 </p>
             )}
 
-            {/* Registrar Name */}
             {whoisInfo?.registrantName && (
                 <p>
                     <span className="text-muted-foreground">Registrant:</span>{' '}
