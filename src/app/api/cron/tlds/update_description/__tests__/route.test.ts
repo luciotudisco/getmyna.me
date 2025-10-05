@@ -1,0 +1,132 @@
+import axios from 'axios';
+import OpenAI from 'openai';
+
+import { GET } from '@/app/api/cron/tlds/update_description/route';
+import { TLDType } from '@/models/tld';
+import { tldRepository } from '@/services/tld-repository';
+
+jest.mock('axios');
+jest.mock('cheerio', () => ({ load: jest.fn().mockReturnValue({ text: jest.fn() }) }));
+jest.mock('openai');
+jest.mock('@/services/tld-repository');
+
+const mockAxios = axios as jest.Mocked<typeof axios>;
+const mockTldRepository = tldRepository as jest.Mocked<typeof tldRepository>;
+const mockOpenAI = OpenAI as jest.MockedClass<typeof OpenAI>;
+
+describe('/api/cron/tlds/update_description', () => {
+    const mockOpenAIClient = {
+        chat: {
+            completions: {
+                create: jest.fn(),
+            },
+        },
+    };
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        mockOpenAI.mockImplementation(() => mockOpenAIClient as any);
+    });
+
+    it('should successfully enrich TLDs with description and type', async () => {
+        // Mock TLD data
+        const mockTlds = [
+            {
+                name: 'com',
+                punycodeName: 'com',
+                description: null,
+                type: null,
+            },
+        ];
+
+        // Mock repository responses
+        mockTldRepository.listTLDs.mockResolvedValue(mockTlds as any);
+        mockTldRepository.updateTLD.mockResolvedValue();
+
+        // Mock axios responses for ICANN and IANA
+        const mockIcannResponse = { data: '<html><body>ICANN content for .com</body></html>' };
+        const mockIanaResponse = { data: '<html><body>IANA content for .com</body></html>' };
+
+        mockAxios.get.mockResolvedValueOnce(mockIcannResponse);
+        mockAxios.get.mockResolvedValueOnce(mockIanaResponse);
+
+        // Mock OpenAI response
+        const mockAIResponse = {
+            choices: [
+                {
+                    message: {
+                        content: JSON.stringify({
+                            description: 'Generic top-level domain for commercial use',
+                            type: 'GENERIC',
+                        }),
+                    },
+                },
+            ],
+        };
+        mockOpenAIClient.chat.completions.create.mockResolvedValue(mockAIResponse);
+
+        const response = await GET();
+        const responseData = await response.json();
+
+        expect(response.status).toBe(200);
+        expect(responseData).toEqual({ message: 'TLD enrichment with description completed successfully' });
+
+        // Verify repository calls
+        expect(mockTldRepository.listTLDs).toHaveBeenCalledTimes(1);
+        expect(mockTldRepository.updateTLD).toHaveBeenCalledTimes(1);
+
+        // Verify axios calls for both TLDs
+        expect(mockAxios.get).toHaveBeenCalledWith('https://icannwiki.org/.com');
+        expect(mockAxios.get).toHaveBeenCalledWith('https://www.iana.org/domains/root/db/com.html');
+
+        // Verify OpenAI calls
+        expect(mockOpenAIClient.chat.completions.create).toHaveBeenCalledTimes(1);
+
+        // Verify updateTLD calls
+        expect(mockTldRepository.updateTLD).toHaveBeenCalledWith('com', expect.any(Object));
+    });
+
+    it('should skip TLDs that already have descriptions', async () => {
+        const mockTlds = [
+            {
+                name: 'com',
+                punycodeName: 'com',
+                description: 'Already has description',
+                type: TLDType.GENERIC,
+            },
+        ];
+
+        mockTldRepository.listTLDs.mockResolvedValue(mockTlds as any);
+
+        const response = await GET();
+        const responseData = await response.json();
+
+        expect(response.status).toBe(200);
+        expect(responseData).toEqual({ message: 'TLD enrichment with description completed successfully' });
+
+        // Verify no API calls were made
+        expect(mockAxios.get).not.toHaveBeenCalled();
+        expect(mockOpenAIClient.chat.completions.create).not.toHaveBeenCalled();
+        expect(mockTldRepository.updateTLD).not.toHaveBeenCalled();
+    });
+
+    it('should throw 500 when request fails', async () => {
+        const mockTlds = [
+            {
+                name: 'com',
+                punycodeName: 'com',
+                description: null,
+                type: null,
+            },
+        ];
+
+        mockTldRepository.listTLDs.mockResolvedValue(mockTlds as any);
+        mockAxios.get.mockRejectedValue(new Error('Network error'));
+
+        const response = await GET();
+        const responseData = await response.json();
+
+        expect(response.status).toBe(500);
+        expect(responseData).toEqual({ error: 'Internal server error' });
+    });
+});

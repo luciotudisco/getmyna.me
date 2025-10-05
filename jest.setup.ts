@@ -2,8 +2,9 @@ import '@testing-library/jest-dom';
 
 // Set up environment variables for tests
 process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test.supabase.co';
-process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-service-key';
+process.env.OPENAI_API_KEY = 'test-openai-key';
 process.env.RAPID_API_KEY = 'test-rapid-api-key';
+process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-service-key';
 
 // Mock Web APIs for Next.js server environment
 global.Request =
