@@ -5,7 +5,7 @@ import { format, formatDistanceToNow, parseISO } from 'date-fns';
 import { WhoisInfo } from '@/models/whois';
 
 interface DomainWhoisSectionProps {
-    whoisInfo?: WhoisInfo | null;
+    whoisInfo?: WhoisInfo;
 }
 
 export function DomainWhoisSection({ whoisInfo }: DomainWhoisSectionProps) {
@@ -14,12 +14,16 @@ export function DomainWhoisSection({ whoisInfo }: DomainWhoisSectionProps) {
     const domainAge = getDomainAge(whoisInfo?.creationDate);
 
     function formatDate(dateString: string | undefined): string | null {
-        if (!dateString) return null;
+        if (!dateString) {
+            return null;
+        }
         return format(parseISO(dateString), 'MMMM do, yyyy');
     }
 
     function getDomainAge(dateString: string | undefined): string | null {
-        if (!dateString) return null;
+        if (!dateString) {
+            return null;
+        }
         return formatDistanceToNow(parseISO(dateString), { addSuffix: false });
     }
 
