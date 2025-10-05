@@ -22,11 +22,9 @@
 **Examples:**
 
 - `instangram` → `instagr.am` (using .am from Armenia)
-- `delicious` → `del.icio.us` (using .us from United States)
 - `bitly` → `bit.ly` (using .ly from Libya)
 - `google` → `goo.gl` (using .gl from Greenland)
 - `youtube` → `youtu.be` (using .be from Belgium)
-- `flickr` → `flic.kr` (using .kr from South Korea)
 - `reddit` → `redd.it` (using .it from Italy)
 
 Whether you're looking for a memorable personal brand, a catchy business domain, or just want to explore creative naming possibilities, getmyna.me generates thousands of domain suggestions, checks their availability, and provides detailed pricing and WHOIS information.
