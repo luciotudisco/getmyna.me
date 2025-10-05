@@ -11,7 +11,7 @@ interface DomainWhoisSectionProps {
 export function DomainWhoisSection({ whoisInfo }: DomainWhoisSectionProps) {
     const formattedCreationDate = formatDate(whoisInfo?.creationDate);
     const formattedExpirationDate = formatDate(whoisInfo?.expirationDate);
-    const domainAge = getDomainAge(whoisInfo?.creationDate);
+    const domainAge = getAge(whoisInfo?.creationDate);
 
     function formatDate(dateString: string | undefined): string | null {
         if (!dateString) {
@@ -20,7 +20,7 @@ export function DomainWhoisSection({ whoisInfo }: DomainWhoisSectionProps) {
         return format(parseISO(dateString), 'MMMM do, yyyy');
     }
 
-    function getDomainAge(dateString: string | undefined): string | null {
+    function getAge(dateString: string | undefined): string | null {
         if (!dateString) {
             return null;
         }
