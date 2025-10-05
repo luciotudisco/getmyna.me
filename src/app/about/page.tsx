@@ -16,14 +16,16 @@ const AboutPage = () => {
     }) => (
         <div className="mb-8 flex gap-4">
             <div>
-                <div className="mb-2 flex items-center gap-2">
+                <div className="mb-2 flex items-end gap-2">
                     <span
-                        className="flex size-5 shrink-0 items-center justify-center rounded-md font-mono text-xs font-semibold uppercase"
+                        className="flex size-6 shrink-0 items-center justify-center rounded-sm font-mono text-xs font-semibold uppercase"
                         style={{ backgroundColor: color }}
                     >
                         {index + 1}
                     </span>
-                    <h2 className="text-md text-balance font-semibold">{question}</h2>
+                    <h2 className="text-md text-balance font-semibold uppercase leading-relaxed underline">
+                        {question}
+                    </h2>
                 </div>
                 <p className="text-xs text-muted-foreground lg:text-sm">{answer}</p>
             </div>
@@ -36,7 +38,7 @@ const AboutPage = () => {
                 <div className="text-center">
                     <Badge className="text-xs font-medium">ABOUT</Badge>
                     <h1 className="mt-4 text-2xl font-semibold lg:text-4xl">Domain Hacks</h1>
-                    <p className="mt-4 text-sm font-medium text-muted-foreground lg:mt-6 lg:text-base">
+                    <p className="mt-2 text-sm font-medium text-muted-foreground lg:mt-6 lg:text-base">
                         Discover how to create memorable domains that{' '}
                         <Highlighter action="highlight" color="#fde2e4">
                             stand out
