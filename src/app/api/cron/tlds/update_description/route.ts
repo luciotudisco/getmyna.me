@@ -84,7 +84,7 @@ const TLD_SCHEMA = {
                 description: [
                     'One or two sentences describing the TLD, non-technical.',
                     'Briefly note the TLD origin, history and its intended use.',
-                    'If it is a brand TLD, note the sponsoring organization and the sponsoring organization.',
+                    'If it is a brand TLD, note the sponsoring organization.',
                     'Highlight if registrations are restricted and any other interesting facts.',
                     'Spell out acronyms and abbreviations at first mention.',
                 ].join(' '),
