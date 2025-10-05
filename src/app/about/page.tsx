@@ -23,7 +23,7 @@ const AboutPage = () => {
                     >
                         {index + 1}
                     </span>
-                    <h2 className="text-md text-balance font-semibold uppercase leading-relaxed underline">
+                    <h2 className="text-md text-balance font-semibold leading-relaxed underline">
                         {question}
                     </h2>
                 </div>
