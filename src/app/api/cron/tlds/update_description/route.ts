@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import * as cheerio from 'cheerio';
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
@@ -28,16 +28,15 @@ export async function GET(): Promise<NextResponse> {
                 continue;
             }
 
-            let icannWiki;
-            let ianaWiki;
+            let icannWiki = '';
+            let ianaWiki = '';
 
             try {
                 const icannResponse = await axios.get(`https://icannwiki.org/.${tld.name}`);
                 icannWiki = cheerio.load(icannResponse.data).text();
             } catch (error) {
-                if (axios.isAxiosError(error) && error.response?.status === 404) {
-                    logger.warn(`ICANN wiki page not found for TLD ${tld.name}, skipping...`);
-                    continue;
+                if (isAxiosError(error) && error.response?.status === 404) {
+                    logger.warn(`ICANN wiki page not found for TLD ${tld.name}.`);
                 }
                 throw error;
             }
@@ -46,9 +45,8 @@ export async function GET(): Promise<NextResponse> {
                 const ianaResponse = await axios.get(`https://www.iana.org/domains/root/db/${tld.punycodeName}.html`);
                 ianaWiki = cheerio.load(ianaResponse.data).text();
             } catch (error) {
-                if (axios.isAxiosError(error) && error.response?.status === 404) {
-                    logger.warn(`IANA wiki page not found for TLD ${tld.name}, skipping...`);
-                    continue;
+                if (isAxiosError(error) && error.response?.status === 404) {
+                    logger.warn(`IANA wiki page not found for TLD ${tld.name}.`);
                 }
                 throw error;
             }
