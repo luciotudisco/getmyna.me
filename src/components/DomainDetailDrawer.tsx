@@ -12,7 +12,6 @@ import LoadingMessage from '@/components/LoadingMessage';
 import TLDSection from '@/components/TLDSection';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
-import { DigInfo } from '@/models/dig';
 import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { TLD } from '@/models/tld';
 import { WhoisInfo } from '@/models/whois';
@@ -26,7 +25,6 @@ interface DomainDetailDrawerProps {
 }
 
 function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawerProps) {
-    const [digInfo, setDigInfo] = useState<DigInfo | null>(null);
     const [hasError, setHasError] = useState(false);
     const [loading, setLoading] = useState(false);
     const [tldInfo, setTldInfo] = useState<TLD | null>(null);
@@ -39,7 +37,6 @@ function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawe
 
         setWhoisInfo(null);
         setTldInfo(null);
-        setDigInfo(null);
 
         const fetchData = async () => {
             setLoading(true);
@@ -48,11 +45,9 @@ function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawe
                 const isAvailable = domain.isAvailable();
                 const whoisPromise = isAvailable ? Promise.resolve(null) : apiClient.getWhoisInfo(domain.getName());
                 const tldPromise = apiClient.getTLD(domain.getName());
-                const digPromise = !isAvailable ? apiClient.getDigInfo(domain.getName()) : Promise.resolve(null);
-                const [whoisData, tldData, digData] = await Promise.all([whoisPromise, tldPromise, digPromise]);
+                const [whoisData, tldData] = await Promise.all([whoisPromise, tldPromise]);
                 setWhoisInfo(whoisData as WhoisInfo);
                 setTldInfo(tldData as TLD);
-                setDigInfo(digData as DigInfo);
             } catch {
                 setHasError(true);
             } finally {
@@ -120,7 +115,7 @@ function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawe
                     {!domain.isAvailable() && whoisInfo && whoisInfo.creationDate && (
                         <>
                             <Separator />
-                            <DomainWhoisSection whoisInfo={whoisInfo} digInfo={digInfo} />
+                            <DomainWhoisSection whoisInfo={whoisInfo} />
                         </>
                     )}
 

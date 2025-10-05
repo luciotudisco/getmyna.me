@@ -1,7 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
-import { DigInfo, DNSRecordType } from '@/models/dig';
 import { DomainStatus } from '@/models/domain';
 import { Registrar, TLD, TLDType } from '@/models/tld';
 import { WhoisInfo } from '@/models/whois';
@@ -29,24 +28,6 @@ describe('APIClient', () => {
 
     afterEach(() => {
         mockAdapter.restore();
-    });
-
-    describe('getDigInfo', () => {
-        it('should return dig information for a domain', async () => {
-            const mockDigInfo: DigInfo = {
-                records: {
-                    [DNSRecordType.A]: ['192.168.1.1', '192.168.1.2'],
-                    [DNSRecordType.AAAA]: ['2001:db8::1'],
-                    [DNSRecordType.MX]: ['10 mail.example.com'],
-                },
-            };
-
-            mockAdapter.onGet('/api/domains/example.com/dig').reply(200, mockDigInfo);
-
-            const result = await apiClient.getDigInfo('example.com');
-
-            expect(result).toEqual(mockDigInfo);
-        });
     });
 
     describe('getDomainStatus', () => {

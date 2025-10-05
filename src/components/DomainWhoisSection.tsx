@@ -3,16 +3,13 @@
 import { useMemo } from 'react';
 import { format, formatDistanceToNow, parseISO } from 'date-fns';
 
-import { Badge } from '@/components/ui/badge';
-import { DigInfo, DNSRecordType } from '@/models/dig';
 import { WhoisInfo } from '@/models/whois';
 
 interface DomainWhoisSectionProps {
     whoisInfo?: WhoisInfo | null;
-    digInfo?: DigInfo | null;
 }
 
-export function DomainWhoisSection({ whoisInfo, digInfo }: DomainWhoisSectionProps) {
+export function DomainWhoisSection({ whoisInfo }: DomainWhoisSectionProps) {
     const formattedCreationDate = useMemo(
         () => (whoisInfo?.creationDate ? format(parseISO(whoisInfo.creationDate), 'MMMM do, yyyy') : null),
         [whoisInfo?.creationDate],
@@ -31,37 +28,10 @@ export function DomainWhoisSection({ whoisInfo, digInfo }: DomainWhoisSectionPro
         [whoisInfo?.creationDate],
     );
 
-    const aRecords = useMemo(() => {
-        if (!digInfo?.records) {
-            return false;
-        }
-        const aRecords = digInfo.records[DNSRecordType.A] || [];
-        const aaaaRecords = digInfo.records[DNSRecordType.AAAA] || [];
-        return { aRecords, aaaaRecords };
-    }, [digInfo]);
-
-    const mxRecords = useMemo(() => {
-        if (!digInfo?.records) return false;
-        const mxRecords = digInfo.records[DNSRecordType.MX] || [];
-        return mxRecords;
-    }, [digInfo]);
-
     return (
         <div className="space-y-2 text-xs">
             <div className="flex items-center justify-between">
                 <span className="font-semibold uppercase text-muted-foreground">Domain Whois</span>
-                <div className="flex gap-2">
-                    {aRecords && aRecords.aRecords.length > 0 && (
-                        <Badge variant="outline" className="uppercase">
-                            A Records
-                        </Badge>
-                    )}
-                    {mxRecords && mxRecords.length > 0 && (
-                        <Badge variant="outline" className="uppercase">
-                            MX Records
-                        </Badge>
-                    )}
-                </div>
             </div>
 
             {/* Creation Date */}

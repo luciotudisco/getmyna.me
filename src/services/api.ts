@@ -1,6 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
 
-import { DigInfo } from '@/models/dig';
 import { DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { TLD } from '@/models/tld';
 import { WhoisInfo } from '@/models/whois';
@@ -16,14 +15,6 @@ class APIClient {
      */
     constructor() {
         this.client = axios.create();
-    }
-
-    /**
-     * Gets DNS records for a domain.
-     */
-    async getDigInfo(domain: string): Promise<DigInfo> {
-        const response = await this.client.get(`/api/domains/${domain}/dig`);
-        return response.data as DigInfo;
     }
 
     /**
