@@ -14,7 +14,9 @@ class APIClient {
      * Creates axios instance for API requests.
      */
     constructor() {
-        this.client = axios.create();
+        this.client = axios.create({
+            timeout: 15000, // 15 seconds default timeout
+        });
     }
 
     /**
