@@ -9,9 +9,8 @@ import logger from '@/utils/logger';
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
 
 /**
- * Enrich TLDs with their description.
- * This function fetches the TLDs from the database and enriches them with their description.
- * It then updates the TLDs in the database with the new description.
+ * Enrich TLDs with their description and type.
+ * This function fetches the TLDs from the database and enriches them with their description and type.
  */
 export async function GET(): Promise<NextResponse> {
     try {
@@ -23,15 +22,39 @@ export async function GET(): Promise<NextResponse> {
                 logger.warn(`Skipping TLD ${tld.name} because it has no punycodeName or name`);
                 continue;
             }
+
             if (tld.description !== null && tld.type !== null) {
                 logger.info(`Skipping TLD ${tld.name} because it already has a description and type`);
                 continue;
             }
-            logger.info(`Enriching TLD ${tld.name} with description and type ...`);
-            const icannWikiResponse = await axios.get(`https://icannwiki.org/.${tld.name}`);
-            const ianaWikiResponse = await axios.get(`https://www.iana.org/domains/root/db/${tld.punycodeName}.html`);
-            const icannWikiHTML = cheerio.load(icannWikiResponse.data);
-            const ianaWikiHTML = cheerio.load(ianaWikiResponse.data);
+
+            let icannWiki;
+            let ianaWiki;
+
+            try {
+                const icannWikiResponse = await axios.get(`https://icannwiki.org/.${tld.name}`);
+                icannWiki = cheerio.load(icannWikiResponse.data).text();
+            } catch (error) {
+                if (axios.isAxiosError(error) && error.response?.status === 404) {
+                    logger.warn(`ICANN wiki page not found for TLD ${tld.name}, skipping...`);
+                    continue;
+                }
+                throw error;
+            }
+
+            try {
+                const ianaWikiResponse = await axios.get(
+                    `https://www.iana.org/domains/root/db/${tld.punycodeName}.html`,
+                );
+                ianaWiki = cheerio.load(ianaWikiResponse.data).text();
+            } catch (error) {
+                if (axios.isAxiosError(error) && error.response?.status === 404) {
+                    logger.warn(`IANA wiki page not found for TLD ${tld.name}, skipping...`);
+                    continue;
+                }
+                throw error;
+            }
+
             const response = await openaiClient.chat.completions.create({
                 model: 'gpt-4o-mini',
                 response_format: { type: 'json_schema', json_schema: TLD_SCHEMA },
@@ -40,20 +63,20 @@ export async function GET(): Promise<NextResponse> {
                         role: 'system',
                         content: [
                             'You are an expert on internet domain names system and top-level domains (TLDs).',
-                            'You will be given the HTML of the ICANN / IANA wiki pages about a specific TLD.',
+                            'You will be given the HTML of the ICANN and IANA wiki pages about a specific TLD.',
                             'You will need to extract information about the TLD from the HTML according to the schema provided.',
                         ].join('\n'),
                     },
                     {
                         role: 'user',
                         content: [
-                            `The ICANN wiki page for the TLD "${tld.name}": ${icannWikiHTML.text()}`,
-                            `The IANA wiki page for the TLD "${tld.name}": ${ianaWikiHTML.text()}`,
-                        ].join('\n'),
+                            `The ICANN wiki page for the TLD "${tld.name}": ${icannWiki}`,
+                            `The IANA wiki page for the TLD "${tld.name}": ${ianaWiki}`,
+                        ].join('\n\n'),
                     },
                     {
                         role: 'user',
-                        content: `Generate structured metadata for the TLD "${tld.name}" in the following JSON format: ${JSON.stringify(TLD_SCHEMA)}`,
+                        content: `Generate structured metadata in the following JSON format: ${JSON.stringify(TLD_SCHEMA)}`,
                     },
                 ],
             });
@@ -61,6 +84,7 @@ export async function GET(): Promise<NextResponse> {
             // Update TLD with structured data
             const responseContent = response.choices[0].message.content;
             const tldData = JSON.parse(responseContent || '{}');
+            logger.info(`Enriching TLD ${tld.name} with description and type ...`);
             await tldRepository.updateTLD(tld.punycodeName, { description: tldData.description, type: tldData.type });
         }
         logger.info('TLD enrichment with description completed');
@@ -79,13 +103,12 @@ const TLD_SCHEMA = {
         properties: {
             description: {
                 type: 'string',
-                minLength: 20,
-                maxLength: 500,
                 description: [
-                    'One or two sentences describing the TLD, non-technical.',
-                    'Briefly note the TLD origin, history and its intended use.',
+                    'One or two sentences describing the TLD. ',
+                    'The description should be non-technical and easy to understand.',
+                    'The description should include a brief history of the TLD, its intended use and any other interesting facts.',
                     'If it is a brand TLD, note the sponsoring organization.',
-                    'Highlight if registrations are restricted and any other interesting facts.',
+                    'Highlight if registrations are restricted.',
                     'Spell out acronyms and abbreviations at first mention.',
                 ].join(' '),
             },
