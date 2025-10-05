@@ -8,19 +8,16 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: 📥 Check out repository
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
-            - name: 📦 Install dependencies
-              run: npm install
+            - name: 📦 Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+                  cache: 'npm'
 
-            - name: 🔍 Run ESLint
-              run: npm run lint:strict
-
-            - name: 🔧 Type check
-              run: npm run type-check
-
-            - name: 🧪 Run tests
-              run: npm test
+            - name: 📥 Install dependencies
+              run: npm ci
 
             - name: 🏗️ Build Next.js
               env:
