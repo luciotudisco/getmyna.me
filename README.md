@@ -48,7 +48,7 @@ Whether you're looking for a memorable personal brand, a catchy business domain,
 1. **Clone the repository**
 
     ```bash
-    git clone https://github.com/yourusername/getmyna.me.git
+    git clone https://github.com/luciotudisco/getmyna.me.git
     cd getmyna.me
     ```
 
@@ -196,6 +196,6 @@ This project is licensed under the GPL 3.0 License - see the [LICENSE](LICENSE) 
 
 <div align="center">
 
-[⭐ Star this repo](https://github.com/yourusername/getmyna.me) • [🐛 Report Bug](https://github.com/yourusername/getmyna.me/issues) • [💡 Request Feature](https://github.com/yourusername/getmyna.me/issues)
+[⭐ Star this repo](https://github.com/luciotudisco/getmyna.me) • [🐛 Report Bug](https://github.com/luciotudisco/getmyna.me/issues) • [💡 Request Feature](https://github.com/luciotudisco/getmyna.me/issues)
 
 </div>
