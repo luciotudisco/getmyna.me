@@ -12,19 +12,18 @@ import LoadingMessage from '@/components/LoadingMessage';
 import TLDSection from '@/components/TLDSection';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
-import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
+import { Domain } from '@/models/domain';
 import { TLD } from '@/models/tld';
 import { WhoisInfo } from '@/models/whois';
 import { apiClient } from '@/services/api';
 
 interface DomainDetailDrawerProps {
     domain: Domain;
-    status: DomainStatusEnum;
     open: boolean;
     onClose: () => void;
 }
 
-function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawerProps) {
+function DomainDetailDrawer({ domain, open, onClose }: DomainDetailDrawerProps) {
     const [hasError, setHasError] = useState(false);
     const [loading, setLoading] = useState(false);
     const [tldInfo, setTldInfo] = useState<TLD | null>(null);
@@ -94,7 +93,7 @@ function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawe
                 <DrawerHeader>
                     <DrawerTitle className="flex items-center justify-between">
                         <div className="flex max-w-[400px] items-center gap-2 truncate">{domain.getName()}</div>
-                        <DomainStatusBadge domain={domain} status={status} className="min-w-[8rem]" />
+                        <DomainStatusBadge status={domain.getStatus()} className="min-w-[8rem]" />
                     </DrawerTitle>
                 </DrawerHeader>
                 <div className="space-y-4 p-6 pt-0">
@@ -108,7 +107,7 @@ function DomainDetailDrawer({ domain, status, open, onClose }: DomainDetailDrawe
                     {!domain.isAvailable() && (
                         <>
                             <Separator />
-                            <DomainStatusSection status={status} />
+                            <DomainStatusSection status={domain.getStatus()} />
                         </>
                     )}
 

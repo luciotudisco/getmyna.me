@@ -98,7 +98,7 @@ export enum DomainStatus {
     ERROR = 'ERROR',
 }
 
-const DOMAIN_AVAILABLE_STATUS_VALUES = new Set([
+export const DOMAIN_AVAILABLE_STATUS_VALUES = new Set([
     DomainStatus.INACTIVE,
     DomainStatus.PREMIUM,
     DomainStatus.TRANSFERABLE,
