@@ -28,7 +28,7 @@ export async function GET(): Promise<NextResponse> {
                 continue;
             }
             logger.info(`Enriching TLD ${tld.name} with description and type ...`);
-            const icannWikiResponse = await axios.get(`https://icannwiki.org/.${tld.punycodeName}`);
+            const icannWikiResponse = await axios.get(`https://icannwiki.org/.${tld.name}`);
             const ianaWikiResponse = await axios.get(`https://www.iana.org/domains/root/db/${tld.punycodeName}.html`);
             const icannWikiHTML = cheerio.load(icannWikiResponse.data);
             const ianaWikiHTML = cheerio.load(ianaWikiResponse.data);
