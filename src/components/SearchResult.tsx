@@ -38,11 +38,11 @@ export function SearchResult({ domain }: { domain: Domain }) {
                 </TableCell>
                 <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2">
-                        <DomainStatusBadge domain={domain} status={status} />
+                        <DomainStatusBadge status={status} />
                     </div>
                 </TableCell>
             </TableRow>
-            <DomainDetailDrawer domain={domain} status={status} open={open} onClose={() => setOpen(false)} />
+            <DomainDetailDrawer domain={domain} open={open} onClose={() => setOpen(false)} />
         </>
     );
 }

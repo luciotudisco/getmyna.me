@@ -3,12 +3,11 @@
 import { Loader2 } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
-import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
+import { DOMAIN_AVAILABLE_STATUS_VALUES, DomainStatus } from '@/models/domain';
 import { cn } from '@/utils/utils';
 
 interface DomainStatusBadgeProps {
-    domain: Domain;
-    status: DomainStatusEnum;
+    status: DomainStatus;
     className?: string;
 }
 
@@ -48,16 +47,16 @@ function TakenBadge({ className }: { className?: string }) {
     );
 }
 
-function DomainStatusBadge({ domain, status, className }: DomainStatusBadgeProps) {
-    if (status === DomainStatusEnum.UNKNOWN) {
+function DomainStatusBadge({ status, className }: DomainStatusBadgeProps) {
+    if (status === DomainStatus.UNKNOWN) {
         return <UnknownBadge className={className} />;
     }
 
-    if (status === DomainStatusEnum.ERROR) {
+    if (status === DomainStatus.ERROR) {
         return <ErrorBadge className={className} />;
     }
 
-    if (domain.isAvailable()) {
+    if (DOMAIN_AVAILABLE_STATUS_VALUES.has(status)) {
         return <AvailableBadge className={className} />;
     }
 
