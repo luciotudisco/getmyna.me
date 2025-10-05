@@ -1,5 +1,3 @@
-'server-only';
-
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 import { TLD } from '@/models/tld';
