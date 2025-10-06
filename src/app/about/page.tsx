@@ -1,6 +1,29 @@
+import type { Metadata } from 'next';
+
 import TLDCounter from '@/components/TLDCounter';
 import { Badge } from '@/components/ui/badge';
 import { Highlighter } from '@/components/ui/highlighter';
+
+export const metadata: Metadata = {
+    title: 'About Domain Hacks | GetMyNa.me',
+    description: 'Learn about domain hacks and how to create memorable domains that stand out. Discover the power of creative domain naming with TLDs.',
+    keywords: ['domain hacks', 'creative domains', 'memorable domains', 'TLD', 'domain naming', 'brand domains', 'unique domains'],
+    openGraph: {
+        title: 'About Domain Hacks | GetMyNa.me',
+        description: 'Learn about domain hacks and how to create memorable domains that stand out. Discover the power of creative domain naming with TLDs.',
+        type: 'website',
+        url: 'https://getmyna.me/about',
+        siteName: 'GetMyNa.me',
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'About Domain Hacks | GetMyNa.me',
+        description: 'Learn about domain hacks and how to create memorable domains that stand out. Discover the power of creative domain naming with TLDs.',
+    },
+    alternates: {
+        canonical: 'https://getmyna.me/about',
+    },
+};
 
 const AboutPage = () => {
     const FaqItem = ({ question, answer }: { question: string; answer: string }) => (
