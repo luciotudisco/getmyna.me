@@ -9,7 +9,8 @@ import './globals.css';
 
 export const metadata: Metadata = {
     title: 'GetMyNa.me',
-    description: 'Find the perfect domain hack. Discover creative domain names that combine your brand with clever TLD combinations.',
+    description:
+        'Find the perfect domain hack. Discover creative domain names that combine your brand with clever TLD combinations.',
     keywords: ['domain hack', 'domain names', 'creative domains', 'brand domains', 'TLD', 'domain search'],
 };
 
