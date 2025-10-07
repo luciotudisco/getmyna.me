@@ -73,6 +73,33 @@ describe('getDomainsHacks', () => {
         const result = await domainHacksGenerator.getDomainsHacks('bill gates', false);
         expect(result).toEqual(['gat.es', 'billgat.es']);
     });
+
+    it('should strip punctuation from search term', () => {
+        const result = domainHacksGenerator.getDomainsHacks('bill!@#$%^&*()gates');
+        // After stripping punctuation, "bill!@#$%^&*()gates" becomes "billgates" (single word)
+        expect(result).toContain('billgat.es');
+        expect(result).toContain('bill.gat.es');
+        expect(result).toContain('b.illgat.es');
+        expect(result).toContain('bi.llgat.es');
+        expect(result).toContain('bil.lgat.es');
+        expect(result).toContain('billg.at.es');
+        expect(result).toContain('billga.t.es');
+    });
+
+    it('should strip punctuation from search term with spaces', () => {
+        const result = domainHacksGenerator.getDomainsHacks('bill!@#$%^&*() gates');
+        // After stripping punctuation, "bill!@#$%^&*() gates" becomes "bill gates" (two words)
+        expect(result).toContain('gat.es');
+        expect(result).toContain('billgat.es');
+        expect(result).toContain('bill.gat.es');
+        expect(result).toContain('g.at.es');
+        expect(result).toContain('ga.t.es');
+        expect(result).toContain('b.illgat.es');
+        expect(result).toContain('bi.llgat.es');
+        expect(result).toContain('bil.lgat.es');
+        expect(result).toContain('billg.at.es');
+        expect(result).toContain('billga.t.es');
+    });
 });
 
 describe('getMatchingDomains', () => {

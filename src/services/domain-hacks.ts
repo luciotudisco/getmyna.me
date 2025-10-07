@@ -30,6 +30,9 @@ export class DomainHacksGenerator {
     getDomainsHacks(input: string, includeSubdomains = true): string[] {
         input = input.trim().toLowerCase();
 
+        // Strip punctuation from the search term
+        input = input.replace(/[^\w\s]/g, '');
+
         // Split the input into words
         // If more than 3 words, join the middle ones to reduce complexity
         let nameParts = input.split(/\s+/);
