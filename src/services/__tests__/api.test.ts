@@ -89,6 +89,53 @@ describe('APIClient', () => {
         });
     });
 
+    describe('getTLDs', () => {
+        it('should return a list of all TLDs', async () => {
+            const mockTlds: TLD[] = [
+                {
+                    name: 'com',
+                    punycodeName: 'com',
+                    description: 'Commercial',
+                    type: TLDType.GENERIC,
+                    pricing: {
+                        [Registrar.DYNADOT]: {
+                            registration: 8.99,
+                            renewal: 8.99,
+                            currency: 'USD',
+                        },
+                    },
+                },
+                {
+                    name: 'dev',
+                    punycodeName: 'dev',
+                    description: 'Technology and development',
+                    type: TLDType.GENERIC,
+                    pricing: {
+                        [Registrar.GANDI]: {
+                            registration: 15.0,
+                            renewal: 15.0,
+                            currency: 'USD',
+                        },
+                    },
+                },
+                {
+                    name: 'uk',
+                    punycodeName: 'uk',
+                    description: 'United Kingdom',
+                    type: TLDType.COUNTRY_CODE,
+                },
+            ];
+
+            const mockResponse = { tlds: mockTlds };
+
+            mockAdapter.onGet('/api/tlds').reply(200, mockResponse);
+
+            const result = await apiClient.getTLDs();
+
+            expect(result).toEqual(mockTlds);
+        });
+    });
+
     describe('getTLDsCount', () => {
         it('should return the number of TLDs', async () => {
             const mockCount = 100;
