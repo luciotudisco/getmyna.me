@@ -15,18 +15,14 @@ export default function TldsPage() {
     const [isPending, startTransition] = useTransition();
 
     useEffect(() => {
-        async function fetchTlds() {
+        startTransition(async () => {
             try {
                 const data = await apiClient.getTLDs();
-                startTransition(() => {
-                    setTlds(data);
-                });
+                setTlds(data);
             } catch {
                 setHasError(true);
             }
-        }
-
-        fetchTlds();
+        });
     }, []);
 
     if (hasError) {
