@@ -12,7 +12,7 @@ import { apiClient } from '@/services/api';
 export default function TldsPage() {
     const [tlds, setTlds] = useState<TLD[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [hasError, setHasError] = useState(false);
 
     useEffect(() => {
         async function fetchTlds() {
@@ -21,7 +21,7 @@ export default function TldsPage() {
                 const data = await apiClient.getTLDs();
                 setTlds(data);
             } catch (err) {
-                setError('Failed to load TLDs. Please try again later.');
+                setHasError(true);
                 console.error('Error fetching TLDs:', err);
             } finally {
                 setLoading(false);
@@ -35,8 +35,8 @@ export default function TldsPage() {
         return <LoadingMessage message="Loading TLDs..." />;
     }
 
-    if (error) {
-        return <ErrorMessage message={error} />;
+    if (hasError) {
+        return <ErrorMessage />;
     }
 
     return (
