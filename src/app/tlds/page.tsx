@@ -20,9 +20,8 @@ export default function TldsPage() {
                 setLoading(true);
                 const data = await apiClient.getTLDs();
                 setTlds(data);
-            } catch (err) {
+            } catch {
                 setHasError(true);
-                console.error('Error fetching TLDs:', err);
             } finally {
                 setLoading(false);
             }
@@ -32,7 +31,7 @@ export default function TldsPage() {
     }, []);
 
     if (loading) {
-        return <LoadingMessage message="Loading TLDs..." />;
+        return <LoadingMessage />;
     }
 
     if (hasError) {
