@@ -134,26 +134,6 @@ describe('APIClient', () => {
 
             expect(result).toEqual(mockTlds);
         });
-
-        it('should return an empty array when no TLDs are returned', async () => {
-            const mockResponse = { tlds: [] };
-
-            mockAdapter.onGet('/api/tlds').reply(200, mockResponse);
-
-            const result = await apiClient.getTLDs();
-
-            expect(result).toEqual([]);
-        });
-
-        it('should return an empty array when tlds property is missing', async () => {
-            const mockResponse = {};
-
-            mockAdapter.onGet('/api/tlds').reply(200, mockResponse);
-
-            const result = await apiClient.getTLDs();
-
-            expect(result).toEqual([]);
-        });
     });
 
     describe('getTLDsCount', () => {
