@@ -38,6 +38,14 @@ class APIClient {
     /**
      * Gets all available TLDs.
      */
+    async getTLDs(): Promise<TLD[]> {
+        const response = await this.client.get('/api/tlds');
+        return response.data.tlds ?? [];
+    }
+
+    /**
+     * Gets all available TLDs count.
+     */
     async getTLDsCount(): Promise<number> {
         const response = await this.client.get('/api/tlds/count');
         return response.data.count ?? 0;

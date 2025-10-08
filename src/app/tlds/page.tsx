@@ -1,9 +1,12 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import { Flag, FlaskConical, Globe2, Handshake, type LucideIcon, Server, ShieldCheck } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Highlighter } from '@/components/ui/highlighter';
 import { Registrar, TLD, TLDType } from '@/models/tld';
-import { tldRepository } from '@/services/tld-repository';
+import { apiClient } from '@/services/api';
 
 const TLD_TYPE_ICONS: Record<TLDType, LucideIcon> = {
     [TLDType.COUNTRY_CODE]: Flag,
@@ -31,8 +34,27 @@ const REGISTRAR_DISPLAY_NAMES: Record<Registrar, string> = {
     [Registrar.PORKBUN]: 'Porkbun',
 };
 
-export default async function TldsPage() {
-    const tlds = await tldRepository.listTLDs();
+export default function TldsPage() {
+    const [tlds, setTlds] = useState<TLD[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        async function fetchTlds() {
+            try {
+                setLoading(true);
+                const data = await apiClient.getTLDs();
+                setTlds(data);
+            } catch (err) {
+                setError('Failed to load TLDs. Please try again later.');
+                console.error('Error fetching TLDs:', err);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchTlds();
+    }, []);
 
     // Local component defined inside the page
     function TldListItem({ tld }: { tld: TLD }) {
@@ -66,6 +88,28 @@ export default async function TldsPage() {
                 )}
 
                 {tld.description && <p className="text-xs leading-relaxed text-muted-foreground">{tld.description}</p>}
+            </div>
+        );
+    }
+
+    if (loading) {
+        return (
+            <div className="flex min-h-screen items-center justify-center">
+                <div className="text-center">
+                    <div className="mb-4 text-4xl">⏳</div>
+                    <p className="text-sm text-muted-foreground">Loading TLDs...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="flex min-h-screen items-center justify-center">
+                <div className="text-center">
+                    <div className="mb-4 text-4xl">❌</div>
+                    <p className="text-sm text-muted-foreground">{error}</p>
+                </div>
             </div>
         );
     }
