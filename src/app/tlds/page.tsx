@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 
 import ErrorMessage from '@/components/ErrorMessage';
 import LoadingMessage from '@/components/LoadingMessage';
@@ -11,31 +11,30 @@ import { apiClient } from '@/services/api';
 
 export default function TldsPage() {
     const [tlds, setTlds] = useState<TLD[]>([]);
-    const [loading, setLoading] = useState(true);
     const [hasError, setHasError] = useState(false);
+    const [isPending, startTransition] = useTransition();
 
     useEffect(() => {
         async function fetchTlds() {
             try {
-                setLoading(true);
                 const data = await apiClient.getTLDs();
-                setTlds(data);
+                startTransition(() => {
+                    setTlds(data);
+                });
             } catch {
                 setHasError(true);
-            } finally {
-                setLoading(false);
             }
         }
 
         fetchTlds();
     }, []);
 
-    if (loading) {
-        return <LoadingMessage />;
-    }
-
     if (hasError) {
         return <ErrorMessage />;
+    }
+
+    if (isPending || tlds.length === 0) {
+        return <LoadingMessage />;
     }
 
     return (
