@@ -127,7 +127,6 @@ describe('APIClient', () => {
             ];
 
             const mockResponse = { tlds: mockTlds };
-
             mockAdapter.onGet('/api/tlds').reply(200, mockResponse);
 
             const result = await apiClient.getTLDs();

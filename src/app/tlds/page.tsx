@@ -15,25 +15,21 @@ export default function TldsPage() {
     const [isPending, startTransition] = useTransition();
 
     useEffect(() => {
-        async function fetchTlds() {
+        startTransition(async () => {
             try {
                 const data = await apiClient.getTLDs();
-                startTransition(() => {
-                    setTlds(data);
-                });
+                setTlds(data);
             } catch {
                 setHasError(true);
             }
-        }
-
-        fetchTlds();
+        });
     }, []);
 
     if (hasError) {
         return <ErrorMessage />;
     }
 
-    if (isPending || tlds.length === 0) {
+    if (isPending) {
         return <LoadingMessage />;
     }
 
@@ -53,7 +49,7 @@ export default function TldsPage() {
 
                 <div className="mt-6 flex w-full flex-wrap justify-center gap-2 lg:mt-14">
                     {tlds.map((tld) => (
-                        <Badge key={tld.name || tld.punycodeName} variant="outline">
+                        <Badge key={tld.name} variant="outline" className="font-light">
                             .{tld.name}
                         </Badge>
                     ))}
