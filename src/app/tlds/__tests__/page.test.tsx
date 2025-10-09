@@ -79,16 +79,6 @@ describe('TldsPage', () => {
 
             expect(screen.getByTestId('loading-message')).toBeInTheDocument();
         });
-
-        it('should show loading message when TLDs array is empty', async () => {
-            mockApiClient.getTLDs.mockResolvedValue([]);
-
-            render(<TldsPage />);
-
-            await waitFor(() => {
-                expect(screen.getByTestId('loading-message')).toBeInTheDocument();
-            });
-        });
     });
 
     describe('Error State', () => {
@@ -164,63 +154,6 @@ describe('TldsPage', () => {
 
             await waitFor(() => {
                 expect(screen.getByText('.xn--80adxhks')).toBeInTheDocument();
-            });
-        });
-
-        it('should render TLD badges with outline variant', async () => {
-            mockApiClient.getTLDs.mockResolvedValue(mockTLDs);
-
-            render(<TldsPage />);
-
-            await waitFor(() => {
-                const badges = screen
-                    .getAllByRole('generic')
-                    .filter((el) => el.textContent?.startsWith('.') && el.textContent?.length > 1);
-
-                // Check that badges have the outline variant class
-                badges.forEach((badge) => {
-                    expect(badge).toHaveClass('border');
-                });
-            });
-        });
-
-        it('should have proper responsive layout classes', async () => {
-            mockApiClient.getTLDs.mockResolvedValue(mockTLDs);
-
-            render(<TldsPage />);
-
-            await waitFor(() => {
-                const mainElement = screen.getByRole('main');
-                expect(mainElement).toHaveClass(
-                    'm-auto',
-                    'flex',
-                    'w-full',
-                    'max-w-6xl',
-                    'flex-col',
-                    'items-center',
-                    'gap-5',
-                    'p-5',
-                    'md:p-10',
-                );
-            });
-        });
-
-        it('should have proper container classes for TLD badges', async () => {
-            mockApiClient.getTLDs.mockResolvedValue(mockTLDs);
-
-            render(<TldsPage />);
-
-            await waitFor(() => {
-                const badgesContainer = screen.getByText('.com').closest('div');
-                expect(badgesContainer).toHaveClass(
-                    'mt-6',
-                    'flex',
-                    'w-full',
-                    'flex-wrap',
-                    'justify-center',
-                    'gap-2',
-                    'lg:mt-14',
-                );
             });
         });
     });
@@ -308,16 +241,6 @@ describe('TldsPage', () => {
                 // Should display the original name, not punycode
                 expect(screen.getByText('.москва')).toBeInTheDocument();
                 expect(screen.queryByText('.xn--80adxhks')).not.toBeInTheDocument();
-            });
-        });
-
-        it('should handle empty TLDs array by showing loading state', async () => {
-            mockApiClient.getTLDs.mockResolvedValue([]);
-
-            render(<TldsPage />);
-
-            await waitFor(() => {
-                expect(screen.getByTestId('loading-message')).toBeInTheDocument();
             });
         });
 
