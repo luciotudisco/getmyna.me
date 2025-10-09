@@ -24,9 +24,9 @@ function CountDisplay({ isPending, hasError, count }: { isPending: boolean; hasE
         <div className="flex items-center gap-2">
             <NumberTicker value={count} className="min-w-20 text-2xl font-semibold tabular-nums text-primary" />
             <span className="text-lg font-medium text-muted-foreground">TLDs</span>
-            <Link 
-                href="/tlds" 
-                className="text-xs text-muted-foreground hover:text-foreground transition-colors duration-200 underline decoration-dotted underline-offset-2"
+            <Link
+                href="/tlds"
+                className="text-xs text-muted-foreground underline decoration-dotted underline-offset-2 transition-colors duration-200 hover:text-foreground"
                 title="View all TLDs"
             >
                 view all
