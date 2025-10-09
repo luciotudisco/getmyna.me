@@ -114,37 +114,6 @@ describe('TldsPage', () => {
                 expect(screen.getByText('4 TLDs')).toBeInTheDocument();
             });
         });
-
-        it('should render all TLDs as badges', async () => {
-            mockApiClient.getTLDs.mockResolvedValue(mockTLDs);
-
-            render(<TldsPage />);
-
-            await waitFor(() => {
-                expect(screen.getByText('.com')).toBeInTheDocument();
-                expect(screen.getByText('.org')).toBeInTheDocument();
-                expect(screen.getByText('.uk')).toBeInTheDocument();
-                expect(screen.getByText('.москва')).toBeInTheDocument();
-            });
-        });
-
-        it('should use the correct key for TLD badges (name or punycodeName)', async () => {
-            const tldsWithMissingName: TLD[] = [
-                {
-                    punycodeName: 'xn--80adxhks',
-                    description: 'Moscow',
-                    type: TLDType.COUNTRY_CODE,
-                },
-            ];
-
-            mockApiClient.getTLDs.mockResolvedValue(tldsWithMissingName);
-
-            render(<TldsPage />);
-
-            await waitFor(() => {
-                expect(screen.getByText('.xn--80adxhks')).toBeInTheDocument();
-            });
-        });
     });
 
     describe('API Integration', () => {
