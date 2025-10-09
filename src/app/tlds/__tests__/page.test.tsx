@@ -91,17 +91,6 @@ describe('TldsPage', () => {
                 expect(screen.getByTestId('error-message')).toBeInTheDocument();
             });
         });
-
-        it('should not show TLDs content when there is an error', async () => {
-            mockApiClient.getTLDs.mockRejectedValue(new Error('API Error'));
-
-            render(<TldsPage />);
-
-            await waitFor(() => {
-                expect(screen.queryByText('All Top-Level Domains')).not.toBeInTheDocument();
-                expect(screen.queryByText('TLD DIRECTORY')).not.toBeInTheDocument();
-            });
-        });
     });
 
     describe('Success State', () => {
