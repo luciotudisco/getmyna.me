@@ -28,10 +28,10 @@ function CountDisplay({ isPending, hasError, count }: { isPending: boolean; hasE
             </div>
             <Link
                 href="/tlds"
-                className="text-xs text-muted-foreground underline decoration-dotted underline-offset-2 transition-colors duration-200 hover:text-foreground"
+                className="text-xs text-muted-foreground underline decoration-dotted underline-offset-2 transition-colors duration-200 hover:text-foreground mb-4"
                 title="View all TLDs"
             >
-                view all
+                view them all
             </Link>
         </div>
     );
