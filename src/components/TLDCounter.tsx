@@ -21,9 +21,11 @@ function CountDisplay({ isPending, hasError, count }: { isPending: boolean; hasE
     }
 
     return (
-        <div className="flex items-center gap-2">
-            <NumberTicker value={count} className="min-w-20 text-2xl font-semibold tabular-nums text-primary" />
-            <span className="text-lg font-medium text-muted-foreground">TLDs</span>
+        <div className="flex flex-col items-center gap-1">
+            <div className="flex items-center gap-2">
+                <NumberTicker value={count} className="min-w-20 text-2xl font-semibold tabular-nums text-primary" />
+                <span className="text-lg font-medium text-muted-foreground">TLDs</span>
+            </div>
             <Link
                 href="/tlds"
                 className="text-xs text-muted-foreground underline decoration-dotted underline-offset-2 transition-colors duration-200 hover:text-foreground"
@@ -56,9 +58,7 @@ function TLDCounter() {
     return (
         <div className="flex flex-col items-center justify-center gap-1 pb-8">
             <h2 className="text-muted-foreground">Powered by a collection of</h2>
-            <div className="flex items-baseline gap-2">
-                <CountDisplay isPending={isPending} hasError={hasError} count={count} />
-            </div>
+            <CountDisplay isPending={isPending} hasError={hasError} count={count} />
         </div>
     );
 }
