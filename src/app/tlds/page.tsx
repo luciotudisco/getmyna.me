@@ -34,27 +34,25 @@ export default function TldsPage() {
     }
 
     return (
-        <div className="min-h-screen">
-            <main className="m-auto flex w-full max-w-6xl flex-col items-center gap-5 p-5 md:p-10">
-                <div className="text-center">
-                    <Badge className="text-xs font-medium">TLD DIRECTORY</Badge>
-                    <h1 className="mt-4 text-2xl font-semibold lg:text-4xl">All Top-Level Domains</h1>
-                    <p className="mt-2 text-sm font-medium text-muted-foreground lg:mt-6 lg:text-base">
-                        Explore our complete collection of{' '}
-                        <Highlighter action="underline" color="#fde2e4">
-                            {tlds.length} TLDs
-                        </Highlighter>
-                    </p>
-                </div>
+        <div className="m-auto flex w-full max-w-6xl flex-col items-center gap-5 p-5 md:p-10">
+            <div className="text-center">
+                <Badge className="text-xs font-medium">TLD DIRECTORY</Badge>
+                <h1 className="mt-4 text-2xl font-semibold lg:text-4xl">All Top-Level Domains</h1>
+                <p className="mt-2 text-sm font-medium text-muted-foreground lg:mt-6 lg:text-base">
+                    Explore our complete collection of{' '}
+                    <Highlighter action="underline" color="#fde2e4">
+                        {tlds.length} TLDs
+                    </Highlighter>
+                </p>
+            </div>
 
-                <div className="mt-6 flex w-full flex-wrap justify-center gap-2 lg:mt-14">
-                    {tlds.map((tld) => (
-                        <Badge key={tld.name} variant="outline" className="font-light">
-                            .{tld.name}
-                        </Badge>
-                    ))}
-                </div>
-            </main>
+            <div className="mt-6 flex w-full flex-wrap justify-center gap-2 lg:mt-14">
+                {tlds.map((tld) => (
+                    <Badge key={tld.name} variant="outline" className="font-light">
+                        .{tld.name}
+                    </Badge>
+                ))}
+            </div>
         </div>
     );
 }
