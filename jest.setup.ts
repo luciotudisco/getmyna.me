@@ -42,3 +42,22 @@ global.Response =
             return new MockResponse(data, init);
         }
     };
+
+// Mock IntersectionObserver for framer-motion
+global.IntersectionObserver = class IntersectionObserver {
+    constructor() {}
+    disconnect() {}
+    observe() {}
+    takeRecords() {
+        return [];
+    }
+    unobserve() {}
+} as any;
+
+// Mock ResizeObserver for UI components
+global.ResizeObserver = class ResizeObserver {
+    constructor() {}
+    disconnect() {}
+    observe() {}
+    unobserve() {}
+} as any;
