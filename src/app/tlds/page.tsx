@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useTransition } from 'react';
+import { motion } from 'framer-motion';
 
 import ErrorMessage from '@/components/ErrorMessage';
 import LoadingMessage from '@/components/LoadingMessage';
@@ -49,9 +50,20 @@ export default function TldsPage() {
 
                 <div className="mt-6 flex w-full flex-wrap justify-center gap-2 lg:mt-14">
                     {tlds.map((tld) => (
-                        <Badge key={tld.name} variant="outline" className="font-light">
-                            .{tld.name}
-                        </Badge>
+                        <motion.div
+                            key={tld.name}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                                duration: 0.5,
+                                delay: Math.random() * 0.8,
+                                ease: 'easeOut',
+                            }}
+                        >
+                            <Badge variant="outline" className="font-light">
+                                .{tld.name}
+                            </Badge>
+                        </motion.div>
                     ))}
                 </div>
             </main>
