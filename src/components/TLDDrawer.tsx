@@ -23,6 +23,12 @@ function TLDDrawer({ tld, open, onClose }: TLDDrawerProps) {
                     </VisuallyHidden>
                     <DrawerTitle className="flex items-center justify-between">
                         <div className="flex max-w-[400px] items-center gap-2 truncate">.{tld.name}</div>
+                        {tld.type && (
+                            <Badge variant="outline" className="flex items-center gap-1 uppercase">
+                                {TLD_TYPE_ICONS[tld.type] && <TLD_TYPE_ICONS[tld.type] className="h-3 w-3" aria-hidden="true" />}
+                                <span>{TLD_TYPE_DISPLAY_NAMES[tld.type]}</span>
+                            </Badge>
+                        )}
                     </DrawerTitle>
                 </DrawerHeader>
                 <div className="space-y-4 p-6 pt-0">
@@ -30,17 +36,6 @@ function TLDDrawer({ tld, open, onClose }: TLDDrawerProps) {
                     <div className="space-y-2 text-xs">
                         <div className="flex items-center justify-between">
                             <span className="font-semibold uppercase text-muted-foreground">Top Level Domain</span>
-                            <div className="flex items-center gap-2">
-                                <Badge variant="outline" className="uppercase">
-                                    .{tld.name}
-                                </Badge>
-                                {tld.type && (
-                                    <Badge variant="outline" className="flex items-center gap-1 uppercase">
-                                        {TLD_TYPE_ICONS[tld.type] && <TLD_TYPE_ICONS[tld.type] className="h-3 w-3" aria-hidden="true" />}
-                                        <span>{TLD_TYPE_DISPLAY_NAMES[tld.type]}</span>
-                                    </Badge>
-                                )}
-                            </div>
                         </div>
                         <p className="gap-2 text-xs leading-relaxed">
                             <span>{tld.description ?? 'No additional information is available for this TLD, just yet.'}</span>{' '}
