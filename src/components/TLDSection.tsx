@@ -1,27 +1,7 @@
 'use client';
 
-import { Flag, FlaskConical, Globe2, Handshake, type LucideIcon, Server, ShieldCheck } from 'lucide-react';
-
 import { Badge } from '@/components/ui/badge';
-import { TLD, TLDType } from '@/models/tld';
-
-const TLD_TYPE_ICONS: Record<TLDType, LucideIcon> = {
-    [TLDType.COUNTRY_CODE]: Flag,
-    [TLDType.GENERIC]: Globe2,
-    [TLDType.GENERIC_RESTRICTED]: ShieldCheck,
-    [TLDType.INFRASTRUCTURE]: Server,
-    [TLDType.SPONSORED]: Handshake,
-    [TLDType.TEST]: FlaskConical,
-};
-
-const TLD_TYPE_DISPLAY_NAMES: Record<TLDType, string> = {
-    [TLDType.COUNTRY_CODE]: 'Country Code',
-    [TLDType.GENERIC]: 'Generic',
-    [TLDType.GENERIC_RESTRICTED]: 'Generic Restricted',
-    [TLDType.INFRASTRUCTURE]: 'Infrastructure',
-    [TLDType.SPONSORED]: 'Sponsored',
-    [TLDType.TEST]: 'Test',
-};
+import { TLD, TLD_TYPE_DISPLAY_NAMES, TLD_TYPE_ICONS } from '@/models/tld';
 
 export default function TLDSection({ name, punycodeName, description, type }: TLD) {
     const ianaURL = `https://www.iana.org/domains/root/db/${punycodeName}.html`;
