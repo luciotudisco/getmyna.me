@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 
 import ErrorMessage from '@/components/ErrorMessage';
 import LoadingMessage from '@/components/LoadingMessage';
+import TLDDrawer from '@/components/TLDDrawer';
 import { Badge } from '@/components/ui/badge';
 import { Highlighter } from '@/components/ui/highlighter';
 import { TLD } from '@/models/tld';
@@ -14,6 +15,8 @@ export default function TldsPage() {
     const [tlds, setTlds] = useState<TLD[]>([]);
     const [hasError, setHasError] = useState(false);
     const [isPending, startTransition] = useTransition();
+    const [selectedTld, setSelectedTld] = useState<TLD | null>(null);
+    const [drawerOpen, setDrawerOpen] = useState(false);
 
     useEffect(() => {
         startTransition(async () => {
@@ -25,6 +28,16 @@ export default function TldsPage() {
             }
         });
     }, []);
+
+    const showDrawer = (tld: TLD) => {
+        setSelectedTld(tld);
+        setDrawerOpen(true);
+    };
+
+    const closeDrawer = () => {
+        setDrawerOpen(false);
+        setSelectedTld(null);
+    };
 
     if (hasError) {
         return <ErrorMessage />;
@@ -60,13 +73,19 @@ export default function TldsPage() {
                                 ease: 'easeOut',
                             }}
                         >
-                            <Badge variant="outline" className="font-light">
+                            <Badge
+                                variant="outline"
+                                className="cursor-pointer font-light transition-colors hover:bg-muted"
+                                onClick={() => showDrawer(tld)}
+                            >
                                 .{tld.name}
                             </Badge>
                         </motion.div>
                     ))}
                 </div>
             </main>
+
+            {selectedTld && <TLDDrawer tld={selectedTld} open={drawerOpen} onClose={closeDrawer} />}
         </div>
     );
 }

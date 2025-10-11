@@ -4,7 +4,7 @@ import LoadingMessage from '@/components/LoadingMessage';
 
 // Mock the Lottie Player
 jest.mock('@lottiefiles/react-lottie-player', () => ({
-    Player: ({ src, autoplay, loop, style }: any) => (
+    Player: ({ src, autoplay, loop, style: _style }: any) => (
         <div data-testid="lottie-player" data-src={src} data-autoplay={autoplay} data-loop={loop}>
             Lottie Player
         </div>

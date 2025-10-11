@@ -4,7 +4,7 @@ import ErrorMessage from '@/components/ErrorMessage';
 
 // Mock the Lottie Player
 jest.mock('@lottiefiles/react-lottie-player', () => ({
-    Player: ({ src, autoplay, keepLastFrame, style }: any) => (
+    Player: ({ src, autoplay, keepLastFrame, style: _style }: any) => (
         <div data-testid="lottie-player" data-src={src} data-autoplay={autoplay} data-keep-last-frame={keepLastFrame}>
             Lottie Player
         </div>
