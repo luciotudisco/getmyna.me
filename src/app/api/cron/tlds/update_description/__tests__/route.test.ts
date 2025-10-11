@@ -58,6 +58,7 @@ describe('/api/cron/tlds/update_description', () => {
                         content: JSON.stringify({
                             description: 'Generic top-level domain for commercial use',
                             type: 'GENERIC',
+                            year_established: 1985,
                         }),
                     },
                 },
@@ -117,6 +118,7 @@ describe('/api/cron/tlds/update_description', () => {
                 punycodeName: 'com',
                 description: null,
                 type: null,
+                yearEstablished: null,
             },
         ];
 
