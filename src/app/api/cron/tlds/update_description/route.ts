@@ -116,7 +116,7 @@ const TLD_SCHEMA = {
             },
             type: {
                 type: 'string',
-                enum: ['GENERIC', 'COUNTRY_CODE', 'GENERIC_RESTRICTED', 'INFRASTRUCTURE', 'SPONSORED', 'TEST'],
+                enum: ['GENERIC', 'COUNTRY_CODE', 'GENERIC_RESTRICTED', 'INFRASTRUCTURE', 'SPONSORED'],
                 description: 'The TLD category according to IANA.',
             },
             year_established: {

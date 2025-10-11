@@ -107,17 +107,6 @@ describe('TLDSection', () => {
 
             expect(screen.queryByText('Sponsored')).toBeInTheDocument();
         });
-
-        it('should render the TLD type when type is TEST', () => {
-            const testTLD: TLD = {
-                ...baseTLD,
-                type: TLDType.TEST,
-            };
-
-            render(<TLDSection {...testTLD} />);
-
-            expect(screen.queryByText('Test')).toBeInTheDocument();
-        });
     });
 
     describe('punycode handling', () => {

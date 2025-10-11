@@ -1,4 +1,4 @@
-import { Flag, FlaskConical, Globe2, Handshake, type LucideIcon, Server, ShieldCheck } from 'lucide-react';
+import { Flag, Globe2, Handshake, type LucideIcon, Server, ShieldCheck } from 'lucide-react';
 
 export enum TLDType {
     // Two-letter country codes (e.g., .uk).
@@ -11,8 +11,6 @@ export enum TLDType {
     INFRASTRUCTURE = 'INFRASTRUCTURE',
     // Community-specific domains run by sponsors (e.g., .edu, .gov).
     SPONSORED = 'SPONSORED',
-    // Reserved or special-use domains for testing (e.g., .test).
-    TEST = 'TEST',
 }
 
 export enum Registrar {
@@ -44,7 +42,6 @@ export const TLD_TYPE_ICONS: Record<TLDType, LucideIcon> = {
     [TLDType.GENERIC_RESTRICTED]: ShieldCheck,
     [TLDType.INFRASTRUCTURE]: Server,
     [TLDType.SPONSORED]: Handshake,
-    [TLDType.TEST]: FlaskConical,
 };
 
 export const TLD_TYPE_DISPLAY_NAMES: Record<TLDType, string> = {
@@ -53,5 +50,4 @@ export const TLD_TYPE_DISPLAY_NAMES: Record<TLDType, string> = {
     [TLDType.GENERIC_RESTRICTED]: 'Generic Restricted',
     [TLDType.INFRASTRUCTURE]: 'Infrastructure',
     [TLDType.SPONSORED]: 'Sponsored',
-    [TLDType.TEST]: 'Test',
 };
