@@ -29,12 +29,12 @@ export default function TldsPage() {
         });
     }, []);
 
-    const handleTldClick = (tld: TLD) => {
+    const showDrawer = (tld: TLD) => {
         setSelectedTld(tld);
         setDrawerOpen(true);
     };
 
-    const handleDrawerClose = () => {
+    const closeDrawer = () => {
         setDrawerOpen(false);
         setSelectedTld(null);
     };
@@ -76,7 +76,7 @@ export default function TldsPage() {
                             <Badge
                                 variant="outline"
                                 className="cursor-pointer font-light transition-colors hover:bg-muted"
-                                onClick={() => handleTldClick(tld)}
+                                onClick={() => showDrawer(tld)}
                             >
                                 .{tld.name}
                             </Badge>
@@ -85,7 +85,7 @@ export default function TldsPage() {
                 </div>
             </main>
 
-            {selectedTld && <TLDDrawer tld={selectedTld} open={drawerOpen} onClose={handleDrawerClose} />}
+            {selectedTld && <TLDDrawer tld={selectedTld} open={drawerOpen} onClose={closeDrawer} />}
         </div>
     );
 }
