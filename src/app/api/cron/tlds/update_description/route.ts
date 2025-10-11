@@ -23,7 +23,7 @@ export async function GET(): Promise<NextResponse> {
                 continue;
             }
 
-            if (tld.description !== null && tld.type !== null) {
+            if (tld.description !== null && tld.type !== null && tld.yearEstablished !== null) {
                 logger.info(`Skipping TLD ${tld.name} because it already has a description and type`);
                 continue;
             }
@@ -83,7 +83,11 @@ export async function GET(): Promise<NextResponse> {
             const responseContent = response.choices[0].message.content;
             const tldData = JSON.parse(responseContent || '{}');
             logger.info(`Enriching TLD ${tld.name} with description and type ...`);
-            await tldRepository.updateTLD(tld.punycodeName, { description: tldData.description, type: tldData.type });
+            await tldRepository.updateTLD(tld.punycodeName, {
+                description: tldData.description,
+                type: tldData.type,
+                yearEstablished: tldData.year_established,
+            });
         }
         logger.info('TLD enrichment with description completed');
         return NextResponse.json({ message: 'TLD enrichment with description completed successfully' });
@@ -115,8 +119,14 @@ const TLD_SCHEMA = {
                 enum: ['GENERIC', 'COUNTRY_CODE', 'GENERIC_RESTRICTED', 'INFRASTRUCTURE', 'SPONSORED', 'TEST'],
                 description: 'The TLD category according to IANA.',
             },
+            year_established: {
+                type: 'integer',
+                minimum: 1985,
+                maximum: new Date().getFullYear(),
+                description: 'The year the TLD was established.',
+            },
         },
-        required: ['description', 'type'],
+        required: ['description', 'type', 'year_established'],
         additionalProperties: false,
     },
 };

@@ -73,6 +73,7 @@ describe('TLDRepository', () => {
                         currency: 'USD',
                     },
                 },
+                yearEstablished: 1985,
             };
 
             mockSupabaseClient.from = jest.fn().mockReturnValue({
@@ -96,6 +97,7 @@ describe('TLDRepository', () => {
             type: TLDType.GENERIC,
             description: 'Commercial',
             pricing: {},
+            year_established: 1985,
         };
 
         it('should return cached TLD if available', async () => {
@@ -103,6 +105,7 @@ describe('TLDRepository', () => {
                 name: 'com',
                 punycodeName: 'com',
                 type: TLDType.GENERIC,
+                yearEstablished: 1985,
             };
 
             mockCache.get.mockReturnValue(cachedTLD);
@@ -135,6 +138,7 @@ describe('TLDRepository', () => {
                 type: TLDType.GENERIC,
                 description: 'Commercial',
                 pricing: {},
+                yearEstablished: 1985,
             });
             expect(mockCache.set).toHaveBeenCalledWith('tld:com', expect.any(Object), 60000);
         });
@@ -187,6 +191,7 @@ describe('TLDRepository', () => {
                 type: TLDType.GENERIC,
                 description: 'Commercial',
                 pricing: {},
+                year_established: 1985,
             },
             {
                 name: 'net',
@@ -194,6 +199,7 @@ describe('TLDRepository', () => {
                 type: TLDType.GENERIC,
                 description: 'Network',
                 pricing: {},
+                year_established: 1985,
             },
         ];
 
@@ -230,6 +236,7 @@ describe('TLDRepository', () => {
                     type: TLDType.GENERIC,
                     description: 'Commercial',
                     pricing: {},
+                    yearEstablished: 1985,
                 },
                 {
                     name: 'net',
@@ -237,6 +244,7 @@ describe('TLDRepository', () => {
                     type: TLDType.GENERIC,
                     description: 'Network',
                     pricing: {},
+                    yearEstablished: 1985,
                 },
             ]);
             expect(mockCache.set).toHaveBeenCalledWith('tlds', expect.any(Array), 60000);
@@ -250,6 +258,7 @@ describe('TLDRepository', () => {
             type: TLDType.GENERIC,
             description: 'Updated Commercial',
             pricing: {},
+            yearEstablished: 1985,
         };
 
         it('should update TLD and invalidate cache', async () => {

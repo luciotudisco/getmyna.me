@@ -9,6 +9,7 @@ describe('TLDDrawer', () => {
         punycodeName: 'com',
         description: 'Commercial organizations',
         type: TLDType.GENERIC,
+        yearEstablished: 1985,
     };
 
     const mockOnClose = jest.fn();
@@ -24,6 +25,7 @@ describe('TLDDrawer', () => {
             expect(screen.getByText('.com')).toBeInTheDocument();
             expect(screen.getByText('Generic')).toBeInTheDocument();
             expect(screen.getByText('Commercial organizations')).toBeInTheDocument();
+            expect(screen.getByText('1985')).toBeInTheDocument();
 
             const learnMoreLink = screen.getByText('Learn more');
             expect(learnMoreLink).toBeInTheDocument();

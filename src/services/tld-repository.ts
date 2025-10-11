@@ -51,6 +51,7 @@ class TLDRepository {
                 punycode_name: tldInfo.punycodeName,
                 type: tldInfo.type,
                 updated_at: now,
+                year_established: tldInfo.yearEstablished,
             },
             {
                 onConflict: 'name,punycode_name',
@@ -81,7 +82,7 @@ class TLDRepository {
         const searchField = name.startsWith('xn--') ? 'punycode_name' : 'name';
         const { data, error } = await this.client
             .from('tld')
-            .select('description, name, pricing, punycode_name, type')
+            .select('description, name, pricing, punycode_name, type, year_established')
             .eq(searchField, name)
             .single();
 
@@ -100,6 +101,7 @@ class TLDRepository {
             pricing: data.pricing,
             punycodeName: data.punycode_name,
             type: data.type,
+            yearEstablished: data.year_established,
         } as TLD;
         this.cache.set(cacheKey, tld, this.TTL_MILLISECONDS);
         return tld;
@@ -119,7 +121,7 @@ class TLDRepository {
 
         const { data, error } = await this.client
             .from('tld')
-            .select('description, name, pricing, punycode_name, type')
+            .select('description, name, pricing, punycode_name, type, year_established')
             .order('name', { ascending: true })
             .limit(5000);
         if (error) {
@@ -127,11 +129,12 @@ class TLDRepository {
             throw new Error(`Failed to fetch TLDs: ${error.message}`);
         }
         const tlds: TLD[] = data.map((tld) => ({
+            description: tld.description,
             name: tld.name,
+            pricing: tld.pricing,
             punycodeName: tld.punycode_name,
             type: tld.type,
-            description: tld.description,
-            pricing: tld.pricing,
+            yearEstablished: tld.year_established,
         }));
         this.cache.set(cacheKey, tlds, this.TTL_MILLISECONDS);
         return tlds;
@@ -154,6 +157,7 @@ class TLDRepository {
                 punycodeName: tldInfo.punycodeName,
                 type: tldInfo.type,
                 updated_at: new Date().toISOString(),
+                year_established: tldInfo.yearEstablished,
             })
             .eq(searchField, name);
 

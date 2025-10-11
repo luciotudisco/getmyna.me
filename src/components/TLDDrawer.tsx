@@ -23,12 +23,19 @@ function TLDDrawer({ tld, open, onClose }: TLDDrawerProps) {
                 <DrawerHeader>
                     <DrawerTitle className="flex items-center justify-between">
                         <div className="flex max-w-[400px] items-center gap-2 truncate">.{tld.name}</div>
-                        {tld.type && (
-                            <Badge variant="outline" className="flex items-center gap-1 uppercase">
-                                {Icon && <Icon className="h-3 w-3" aria-hidden="true" />}
-                                <span>{tldDisplayName}</span>
-                            </Badge>
-                        )}
+                        <div className="flex items-center gap-2">
+                            {tld.type && (
+                                <Badge variant="outline" className="flex items-center gap-1 uppercase">
+                                    {Icon && <Icon className="h-3 w-3" aria-hidden="true" />}
+                                    <span>{tldDisplayName}</span>
+                                </Badge>
+                            )}
+                            {tld.yearEstablished && (
+                                <Badge variant="outline" className="flex items-center gap-1 uppercase">
+                                    <span>{tld.yearEstablished}</span>
+                                </Badge>
+                            )}
+                        </div>
                     </DrawerTitle>
                 </DrawerHeader>
                 <div className="space-y-4 p-6 pt-0">

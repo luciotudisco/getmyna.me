@@ -35,6 +35,7 @@ export interface TLD {
     pricing?: Partial<Record<Registrar, TLDPricing>>;
     punycodeName?: string;
     type?: TLDType;
+    yearEstablished?: number;
 }
 
 export const TLD_TYPE_ICONS: Record<TLDType, LucideIcon> = {
