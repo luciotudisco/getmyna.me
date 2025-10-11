@@ -25,7 +25,12 @@ function TLDDrawer({ tld, open, onClose }: TLDDrawerProps) {
                         <div className="flex max-w-[400px] items-center gap-2 truncate">.{tld.name}</div>
                         {tld.type && (
                             <Badge variant="outline" className="flex items-center gap-1 uppercase">
-                                {TLD_TYPE_ICONS[tld.type] && <TLD_TYPE_ICONS[tld.type] className="h-3 w-3" aria-hidden="true" />}
+                                {tld.type &&
+                                    TLD_TYPE_ICONS[tld.type] &&
+                                    (() => {
+                                        const IconComponent = TLD_TYPE_ICONS[tld.type];
+                                        return <IconComponent className="h-3 w-3" aria-hidden="true" />;
+                                    })()}
                                 <span>{TLD_TYPE_DISPLAY_NAMES[tld.type]}</span>
                             </Badge>
                         )}
@@ -38,11 +43,13 @@ function TLDDrawer({ tld, open, onClose }: TLDDrawerProps) {
                             <span className="font-semibold uppercase text-muted-foreground">Top Level Domain</span>
                         </div>
                         <p className="gap-2 text-xs leading-relaxed">
-                            <span>{tld.description ?? 'No additional information is available for this TLD, just yet.'}</span>{' '}
-                            <a 
-                                href={`https://www.iana.org/domains/root/db/${tld.punycodeName}.html`} 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
+                            <span>
+                                {tld.description ?? 'No additional information is available for this TLD, just yet.'}
+                            </span>{' '}
+                            <a
+                                href={`https://www.iana.org/domains/root/db/${tld.punycodeName}.html`}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="text-muted-foreground underline"
                             >
                                 Learn more
