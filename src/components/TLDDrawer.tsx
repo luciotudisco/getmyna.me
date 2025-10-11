@@ -39,9 +39,6 @@ function TLDDrawer({ tld, open, onClose }: TLDDrawerProps) {
                 <div className="space-y-4 p-6 pt-0">
                     <Separator />
                     <div className="space-y-2 text-xs">
-                        <div className="flex items-center justify-between">
-                            <span className="font-semibold uppercase text-muted-foreground">Top Level Domain</span>
-                        </div>
                         <p className="gap-2 text-xs leading-relaxed">
                             <span>
                                 {tld.description ?? 'No additional information is available for this TLD, just yet.'}
