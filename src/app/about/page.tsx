@@ -14,9 +14,8 @@ const AboutPage = () => {
         <div className="min-h-screen">
             <main className="m-auto flex w-full max-w-4xl flex-col items-center gap-5 p-5 md:p-10">
                 <div className="text-center">
-                    <Badge className="text-xs font-medium">ABOUT</Badge>
-                    <h1 className="mt-4 text-2xl font-semibold lg:text-4xl">Domain Hacks</h1>
-                    <p className="mt-2 text-sm font-medium text-muted-foreground lg:mt-6 lg:text-base">
+                    <Badge className="text-xs font-medium bg-[#fcf6bd] text-black">ABOUT</Badge>
+                    <p className="mt-4 text-sm font-medium text-muted-foreground lg:mt-6 lg:text-base">
                         Discover how to create memorable domains that{' '}
                         <Highlighter action="highlight" color="#fde2e4">
                             stand out
