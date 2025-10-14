@@ -68,29 +68,6 @@ class TLDRepository {
     }
 
     /**
-     * Checks if a TLD exists in the database.
-     *
-     * @param name - The name of the TLD to check.
-     * @returns True if the TLD exists, false otherwise.
-     */
-    async doesTLDExist(name: string): Promise<boolean> {
-        const cacheKey = `tld:exists:${name}`;
-        const cached = this.cache.get(cacheKey);
-        if (cached !== undefined) {
-            return cached as boolean;
-        }
-        const searchField = name.startsWith('xn--') ? 'punycode_name' : 'name';
-        const { data, error } = await this.client.from('tld').select('name').eq(searchField, name).maybeSingle();
-        if (error) {
-            logger.error({ error }, `Error checking if TLD ${name} exists`);
-            throw new Error(`Failed to check if TLD ${name} exists: ${error.message}`);
-        }
-        const exists = data !== null;
-        this.cache.set(cacheKey, exists, this.TTL_MILLISECONDS);
-        return exists;
-    }
-
-    /**
      * Fetches a TLD from the database.
      *
      * @param name - The name of the TLD to fetch.
