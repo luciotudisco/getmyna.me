@@ -87,6 +87,77 @@ describe('TLDRepository', () => {
             expect(mockSupabaseClient.from).toHaveBeenCalledWith('tld');
             expect(mockCache.delete).toHaveBeenCalledWith('tlds');
             expect(mockCache.delete).toHaveBeenCalledWith('tld:com');
+            expect(mockCache.delete).toHaveBeenCalledWith('tld:exists:com');
+        });
+    });
+
+    describe('tldExists', () => {
+        it('should return cached result if available', async () => {
+            mockCache.get.mockReturnValue(true);
+
+            const result = await tldRepository.doesTLDExist('com');
+
+            expect(result).toBe(true);
+            expect(mockCache.get).toHaveBeenCalledWith('tld:exists:com');
+            expect(mockSupabaseClient.from).not.toHaveBeenCalled();
+        });
+
+        it('should return true when TLD exists in database', async () => {
+            mockCache.get.mockReturnValue(undefined);
+            mockSupabaseClient.from = jest.fn().mockReturnValue({
+                select: jest.fn().mockReturnValue({
+                    eq: jest.fn().mockReturnValue({
+                        maybeSingle: jest.fn().mockResolvedValue({
+                            data: { name: 'com' },
+                            error: null,
+                        }),
+                    }),
+                }),
+            });
+
+            const result = await tldRepository.doesTLDExist('com');
+
+            expect(result).toBe(true);
+            expect(mockCache.set).toHaveBeenCalledWith('tld:exists:com', true, 60000);
+        });
+
+        it('should return false when TLD does not exist in database', async () => {
+            mockCache.get.mockReturnValue(undefined);
+            mockSupabaseClient.from = jest.fn().mockReturnValue({
+                select: jest.fn().mockReturnValue({
+                    eq: jest.fn().mockReturnValue({
+                        maybeSingle: jest.fn().mockResolvedValue({
+                            data: null,
+                            error: null,
+                        }),
+                    }),
+                }),
+            });
+
+            const result = await tldRepository.doesTLDExist('nonexistent');
+
+            expect(result).toBe(false);
+            expect(mockCache.set).toHaveBeenCalledWith('tld:exists:nonexistent', false, 60000);
+        });
+
+        it('should search by punycode_name when name starts with xn--', async () => {
+            mockCache.get.mockReturnValue(undefined);
+            const mockEq = jest.fn().mockReturnValue({
+                maybeSingle: jest.fn().mockResolvedValue({
+                    data: { name: 'test' },
+                    error: null,
+                }),
+            });
+
+            mockSupabaseClient.from = jest.fn().mockReturnValue({
+                select: jest.fn().mockReturnValue({
+                    eq: mockEq,
+                }),
+            });
+
+            await tldRepository.doesTLDExist('xn--test');
+
+            expect(mockEq).toHaveBeenCalledWith('punycode_name', 'xn--test');
         });
     });
 
@@ -275,6 +346,7 @@ describe('TLDRepository', () => {
             expect(mockSupabaseClient.from).toHaveBeenCalledWith('tld');
             expect(mockCache.delete).toHaveBeenCalledWith('tlds');
             expect(mockCache.delete).toHaveBeenCalledWith('tld:com');
+            expect(mockCache.delete).toHaveBeenCalledWith('tld:exists:com');
         });
 
         it('should search by punycode_name when name starts with xn--', async () => {
