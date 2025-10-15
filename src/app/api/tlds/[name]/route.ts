@@ -14,7 +14,7 @@ export async function GET(_request: Request, ctx: { params: Promise<{ name: stri
         if (!tld) {
             return NextResponse.json({ error: 'TLD not found' }, { status: 404 });
         }
-        return NextResponse.json({ tld });
+        return NextResponse.json(tld);
     } catch (error) {
         logger.error({ error }, 'Error fetching TLD by name');
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

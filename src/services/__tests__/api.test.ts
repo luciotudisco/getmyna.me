@@ -60,7 +60,7 @@ describe('APIClient', () => {
         });
     });
 
-    describe('getTld', () => {
+    describe('getDomainTLD', () => {
         it('should return TLD information for a domain', async () => {
             const mockTldInfo: TLD = {
                 name: 'com',
@@ -83,7 +83,36 @@ describe('APIClient', () => {
 
             mockAdapter.onGet('/api/domains/example.com/tld').reply(200, mockTldInfo);
 
-            const result = await apiClient.getTLD('example.com');
+            const result = await apiClient.getDomainTLD('example.com');
+
+            expect(result).toEqual(mockTldInfo);
+        });
+    });
+
+    describe('getTLD', () => {
+        it('should return TLD information', async () => {
+            const mockTldInfo: TLD = {
+                name: 'com',
+                punycodeName: 'com',
+                description: 'Commercial',
+                type: TLDType.GENERIC,
+                pricing: {
+                    [Registrar.DYNADOT]: {
+                        registration: 8.99,
+                        renewal: 8.99,
+                        currency: 'USD',
+                    },
+                    [Registrar.GANDI]: {
+                        registration: 12.99,
+                        renewal: 12.99,
+                        currency: 'USD',
+                    },
+                },
+            };
+
+            mockAdapter.onGet('/api/tlds/com').reply(200, mockTldInfo);
+
+            const result = await apiClient.getTLD('com');
 
             expect(result).toEqual(mockTldInfo);
         });

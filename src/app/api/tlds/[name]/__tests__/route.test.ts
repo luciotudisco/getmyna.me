@@ -1,7 +1,6 @@
+import { GET } from '@/app/api/tlds/[name]/route';
 import { TLDType } from '@/models/tld';
 import { tldRepository } from '@/services/tld-repository';
-
-import { GET } from '../route';
 
 jest.mock('@/services/tld-repository');
 const mockTldRepository = tldRepository as jest.Mocked<typeof tldRepository>;
@@ -25,7 +24,7 @@ describe('/api/tlds/[name]', () => {
         const data = await response.json();
 
         expect(response.status).toBe(200);
-        expect(data).toEqual({ tld: mockTld });
+        expect(data).toEqual(mockTld);
         expect(mockTldRepository.getTLD).toHaveBeenCalledWith('com');
     });
 
@@ -73,7 +72,7 @@ describe('/api/tlds/[name]', () => {
         const data = await response.json();
 
         expect(response.status).toBe(200);
-        expect(data).toEqual({ tld: mockTld });
+        expect(data).toEqual(mockTld);
         expect(mockTldRepository.getTLD).toHaveBeenCalledWith('xn--0zwm56d');
     });
 
@@ -91,7 +90,7 @@ describe('/api/tlds/[name]', () => {
         const data = await response.json();
 
         expect(response.status).toBe(200);
-        expect(data).toEqual({ tld: mockTld });
+        expect(data).toEqual(mockTld);
         expect(mockTldRepository.getTLD).toHaveBeenCalledWith('com');
     });
 });

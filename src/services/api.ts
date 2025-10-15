@@ -30,8 +30,16 @@ class APIClient {
     /**
      * Gets TLD info for a domain.
      */
-    async getTLD(domain: string): Promise<TLD> {
+    async getDomainTLD(domain: string): Promise<TLD> {
         const response = await this.client.get(`/api/domains/${domain}/tld`);
+        return response.data as TLD;
+    }
+
+    /**
+     * Get TLD info.
+     */
+    async getTLD(name: string): Promise<TLD> {
+        const response = await this.client.get(`/api/tlds/${name}`);
         return response.data as TLD;
     }
 
