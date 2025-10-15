@@ -1,14 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 import { tldRepository } from '@/services/tld-repository';
 import logger from '@/utils/logger';
 
-export async function GET(request: NextRequest, { params }: { params: { name: string } }): Promise<NextResponse> {
+export async function GET(_request: Request, ctx: { params: Promise<{ name: string }> }): Promise<NextResponse> {
     try {
-        const { name } = params;
+        let { name } = await ctx.params;
         if (!name) {
             return NextResponse.json({ error: 'TLD name is required' }, { status: 400 });
         }
+        name = name.startsWith('.') ? name.slice(1) : name;
         const tld = await tldRepository.getTLD(name);
         if (!tld) {
             return NextResponse.json({ error: 'TLD not found' }, { status: 404 });
