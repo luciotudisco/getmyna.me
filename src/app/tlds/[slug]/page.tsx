@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useTransition } from 'react';
+import { use, useEffect, useState, useTransition } from 'react';
 
 import ErrorMessage from '@/components/ErrorMessage';
 import LoadingMessage from '@/components/LoadingMessage';
@@ -8,14 +8,8 @@ import { Badge } from '@/components/ui/badge';
 import { TLD, TLD_TYPE_DISPLAY_NAMES, TLDType } from '@/models/tld';
 import { apiClient } from '@/services/api';
 
-interface TLDPageProps {
-    params: {
-        slug: string;
-    };
-}
-
-export default function TLDPage({ params }: TLDPageProps) {
-    const { slug } = params;
+export default function TLDPage({ params }: { params: Promise<{ slug: string }> }) {
+    const { slug } = use(params);
     const [tld, setTld] = useState<TLD | null>(null);
     const [hasError, setHasError] = useState(false);
     const [isPending, startTransition] = useTransition();
@@ -31,12 +25,16 @@ export default function TLDPage({ params }: TLDPageProps) {
         });
     }, [slug]);
 
-    if (hasError || !tld) {
+    if (hasError) {
         return <ErrorMessage />;
     }
 
     if (isPending) {
         return <LoadingMessage />;
+    }
+
+    if (!tld) {
+        return <></>;
     }
 
     return (
