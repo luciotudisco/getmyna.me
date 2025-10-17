@@ -3,23 +3,7 @@
 import { ExternalLinkIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Registrar, TLDPricing } from '@/models/tld';
-
-const REGISTRARS_DOMAIN_SEARCH_URLS: { [K in Registrar]: (domain: string) => string } = {
-    [Registrar.DYNADOT]: (domain: string) => `https://www.dynadot.com/domain/search?domain=${domain}`,
-    [Registrar.GANDI]: (domain: string) => `https://shop.gandi.net/domain/suggest?search=${domain}`,
-    [Registrar.NAMECOM]: (domain: string) => `https://www.name.com/domain/search/${domain}`,
-    [Registrar.NAMESILO]: (domain: string) => `https://www.namesilo.com/domain/search-domains?query=${domain}`,
-    [Registrar.PORKBUN]: (domain: string) => `https://porkbun.com/checkout/search?q=${domain}`,
-};
-
-const REGISTRARS_DOMAIN_DISPLAY_NAMES: { [K in Registrar]: string } = {
-    [Registrar.DYNADOT]: 'Dynadot',
-    [Registrar.GANDI]: 'Gandi',
-    [Registrar.NAMECOM]: 'Name.com',
-    [Registrar.NAMESILO]: 'NameSilo',
-    [Registrar.PORKBUN]: 'Porkbun',
-};
+import { Registrar, REGISTRAR_DISPLAY_NAMES, REGISTRAR_SEARCH_URLS, TLDPricing } from '@/models/tld';
 
 interface DomainRegistrarButtonsProps {
     domainName: string;
@@ -50,8 +34,8 @@ function DomainRegistrarButtons({ domainName, pricing }: DomainRegistrarButtonsP
         <div className="space-y-2">
             {sortedRegistrars.map(([registrarKey, registrarPricing]) => {
                 const registrar = registrarKey as Registrar;
-                const searchUrl = REGISTRARS_DOMAIN_SEARCH_URLS[registrar];
-                const displayName = REGISTRARS_DOMAIN_DISPLAY_NAMES[registrar];
+                const searchUrl = REGISTRAR_SEARCH_URLS[registrar];
+                const displayName = REGISTRAR_DISPLAY_NAMES[registrar];
                 const registrationPrice = registrarPricing?.registration;
                 const hasPricing = typeof registrationPrice === 'number';
                 const roundedRegistrationPrice = hasPricing ? `$${registrationPrice.toFixed(2)}` : null;
