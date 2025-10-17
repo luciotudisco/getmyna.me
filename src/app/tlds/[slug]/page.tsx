@@ -37,12 +37,11 @@ export default function TLDPage({ params }: { params: Promise<{ slug: string }> 
         return <></>;
     }
 
-    // Returns ISO 3166-1 alpha-2 code if inferable from TLD (e.g., "uk" -> "gb").
+    // Returns ISO 3166-1 alpha-2 code if inferable from TLD.
     const getCountryIsoFromTld = (tld: TLD): string | null => {
         const name = (tld.name ?? '').toLowerCase();
         if (/^[a-z]{2}$/.test(name)) {
-            if (name === 'uk') return 'gb';
-            return name;
+            return 'uk' === name ? 'gb' : name;
         }
         return null;
     };
@@ -57,8 +56,8 @@ export default function TLDPage({ params }: { params: Promise<{ slug: string }> 
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         {tld?.yearEstablished && (
                             <div className="flex items-center gap-5 rounded-lg border bg-card p-4 shadow-sm transition-shadow hover:shadow-md">
-                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                                    <Calendar className="h-5 w-5 text-primary" />
+                                <div className="flex h-10 w-10 items-center justify-center">
+                                    <Calendar className="h-12 w-12 text-primary" />
                                 </div>
                                 <div className="flex flex-col">
                                     <span className="text-xs font-medium text-muted-foreground">Introduced</span>
@@ -73,25 +72,27 @@ export default function TLDPage({ params }: { params: Promise<{ slug: string }> 
                         )}
                         {tld?.type && (
                             <div className="flex items-center gap-5 rounded-lg border bg-card p-4 shadow-sm transition-shadow hover:shadow-md">
-                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                                    {(() => {
-                                        const Icon = TLD_TYPE_ICONS[tld.type];
-                                        return <Icon className="h-5 w-5 text-primary" />;
-                                    })()}
+                                <div className="flex h-10 w-10 items-center justify-center">
+                                    {tld.type === TLDType.COUNTRY_CODE && getCountryIsoFromTld(tld) ? (
+                                        <span
+                                            title={tld.name}
+                                            aria-label={`Flag of ${tld.name}`}
+                                            className={`fi fi-${getCountryIsoFromTld(tld)!}`}
+                                            style={{ fontSize: '2rem' }}
+                                        />
+                                    ) : (
+                                        (() => {
+                                            const Icon = TLD_TYPE_ICONS[tld.type];
+                                            return <Icon className="h-12 w-12 text-primary" />;
+                                        })()
+                                    )}
                                 </div>
-                                <div className="flex flex-col">
+                                <div className="flex w-full flex-col">
                                     <span className="text-xs font-medium text-muted-foreground">Type</span>
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex w-full items-center justify-between gap-2">
                                         <span className="text-lg font-semibold">
                                             {TLD_TYPE_DISPLAY_NAMES[tld.type]}
                                         </span>
-                                        {tld.type === TLDType.COUNTRY_CODE && getCountryIsoFromTld(tld) && (
-                                            <span
-                                                title={tld.name}
-                                                aria-label={`Flag of ${tld.name}`}
-                                                className={`fi fi-${getCountryIsoFromTld(tld)!} rounded-sm`}
-                                            />
-                                        )}
                                     </div>
                                 </div>
                             </div>
