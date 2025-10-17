@@ -5,7 +5,7 @@ import { Calendar, FileText } from 'lucide-react';
 
 import ErrorMessage from '@/components/ErrorMessage';
 import LoadingMessage from '@/components/LoadingMessage';
-import { TLD, TLD_TYPE_DISPLAY_NAMES, TLD_TYPE_ICONS } from '@/models/tld';
+import { TLD, TLD_TYPE_DISPLAY_NAMES, TLD_TYPE_ICONS, TLDType } from '@/models/tld';
 import { apiClient } from '@/services/api';
 
 export default function TLDPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -36,6 +36,16 @@ export default function TLDPage({ params }: { params: Promise<{ slug: string }> 
     if (!tld) {
         return <></>;
     }
+
+    // Returns ISO 3166-1 alpha-2 code if inferable from TLD (e.g., "uk" -> "gb").
+    const getCountryIsoFromTld = (tld: TLD): string | null => {
+        const name = (tld.name ?? '').toLowerCase();
+        if (/^[a-z]{2}$/.test(name)) {
+            if (name === 'uk') return 'gb';
+            return name;
+        }
+        return null;
+    };
 
     return (
         <div className="min-h-screen">
@@ -71,7 +81,18 @@ export default function TLDPage({ params }: { params: Promise<{ slug: string }> 
                                 </div>
                                 <div className="flex flex-col">
                                     <span className="text-xs font-medium text-muted-foreground">Type</span>
-                                    <span className="text-lg font-semibold">{TLD_TYPE_DISPLAY_NAMES[tld.type]}</span>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-lg font-semibold">
+                                            {TLD_TYPE_DISPLAY_NAMES[tld.type]}
+                                        </span>
+                                        {tld.type === TLDType.COUNTRY_CODE && getCountryIsoFromTld(tld) && (
+                                            <span
+                                                title={tld.name}
+                                                aria-label={`Flag of ${tld.name}`}
+                                                className={`fi fi-${getCountryIsoFromTld(tld)!} rounded-sm`}
+                                            />
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         )}
