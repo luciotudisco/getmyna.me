@@ -1,5 +1,5 @@
 import { useEffect, useState, useTransition } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import ErrorMessage from '@/components/ErrorMessage';
 import LoadingMessage from '@/components/LoadingMessage';
@@ -11,6 +11,7 @@ import { Domain } from '@/models/domain';
 import { apiClient } from '@/services/api';
 
 export function SearchResults() {
+    const router = useRouter();
     const searchParams = useSearchParams();
     const [domains, setDomains] = useState<Domain[]>([]);
     const [hasError, setHasError] = useState(false);
@@ -21,8 +22,16 @@ export function SearchResults() {
             try {
                 setHasError(false);
                 const term = searchParams.get('term');
+                if (!term) {
+                    return;
+                }
+                const isValidTLD = await apiClient.isValidTLD(term);
+                if (isValidTLD) {
+                    router.push(`/tlds/${term}`);
+                    return;
+                }
                 const includeSubdomains = searchParams.get('include_subdomains') === 'true';
-                const names = await apiClient.searchDomains(term ?? '', includeSubdomains);
+                const names = await apiClient.searchDomains(term, includeSubdomains);
                 const matchingDomains = names.map((name: string) => new Domain(name));
                 setDomains(matchingDomains);
             } catch {
@@ -30,7 +39,7 @@ export function SearchResults() {
                 setDomains([]);
             }
         });
-    }, [searchParams]);
+    }, [searchParams, router]);
 
     if (isPending) {
         return <LoadingMessage />;
