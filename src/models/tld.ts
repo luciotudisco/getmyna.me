@@ -32,6 +32,7 @@ export interface TLD {
     name?: string;
     pricing?: Partial<Record<Registrar, TLDPricing>>;
     punycodeName?: string;
+    tagline?: string;
     type?: TLDType;
     yearEstablished?: number;
 }

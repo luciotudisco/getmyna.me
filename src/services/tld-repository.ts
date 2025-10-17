@@ -49,6 +49,7 @@ class TLDRepository {
                 name: tldInfo.name,
                 pricing: tldInfo.pricing,
                 punycode_name: tldInfo.punycodeName,
+                tagline: tldInfo.tagline,
                 type: tldInfo.type,
                 updated_at: now,
                 year_established: tldInfo.yearEstablished,
@@ -83,7 +84,7 @@ class TLDRepository {
         const searchField = name.startsWith('xn--') ? 'punycode_name' : 'name';
         const { data, error } = await this.client
             .from('tld')
-            .select('description, name, pricing, punycode_name, type, year_established')
+            .select('description, name, pricing, punycode_name, tagline, type, year_established')
             .eq(searchField, name)
             .single();
 
@@ -101,6 +102,7 @@ class TLDRepository {
             name: data.name,
             pricing: data.pricing,
             punycodeName: data.punycode_name,
+            tagline: data.tagline,
             type: data.type,
             yearEstablished: data.year_established,
         } as TLD;
@@ -122,7 +124,7 @@ class TLDRepository {
 
         const { data, error } = await this.client
             .from('tld')
-            .select('description, name, pricing, punycode_name, type, year_established')
+            .select('description, name, pricing, punycode_name, tagline, type, year_established')
             .order('name', { ascending: true })
             .limit(5000);
         if (error) {
@@ -134,6 +136,7 @@ class TLDRepository {
             name: tld.name,
             pricing: tld.pricing,
             punycodeName: tld.punycode_name,
+            tagline: tld.tagline,
             type: tld.type,
             yearEstablished: tld.year_established,
         }));
@@ -156,6 +159,7 @@ class TLDRepository {
                 name: tldInfo.name,
                 pricing: tldInfo.pricing,
                 punycodeName: tldInfo.punycodeName,
+                tagline: tldInfo.tagline,
                 type: tldInfo.type,
                 updated_at: new Date().toISOString(),
                 year_established: tldInfo.yearEstablished,

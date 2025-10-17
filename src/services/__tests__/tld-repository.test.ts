@@ -66,6 +66,7 @@ describe('TLDRepository', () => {
                 punycodeName: 'com',
                 type: TLDType.GENERIC,
                 description: 'Commercial',
+                tagline: 'For commercial use',
                 pricing: {
                     [Registrar.PORKBUN]: {
                         registration: 10.99,
@@ -97,6 +98,7 @@ describe('TLDRepository', () => {
             punycode_name: 'com',
             type: TLDType.GENERIC,
             description: 'Commercial',
+            tagline: 'For commercial use',
             pricing: {},
             year_established: 1985,
         };
@@ -106,6 +108,7 @@ describe('TLDRepository', () => {
                 name: 'com',
                 punycodeName: 'com',
                 type: TLDType.GENERIC,
+                tagline: 'For commercial use',
                 yearEstablished: 1985,
             };
 
@@ -138,6 +141,7 @@ describe('TLDRepository', () => {
                 punycodeName: 'com',
                 type: TLDType.GENERIC,
                 description: 'Commercial',
+                tagline: 'For commercial use',
                 pricing: {},
                 yearEstablished: 1985,
             });
@@ -191,6 +195,7 @@ describe('TLDRepository', () => {
                 punycode_name: 'com',
                 type: TLDType.GENERIC,
                 description: 'Commercial',
+                tagline: 'For commercial use',
                 pricing: {},
                 year_established: 1985,
             },
@@ -199,6 +204,7 @@ describe('TLDRepository', () => {
                 punycode_name: 'net',
                 type: TLDType.GENERIC,
                 description: 'Network',
+                tagline: 'For network infrastructure',
                 pricing: {},
                 year_established: 1985,
             },
@@ -236,6 +242,7 @@ describe('TLDRepository', () => {
                     punycodeName: 'com',
                     type: TLDType.GENERIC,
                     description: 'Commercial',
+                    tagline: 'For commercial use',
                     pricing: {},
                     yearEstablished: 1985,
                 },
@@ -244,6 +251,7 @@ describe('TLDRepository', () => {
                     punycodeName: 'net',
                     type: TLDType.GENERIC,
                     description: 'Network',
+                    tagline: 'For network infrastructure',
                     pricing: {},
                     yearEstablished: 1985,
                 },
@@ -258,6 +266,7 @@ describe('TLDRepository', () => {
             punycodeName: 'com',
             type: TLDType.GENERIC,
             description: 'Updated Commercial',
+            tagline: 'Updated tagline for commercial use',
             pricing: {},
             yearEstablished: 1985,
         };
