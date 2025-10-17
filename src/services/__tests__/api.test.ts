@@ -118,6 +118,37 @@ describe('APIClient', () => {
         });
     });
 
+    describe('isValidTLD', () => {
+        it('should return true for valid TLD', async () => {
+            const mockTldInfo: TLD = {
+                name: 'com',
+                punycodeName: 'com',
+                description: 'Commercial',
+                type: TLDType.GENERIC,
+            };
+
+            mockAdapter.onGet('/api/tlds/com').reply(200, { tld: mockTldInfo });
+
+            const result = await apiClient.isValidTLD('com');
+
+            expect(result).toBe(true);
+        });
+
+        it('should return false for invalid TLD (404)', async () => {
+            mockAdapter.onGet('/api/tlds/invalid').reply(404, { error: 'TLD not found' });
+
+            const result = await apiClient.isValidTLD('invalid');
+
+            expect(result).toBe(false);
+        });
+
+        it('should throw error for non-404 API errors', async () => {
+            mockAdapter.onGet('/api/tlds/error').reply(500, { error: 'Internal server error' });
+
+            await expect(apiClient.isValidTLD('error')).rejects.toThrow();
+        });
+    });
+
     describe('getTLDs', () => {
         it('should return a list of all TLDs', async () => {
             const mockTlds: TLD[] = [

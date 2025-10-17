@@ -44,6 +44,23 @@ class APIClient {
     }
 
     /**
+     * Checks if a given string is a valid TLD.
+     * @param name - The TLD name to validate (with or without leading dot)
+     * @returns True if the TLD exists, false otherwise
+     */
+    async isValidTLD(name: string): Promise<boolean> {
+        try {
+            await this.client.get(`/api/tlds/${name}`);
+            return true;
+        } catch (error: any) {
+            if (error.response && error.response.status === 404) {
+                return false;
+            }
+            throw error;
+        }
+    }
+
+    /**
      * Gets all available TLDs.
      */
     async getTLDs(): Promise<TLD[]> {
