@@ -23,7 +23,7 @@ export async function GET(): Promise<NextResponse> {
                 continue;
             }
 
-            if (tld.description !== null && tld.type !== null && tld.yearEstablished !== null) {
+            if (tld.description !== null && tld.type !== null && tld.yearEstablished !== null && tld.tagline !== null) {
                 logger.info(`Skipping TLD ${tld.name} because it already has a description and type`);
                 continue;
             }
@@ -85,6 +85,7 @@ export async function GET(): Promise<NextResponse> {
             logger.info(`Enriching TLD ${tld.name} with description and type ...`);
             await tldRepository.updateTLD(tld.punycodeName, {
                 description: tldData.description,
+                tagline: tldData.tagline,
                 type: tldData.type,
                 yearEstablished: tldData.year_established,
             });
@@ -114,6 +115,14 @@ const TLD_SCHEMA = {
                     'Spell out acronyms and abbreviations at first mention.',
                 ].join(' '),
             },
+            tagline: {
+                type: 'string',
+                description: [
+                    'A one-sentence tagline for the TLD.',
+                    'Examples: "The tech world\'s favorite island domain turned digital innovation hub".',
+                    'The tagline should be a single sentence that captures the essence of the TLD and is no more than 100 characters.',
+                ].join(' '),
+            },
             type: {
                 type: 'string',
                 enum: ['GENERIC', 'COUNTRY_CODE', 'GENERIC_RESTRICTED', 'INFRASTRUCTURE', 'SPONSORED'],
@@ -126,7 +135,7 @@ const TLD_SCHEMA = {
                 description: 'The year the TLD was established.',
             },
         },
-        required: ['description', 'type', 'year_established'],
+        required: ['description', 'tagline', 'type', 'year_established'],
         additionalProperties: false,
     },
 };

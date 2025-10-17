@@ -35,7 +35,9 @@ describe('/api/cron/tlds/update_description', () => {
                 name: 'com',
                 punycodeName: 'com',
                 description: null,
+                tagline: null,
                 type: null,
+                yearEstablished: null,
             },
         ];
 
@@ -57,6 +59,7 @@ describe('/api/cron/tlds/update_description', () => {
                     message: {
                         content: JSON.stringify({
                             description: 'Generic top-level domain for commercial use',
+                            tagline: 'The original domain for commerce',
                             type: 'GENERIC',
                             year_established: 1985,
                         }),
@@ -83,8 +86,13 @@ describe('/api/cron/tlds/update_description', () => {
         // Verify OpenAI calls
         expect(mockOpenAIClient.chat.completions.create).toHaveBeenCalledTimes(1);
 
-        // Verify updateTLD calls
-        expect(mockTldRepository.updateTLD).toHaveBeenCalledWith('com', expect.any(Object));
+        // Verify updateTLD calls with tagline
+        expect(mockTldRepository.updateTLD).toHaveBeenCalledWith('com', {
+            description: 'Generic top-level domain for commercial use',
+            tagline: 'The original domain for commerce',
+            type: 'GENERIC',
+            yearEstablished: 1985,
+        });
     });
 
     it('should skip TLDs that already have descriptions', async () => {
@@ -93,7 +101,9 @@ describe('/api/cron/tlds/update_description', () => {
                 name: 'com',
                 punycodeName: 'com',
                 description: 'Already has description',
+                tagline: 'Already has tagline',
                 type: TLDType.GENERIC,
+                yearEstablished: 1985,
             },
         ];
 
@@ -117,6 +127,7 @@ describe('/api/cron/tlds/update_description', () => {
                 name: 'com',
                 punycodeName: 'com',
                 description: null,
+                tagline: null,
                 type: null,
                 yearEstablished: null,
             },

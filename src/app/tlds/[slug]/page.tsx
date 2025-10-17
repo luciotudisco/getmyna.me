@@ -48,10 +48,11 @@ export default function TLDPage({ params }: { params: Promise<{ slug: string }> 
 
     return (
         <div className="min-h-screen">
-            <main className="container mx-auto max-w-4xl px-4 py-16">
+            <main className="container mx-auto max-w-4xl px-4 py-6 md:py-16">
                 <div className="flex flex-col gap-10">
-                    <div className="flex items-center">
+                    <div className="flex flex-col">
                         <h1 className="text-4xl font-bold">.{tld?.name}</h1>
+                        <h2 className="text-md mt-2 font-light">{tld?.tagline}</h2>
                     </div>
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         {tld?.yearEstablished && (
