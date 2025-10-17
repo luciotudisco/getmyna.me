@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosError, AxiosInstance } from 'axios';
 
 import { DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { TLD } from '@/models/tld';
@@ -52,8 +52,8 @@ class APIClient {
         try {
             await this.client.get(`/api/tlds/${name}`);
             return true;
-        } catch (error: any) {
-            if (error.response && error.response.status === 404) {
+        } catch (error: unknown) {
+            if (error instanceof AxiosError && error.response?.status === 404) {
                 return false;
             }
             throw error;
