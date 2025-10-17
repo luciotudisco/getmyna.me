@@ -46,9 +46,9 @@ class TLDRepository {
             {
                 created_at: now,
                 description: tldInfo.description,
-                name: tldInfo.name,
+                name: tldInfo.name?.toLowerCase(),
                 pricing: tldInfo.pricing,
-                punycode_name: tldInfo.punycodeName,
+                punycode_name: tldInfo.punycodeName?.toLowerCase(),
                 tagline: tldInfo.tagline,
                 type: tldInfo.type,
                 updated_at: now,
@@ -75,6 +75,7 @@ class TLDRepository {
      * @returns The TLD information.
      */
     async getTLD(name: string): Promise<TLD | null> {
+        name = name.toLowerCase();
         const cacheKey = `tld:${name}`;
         const cached = this.cache.get(cacheKey);
         if (cached !== undefined) {
@@ -151,6 +152,7 @@ class TLDRepository {
      * @param tldInfo - The TLD information to update.
      */
     async updateTLD(name: string, tldInfo: TLD): Promise<void> {
+        name = name.toLowerCase();
         const searchField = name.startsWith('xn--') ? 'punycode_name' : 'name';
         const { error } = await this.client
             .from('tld')
