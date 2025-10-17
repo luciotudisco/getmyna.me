@@ -21,7 +21,7 @@ const FLAG_SIZE_STYLES = {
     lg: { fontSize: '2rem' }, // matches h-8/w-8
 };
 
-export function TLDTypeIcon({ tld, size = 'lg', className }: TLDTypeIconProps) {
+function TLDTypeIcon({ tld, size = 'lg', className }: TLDTypeIconProps) {
     const isCountryCode = tld.type === TLDType.COUNTRY_CODE;
     const countryIso = isCountryCode ? ('uk' === tld.name ? 'gb' : tld.name) : null;
 

@@ -1,9 +1,8 @@
 'use client';
 
+import TLDTypeIcon from '@/components/TLDTypeIcon';
 import { Badge } from '@/components/ui/badge';
 import { TLD, TLD_TYPE_DISPLAY_NAMES } from '@/models/tld';
-
-import { TLDTypeIcon } from './TLDTypeIcon';
 
 export default function TLDSection({ name, description, type }: TLD) {
     const tldDescription = description ?? 'No additional information is available for this TLD, just yet.';
