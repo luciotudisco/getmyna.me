@@ -12,7 +12,6 @@ interface TLDDrawerProps {
 }
 
 function TLDDrawer({ tld, open, onClose }: TLDDrawerProps) {
-    const ianaURL = `https://www.iana.org/domains/root/db/${tld.punycodeName}.html`;
     const tldDescription = tld.description ?? 'No additional information is available for this TLD, just yet.';
     const tldDisplayName = tld.type ? TLD_TYPE_DISPLAY_NAMES[tld.type] : null;
     const Icon = tld.type ? TLD_TYPE_ICONS[tld.type] : null;
@@ -43,12 +42,7 @@ function TLDDrawer({ tld, open, onClose }: TLDDrawerProps) {
                     <div className="space-y-2 text-xs">
                         <p className="gap-2 text-xs leading-relaxed">
                             <span>{tldDescription}</span>{' '}
-                            <a
-                                href={ianaURL}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-muted-foreground underline"
-                            >
+                            <a href={`/tlds/${tld.name}`} className="text-muted-foreground underline">
                                 Learn more
                             </a>
                         </p>
