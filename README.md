@@ -137,15 +137,15 @@ npm run test:watch  # Run tests in watch mode
 ```
 src/
 ├── app/                 # Next.js app router
-│   ├── api/            # API routes
-│   ├── search/         # Search page
-│   └── about/          # About page
-├── components/         # React components
-│   ├── ui/            # Reusable UI components
-│   └── ...            # Feature components
-├── models/            # TypeScript type definitions
-├── services/          # Business logic and API calls
-└── utils/             # Utility functions
+│   ├── api/             # API routes
+│   ├── search/          # Search page
+│   └── about/           # About page
+├── components/          # React components
+│   ├── ui/              # Reusable UI components
+│   └── ...              # Feature components
+├── models/              # TypeScript type definitions
+├── services/            # Business logic and API calls
+└── utils/               # Utility functions
 ```
 
 ## 🧪 Testing
