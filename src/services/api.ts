@@ -5,7 +5,7 @@ import { TLD } from '@/models/tld';
 import { WhoisInfo } from '@/models/whois';
 
 /**
- * API client for domain-related endpoints.
+ * API client for the project's API endpoints.
  */
 class APIClient {
     private client: AxiosInstance;
@@ -14,9 +14,7 @@ class APIClient {
      * Creates axios instance for API requests.
      */
     constructor() {
-        this.client = axios.create({
-            timeout: 15000, // 15 seconds default timeout
-        });
+        this.client = axios.create();
     }
 
     /**
