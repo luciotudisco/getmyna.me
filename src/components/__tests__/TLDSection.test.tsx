@@ -35,9 +35,7 @@ describe('TLDSection', () => {
 
             const learnMoreLink = screen.getByText('Learn more');
             expect(learnMoreLink).toBeInTheDocument();
-            expect(learnMoreLink).toHaveAttribute('href', 'https://www.iana.org/domains/root/db/com.html');
-            expect(learnMoreLink).toHaveAttribute('target', '_blank');
-            expect(learnMoreLink).toHaveAttribute('rel', 'noopener noreferrer');
+            expect(learnMoreLink).toHaveAttribute('href', '/tlds/com');
         });
     });
 
@@ -110,20 +108,6 @@ describe('TLDSection', () => {
     });
 
     describe('punycode handling', () => {
-        it('should use punycodeName for IANA URL when provided', () => {
-            const punycodeTLD: TLD = {
-                name: 'москва',
-                punycodeName: 'xn--80adxhks',
-                description: 'Moscow',
-                type: TLDType.COUNTRY_CODE,
-            };
-
-            render(<TLDSection {...punycodeTLD} />);
-
-            const learnMoreLink = screen.getByText('Learn more');
-            expect(learnMoreLink).toHaveAttribute('href', 'https://www.iana.org/domains/root/db/xn--80adxhks.html');
-        });
-
         it('should display the original name in the badge even with punycode', () => {
             const punycodeTLD: TLD = {
                 name: 'москва',

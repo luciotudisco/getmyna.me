@@ -29,9 +29,7 @@ describe('TLDDrawer', () => {
 
             const learnMoreLink = screen.getByText('Learn more');
             expect(learnMoreLink).toBeInTheDocument();
-            expect(learnMoreLink).toHaveAttribute('href', 'https://www.iana.org/domains/root/db/com.html');
-            expect(learnMoreLink).toHaveAttribute('target', '_blank');
-            expect(learnMoreLink).toHaveAttribute('rel', 'noopener noreferrer');
+            expect(learnMoreLink).toHaveAttribute('href', '/tlds/com');
         });
     });
 });
