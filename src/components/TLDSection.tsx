@@ -1,12 +1,13 @@
 'use client';
 
 import { Badge } from '@/components/ui/badge';
-import { TLD, TLD_TYPE_DISPLAY_NAMES, TLD_TYPE_ICONS } from '@/models/tld';
+import { TLD, TLD_TYPE_DISPLAY_NAMES } from '@/models/tld';
+
+import { TLDTypeIcon } from './TLDTypeIcon';
 
 export default function TLDSection({ name, description, type }: TLD) {
     const tldDescription = description ?? 'No additional information is available for this TLD, just yet.';
     const tldDisplayName = type ? TLD_TYPE_DISPLAY_NAMES[type] : null;
-    const Icon = type ? TLD_TYPE_ICONS[type] : null;
 
     return (
         <div className="space-y-2 text-xs">
@@ -18,7 +19,7 @@ export default function TLDSection({ name, description, type }: TLD) {
                     </Badge>
                     {type && (
                         <Badge variant="outline" className="flex items-center gap-1 uppercase">
-                            {Icon && <Icon className="h-3 w-3" aria-hidden="true" />}
+                            <TLDTypeIcon tld={{ name, type }} size="sm" />
                             <span>{tldDisplayName}</span>
                         </Badge>
                     )}
