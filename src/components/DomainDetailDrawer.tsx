@@ -96,7 +96,7 @@ function DomainDetailDrawer({ domain, open, onClose }: DomainDetailDrawerProps) 
                         <DomainStatusBadge status={domain.getStatus()} className="min-w-[8rem]" />
                     </DrawerTitle>
                 </DrawerHeader>
-                <div className="space-y-4 p-6 pt-0 lg:px-12">
+                <div className="space-y-4 p-6 pt-0">
                     {domain.isAvailable() && (
                         <>
                             <Separator />
