@@ -47,7 +47,7 @@ export default function TLDPage({ params }: { params: Promise<{ slug: string }> 
 
     return (
         <div className="min-h-screen">
-            <main className="m-auto flex w-full max-w-6xl flex-col items-center gap-5 p-5 md:p-10">
+            <main className="m-auto flex w-full max-w-4xl flex-col items-center gap-5 p-5 md:p-10">
                 <Badge className="text-xs font-medium">TLD</Badge>
                 <div className="flex w-full flex-col gap-4">
                     <div className="flex w-full flex-col">

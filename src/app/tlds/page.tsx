@@ -49,7 +49,7 @@ export default function TldsPage() {
 
     return (
         <div className="min-h-screen">
-            <main className="m-auto flex w-full max-w-6xl flex-col items-center gap-5 p-5 md:p-10">
+            <main className="m-auto flex w-full max-w-4xl flex-col items-center gap-5 p-5 md:p-10">
                 <div className="text-center">
                     <Badge className="text-xs font-medium">TLD DIRECTORY</Badge>
                     <h1 className="mt-4 text-2xl font-semibold lg:text-3xl">All Top-Level Domains</h1>
