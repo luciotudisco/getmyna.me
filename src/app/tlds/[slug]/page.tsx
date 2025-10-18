@@ -7,13 +7,7 @@ import ErrorMessage from '@/components/ErrorMessage';
 import LoadingMessage from '@/components/LoadingMessage';
 import TLDTypeIcon from '@/components/TLDTypeIcon';
 import { Badge } from '@/components/ui/badge';
-import {
-    Registrar,
-    REGISTRAR_DISPLAY_NAMES,
-    REGISTRAR_TLD_SEARCH_URLS,
-    TLD,
-    TLD_TYPE_DISPLAY_NAMES,
-} from '@/models/tld';
+import { REGISTRAR_DISPLAY_NAMES, REGISTRAR_TLD_SEARCH_URLS, TLD, TLD_TYPE_DISPLAY_NAMES } from '@/models/tld';
 import { apiClient } from '@/services/api';
 
 export default function TLDPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -41,7 +35,7 @@ export default function TLDPage({ params }: { params: Promise<{ slug: string }> 
         return <LoadingMessage />;
     }
 
-    if (!tld) {
+    if (!tld || !tld.name) {
         return <></>;
     }
 
@@ -51,7 +45,7 @@ export default function TLDPage({ params }: { params: Promise<{ slug: string }> 
                 <Badge className="text-xs font-medium">TLD</Badge>
                 <div className="flex w-full flex-col gap-4">
                     <div className="flex w-full flex-col">
-                        <h1 className="text-4xl font-bold">.{tld?.name}</h1>
+                        <h1 className="text-4xl font-bold">.{tld.name}</h1>
                         <h2 className="text-md mt-2 font-light">{tld?.tagline}</h2>
                     </div>
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -116,9 +110,7 @@ export default function TLDPage({ params }: { params: Promise<{ slug: string }> 
                                 {Object.entries(tld.pricing).map(([registrar, pricing]) => {
                                     const registrarKey = registrar as keyof typeof REGISTRAR_DISPLAY_NAMES;
                                     const registrarName = REGISTRAR_DISPLAY_NAMES[registrarKey];
-                                    const registrarUrl = REGISTRAR_TLD_SEARCH_URLS[registrarKey as Registrar](
-                                        tld.name!,
-                                    );
+                                    const registrarUrl = REGISTRAR_TLD_SEARCH_URLS[registrarKey](tld.name!);
                                     const currency = pricing.currency || 'USD';
                                     const hasRegistration = typeof pricing.registration === 'number';
                                     const hasRenewal = typeof pricing.renewal === 'number';
@@ -128,7 +120,7 @@ export default function TLDPage({ params }: { params: Promise<{ slug: string }> 
                                             href={registrarUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="group relative cursor-pointer overflow-hidden rounded-lg border p-4 duration-300 hover:scale-105 hover:shadow-lg"
+                                            className="group relative cursor-pointer overflow-hidden rounded-lg border p-4 hover:shadow-lg"
                                         >
                                             <div className="flex flex-col gap-3">
                                                 <div className="flex items-center justify-between">
