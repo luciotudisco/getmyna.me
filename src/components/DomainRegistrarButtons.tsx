@@ -3,7 +3,7 @@
 import { ExternalLinkIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Registrar, REGISTRAR_DISPLAY_NAMES, REGISTRAR_SEARCH_URLS, TLDPricing } from '@/models/tld';
+import { Registrar, REGISTRAR_DISPLAY_NAMES, REGISTRAR_DOMAIN_SEARCH_URLS, TLDPricing } from '@/models/tld';
 
 interface DomainRegistrarButtonsProps {
     domainName: string;
@@ -34,7 +34,7 @@ function DomainRegistrarButtons({ domainName, pricing }: DomainRegistrarButtonsP
         <div className="space-y-2">
             {sortedRegistrars.map(([registrarKey, registrarPricing]) => {
                 const registrar = registrarKey as Registrar;
-                const searchUrl = REGISTRAR_SEARCH_URLS[registrar];
+                const searchUrl = REGISTRAR_DOMAIN_SEARCH_URLS[registrar];
                 const displayName = REGISTRAR_DISPLAY_NAMES[registrar];
                 const registrationPrice = registrarPricing?.registration;
                 const hasPricing = typeof registrationPrice === 'number';

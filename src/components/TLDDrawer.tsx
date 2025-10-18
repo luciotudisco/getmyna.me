@@ -3,7 +3,9 @@
 import { Badge } from '@/components/ui/badge';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
-import { TLD, TLD_TYPE_DISPLAY_NAMES, TLD_TYPE_ICONS } from '@/models/tld';
+import { TLD, TLD_TYPE_DISPLAY_NAMES } from '@/models/tld';
+
+import TLDTypeIcon from './TLDTypeIcon';
 
 interface TLDDrawerProps {
     tld: TLD;
@@ -14,7 +16,6 @@ interface TLDDrawerProps {
 function TLDDrawer({ tld, open, onClose }: TLDDrawerProps) {
     const tldDescription = tld.description ?? 'No additional information is available for this TLD, just yet.';
     const tldDisplayName = tld.type ? TLD_TYPE_DISPLAY_NAMES[tld.type] : null;
-    const Icon = tld.type ? TLD_TYPE_ICONS[tld.type] : null;
 
     return (
         <Drawer open={open} onOpenChange={(openState: boolean) => !openState && onClose()} direction="bottom">
@@ -25,7 +26,7 @@ function TLDDrawer({ tld, open, onClose }: TLDDrawerProps) {
                         <div className="flex items-center gap-2">
                             {tld.type && (
                                 <Badge variant="outline" className="flex items-center gap-1 uppercase">
-                                    {Icon && <Icon className="h-3 w-3" aria-hidden="true" />}
+                                    <TLDTypeIcon tld={tld} size="sm" />
                                     <span>{tldDisplayName}</span>
                                 </Badge>
                             )}

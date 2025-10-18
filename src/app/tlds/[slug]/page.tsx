@@ -1,12 +1,19 @@
 'use client';
 
 import { use, useEffect, useState, useTransition } from 'react';
-import { Calendar, DollarSign, FileText } from 'lucide-react';
+import { Calendar, DollarSign, ExternalLink, FileText } from 'lucide-react';
 
 import ErrorMessage from '@/components/ErrorMessage';
 import LoadingMessage from '@/components/LoadingMessage';
 import TLDTypeIcon from '@/components/TLDTypeIcon';
-import { REGISTRAR_DISPLAY_NAMES, TLD, TLD_TYPE_DISPLAY_NAMES } from '@/models/tld';
+import { Badge } from '@/components/ui/badge';
+import {
+    Registrar,
+    REGISTRAR_DISPLAY_NAMES,
+    REGISTRAR_TLD_SEARCH_URLS,
+    TLD,
+    TLD_TYPE_DISPLAY_NAMES,
+} from '@/models/tld';
 import { apiClient } from '@/services/api';
 
 export default function TLDPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -40,9 +47,10 @@ export default function TLDPage({ params }: { params: Promise<{ slug: string }> 
 
     return (
         <div className="min-h-screen">
-            <main className="container mx-auto max-w-4xl px-4 py-6 md:py-16">
-                <div className="flex flex-col gap-4">
-                    <div className="flex flex-col">
+            <main className="m-auto flex w-full max-w-6xl flex-col items-center gap-5 p-5 md:p-10">
+                <Badge className="text-xs font-medium">TLD</Badge>
+                <div className="flex w-full flex-col gap-4">
+                    <div className="flex w-full flex-col">
                         <h1 className="text-4xl font-bold">.{tld?.name}</h1>
                         <h2 className="text-md mt-2 font-light">{tld?.tagline}</h2>
                     </div>
@@ -106,22 +114,29 @@ export default function TLDPage({ params }: { params: Promise<{ slug: string }> 
                             </div>
                             <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                                 {Object.entries(tld.pricing).map(([registrar, pricing]) => {
-                                    const registrarName =
-                                        REGISTRAR_DISPLAY_NAMES[registrar as keyof typeof REGISTRAR_DISPLAY_NAMES];
+                                    const registrarKey = registrar as keyof typeof REGISTRAR_DISPLAY_NAMES;
+                                    const registrarName = REGISTRAR_DISPLAY_NAMES[registrarKey];
+                                    const registrarUrl = REGISTRAR_TLD_SEARCH_URLS[registrarKey as Registrar](
+                                        tld.name!,
+                                    );
                                     const currency = pricing.currency || 'USD';
                                     const hasRegistration = typeof pricing.registration === 'number';
                                     const hasRenewal = typeof pricing.renewal === 'number';
                                     return (
-                                        <div
+                                        <a
                                             key={registrar}
-                                            className="group relative overflow-hidden rounded-lg border p-4 duration-300 hover:scale-105 hover:shadow-lg"
+                                            href={registrarUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="group relative cursor-pointer overflow-hidden rounded-lg border p-4 duration-300 hover:scale-105 hover:shadow-lg"
                                         >
                                             <div className="flex flex-col gap-3">
                                                 <div className="flex items-center justify-between">
-                                                    <h3 className="text-sm font-semibold text-foreground">
+                                                    <h3 className="flex items-center gap-1 text-sm font-semibold text-foreground">
                                                         {registrarName}
+                                                        <ExternalLink className="h-3 w-3 opacity-50 transition-opacity group-hover:opacity-100" />
                                                     </h3>
-                                                    <div className="rounded-full px-2 py-0.5 font-medium text-muted-foreground">
+                                                    <div className="rounded-full px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
                                                         {currency}
                                                     </div>
                                                 </div>
@@ -163,7 +178,7 @@ export default function TLDPage({ params }: { params: Promise<{ slug: string }> 
                                                     </span>
                                                 )}
                                             </div>
-                                        </div>
+                                        </a>
                                     );
                                 })}
                             </div>

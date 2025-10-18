@@ -1,7 +1,7 @@
-import { Globe2 } from 'lucide-react';
+import { Flag, Globe2, Handshake, LucideIcon, Server, ShieldCheck } from 'lucide-react';
 
 import { cn } from '@/components/ui/utils';
-import { TLD, TLD_TYPE_ICONS, TLDType } from '@/models/tld';
+import { TLD, TLDType } from '@/models/tld';
 
 interface TLDTypeIconProps {
     tld: TLD;
@@ -16,9 +16,17 @@ const SIZE_CLASSES = {
 };
 
 const FLAG_SIZE_STYLES = {
-    sm: { fontSize: '1rem' }, // matches h-4/w-4
-    md: { fontSize: '1.5rem' }, // matches h-6/w-6
-    lg: { fontSize: '2rem' }, // matches h-8/w-8
+    sm: { fontSize: '0.75rem' },
+    md: { fontSize: '1.5rem' },
+    lg: { fontSize: '2rem' },
+};
+
+export const TLD_TYPE_ICONS: Record<TLDType, LucideIcon> = {
+    [TLDType.COUNTRY_CODE]: Flag,
+    [TLDType.GENERIC]: Globe2,
+    [TLDType.GENERIC_RESTRICTED]: ShieldCheck,
+    [TLDType.INFRASTRUCTURE]: Server,
+    [TLDType.SPONSORED]: Handshake,
 };
 
 function TLDTypeIcon({ tld, size = 'lg', className }: TLDTypeIconProps) {

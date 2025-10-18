@@ -1,5 +1,3 @@
-import { Flag, Globe2, Handshake, type LucideIcon, Server, ShieldCheck } from 'lucide-react';
-
 export enum TLDType {
     // Two-letter country codes (e.g., .uk).
     COUNTRY_CODE = 'COUNTRY_CODE',
@@ -29,7 +27,15 @@ export const REGISTRAR_DISPLAY_NAMES: Record<Registrar, string> = {
     [Registrar.PORKBUN]: 'Porkbun',
 };
 
-export const REGISTRAR_SEARCH_URLS: Record<Registrar, (domain: string) => string> = {
+export const REGISTRAR_TLD_SEARCH_URLS: Record<Registrar, (tld: string) => string> = {
+    [Registrar.DYNADOT]: (tld: string) => `https://www.dynadot.com/domain/${tld}`,
+    [Registrar.GANDI]: (tld: string) => `https://www.gandi.net/en/domain/tld/${tld}`,
+    [Registrar.NAMECOM]: (tld: string) => `https://www.name.com/domains/${tld}`,
+    [Registrar.NAMESILO]: (tld: string) => `https://www.namesilo.com/tld/${tld}`,
+    [Registrar.PORKBUN]: (tld: string) => `https://porkbun.com/tld/${tld}`,
+};
+
+export const REGISTRAR_DOMAIN_SEARCH_URLS: Record<Registrar, (domain: string) => string> = {
     [Registrar.DYNADOT]: (domain: string) => `https://www.dynadot.com/domain/search?domain=${domain}`,
     [Registrar.GANDI]: (domain: string) => `https://shop.gandi.net/domain/suggest?search=${domain}`,
     [Registrar.NAMECOM]: (domain: string) => `https://www.name.com/domain/search/${domain}`,
@@ -52,14 +58,6 @@ export interface TLD {
     type?: TLDType;
     yearEstablished?: number;
 }
-
-export const TLD_TYPE_ICONS: Record<TLDType, LucideIcon> = {
-    [TLDType.COUNTRY_CODE]: Flag,
-    [TLDType.GENERIC]: Globe2,
-    [TLDType.GENERIC_RESTRICTED]: ShieldCheck,
-    [TLDType.INFRASTRUCTURE]: Server,
-    [TLDType.SPONSORED]: Handshake,
-};
 
 export const TLD_TYPE_DISPLAY_NAMES: Record<TLDType, string> = {
     [TLDType.COUNTRY_CODE]: 'Country Code',
