@@ -23,7 +23,7 @@ export async function GET(): Promise<NextResponse> {
                 continue;
             }
 
-            if (tld.description !== null && tld.type !== null && tld.yearEstablished !== null && tld.tagline !== null) {
+            if (tld.description !== null && tld.yearEstablished !== null && tld.tagline !== null) {
                 logger.info(`Skipping TLD ${tld.name} because it is already enriched`);
                 continue;
             }
@@ -87,7 +87,6 @@ export async function GET(): Promise<NextResponse> {
                 countryCode: tldData.countryCode,
                 description: tldData.description,
                 tagline: tldData.tagline,
-                type: tldData.type,
                 yearEstablished: tldData.year_established,
             });
         }
@@ -132,16 +131,6 @@ const TLD_SCHEMA = {
                     'The tagline should be a single sentence that captures the essence of the TLD and is no more than 100 characters.',
                 ].join(' '),
             },
-            type: {
-                type: 'string',
-                enum: ['GENERIC', 'COUNTRY_CODE', 'GENERIC_RESTRICTED', 'INFRASTRUCTURE', 'SPONSORED'],
-                description: [
-                    'The TLD category according to IANA.',
-                    'Use the the category at the top of the IANA wiki page.',
-                    'Do not use the SPONSORED category simply because the TLD has a sponsoring organization. Do so only when the IANA wiki page labels it as "Sponsored top-level domain".',
-                    'Examples: "GENERIC" for .com, "COUNTRY_CODE" for .uk, "GENERIC_RESTRICTED" for .biz, "INFRASTRUCTURE" for .arpa, "SPONSORED" for .edu.',
-                ].join(' '),
-            },
             year_established: {
                 type: 'integer',
                 minimum: 1985,
@@ -149,7 +138,7 @@ const TLD_SCHEMA = {
                 description: 'The year the TLD was established.',
             },
         },
-        required: ['countryCode', 'description', 'tagline', 'type', 'year_established'],
+        required: ['countryCode', 'description', 'tagline', 'year_established'],
         additionalProperties: false,
     },
 };

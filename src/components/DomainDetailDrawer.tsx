@@ -60,7 +60,7 @@ function DomainDetailDrawer({ domain, open, onClose }: DomainDetailDrawerProps) 
     if (loading) {
         return (
             <Drawer open={open} onOpenChange={(openState: boolean) => !openState && onClose()} direction="bottom">
-                <DrawerContent className="min-h-[400px] px-4 lg:px-10">
+                <DrawerContent className="min-h-[400px] px-0 md:px-4 lg:px-10">
                     <VisuallyHidden>
                         <DrawerTitle>Loading domain details for {domain.getName()}</DrawerTitle>
                     </VisuallyHidden>
@@ -75,7 +75,7 @@ function DomainDetailDrawer({ domain, open, onClose }: DomainDetailDrawerProps) 
     if (hasError) {
         return (
             <Drawer open={open} onOpenChange={(openState: boolean) => !openState && onClose()} direction="bottom">
-                <DrawerContent className="min-h-[400px] px-4 lg:px-10">
+                <DrawerContent className="min-h-[400px] px-0 md:px-4 lg:px-10">
                     <VisuallyHidden>
                         <DrawerTitle>Loading domain details for {domain.getName()}</DrawerTitle>
                     </VisuallyHidden>
@@ -89,7 +89,7 @@ function DomainDetailDrawer({ domain, open, onClose }: DomainDetailDrawerProps) 
 
     return (
         <Drawer open={open} onOpenChange={(openState: boolean) => !openState && onClose()} direction="bottom">
-            <DrawerContent className="min-h-[400px] px-4 lg:px-10">
+            <DrawerContent className="min-h-[400px] px-0 md:px-4 lg:px-10">
                 <DrawerHeader>
                     <DrawerTitle className="flex items-center justify-between">
                         <div className="flex max-w-[400px] items-center gap-2 truncate">{domain.getName()}</div>

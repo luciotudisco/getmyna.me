@@ -21,7 +21,7 @@ function TLDDrawer({ tld, open, onClose }: TLDDrawerProps) {
 
     return (
         <Drawer open={open} onOpenChange={(openState: boolean) => !openState && onClose()} direction="bottom">
-            <DrawerContent className="px-4 lg:px-10">
+            <DrawerContent className="px-0 md:px-4 lg:px-10">
                 <DrawerHeader>
                     <DrawerTitle className="flex items-center justify-between">
                         <div className="flex max-w-[400px] items-center gap-2 truncate">.{tld.name}</div>

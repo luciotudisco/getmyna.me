@@ -2,7 +2,6 @@ import axios from 'axios';
 import OpenAI from 'openai';
 
 import { GET } from '@/app/api/cron/tlds/update_description/route';
-import { TLDType } from '@/models/tld';
 import { tldRepository } from '@/services/tld-repository';
 
 jest.mock('axios');
@@ -28,7 +27,7 @@ describe('/api/cron/tlds/update_description', () => {
         mockOpenAI.mockImplementation(() => mockOpenAIClient as any);
     });
 
-    it('should successfully enrich TLDs with description and type', async () => {
+    it('should successfully enrich TLDs with description', async () => {
         // Mock TLD data
         const mockTlds = [
             {
@@ -36,7 +35,6 @@ describe('/api/cron/tlds/update_description', () => {
                 punycodeName: 'com',
                 description: null,
                 tagline: null,
-                type: null,
                 yearEstablished: null,
             },
         ];
@@ -60,7 +58,6 @@ describe('/api/cron/tlds/update_description', () => {
                         content: JSON.stringify({
                             description: 'Generic top-level domain for commercial use',
                             tagline: 'The original domain for commerce',
-                            type: 'GENERIC',
                             year_established: 1985,
                         }),
                     },
@@ -90,7 +87,6 @@ describe('/api/cron/tlds/update_description', () => {
         expect(mockTldRepository.updateTLD).toHaveBeenCalledWith('com', {
             description: 'Generic top-level domain for commercial use',
             tagline: 'The original domain for commerce',
-            type: 'GENERIC',
             yearEstablished: 1985,
         });
     });
@@ -102,7 +98,6 @@ describe('/api/cron/tlds/update_description', () => {
                 punycodeName: 'com',
                 description: 'Already has description',
                 tagline: 'Already has tagline',
-                type: TLDType.GENERIC,
                 yearEstablished: 1985,
             },
         ];
@@ -128,7 +123,6 @@ describe('/api/cron/tlds/update_description', () => {
                 punycodeName: 'com',
                 description: null,
                 tagline: null,
-                type: null,
                 yearEstablished: null,
             },
         ];
