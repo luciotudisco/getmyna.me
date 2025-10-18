@@ -42,7 +42,7 @@ function DomainRegistrarButtons({ domainName, pricing }: DomainRegistrarButtonsP
                 return (
                     <div key={registrar} className="flex items-center gap-3">
                         <Button
-                            className="min-h-10 flex-1 bg-blue-400 text-white hover:bg-blue-600"
+                            className="min-h-10 flex-1 bg-blue-600 text-white hover:bg-blue-700"
                             onClick={() => window.open(searchUrl(domainName), '_blank')}
                         >
                             <ExternalLinkIcon className="mr-2 h-4 w-4" />
