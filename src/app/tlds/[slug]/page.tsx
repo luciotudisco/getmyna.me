@@ -86,9 +86,9 @@ export default function TLDPage({ params }: { params: Promise<{ slug: string }> 
                             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
                                 <FileText className="h-4 w-4 text-primary" />
                             </div>
-                            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                            <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                                 About
-                            </h2>
+                            </h3>
                         </div>
                         <p className="leading-relaxed text-foreground">
                             {tld.description ?? 'No additional information is available for this TLD, just yet.'}
@@ -102,9 +102,9 @@ export default function TLDPage({ params }: { params: Promise<{ slug: string }> 
                                         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
                                             <DollarSign className="h-4 w-4 text-primary" />
                                         </div>
-                                        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                                        <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                                             Pricing
-                                        </h2>
+                                        </h3>
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
@@ -127,29 +127,29 @@ export default function TLDPage({ params }: { params: Promise<{ slug: string }> 
                                                     href={registrarUrl}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="group relative cursor-pointer overflow-hidden rounded-lg border p-4 hover:shadow-lg"
+                                                    className="group relative cursor-pointer overflow-hidden rounded-lg bg-blue-600 p-4 text-white shadow-md transition-all hover:bg-blue-700 hover:shadow-lg"
                                                 >
                                                     <div className="flex flex-col gap-3">
                                                         <div className="flex items-center justify-between">
-                                                            <h3 className="flex items-center gap-1 text-sm font-semibold text-foreground">
+                                                            <h3 className="flex items-center gap-1 text-sm font-semibold text-white">
                                                                 {registrarName}
-                                                                <ExternalLink className="h-3 w-3 opacity-50 transition-opacity group-hover:opacity-100" />
+                                                                <ExternalLink className="h-3 w-3 opacity-70 transition-opacity group-hover:opacity-100" />
                                                             </h3>
-                                                            <div className="rounded-full px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                                                            <div className="rounded-full bg-blue-700 px-2 py-0.5 text-[10px] font-medium text-blue-100">
                                                                 {currency}
                                                             </div>
                                                         </div>
                                                         <div className="space-y-2">
                                                             {hasRegistration && (
                                                                 <div className="flex items-baseline justify-between">
-                                                                    <span className="text-xs text-muted-foreground">
+                                                                    <span className="text-xs text-blue-100">
                                                                         Registration
                                                                     </span>
                                                                     <div className="flex items-baseline gap-1">
-                                                                        <span className="text-lg font-bold text-foreground">
+                                                                        <span className="text-lg font-bold text-white">
                                                                             {pricing.registration?.toFixed(2)}
                                                                         </span>
-                                                                        <span className="text-xs text-muted-foreground">
+                                                                        <span className="text-xs text-blue-100">
                                                                             /yr
                                                                         </span>
                                                                     </div>
@@ -157,14 +157,14 @@ export default function TLDPage({ params }: { params: Promise<{ slug: string }> 
                                                             )}
                                                             {hasRenewal && (
                                                                 <div className="flex items-baseline justify-between">
-                                                                    <span className="text-xs text-muted-foreground">
+                                                                    <span className="text-xs text-blue-100">
                                                                         Renewal
                                                                     </span>
                                                                     <div className="flex items-baseline gap-1">
-                                                                        <span className="text-sm font-semibold text-foreground">
+                                                                        <span className="text-sm font-semibold text-white">
                                                                             {pricing.renewal?.toFixed(2)}
                                                                         </span>
-                                                                        <span className="text-xs text-muted-foreground">
+                                                                        <span className="text-xs text-blue-100">
                                                                             /yr
                                                                         </span>
                                                                     </div>
