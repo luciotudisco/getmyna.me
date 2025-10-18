@@ -101,7 +101,7 @@ describe('TldsPage', () => {
 
             await waitFor(() => {
                 expect(screen.getByText('TLD DIRECTORY')).toBeInTheDocument();
-                expect(screen.getByText('All Top-Level Domains')).toBeInTheDocument();
+                expect(screen.getByText('The complete collection of TLDs')).toBeInTheDocument();
             });
         });
 
