@@ -138,6 +138,7 @@ const TLD_SCHEMA = {
                 description: [
                     'The TLD category according to IANA.',
                     'Use the the category at the top of the IANA wiki page.',
+                    'Do not use the SPONSORED category simply because the TLD has a sponsoring organization. Do so only when the IANA wiki page labels it as "Sponsored top-level domain".',
                     'Examples: "GENERIC" for .com, "COUNTRY_CODE" for .uk, "GENERIC_RESTRICTED" for .biz, "INFRASTRUCTURE" for .arpa, "SPONSORED" for .edu.',
                 ].join(' '),
             },
