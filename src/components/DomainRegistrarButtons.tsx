@@ -51,7 +51,10 @@ function DomainRegistrarButtons({ domainName, pricing }: DomainRegistrarButtonsP
                                 <div className="min-w-[100px] text-right text-xs">
                                     {hasPricing ? (
                                         <div>
-                                            <div className="font-extrabold text-white">{roundedRegistrationPrice}</div>
+                                            <div className="font-extrabold text-white">
+                                                <span className="text-xs text-white/70">from</span>{' '}
+                                                {roundedRegistrationPrice}
+                                            </div>
                                         </div>
                                     ) : (
                                         <div className="text-xs font-extralight text-white">No pricing data</div>
