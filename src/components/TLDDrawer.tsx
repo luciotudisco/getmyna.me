@@ -2,13 +2,12 @@
 
 import { ExternalLink } from 'lucide-react';
 
+import TLDTypeIcon from '@/components/TLDTypeIcon';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
 import { TLD, TLD_TYPE_DISPLAY_NAMES } from '@/models/tld';
-
-import TLDTypeIcon from './TLDTypeIcon';
 
 interface TLDDrawerProps {
     tld: TLD;
