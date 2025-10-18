@@ -94,93 +94,95 @@ export default function TLDPage({ params }: { params: Promise<{ slug: string }> 
                             {tld.description ?? 'No additional information is available for this TLD, just yet.'}
                         </p>
                     </div>
-                    {tld?.pricing && Object.keys(tld.pricing).length > 0 && (
-                        <div className="rounded-lg border p-6 shadow-sm">
-                            <div className="mb-6 flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
-                                        <DollarSign className="h-4 w-4 text-primary" />
+                    {tld?.pricing &&
+                        Object.values(tld.pricing).some((pricing) => typeof pricing.registration === 'number') && (
+                            <div className="rounded-lg border p-6 shadow-sm">
+                                <div className="mb-6 flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
+                                            <DollarSign className="h-4 w-4 text-primary" />
+                                        </div>
+                                        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                                            Pricing
+                                        </h2>
                                     </div>
-                                    <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                                        Pricing
-                                    </h2>
+                                </div>
+                                <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                                    {Object.entries(tld.pricing)
+                                        .filter(
+                                            ([_, pricing]) =>
+                                                typeof pricing.registration === 'number' ||
+                                                typeof pricing.renewal === 'number',
+                                        )
+                                        .map(([registrar, pricing]) => {
+                                            const registrarKey = registrar as keyof typeof REGISTRAR_DISPLAY_NAMES;
+                                            const registrarName = REGISTRAR_DISPLAY_NAMES[registrarKey];
+                                            const registrarUrl = REGISTRAR_TLD_SEARCH_URLS[registrarKey](tld.name!);
+                                            const currency = pricing.currency || 'USD';
+                                            const hasRegistration = typeof pricing.registration === 'number';
+                                            const hasRenewal = typeof pricing.renewal === 'number';
+                                            return (
+                                                <a
+                                                    key={registrar}
+                                                    href={registrarUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="group relative cursor-pointer overflow-hidden rounded-lg border p-4 hover:shadow-lg"
+                                                >
+                                                    <div className="flex flex-col gap-3">
+                                                        <div className="flex items-center justify-between">
+                                                            <h3 className="flex items-center gap-1 text-sm font-semibold text-foreground">
+                                                                {registrarName}
+                                                                <ExternalLink className="h-3 w-3 opacity-50 transition-opacity group-hover:opacity-100" />
+                                                            </h3>
+                                                            <div className="rounded-full px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                                                                {currency}
+                                                            </div>
+                                                        </div>
+                                                        <div className="space-y-2">
+                                                            {hasRegistration && (
+                                                                <div className="flex items-baseline justify-between">
+                                                                    <span className="text-xs text-muted-foreground">
+                                                                        Registration
+                                                                    </span>
+                                                                    <div className="flex items-baseline gap-1">
+                                                                        <span className="text-lg font-bold text-foreground">
+                                                                            {pricing.registration?.toFixed(2)}
+                                                                        </span>
+                                                                        <span className="text-xs text-muted-foreground">
+                                                                            /yr
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                            {hasRenewal && (
+                                                                <div className="flex items-baseline justify-between">
+                                                                    <span className="text-xs text-muted-foreground">
+                                                                        Renewal
+                                                                    </span>
+                                                                    <div className="flex items-baseline gap-1">
+                                                                        <span className="text-sm font-semibold text-foreground">
+                                                                            {pricing.renewal?.toFixed(2)}
+                                                                        </span>
+                                                                        <span className="text-xs text-muted-foreground">
+                                                                            /yr
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            );
+                                        })}
+                                </div>
+                                <div className="mt-4 flex items-center rounded-md">
+                                    <p className="text-[10px] text-muted-foreground">
+                                        * Prices may vary. Visit registrar websites for current offers and promotions.
+                                    </p>
                                 </div>
                             </div>
-                            <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-                                {Object.entries(tld.pricing).map(([registrar, pricing]) => {
-                                    const registrarKey = registrar as keyof typeof REGISTRAR_DISPLAY_NAMES;
-                                    const registrarName = REGISTRAR_DISPLAY_NAMES[registrarKey];
-                                    const registrarUrl = REGISTRAR_TLD_SEARCH_URLS[registrarKey](tld.name!);
-                                    const currency = pricing.currency || 'USD';
-                                    const hasRegistration = typeof pricing.registration === 'number';
-                                    const hasRenewal = typeof pricing.renewal === 'number';
-                                    return (
-                                        <a
-                                            key={registrar}
-                                            href={registrarUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="group relative cursor-pointer overflow-hidden rounded-lg border p-4 hover:shadow-lg"
-                                        >
-                                            <div className="flex flex-col gap-3">
-                                                <div className="flex items-center justify-between">
-                                                    <h3 className="flex items-center gap-1 text-sm font-semibold text-foreground">
-                                                        {registrarName}
-                                                        <ExternalLink className="h-3 w-3 opacity-50 transition-opacity group-hover:opacity-100" />
-                                                    </h3>
-                                                    <div className="rounded-full px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
-                                                        {currency}
-                                                    </div>
-                                                </div>
-                                                <div className="space-y-2">
-                                                    {hasRegistration && (
-                                                        <div className="flex items-baseline justify-between">
-                                                            <span className="text-xs text-muted-foreground">
-                                                                Registration
-                                                            </span>
-                                                            <div className="flex items-baseline gap-1">
-                                                                <span className="text-lg font-bold text-foreground">
-                                                                    {pricing.registration?.toFixed(2)}
-                                                                </span>
-                                                                <span className="text-xs text-muted-foreground">
-                                                                    /yr
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                    {hasRenewal && (
-                                                        <div className="flex items-baseline justify-between">
-                                                            <span className="text-xs text-muted-foreground">
-                                                                Renewal
-                                                            </span>
-                                                            <div className="flex items-baseline gap-1">
-                                                                <span className="text-sm font-semibold text-foreground">
-                                                                    {pricing.renewal?.toFixed(2)}
-                                                                </span>
-                                                                <span className="text-xs text-muted-foreground">
-                                                                    /yr
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                                {!hasRegistration && !hasRenewal && (
-                                                    <span className="text-xs text-muted-foreground">
-                                                        Check registrar website for pricing
-                                                    </span>
-                                                )}
-                                            </div>
-                                        </a>
-                                    );
-                                })}
-                            </div>
-                            <div className="mt-4 flex items-center rounded-md">
-                                <p className="text-[10px] text-muted-foreground">
-                                    * Prices may vary. Visit registrar websites for current offers and promotions.
-                                </p>
-                            </div>
-                        </div>
-                    )}
+                        )}
                 </div>
             </main>
         </div>
