@@ -50,6 +50,7 @@ export interface TLDPricing {
 }
 
 export interface TLD {
+    countryCode?: string;
     description?: string;
     name?: string;
     pricing?: Partial<Record<Registrar, TLDPricing>>;

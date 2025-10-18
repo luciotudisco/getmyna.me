@@ -31,7 +31,7 @@ export const TLD_TYPE_ICONS: Record<TLDType, LucideIcon> = {
 
 function TLDTypeIcon({ tld, size = 'lg', className }: TLDTypeIconProps) {
     const isCountryCode = tld.type === TLDType.COUNTRY_CODE;
-    const countryIso = isCountryCode ? ('uk' === tld.name ? 'gb' : tld.name) : null;
+    const countryIso = tld.countryCode?.toLowerCase() || tld.name?.toLowerCase() || null;
 
     if (isCountryCode && countryIso) {
         return (

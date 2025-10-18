@@ -44,6 +44,7 @@ class TLDRepository {
         const now = new Date().toISOString();
         const { error } = await this.client.from('tld').upsert(
             {
+                country_code: tldInfo.countryCode,
                 created_at: now,
                 description: tldInfo.description,
                 name: tldInfo.name?.toLowerCase(),
@@ -85,7 +86,7 @@ class TLDRepository {
         const searchField = name.startsWith('xn--') ? 'punycode_name' : 'name';
         const { data, error } = await this.client
             .from('tld')
-            .select('description, name, pricing, punycode_name, tagline, type, year_established')
+            .select('country_code, description, name, pricing, punycode_name, tagline, type, year_established')
             .eq(searchField, name)
             .single();
 
@@ -99,6 +100,7 @@ class TLDRepository {
             throw new Error(`Failed to fetch TLD ${name}: ${error.message}`);
         }
         const tld = {
+            countryCode: data.country_code,
             description: data.description,
             name: data.name,
             pricing: data.pricing,
@@ -125,7 +127,7 @@ class TLDRepository {
 
         const { data, error } = await this.client
             .from('tld')
-            .select('description, name, pricing, punycode_name, tagline, type, year_established')
+            .select('country_code, description, name, pricing, punycode_name, tagline, type, year_established')
             .order('name', { ascending: true })
             .limit(5000);
         if (error) {
@@ -133,6 +135,7 @@ class TLDRepository {
             throw new Error(`Failed to fetch TLDs: ${error.message}`);
         }
         const tlds: TLD[] = data.map((tld) => ({
+            countryCode: tld.country_code,
             description: tld.description,
             name: tld.name,
             pricing: tld.pricing,
@@ -157,6 +160,7 @@ class TLDRepository {
         const { error } = await this.client
             .from('tld')
             .update({
+                country_code: tldInfo.countryCode,
                 description: tldInfo.description,
                 name: tldInfo.name,
                 pricing: tldInfo.pricing,

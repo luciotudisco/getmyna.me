@@ -24,7 +24,7 @@ export async function GET(): Promise<NextResponse> {
             }
 
             if (tld.description !== null && tld.type !== null && tld.yearEstablished !== null && tld.tagline !== null) {
-                logger.info(`Skipping TLD ${tld.name} because it already has a description and type`);
+                logger.info(`Skipping TLD ${tld.name} because it is already enriched`);
                 continue;
             }
 
@@ -84,6 +84,7 @@ export async function GET(): Promise<NextResponse> {
             const tldData = JSON.parse(responseContent || '{}');
             logger.info(`Enriching TLD ${tld.name} with description and type ...`);
             await tldRepository.updateTLD(tld.punycodeName, {
+                countryCode: tldData.countryCode,
                 description: tldData.description,
                 tagline: tldData.tagline,
                 type: tldData.type,
@@ -104,6 +105,14 @@ const TLD_SCHEMA = {
     schema: {
         type: 'object',
         properties: {
+            countryCode: {
+                type: 'string',
+                description: [
+                    'The ISO 3166-1 alpha-2 code for the country the TLD is associated with.',
+                    'Populate only if the TLD is a country code TLD. Leave blank otherwise.',
+                    'Examples: "US" for .com, "GB" for .uk, "DE" for .de, etc.',
+                ].join(' '),
+            },
             description: {
                 type: 'string',
                 description: [
@@ -126,7 +135,11 @@ const TLD_SCHEMA = {
             type: {
                 type: 'string',
                 enum: ['GENERIC', 'COUNTRY_CODE', 'GENERIC_RESTRICTED', 'INFRASTRUCTURE', 'SPONSORED'],
-                description: 'The TLD category according to IANA.',
+                description: [
+                    'The TLD category according to IANA.',
+                    'Use the the category at the top of the IANA wiki page.',
+                    'Examples: "GENERIC" for .com, "COUNTRY_CODE" for .uk, "GENERIC_RESTRICTED" for .biz, "INFRASTRUCTURE" for .arpa, "SPONSORED" for .edu.',
+                ].join(' '),
             },
             year_established: {
                 type: 'integer',
@@ -135,7 +148,7 @@ const TLD_SCHEMA = {
                 description: 'The year the TLD was established.',
             },
         },
-        required: ['description', 'tagline', 'type', 'year_established'],
+        required: ['countryCode', 'description', 'tagline', 'type', 'year_established'],
         additionalProperties: false,
     },
 };

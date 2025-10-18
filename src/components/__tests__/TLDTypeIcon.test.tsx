@@ -22,19 +22,21 @@ describe('TLDTypeIcon', () => {
     describe('Country Code TLD Type', () => {
         it('should render country flag for country code TLD', () => {
             const tld: TLD = {
-                name: 'us',
+                countryCode: 'it',
+                name: 'it',
                 type: TLDType.COUNTRY_CODE,
             };
 
             const { container } = render(<TLDTypeIcon tld={tld} />);
-            const flag = container.querySelector('.fi-us');
+            const flag = container.querySelector('.fi-it');
 
             expect(flag).toBeInTheDocument();
-            expect(flag).toHaveAttribute('aria-label', 'Flag of us');
+            expect(flag).toHaveAttribute('aria-label', 'Flag of it');
         });
 
         it('should convert UK to GB for country code', () => {
             const tld: TLD = {
+                countryCode: 'GB',
                 name: 'uk',
                 type: TLDType.COUNTRY_CODE,
             };

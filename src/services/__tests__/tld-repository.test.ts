@@ -62,6 +62,7 @@ describe('TLDRepository', () => {
     describe('createTld', () => {
         it('should create a new TLD and invalidate cache', async () => {
             const mockTLD: TLD = {
+                countryCode: 'US',
                 name: 'com',
                 punycodeName: 'com',
                 type: TLDType.GENERIC,
@@ -94,6 +95,7 @@ describe('TLDRepository', () => {
 
     describe('getTLD', () => {
         const mockTLDData = {
+            country_code: 'US',
             name: 'com',
             punycode_name: 'com',
             type: TLDType.GENERIC,
@@ -105,6 +107,7 @@ describe('TLDRepository', () => {
 
         it('should return cached TLD if available', async () => {
             const cachedTLD: TLD = {
+                countryCode: 'US',
                 name: 'com',
                 punycodeName: 'com',
                 type: TLDType.GENERIC,
@@ -137,6 +140,7 @@ describe('TLDRepository', () => {
             const result = await tldRepository.getTLD('com');
 
             expect(result).toEqual({
+                countryCode: 'US',
                 name: 'com',
                 punycodeName: 'com',
                 type: TLDType.GENERIC,
@@ -191,6 +195,7 @@ describe('TLDRepository', () => {
     describe('listTLDs', () => {
         const mockTLDsData = [
             {
+                country_code: 'US',
                 name: 'com',
                 punycode_name: 'com',
                 type: TLDType.GENERIC,
@@ -200,6 +205,7 @@ describe('TLDRepository', () => {
                 year_established: 1985,
             },
             {
+                country_code: null,
                 name: 'net',
                 punycode_name: 'net',
                 type: TLDType.GENERIC,
@@ -238,6 +244,7 @@ describe('TLDRepository', () => {
 
             expect(result).toEqual([
                 {
+                    countryCode: 'US',
                     name: 'com',
                     punycodeName: 'com',
                     type: TLDType.GENERIC,
@@ -247,6 +254,7 @@ describe('TLDRepository', () => {
                     yearEstablished: 1985,
                 },
                 {
+                    countryCode: null,
                     name: 'net',
                     punycodeName: 'net',
                     type: TLDType.GENERIC,
@@ -262,6 +270,7 @@ describe('TLDRepository', () => {
 
     describe('updateTLD', () => {
         const mockTLD: TLD = {
+            countryCode: 'US',
             name: 'com',
             punycodeName: 'com',
             type: TLDType.GENERIC,
