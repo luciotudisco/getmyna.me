@@ -27,7 +27,7 @@ describe('TLDDrawer', () => {
             expect(screen.getByText('Commercial organizations')).toBeInTheDocument();
             expect(screen.getByText('1985')).toBeInTheDocument();
 
-            const learnMoreLink = screen.getByText('Learn more');
+            const learnMoreLink = screen.getByRole('link', { name: /learn more/i });
             expect(learnMoreLink).toBeInTheDocument();
             expect(learnMoreLink).toHaveAttribute('href', '/tlds/com');
         });

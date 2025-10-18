@@ -1,6 +1,9 @@
 'use client';
 
+import { ExternalLink } from 'lucide-react';
+
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
 import { TLD, TLD_TYPE_DISPLAY_NAMES } from '@/models/tld';
@@ -19,7 +22,7 @@ function TLDDrawer({ tld, open, onClose }: TLDDrawerProps) {
 
     return (
         <Drawer open={open} onOpenChange={(openState: boolean) => !openState && onClose()} direction="bottom">
-            <DrawerContent>
+            <DrawerContent className="px-4 lg:px-10">
                 <DrawerHeader>
                     <DrawerTitle className="flex items-center justify-between">
                         <div className="flex max-w-[400px] items-center gap-2 truncate">.{tld.name}</div>
@@ -40,13 +43,16 @@ function TLDDrawer({ tld, open, onClose }: TLDDrawerProps) {
                 </DrawerHeader>
                 <div className="space-y-4 p-6 pt-0">
                     <Separator />
-                    <div className="space-y-2 text-xs">
+                    <div className="space-y-4 text-xs">
                         <p className="gap-2 text-xs leading-relaxed">
-                            <span>{tldDescription}</span>{' '}
-                            <a href={`/tlds/${tld.name}`} className="text-muted-foreground underline">
-                                Learn more
-                            </a>
+                            <span>{tldDescription}</span>
                         </p>
+                        <Button asChild variant="outline" className="w-full">
+                            <a href={`/tlds/${tld.name}`} className="flex items-center gap-2">
+                                <span className="w-full text-center">Learn more</span>
+                                <ExternalLink className="h-4 w-4" />
+                            </a>
+                        </Button>
                     </div>
                 </div>
             </DrawerContent>
