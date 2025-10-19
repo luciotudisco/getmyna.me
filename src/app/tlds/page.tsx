@@ -8,7 +8,7 @@ import LoadingMessage from '@/components/LoadingMessage';
 import TLDDrawer from '@/components/TLDDrawer';
 import { Badge } from '@/components/ui/badge';
 import { Highlighter } from '@/components/ui/highlighter';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { TLD, TLD_TYPE_DISPLAY_NAMES, TLDType } from '@/models/tld';
 import { apiClient } from '@/services/api';
 
@@ -18,7 +18,7 @@ export default function TldsPage() {
     const [isPending, startTransition] = useTransition();
     const [selectedTld, setSelectedTld] = useState<TLD | null>(null);
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const [selectedType, setSelectedType] = useState<string>('');
+    const [selectedType, setSelectedType] = useState<TLDType | null>(null);
 
     useEffect(() => {
         startTransition(async () => {
@@ -41,7 +41,7 @@ export default function TldsPage() {
         setSelectedTld(null);
     };
 
-    const filteredTlds = selectedType === '' ? tlds : tlds.filter((tld) => tld.type === selectedType);
+    const filteredTlds = selectedType === null ? tlds : tlds.filter((tld) => tld.type === selectedType);
 
     if (hasError) {
         return <ErrorMessage />;
@@ -56,7 +56,7 @@ export default function TldsPage() {
             <main className="m-auto flex w-full max-w-4xl flex-col items-center gap-5 p-5 md:p-10">
                 <div className="text-center">
                     <Badge className="text-xs font-medium">TLD DIRECTORY</Badge>
-                    <h1 className="mt-4 text-2xl font-semibold lg:text-3xl">The ultimate TLD list</h1>
+                    <h1 className="mt-4 text-2xl font-semibold lg:text-3xl">The ultimate TLDs list</h1>
                     <p className="mt-2 text-sm font-medium text-muted-foreground lg:mt-6 lg:text-base">
                         Explore our complete collection of{' '}
                         <Highlighter action="underline" color="#fde2e4">
@@ -65,29 +65,27 @@ export default function TldsPage() {
                     </p>
                 </div>
 
-                {/* Type Filter Toggles */}
-                <div className="mt-3 flex flex-wrap justify-center gap-2 lg:mt-6">
-                    <ToggleGroup
-                        type="single"
-                        value={selectedType}
-                        onValueChange={(value) => setSelectedType(value || '')}
-                        className="flex flex-wrap justify-center gap-2"
+                {/* Type Filter Dropdown */}
+                <div className="mt-6 flex justify-center lg:mt-14">
+                    <Select
+                        value={selectedType || 'all'}
+                        onValueChange={(value) => setSelectedType(value === 'all' ? null : (value as TLDType))}
                     >
-                        {Object.values(TLDType).map((type) => (
-                            <ToggleGroupItem
-                                key={type}
-                                value={type}
-                                variant="outline"
-                                size="sm"
-                                className="border-muted-foreground/20 bg-muted/50 text-xs font-medium text-muted-foreground transition-all hover:bg-muted hover:text-foreground data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:shadow-md"
-                            >
-                                {TLD_TYPE_DISPLAY_NAMES[type]}
-                            </ToggleGroupItem>
-                        ))}
-                    </ToggleGroup>
+                        <SelectTrigger className="w-64">
+                            <SelectValue placeholder="Filter by type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">All Types</SelectItem>
+                            {Object.values(TLDType).map((type) => (
+                                <SelectItem key={type} value={type}>
+                                    {TLD_TYPE_DISPLAY_NAMES[type]}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
                 </div>
 
-                <div className="mt-6 flex w-full flex-wrap justify-center gap-2 lg:mt-14">
+                <div className="mt-3 flex w-full flex-wrap justify-center gap-2 lg:mt-6">
                     {filteredTlds.map((tld) => (
                         <motion.div
                             key={tld.name}
