@@ -16,7 +16,7 @@ describe('/api/cron/tlds/update_type', () => {
         jest.clearAllMocks();
     });
 
-    it('should successfully enrich TLDs with type', async () => {
+    it('should successfully enrich TLDs with type and organization', async () => {
         // Mock TLD data
         const mockTlds = [
             {
@@ -39,9 +39,15 @@ describe('/api/cron/tlds/update_type', () => {
             if (selector.includes('com.html')) {
                 return {
                     closest: jest.fn(() => ({
-                        find: jest.fn(() => ({
-                            text: jest.fn(() => 'generic'),
-                        })),
+                        find: jest.fn((cellSelector: string) => {
+                            if (cellSelector === 'td:nth-child(2)') {
+                                return { text: jest.fn(() => 'generic') };
+                            }
+                            if (cellSelector === 'td:nth-child(3)') {
+                                return { text: jest.fn(() => 'VeriSign, Inc.') };
+                            }
+                            return { text: jest.fn(() => '') };
+                        }),
                     })),
                 };
             }
@@ -59,7 +65,7 @@ describe('/api/cron/tlds/update_type', () => {
         const responseData = await response.json();
 
         expect(response.status).toBe(200);
-        expect(responseData).toEqual({ message: 'TLD enrichment with type completed successfully' });
+        expect(responseData).toEqual({ message: 'TLD enrichment with type and organization completed successfully' });
 
         // Verify repository calls
         expect(mockTldRepository.listTLDs).toHaveBeenCalledTimes(1);
@@ -68,8 +74,11 @@ describe('/api/cron/tlds/update_type', () => {
         // Verify axios call
         expect(mockAxios.get).toHaveBeenCalledWith('https://www.iana.org/domains/root/db');
 
-        // Verify updateTLD was called with correct type
-        expect(mockTldRepository.updateTLD).toHaveBeenCalledWith('com', { type: TLDType.GENERIC });
+        // Verify updateTLD was called with correct type and organization
+        expect(mockTldRepository.updateTLD).toHaveBeenCalledWith('com', {
+            type: TLDType.GENERIC,
+            organization: 'VeriSign, Inc.',
+        });
     });
 
     it('should skip TLDs without punycodeName or name', async () => {
@@ -88,7 +97,7 @@ describe('/api/cron/tlds/update_type', () => {
         const responseData = await response.json();
 
         expect(response.status).toBe(200);
-        expect(responseData).toEqual({ message: 'TLD enrichment with type completed successfully' });
+        expect(responseData).toEqual({ message: 'TLD enrichment with type and organization completed successfully' });
 
         // Verify axios call was made but no updates
         expect(mockAxios.get).toHaveBeenCalledWith('https://www.iana.org/domains/root/db');

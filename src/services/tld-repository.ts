@@ -48,6 +48,7 @@ class TLDRepository {
                 created_at: now,
                 description: tldInfo.description,
                 name: tldInfo.name?.toLowerCase(),
+                organization: tldInfo.organization,
                 pricing: tldInfo.pricing,
                 punycode_name: tldInfo.punycodeName?.toLowerCase(),
                 tagline: tldInfo.tagline,
@@ -86,7 +87,9 @@ class TLDRepository {
         const searchField = name.startsWith('xn--') ? 'punycode_name' : 'name';
         const { data, error } = await this.client
             .from('tld')
-            .select('country_code, description, name, pricing, punycode_name, tagline, type, year_established')
+            .select(
+                'country_code, description, name, organization, pricing, punycode_name, tagline, type, year_established',
+            )
             .eq(searchField, name)
             .single();
 
@@ -103,6 +106,7 @@ class TLDRepository {
             countryCode: data.country_code,
             description: data.description,
             name: data.name,
+            organization: data.organization,
             pricing: data.pricing,
             punycodeName: data.punycode_name,
             tagline: data.tagline,
@@ -127,7 +131,9 @@ class TLDRepository {
 
         const { data, error } = await this.client
             .from('tld')
-            .select('country_code, description, name, pricing, punycode_name, tagline, type, year_established')
+            .select(
+                'country_code, description, name, organization, pricing, punycode_name, tagline, type, year_established',
+            )
             .order('name', { ascending: true })
             .limit(5000);
         if (error) {
@@ -138,6 +144,7 @@ class TLDRepository {
             countryCode: tld.country_code,
             description: tld.description,
             name: tld.name,
+            organization: tld.organization,
             pricing: tld.pricing,
             punycodeName: tld.punycode_name,
             tagline: tld.tagline,
@@ -163,6 +170,7 @@ class TLDRepository {
                 country_code: tldInfo.countryCode,
                 description: tldInfo.description,
                 name: tldInfo.name,
+                organization: tldInfo.organization,
                 pricing: tldInfo.pricing,
                 punycodeName: tldInfo.punycodeName,
                 tagline: tldInfo.tagline,

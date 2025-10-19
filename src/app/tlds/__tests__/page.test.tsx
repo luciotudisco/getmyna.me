@@ -43,24 +43,28 @@ describe('TldsPage', () => {
             name: 'com',
             punycodeName: 'com',
             description: 'Commercial organizations',
+            organization: 'VeriSign',
             type: TLDType.GENERIC,
         },
         {
             name: 'org',
             punycodeName: 'org',
             description: 'Non-profit organizations',
+            organization: 'Public Interest Registry',
             type: TLDType.GENERIC,
         },
         {
             name: 'uk',
             punycodeName: 'uk',
             description: 'United Kingdom',
+            organization: 'Nominet',
             type: TLDType.COUNTRY_CODE,
         },
         {
             name: 'москва',
             punycodeName: 'xn--80adxhks',
             description: 'Moscow',
+            organization: 'Coordination Center for TLD RU',
             type: TLDType.COUNTRY_CODE,
         },
     ];

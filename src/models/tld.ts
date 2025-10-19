@@ -53,6 +53,7 @@ export interface TLD {
     countryCode?: string;
     description?: string;
     name?: string;
+    organization?: string;
     pricing?: Partial<Record<Registrar, TLDPricing>>;
     punycodeName?: string;
     tagline?: string;
