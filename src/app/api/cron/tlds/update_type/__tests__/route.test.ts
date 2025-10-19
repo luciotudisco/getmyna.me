@@ -4,11 +4,7 @@ import { GET } from '@/app/api/cron/tlds/update_type/route';
 import { TLDType } from '@/models/tld';
 import { tldRepository } from '@/services/tld-repository';
 
-// Mock cheerio
-jest.mock('cheerio', () => ({
-    load: jest.fn(),
-}));
-
+jest.mock('cheerio');
 jest.mock('axios');
 jest.mock('@/services/tld-repository');
 
