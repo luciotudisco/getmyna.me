@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { TLD, TLDType } from '@/models/tld';
 // Import the mocked API client
@@ -101,7 +101,7 @@ describe('TldsPage', () => {
 
             await waitFor(() => {
                 expect(screen.getByText('TLD DIRECTORY')).toBeInTheDocument();
-                expect(screen.getByText('The complete collection of TLDs')).toBeInTheDocument();
+                expect(screen.getByText('The ultimate TLD list')).toBeInTheDocument();
             });
         });
 
@@ -112,6 +112,79 @@ describe('TldsPage', () => {
 
             await waitFor(() => {
                 expect(screen.getByText('4 TLDs')).toBeInTheDocument();
+            });
+        });
+
+        it('should render filter buttons for all TLD types', async () => {
+            mockApiClient.getTLDs.mockResolvedValue(mockTLDs);
+
+            render(<TldsPage />);
+
+            await waitFor(() => {
+                expect(screen.getByText('Generic')).toBeInTheDocument();
+                expect(screen.getByText('Country Code')).toBeInTheDocument();
+                expect(screen.getByText('Infrastructure')).toBeInTheDocument();
+                expect(screen.getByText('Sponsored')).toBeInTheDocument();
+                expect(screen.getByText('Generic Restricted')).toBeInTheDocument();
+            });
+        });
+
+        it('should filter TLDs by type when filter button is clicked', async () => {
+            mockApiClient.getTLDs.mockResolvedValue(mockTLDs);
+
+            render(<TldsPage />);
+
+            await waitFor(() => {
+                // Initially all TLDs should be visible
+                expect(screen.getByText('.com')).toBeInTheDocument();
+                expect(screen.getByText('.org')).toBeInTheDocument();
+                expect(screen.getByText('.uk')).toBeInTheDocument();
+                expect(screen.getByText('.москва')).toBeInTheDocument();
+            });
+
+            // Click on Country Code filter
+            const countryCodeButton = screen.getByText('Country Code');
+            fireEvent.click(countryCodeButton);
+
+            await waitFor(() => {
+                // Only country code TLDs should be visible
+                expect(screen.getByText('.uk')).toBeInTheDocument();
+                expect(screen.getByText('.москва')).toBeInTheDocument();
+                // Generic TLDs should not be visible
+                expect(screen.queryByText('.com')).not.toBeInTheDocument();
+                expect(screen.queryByText('.org')).not.toBeInTheDocument();
+                // Count should update
+                expect(screen.getByText('2 TLDs')).toBeInTheDocument();
+            });
+        });
+
+        it('should deselect filter when same type is clicked again', async () => {
+            mockApiClient.getTLDs.mockResolvedValue(mockTLDs);
+
+            render(<TldsPage />);
+
+            await waitFor(() => {
+                // Click on Country Code filter
+                const countryCodeButton = screen.getByText('Country Code');
+                fireEvent.click(countryCodeButton);
+            });
+
+            await waitFor(() => {
+                // Only country code TLDs should be visible
+                expect(screen.getByText('2 TLDs')).toBeInTheDocument();
+            });
+
+            // Click the same filter again to deselect
+            const countryCodeButton = screen.getByText('Country Code');
+            fireEvent.click(countryCodeButton);
+
+            await waitFor(() => {
+                // All TLDs should be visible again
+                expect(screen.getByText('4 TLDs')).toBeInTheDocument();
+                expect(screen.getByText('.com')).toBeInTheDocument();
+                expect(screen.getByText('.org')).toBeInTheDocument();
+                expect(screen.getByText('.uk')).toBeInTheDocument();
+                expect(screen.getByText('.москва')).toBeInTheDocument();
             });
         });
     });
