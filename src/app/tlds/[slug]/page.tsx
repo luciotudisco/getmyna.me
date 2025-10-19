@@ -1,7 +1,7 @@
 'use client';
 
 import { use, useEffect, useState, useTransition } from 'react';
-import { Calendar, DollarSign, ExternalLink, FileText } from 'lucide-react';
+import { Building2, Calendar, DollarSign, ExternalLink, FileText } from 'lucide-react';
 
 import ErrorMessage from '@/components/ErrorMessage';
 import LoadingMessage from '@/components/LoadingMessage';
@@ -57,7 +57,7 @@ export default function TLDPage({ params }: { params: Promise<{ slug: string }> 
                                 <div className="flex flex-col">
                                     <span className="text-xs font-medium text-muted-foreground">Introduced</span>
                                     <div className="flex flex-row items-baseline gap-2">
-                                        <span className="text-lg font-semibold">{tld.yearEstablished}</span>
+                                        <span className="text-md font-semibold">{tld.yearEstablished}</span>
                                         <span className="text-xs text-muted-foreground">
                                             ({new Date().getFullYear() - tld.yearEstablished} years ago)
                                         </span>
@@ -73,9 +73,42 @@ export default function TLDPage({ params }: { params: Promise<{ slug: string }> 
                                 <div className="flex w-full flex-col">
                                     <span className="text-xs font-medium text-muted-foreground">Type</span>
                                     <div className="flex w-full items-center justify-between gap-2">
-                                        <span className="text-lg font-semibold">
+                                        <span className="text-md font-semibold">
                                             {TLD_TYPE_DISPLAY_NAMES[tld.type]}
                                         </span>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        {tld?.organization && (
+                            <div className="flex items-center gap-5 rounded-lg border bg-card p-4 shadow-sm transition-shadow hover:shadow-md">
+                                <div className="flex h-10 w-10 items-center justify-center">
+                                    <Building2 className="h-8 w-8 text-primary" />
+                                </div>
+                                <div className="flex w-full min-w-0 flex-col">
+                                    <span className="text-xs font-medium text-muted-foreground">Organization</span>
+                                    <div className="w-full min-w-0">
+                                        <span className="text-md block truncate font-semibold">{tld.organization}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        {tld?.punycodeName && (
+                            <div className="flex items-center gap-5 rounded-lg border bg-card p-4 shadow-sm transition-shadow hover:shadow-md">
+                                <div className="flex h-10 w-10 items-center justify-center">
+                                    <ExternalLink className="h-8 w-8 text-primary" />
+                                </div>
+                                <div className="flex w-full min-w-0 flex-col">
+                                    <span className="text-xs font-medium text-muted-foreground">More information</span>
+                                    <div className="w-full min-w-0">
+                                        <a
+                                            href={`https://www.iana.org/domains/root/db/${tld.punycodeName}.html`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-md block truncate font-semibold text-primary hover:underline"
+                                        >
+                                            IANA Delegation Details
+                                        </a>
                                     </div>
                                 </div>
                             </div>
