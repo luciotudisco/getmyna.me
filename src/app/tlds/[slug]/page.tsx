@@ -127,7 +127,7 @@ export default function TLDPage({ params }: { params: Promise<{ slug: string }> 
                                                     href={registrarUrl}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="group relative cursor-pointer overflow-hidden rounded-lg bg-blue-600 p-4 text-white shadow-md transition-all hover:bg-blue-700 hover:shadow-lg"
+                                                    className="group relative cursor-pointer overflow-hidden rounded-lg bg-blue-500 p-4 text-white shadow-md transition-all hover:bg-blue-700 hover:shadow-lg"
                                                 >
                                                     <div className="flex flex-col gap-3">
                                                         <div className="flex items-center justify-between">

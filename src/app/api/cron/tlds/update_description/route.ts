@@ -9,8 +9,8 @@ import logger from '@/utils/logger';
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
 
 /**
- * Enrich TLDs with their description and type.
- * This function fetches the TLDs from the database and enriches them with their description and type.
+ * Enrich TLDs with a description.
+ * This function fetches the TLDs from the database and enriches them with a description.
  */
 export async function GET(): Promise<NextResponse> {
     try {
@@ -82,7 +82,7 @@ export async function GET(): Promise<NextResponse> {
             // Update TLD with structured data
             const responseContent = response.choices[0].message.content;
             const tldData = JSON.parse(responseContent || '{}');
-            logger.info(`Enriching TLD ${tld.name} with description and type ...`);
+            logger.info(`Enriching TLD ${tld.name} with description ...`);
             await tldRepository.updateTLD(tld.punycodeName, {
                 countryCode: tldData.countryCode,
                 description: tldData.description,
