@@ -68,7 +68,7 @@ export default function TldsPage() {
                 </div>
 
                 {/* Type Filter Toggles */}
-                <div className="mt-6 flex flex-wrap justify-center gap-2">
+                <div className="mt-3 flex flex-wrap justify-center gap-2 lg:mt-6">
                     {Object.values(TLDType).map((type) => (
                         <Button
                             key={type}
