@@ -33,7 +33,7 @@ function TLDTypeIcon({ tld, size = 'lg', className }: TLDTypeIconProps) {
     const isCountryCode = tld.type === TLDType.COUNTRY_CODE;
     const countryIso = tld.countryCode?.toLowerCase() || tld.name?.toLowerCase() || null;
 
-    if (isCountryCode && countryIso) {
+    if (isCountryCode && countryIso && /^[a-z]{2}$/.test(countryIso)) {
         return (
             <span
                 title={tld.name}
