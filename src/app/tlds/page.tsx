@@ -7,8 +7,8 @@ import ErrorMessage from '@/components/ErrorMessage';
 import LoadingMessage from '@/components/LoadingMessage';
 import TLDDrawer from '@/components/TLDDrawer';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Highlighter } from '@/components/ui/highlighter';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { TLD, TLD_TYPE_DISPLAY_NAMES, TLDType } from '@/models/tld';
 import { apiClient } from '@/services/api';
 
@@ -18,7 +18,7 @@ export default function TldsPage() {
     const [isPending, startTransition] = useTransition();
     const [selectedTld, setSelectedTld] = useState<TLD | null>(null);
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const [selectedType, setSelectedType] = useState<TLDType | null>(null);
+    const [selectedType, setSelectedType] = useState<string>('');
 
     useEffect(() => {
         startTransition(async () => {
@@ -41,9 +41,7 @@ export default function TldsPage() {
         setSelectedTld(null);
     };
 
-    const toggleTypeFilter = (type: TLDType) => setSelectedType((prev) => (prev === type ? null : type));
-
-    const filteredTlds = selectedType === null ? tlds : tlds.filter((tld) => tld.type === selectedType);
+    const filteredTlds = selectedType === '' ? tlds : tlds.filter((tld) => tld.type === selectedType);
 
     if (hasError) {
         return <ErrorMessage />;
@@ -69,21 +67,24 @@ export default function TldsPage() {
 
                 {/* Type Filter Toggles */}
                 <div className="mt-3 flex flex-wrap justify-center gap-2 lg:mt-6">
-                    {Object.values(TLDType).map((type) => (
-                        <Button
-                            key={type}
-                            variant={selectedType === type ? 'default' : 'outline'}
-                            size="sm"
-                            onClick={() => toggleTypeFilter(type)}
-                            className={`text-xs font-medium transition-all ${
-                                selectedType === type
-                                    ? 'bg-primary text-primary-foreground shadow-md'
-                                    : 'border-muted-foreground/20 bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
-                            }`}
-                        >
-                            {TLD_TYPE_DISPLAY_NAMES[type]}
-                        </Button>
-                    ))}
+                    <ToggleGroup
+                        type="single"
+                        value={selectedType}
+                        onValueChange={(value) => setSelectedType(value || '')}
+                        className="flex flex-wrap justify-center gap-2"
+                    >
+                        {Object.values(TLDType).map((type) => (
+                            <ToggleGroupItem
+                                key={type}
+                                value={type}
+                                variant="outline"
+                                size="sm"
+                                className="border-muted-foreground/20 bg-muted/50 text-xs font-medium text-muted-foreground transition-all hover:bg-muted hover:text-foreground data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:shadow-md"
+                            >
+                                {TLD_TYPE_DISPLAY_NAMES[type]}
+                            </ToggleGroupItem>
+                        ))}
+                    </ToggleGroup>
                 </div>
 
                 <div className="mt-6 flex w-full flex-wrap justify-center gap-2 lg:mt-14">
