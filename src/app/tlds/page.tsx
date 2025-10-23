@@ -7,8 +7,9 @@ import ErrorMessage from '@/components/ErrorMessage';
 import LoadingMessage from '@/components/LoadingMessage';
 import TLDDrawer from '@/components/TLDDrawer';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { ButtonGroup } from '@/components/ui/button-group';
 import { Highlighter } from '@/components/ui/highlighter';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { TLD, TLD_TYPE_DISPLAY_NAMES, TLDType } from '@/models/tld';
 import { apiClient } from '@/services/api';
 
@@ -65,24 +66,21 @@ export default function TldsPage() {
                     </p>
                 </div>
 
-                {/* Type Filter Dropdown */}
-                <div className="mt-6 flex justify-center lg:mt-14">
-                    <Select
-                        value={selectedType || 'all'}
-                        onValueChange={(value) => setSelectedType(value === 'all' ? null : (value as TLDType))}
-                    >
-                        <SelectTrigger className="w-64">
-                            <SelectValue placeholder="Filter by type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">All Types</SelectItem>
-                            {Object.values(TLDType).map((type) => (
-                                <SelectItem key={type} value={type}>
-                                    {TLD_TYPE_DISPLAY_NAMES[type]}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+                {/* Type Filter Buttons */}
+                <div className="mt-6 hidden flex-wrap justify-center gap-2 md:block">
+                    <ButtonGroup orientation="horizontal">
+                        {Object.values(TLDType).map((type) => (
+                            <Button
+                                key={type}
+                                variant={selectedType === type ? 'default' : 'secondary'}
+                                size="sm"
+                                onClick={() => setSelectedType(selectedType === type ? null : type)}
+                                className="min-w-32 text-xs uppercase"
+                            >
+                                {TLD_TYPE_DISPLAY_NAMES[type]}
+                            </Button>
+                        ))}
+                    </ButtonGroup>
                 </div>
 
                 <div className="mt-3 flex w-full flex-wrap justify-center gap-2 lg:mt-6">
