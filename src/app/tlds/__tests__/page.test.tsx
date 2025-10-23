@@ -119,19 +119,22 @@ describe('TldsPage', () => {
             });
         });
 
-        it('should render filter dropdown with all TLD types', async () => {
+        it('should render filter buttons with all TLD types', async () => {
             mockApiClient.getTLDs.mockResolvedValue(mockTLDs);
 
             render(<TldsPage />);
 
             await waitFor(() => {
-                // Check that the select trigger is present
-                expect(screen.getByRole('combobox')).toBeInTheDocument();
-                expect(screen.getByText('All Types')).toBeInTheDocument();
+                // Check that the filter buttons are present
+                expect(screen.getByText('Country Code')).toBeInTheDocument();
+                expect(screen.getByText('Generic')).toBeInTheDocument();
+                expect(screen.getByText('Generic Restricted')).toBeInTheDocument();
+                expect(screen.getByText('Infrastructure')).toBeInTheDocument();
+                expect(screen.getByText('Sponsored')).toBeInTheDocument();
             });
         });
 
-        it('should filter TLDs by type when filter option is selected', async () => {
+        it('should filter TLDs by type when filter button is clicked', async () => {
             mockApiClient.getTLDs.mockResolvedValue(mockTLDs);
 
             render(<TldsPage />);
@@ -144,13 +147,9 @@ describe('TldsPage', () => {
                 expect(screen.getByText('.москва')).toBeInTheDocument();
             });
 
-            // Click on the select trigger to open dropdown
-            const selectTrigger = screen.getByRole('combobox');
-            fireEvent.click(selectTrigger);
-
-            // Select Country Code option
-            const countryCodeOption = screen.getByText('Country Code');
-            fireEvent.click(countryCodeOption);
+            // Click on the Country Code filter button
+            const countryCodeButton = screen.getByText('Country Code');
+            fireEvent.click(countryCodeButton);
 
             await waitFor(() => {
                 // Only country code TLDs should be visible
@@ -164,31 +163,34 @@ describe('TldsPage', () => {
             });
         });
 
-        it('should clear filter when All Types is selected', async () => {
+        it('should toggle filter when same button is clicked again', async () => {
             mockApiClient.getTLDs.mockResolvedValue(mockTLDs);
 
             render(<TldsPage />);
 
             await waitFor(() => {
-                // Wait for the component to load
-                expect(screen.getByRole('combobox')).toBeInTheDocument();
+                // Initially all TLDs should be visible
+                expect(screen.getByText('4 TLDs')).toBeInTheDocument();
+                expect(screen.getByText('.com')).toBeInTheDocument();
+                expect(screen.getByText('.org')).toBeInTheDocument();
+                expect(screen.getByText('.uk')).toBeInTheDocument();
+                expect(screen.getByText('.москва')).toBeInTheDocument();
             });
 
-            // First select a filter
-            const selectTrigger = screen.getByRole('combobox');
-            fireEvent.click(selectTrigger);
-
-            const countryCodeOption = screen.getByText('Country Code');
-            fireEvent.click(countryCodeOption);
+            // First click on Country Code filter button
+            const countryCodeButton = screen.getByText('Country Code');
+            fireEvent.click(countryCodeButton);
 
             await waitFor(() => {
                 expect(screen.getByText('2 TLDs')).toBeInTheDocument();
+                expect(screen.getByText('.uk')).toBeInTheDocument();
+                expect(screen.getByText('.москва')).toBeInTheDocument();
+                expect(screen.queryByText('.com')).not.toBeInTheDocument();
+                expect(screen.queryByText('.org')).not.toBeInTheDocument();
             });
 
-            // Now select "All Types" to clear the filter
-            fireEvent.click(selectTrigger);
-            const allTypesOption = screen.getByText('All Types');
-            fireEvent.click(allTypesOption);
+            // Click the same button again to clear the filter
+            fireEvent.click(countryCodeButton);
 
             await waitFor(() => {
                 // All TLDs should be visible again
