@@ -6,7 +6,24 @@ import { Amplitude } from '@/components/Amplitude';
 // Mock Amplitude
 jest.mock('@amplitude/analytics-browser', () => ({
     init: jest.fn(),
+    track: jest.fn(),
+    identify: jest.fn(),
+    setUserId: jest.fn(),
+    setUserProperties: jest.fn(),
 }));
+
+// Mock environment variable
+const originalEnv = process.env;
+beforeAll(() => {
+    process.env = {
+        ...originalEnv,
+        NEXT_PUBLIC_AMPLITUDE_API_KEY: 'test-api-key',
+    };
+});
+
+afterAll(() => {
+    process.env = originalEnv;
+});
 
 describe('Amplitude', () => {
     beforeEach(() => {
@@ -24,5 +41,14 @@ describe('Amplitude', () => {
         render(<Amplitude />);
 
         expect(mockedAmplitude.init).toHaveBeenCalledTimes(1);
+        expect(mockedAmplitude.init).toHaveBeenCalledWith('test-api-key', {
+            autocapture: true,
+            defaultTracking: {
+                pageViews: true,
+                sessions: true,
+                formInteractions: true,
+                fileDownloads: true,
+            }
+        });
     });
 });
