@@ -7,7 +7,6 @@ import NoResults from '@/components/NoResultsMessage';
 import { SearchResult } from '@/components/SearchResult';
 import NumberTicker from '@/components/ui/number-ticker';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useAmplitude } from '@/contexts/AmplitudeContext';
 import { Domain } from '@/models/domain';
 import { apiClient } from '@/services/api';
 
@@ -16,7 +15,6 @@ export function SearchResults() {
     const [domains, setDomains] = useState<Domain[]>([]);
     const [hasError, setHasError] = useState(false);
     const [isPending, startTransition] = useTransition();
-    const { trackEvent } = useAmplitude();
 
     useEffect(() => {
         startTransition(async () => {
@@ -25,41 +23,15 @@ export function SearchResults() {
                 const term = searchParams.get('term');
                 const includeSubdomains = searchParams.get('include_subdomains') === 'true';
 
-                // Track search event
-                if (term) {
-                    trackEvent('search_performed', {
-                        search_term: term,
-                        include_subdomains: includeSubdomains,
-                    });
-                }
-
                 const names = await apiClient.searchDomains(term || '', includeSubdomains);
                 const matchingDomains = names.map((name: string) => new Domain(name));
                 setDomains(matchingDomains);
-
-                // Track search results event
-                if (term) {
-                    trackEvent('search_results', {
-                        search_term: term,
-                        include_subdomains: includeSubdomains,
-                        result_count: matchingDomains.length,
-                    });
-                }
-            } catch (error) {
+            } catch {
                 setHasError(true);
                 setDomains([]);
-
-                // Track search error event
-                const term = searchParams.get('term');
-                if (term) {
-                    trackEvent('search_error', {
-                        search_term: term,
-                        error_message: error instanceof Error ? error.message : 'Unknown error',
-                    });
-                }
             }
         });
-    }, [searchParams, trackEvent]);
+    }, [searchParams]);
 
     if (isPending) {
         return <LoadingMessage />;
