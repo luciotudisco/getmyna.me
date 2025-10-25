@@ -6,7 +6,7 @@ import * as amplitude from '@amplitude/analytics-browser';
 const AMPLITUDE_API_KEY = process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY!;
 
 interface AmplitudeContextType {
-    trackEvent: (eventName: string, eventProperties?: Record<string, any>) => void;
+    trackEvent: (eventName: string, eventProperties?: Record<string, string>) => void;
 }
 
 const AmplitudeContext = createContext<AmplitudeContextType | undefined>(undefined);
@@ -17,30 +17,22 @@ interface AmplitudeProviderProps {
 
 export function AmplitudeProvider({ children }: AmplitudeProviderProps) {
     useEffect(() => {
-        if (AMPLITUDE_API_KEY) {
-            amplitude.init(AMPLITUDE_API_KEY, {
-                autocapture: true,
-                defaultTracking: {
-                    pageViews: true,
-                    sessions: true,
-                    formInteractions: true,
-                    fileDownloads: true,
-                },
-            });
-        }
+        amplitude.init(AMPLITUDE_API_KEY, {
+            autocapture: true,
+            defaultTracking: {
+                pageViews: true,
+                sessions: true,
+                formInteractions: true,
+                fileDownloads: true,
+            },
+        });
     }, []);
 
-    const trackEvent = (eventName: string, eventProperties?: Record<string, any>) => {
-        if (AMPLITUDE_API_KEY) {
-            amplitude.track(eventName, eventProperties);
-        }
+    const trackEvent = (eventName: string, eventProperties?: Record<string, string>) => {
+        amplitude.track(eventName, eventProperties);
     };
 
-    const value: AmplitudeContextType = {
-        trackEvent,
-    };
-
-    return <AmplitudeContext.Provider value={value}>{children}</AmplitudeContext.Provider>;
+    return <AmplitudeContext.Provider value={{ trackEvent }}>{children}</AmplitudeContext.Provider>;
 }
 
 export function useAmplitude() {
