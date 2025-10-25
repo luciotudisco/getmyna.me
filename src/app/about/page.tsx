@@ -36,10 +36,9 @@ const AboutPage = () => {
                     </p>
                     <p>
                         Some of the most recognizable examples prove this point:{' '}
-                        <span className="font-bold">bit.ly</span> (bitly),{' '}
-                        <span className="font-bold">instagr.am</span> (instagram), and{' '}
-                        <span className="font-bold">youtu.be</span> (youtube) — all of which turned clever wordplay into
-                        global brand assets.
+                        <span className="font-bold">bit.ly</span> (bitly), <span className="font-bold">instagr.am</span>{' '}
+                        (instagram), and <span className="font-bold">youtu.be</span> (youtube) — all of which turned
+                        clever wordplay into global brand assets.
                     </p>
                     <p>
                         Ready to find your own? With <span className="font-bold">getmyna.me</span>, you can explore
