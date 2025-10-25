@@ -34,8 +34,8 @@ describe('/api/cron/tlds/update_pricing/porkbun', () => {
         // Mock TLD repository responses
         const mockComTldInfo = { name: 'com', punycodeName: 'com' };
         mockAxios.get.mockResolvedValue(mockPorkbunResponse);
-        mockTldRepository.getTLD.mockResolvedValueOnce(mockComTldInfo as any);
-        mockTldRepository.updateTLD.mockResolvedValue();
+        mockTldRepository.get.mockResolvedValueOnce(mockComTldInfo as any);
+        mockTldRepository.update.mockResolvedValue();
 
         const response = await GET();
         const responseData = await response.json();
@@ -43,11 +43,11 @@ describe('/api/cron/tlds/update_pricing/porkbun', () => {
         expect(response.status).toBe(200);
         expect(responseData).toEqual({ message: 'TLD pricing enrichment from Porkbun completed successfully' });
 
-        expect(mockTldRepository.getTLD).toHaveBeenCalledTimes(1);
-        expect(mockTldRepository.getTLD).toHaveBeenCalledWith('com');
-        expect(mockTldRepository.updateTLD).toHaveBeenCalledTimes(1);
+        expect(mockTldRepository.get).toHaveBeenCalledTimes(1);
+        expect(mockTldRepository.get).toHaveBeenCalledWith('com');
+        expect(mockTldRepository.update).toHaveBeenCalledTimes(1);
         const pricing: TLDPricing = { registration: 12.95, renewal: 12.95, currency: 'USD' };
-        expect(mockTldRepository.updateTLD).toHaveBeenCalledWith('com', { pricing: { [Registrar.PORKBUN]: pricing } });
+        expect(mockTldRepository.update).toHaveBeenCalledWith('com', { pricing: { [Registrar.PORKBUN]: pricing } });
     });
 
     it('should throw 500 when request fails', async () => {

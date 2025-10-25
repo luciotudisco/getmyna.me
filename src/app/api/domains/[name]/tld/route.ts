@@ -11,7 +11,7 @@ export async function GET(_request: Request, ctx: { params: Promise<{ name: stri
             return NextResponse.json({ error: `The domain '${domain}' is not a valid domain` }, { status: 400 });
         }
         const tld = new Domain(domain).getTLD();
-        const tldInfo = await tldRepository.getTLD(tld);
+        const tldInfo = await tldRepository.get(tld);
         if (!tldInfo) {
             return NextResponse.json({ error: `TLD not found for domain '${domain}'` }, { status: 404 });
         }

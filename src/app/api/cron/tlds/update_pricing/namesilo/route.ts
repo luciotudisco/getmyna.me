@@ -34,7 +34,7 @@ export async function GET(): Promise<NextResponse> {
         const response = await axios.get<NamesiloPricingResponse>(NAMESILO_PRICES_URL);
         const tlds = Object.keys(response.data.reply).map((tld) => tld.toLowerCase());
         for (const tld of tlds) {
-            const tldInfo = await tldRepository.getTLD(tld);
+            const tldInfo = await tldRepository.get(tld);
             if (!tldInfo) {
                 logger.info(`TLD ${tld} not found in database. Skipping...`);
                 continue;
@@ -45,7 +45,7 @@ export async function GET(): Promise<NextResponse> {
                 currency: 'USD',
             };
             const updatedPricing = { ...tldInfo?.pricing, [Registrar.NAMESILO]: tldPricing };
-            await tldRepository.updateTLD(tld, { pricing: updatedPricing });
+            await tldRepository.update(tld, { pricing: updatedPricing });
             logger.info(`Updated ${tld} with Namesilo pricing`);
         }
         logger.info('TLD pricing enrichment from Namesilo completed');

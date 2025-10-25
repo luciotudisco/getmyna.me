@@ -34,18 +34,18 @@ describe('/api/tlds', () => {
                 pricing: {},
             },
         ];
-        mockTldRepository.listTLDs.mockResolvedValue(mockTLDs);
+        mockTldRepository.list.mockResolvedValue(mockTLDs);
 
         const response = await GET();
         const responseData = await response.json();
 
         expect(response.status).toBe(200);
         expect(responseData).toEqual({ tlds: mockTLDs });
-        expect(mockTldRepository.listTLDs).toHaveBeenCalledTimes(1);
+        expect(mockTldRepository.list).toHaveBeenCalledTimes(1);
     });
 
     it('should return empty array when no TLDs exist', async () => {
-        mockTldRepository.listTLDs.mockResolvedValue([]);
+        mockTldRepository.list.mockResolvedValue([]);
 
         const response = await GET();
         const responseData = await response.json();
@@ -56,7 +56,7 @@ describe('/api/tlds', () => {
 
     it('should return 500 when request fails', async () => {
         const mockError = new Error('Database connection failed');
-        mockTldRepository.listTLDs.mockRejectedValue(mockError);
+        mockTldRepository.list.mockRejectedValue(mockError);
 
         const response = await GET();
         const responseData = await response.json();

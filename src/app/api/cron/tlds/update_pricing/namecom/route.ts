@@ -41,7 +41,7 @@ export async function GET(): Promise<NextResponse> {
             for (const pricingItem of pricingItems) {
                 const tld = pricingItem.tld;
                 logger.info(`TLD ${tld} found in Name.com pricing`);
-                const tldInfo = await tldRepository.getTLD(tld);
+                const tldInfo = await tldRepository.get(tld);
                 if (!tldInfo) {
                     logger.info(`TLD ${tld} not found in database. Skipping...`);
                     continue;
@@ -52,7 +52,7 @@ export async function GET(): Promise<NextResponse> {
                     currency: 'USD',
                 };
                 const updatedPricing = { ...tldInfo?.pricing, [Registrar.NAMECOM]: tldPricing };
-                await tldRepository.updateTLD(tld, { pricing: updatedPricing });
+                await tldRepository.update(tld, { pricing: updatedPricing });
                 logger.info(`Updated ${tld} with Name.com pricing`);
             }
             hasMoreResults = response.data.nextPage !== null && page < MAX_PAGES;

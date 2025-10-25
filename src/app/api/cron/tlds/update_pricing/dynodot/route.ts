@@ -37,7 +37,7 @@ export async function GET(): Promise<NextResponse> {
         const tldPriceList = response.data.data.tldPriceList;
         for (const tldPrice of tldPriceList) {
             const tld = tldPrice.tld.toLowerCase().replace(/^\./, '');
-            const tldInfo = await tldRepository.getTLD(tld);
+            const tldInfo = await tldRepository.get(tld);
             if (!tldInfo) {
                 logger.info(`TLD ${tld} not found in database. Skipping...`);
                 continue;
@@ -48,7 +48,7 @@ export async function GET(): Promise<NextResponse> {
                 currency: 'USD',
             };
             const updatedPricing = { ...tldInfo?.pricing, [Registrar.DYNADOT]: tldPricing };
-            await tldRepository.updateTLD(tld, { pricing: updatedPricing });
+            await tldRepository.update(tld, { pricing: updatedPricing });
             logger.info(`Updated ${tld} with Dynadot pricing`);
         }
         logger.info('TLD pricing enrichment from Dynadot completed');

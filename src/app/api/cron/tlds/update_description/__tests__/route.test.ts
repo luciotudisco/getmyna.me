@@ -40,8 +40,8 @@ describe('/api/cron/tlds/update_description', () => {
         ];
 
         // Mock repository responses
-        mockTldRepository.listTLDs.mockResolvedValue(mockTlds as any);
-        mockTldRepository.updateTLD.mockResolvedValue();
+        mockTldRepository.list.mockResolvedValue(mockTlds as any);
+        mockTldRepository.update.mockResolvedValue();
 
         // Mock axios responses for ICANN and IANA
         const mockIcannResponse = { data: '<html><body>ICANN content for .com</body></html>' };
@@ -73,8 +73,8 @@ describe('/api/cron/tlds/update_description', () => {
         expect(responseData).toEqual({ message: 'TLD enrichment with description completed successfully' });
 
         // Verify repository calls
-        expect(mockTldRepository.listTLDs).toHaveBeenCalledTimes(1);
-        expect(mockTldRepository.updateTLD).toHaveBeenCalledTimes(1);
+        expect(mockTldRepository.list).toHaveBeenCalledTimes(1);
+        expect(mockTldRepository.update).toHaveBeenCalledTimes(1);
 
         // Verify axios calls for both TLDs
         expect(mockAxios.get).toHaveBeenCalledWith('https://icannwiki.org/.com');
@@ -84,7 +84,7 @@ describe('/api/cron/tlds/update_description', () => {
         expect(mockOpenAIClient.chat.completions.create).toHaveBeenCalledTimes(1);
 
         // Verify updateTLD calls with tagline
-        expect(mockTldRepository.updateTLD).toHaveBeenCalledWith('com', {
+        expect(mockTldRepository.update).toHaveBeenCalledWith('com', {
             description: 'Generic top-level domain for commercial use',
             tagline: 'The original domain for commerce',
             yearEstablished: 1985,
@@ -102,7 +102,7 @@ describe('/api/cron/tlds/update_description', () => {
             },
         ];
 
-        mockTldRepository.listTLDs.mockResolvedValue(mockTlds as any);
+        mockTldRepository.list.mockResolvedValue(mockTlds as any);
 
         const response = await GET();
         const responseData = await response.json();
@@ -113,7 +113,7 @@ describe('/api/cron/tlds/update_description', () => {
         // Verify no API calls were made
         expect(mockAxios.get).not.toHaveBeenCalled();
         expect(mockOpenAIClient.chat.completions.create).not.toHaveBeenCalled();
-        expect(mockTldRepository.updateTLD).not.toHaveBeenCalled();
+        expect(mockTldRepository.update).not.toHaveBeenCalled();
     });
 
     it('should throw 500 when request fails', async () => {
@@ -127,7 +127,7 @@ describe('/api/cron/tlds/update_description', () => {
             },
         ];
 
-        mockTldRepository.listTLDs.mockResolvedValue(mockTlds as any);
+        mockTldRepository.list.mockResolvedValue(mockTlds as any);
         mockAxios.get.mockRejectedValue(new Error('Network error'));
 
         const response = await GET();

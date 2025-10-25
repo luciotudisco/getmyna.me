@@ -16,7 +16,7 @@ export async function GET(): Promise<NextResponse> {
     try {
         logger.info('Starting TLD enrichment with description ...');
         const openaiClient = new OpenAI({ apiKey: process.env['OPENAI_API_KEY'] });
-        const tlds = await tldRepository.listTLDs();
+        const tlds = await tldRepository.list();
         for (const tld of tlds.reverse()) {
             if (!tld.punycodeName || !tld.name) {
                 logger.warn(`Skipping TLD ${tld.name} because it has no punycodeName or name`);
@@ -83,7 +83,7 @@ export async function GET(): Promise<NextResponse> {
             const responseContent = response.choices[0].message.content;
             const tldData = JSON.parse(responseContent || '{}');
             logger.info(`Enriching TLD ${tld.name} with description ...`);
-            await tldRepository.updateTLD(tld.punycodeName, {
+            await tldRepository.update(tld.punycodeName, {
                 countryCode: tldData.countryCode,
                 description: tldData.description,
                 tagline: tldData.tagline,

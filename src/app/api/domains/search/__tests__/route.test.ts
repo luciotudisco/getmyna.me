@@ -17,7 +17,7 @@ describe('/api/domains/search', () => {
         const mockTLDs = [{ name: 'io' }];
         const mockDomainHacks = ['luc.io'];
 
-        mockTldRepository.listTLDs.mockResolvedValue(mockTLDs);
+        mockTldRepository.list.mockResolvedValue(mockTLDs);
         mockDomainHacksGenerator.prototype.getDomainsHacks.mockReturnValue(mockDomainHacks);
 
         const request = new Request('https://example.com/api/domains/search?term=lucio');
@@ -26,7 +26,7 @@ describe('/api/domains/search', () => {
 
         expect(response.status).toBe(200);
         expect(responseData).toEqual({ domainHacks: mockDomainHacks });
-        expect(mockTldRepository.listTLDs).toHaveBeenCalledTimes(1);
+        expect(mockTldRepository.list).toHaveBeenCalledTimes(1);
         expect(mockDomainHacksGenerator.prototype.getDomainsHacks).toHaveBeenCalledWith('lucio', false);
     });
 
@@ -34,7 +34,7 @@ describe('/api/domains/search', () => {
         const mockTLDs = [{ name: 'io' }];
         const mockDomainHacks = ['luc.io', 'lu.c.io', 'l.uc.io'];
 
-        mockTldRepository.listTLDs.mockResolvedValue(mockTLDs);
+        mockTldRepository.list.mockResolvedValue(mockTLDs);
         mockDomainHacksGenerator.prototype.getDomainsHacks.mockReturnValue(mockDomainHacks);
 
         const request = new Request('https://example.com/api/domains/search?term=lucio&include_subdomains=true');
@@ -50,7 +50,7 @@ describe('/api/domains/search', () => {
         const mockTLDs = [{ name: 'io' }];
         const mockDomainHacks: string[] = [];
 
-        mockTldRepository.listTLDs.mockResolvedValue(mockTLDs);
+        mockTldRepository.list.mockResolvedValue(mockTLDs);
         mockDomainHacksGenerator.prototype.getDomainsHacks.mockReturnValue(mockDomainHacks);
 
         const request = new Request('https://example.com/api/domains/search?term=test');
@@ -63,7 +63,7 @@ describe('/api/domains/search', () => {
     });
 
     it('should throw 500 when request fails', async () => {
-        mockTldRepository.listTLDs.mockRejectedValue(new Error('Database connection failed'));
+        mockTldRepository.list.mockRejectedValue(new Error('Database connection failed'));
 
         const request = new Request('https://example.com/api/domains/search?term=test');
         const response = await GET(request);

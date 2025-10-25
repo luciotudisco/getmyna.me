@@ -8,7 +8,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     try {
         const url = new URL(request.url);
         const includeSubdomains = url.searchParams.get('include_subdomains') === 'true';
-        const tlds = await tldRepository.listTLDs();
+        const tlds = await tldRepository.list();
         const domainHacksGenerator = new DomainHacksGenerator(tlds);
         const domainHacks = domainHacksGenerator.getDomainsHacks(url.searchParams.get('term') || '', includeSubdomains);
         return NextResponse.json({ domainHacks });

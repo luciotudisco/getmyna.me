@@ -27,8 +27,8 @@ describe('/api/cron/tlds/update_type', () => {
         ];
 
         // Mock repository responses
-        mockTldRepository.listTLDs.mockResolvedValue(mockTlds as any);
-        mockTldRepository.updateTLD.mockResolvedValue();
+        mockTldRepository.list.mockResolvedValue(mockTlds as any);
+        mockTldRepository.update.mockResolvedValue();
 
         // Mock IANA root database HTML response
         const mockIanaResponse = { data: '<html><body>IANA content for .com</body></html>' };
@@ -68,14 +68,14 @@ describe('/api/cron/tlds/update_type', () => {
         expect(responseData).toEqual({ message: 'TLD enrichment with type and organization completed successfully' });
 
         // Verify repository calls
-        expect(mockTldRepository.listTLDs).toHaveBeenCalledTimes(1);
-        expect(mockTldRepository.updateTLD).toHaveBeenCalledTimes(1);
+        expect(mockTldRepository.list).toHaveBeenCalledTimes(1);
+        expect(mockTldRepository.update).toHaveBeenCalledTimes(1);
 
         // Verify axios call
         expect(mockAxios.get).toHaveBeenCalledWith('https://www.iana.org/domains/root/db');
 
         // Verify updateTLD was called with correct type and organization
-        expect(mockTldRepository.updateTLD).toHaveBeenCalledWith('com', {
+        expect(mockTldRepository.update).toHaveBeenCalledWith('com', {
             type: TLDType.GENERIC,
             organization: 'VeriSign, Inc.',
         });
@@ -90,7 +90,7 @@ describe('/api/cron/tlds/update_type', () => {
             },
         ];
 
-        mockTldRepository.listTLDs.mockResolvedValue(mockTlds as any);
+        mockTldRepository.list.mockResolvedValue(mockTlds as any);
         mockAxios.get.mockResolvedValue({ data: '<table></table>' });
 
         const response = await GET();
@@ -101,7 +101,7 @@ describe('/api/cron/tlds/update_type', () => {
 
         // Verify axios call was made but no updates
         expect(mockAxios.get).toHaveBeenCalledWith('https://www.iana.org/domains/root/db');
-        expect(mockTldRepository.updateTLD).not.toHaveBeenCalled();
+        expect(mockTldRepository.update).not.toHaveBeenCalled();
     });
 
     it('should return 500 when request fails', async () => {
@@ -113,7 +113,7 @@ describe('/api/cron/tlds/update_type', () => {
             },
         ];
 
-        mockTldRepository.listTLDs.mockResolvedValue(mockTlds as any);
+        mockTldRepository.list.mockResolvedValue(mockTlds as any);
         mockAxios.get.mockRejectedValue(new Error('Network error'));
 
         const response = await GET();

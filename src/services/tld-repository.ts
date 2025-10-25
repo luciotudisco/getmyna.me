@@ -26,7 +26,7 @@ class TLDRepository {
      *
      * @returns The number of TLDs.
      */
-    async countTLDs(): Promise<number> {
+    async count(): Promise<number> {
         const { data, error } = await this.client.from('tld').select('*', { count: 'exact' });
         if (error) {
             logger.error({ error }, 'Error counting TLDs');
@@ -40,34 +40,34 @@ class TLDRepository {
      *
      * @param tldInfo - The TLD information to create.
      */
-    async createTld(tldInfo: TLD): Promise<void> {
+    async create(tld: TLD): Promise<void> {
         const now = new Date().toISOString();
         const { error } = await this.client.from('tld').upsert(
             {
-                country_code: tldInfo.countryCode,
+                country_code: tld.countryCode,
                 created_at: now,
-                description: tldInfo.description,
-                name: tldInfo.name?.toLowerCase(),
-                organization: tldInfo.organization,
-                pricing: tldInfo.pricing,
-                punycode_name: tldInfo.punycodeName?.toLowerCase(),
-                tagline: tldInfo.tagline,
-                type: tldInfo.type,
+                description: tld.description,
+                name: tld.name?.toLowerCase(),
+                organization: tld.organization,
+                pricing: tld.pricing,
+                punycode_name: tld.punycodeName?.toLowerCase(),
+                tagline: tld.tagline,
+                type: tld.type,
                 updated_at: now,
-                year_established: tldInfo.yearEstablished,
+                year_established: tld.yearEstablished,
             },
             {
                 onConflict: 'name,punycode_name',
             },
         );
         if (error) {
-            logger.error({ error }, `Error upserting TLD ${tldInfo.name}`);
-            throw new Error(`Failed to upsert TLD ${tldInfo.name}: ${error.message}`);
+            logger.error({ error }, `Error upserting TLD ${tld.name}`);
+            throw new Error(`Failed to upsert TLD ${tld.name}: ${error.message}`);
         }
 
         this.cache.delete('tlds');
-        this.cache.delete(`tld:${tldInfo.name}`);
-        this.cache.delete(`tld:exists:${tldInfo.name}`);
+        this.cache.delete(`tld:${tld.name}`);
+        this.cache.delete(`tld:exists:${tld.name}`);
     }
 
     /**
@@ -76,7 +76,7 @@ class TLDRepository {
      * @param name - The name of the TLD to fetch.
      * @returns The TLD information.
      */
-    async getTLD(name: string): Promise<TLD | null> {
+    async get(name: string): Promise<TLD | null> {
         name = name.toLowerCase();
         const cacheKey = `tld:${name}`;
         const cached = this.cache.get(cacheKey);
@@ -122,7 +122,7 @@ class TLDRepository {
      *
      * @returns A list of TLDs.
      */
-    async listTLDs(): Promise<TLD[]> {
+    async list(): Promise<TLD[]> {
         const cacheKey = 'tlds';
         const cached = this.cache.get(cacheKey);
         if (cached) {
@@ -161,22 +161,22 @@ class TLDRepository {
      * @param name - The name of the TLD to update.
      * @param tldInfo - The TLD information to update.
      */
-    async updateTLD(name: string, tldInfo: TLD): Promise<void> {
+    async update(name: string, tld: TLD): Promise<void> {
         name = name.toLowerCase();
         const searchField = name.startsWith('xn--') ? 'punycode_name' : 'name';
         const { error } = await this.client
             .from('tld')
             .update({
-                country_code: tldInfo.countryCode,
-                description: tldInfo.description,
-                name: tldInfo.name,
-                organization: tldInfo.organization,
-                pricing: tldInfo.pricing,
-                punycodeName: tldInfo.punycodeName,
-                tagline: tldInfo.tagline,
-                type: tldInfo.type,
+                country_code: tld.countryCode,
+                description: tld.description,
+                name: tld.name,
+                organization: tld.organization,
+                pricing: tld.pricing,
+                punycodeName: tld.punycodeName,
+                tagline: tld.tagline,
+                type: tld.type,
                 updated_at: new Date().toISOString(),
-                year_established: tldInfo.yearEstablished,
+                year_established: tld.yearEstablished,
             })
             .eq(searchField, name);
 

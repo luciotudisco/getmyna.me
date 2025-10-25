@@ -21,13 +21,13 @@ export async function GET(): Promise<NextResponse> {
         for (const tld of tlds) {
             const punycodeName = tld.toLowerCase();
             const tldName = toUnicode(punycodeName);
-            const existingTld = await tldRepository.getTLD(punycodeName);
+            const existingTld = await tldRepository.get(punycodeName);
             if (existingTld) {
                 logger.info(`TLD ${punycodeName} already exists. Skipping...`);
                 continue;
             }
             logger.info(`Creating new TLD ${punycodeName} ...`);
-            await tldRepository.createTld({ name: tldName, punycodeName });
+            await tldRepository.create({ name: tldName, punycodeName });
         }
 
         logger.info('TLD import completed');

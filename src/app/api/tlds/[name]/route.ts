@@ -10,7 +10,7 @@ export async function GET(_request: Request, ctx: { params: Promise<{ name: stri
             return NextResponse.json({ error: 'TLD name is required' }, { status: 400 });
         }
         name = name.startsWith('.') ? name.slice(1) : name;
-        const tld = await tldRepository.getTLD(name);
+        const tld = await tldRepository.get(name);
         if (!tld) {
             return NextResponse.json({ error: 'TLD not found' }, { status: 404 });
         }

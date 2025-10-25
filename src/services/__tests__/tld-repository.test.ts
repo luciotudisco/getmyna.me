@@ -52,7 +52,7 @@ describe('TLDRepository', () => {
                 }),
             });
 
-            const count = await tldRepository.countTLDs();
+            const count = await tldRepository.count();
 
             expect(count).toBe(3);
             expect(mockSupabaseClient.from).toHaveBeenCalledWith('tld');
@@ -85,7 +85,7 @@ describe('TLDRepository', () => {
                 }),
             });
 
-            await tldRepository.createTld(mockTLD);
+            await tldRepository.create(mockTLD);
 
             expect(mockSupabaseClient.from).toHaveBeenCalledWith('tld');
             expect(mockCache.delete).toHaveBeenCalledWith('tlds');
@@ -120,7 +120,7 @@ describe('TLDRepository', () => {
 
             mockCache.get.mockReturnValue(cachedTLD);
 
-            const result = await tldRepository.getTLD('com');
+            const result = await tldRepository.get('com');
 
             expect(result).toBe(cachedTLD);
             expect(mockCache.get).toHaveBeenCalledWith('tld:com');
@@ -140,7 +140,7 @@ describe('TLDRepository', () => {
                 }),
             });
 
-            const result = await tldRepository.getTLD('com');
+            const result = await tldRepository.get('com');
 
             expect(result).toEqual({
                 countryCode: 'US',
@@ -171,7 +171,7 @@ describe('TLDRepository', () => {
                 }),
             });
 
-            await tldRepository.getTLD('xn--test');
+            await tldRepository.get('xn--test');
 
             expect(mockEq).toHaveBeenCalledWith('punycode_name', 'xn--test');
         });
@@ -189,7 +189,7 @@ describe('TLDRepository', () => {
                 }),
             });
 
-            const result = await tldRepository.getTLD('nonexistent');
+            const result = await tldRepository.get('nonexistent');
 
             expect(result).toBeNull();
             expect(mockCache.set).toHaveBeenCalledWith('tld:nonexistent', null, 60000);
@@ -226,7 +226,7 @@ describe('TLDRepository', () => {
             const cachedTLDs: TLD[] = [{ name: 'com' }, { name: 'net' }];
             mockCache.get.mockReturnValue(cachedTLDs);
 
-            const result = await tldRepository.listTLDs();
+            const result = await tldRepository.list();
 
             expect(result).toBe(cachedTLDs);
             expect(mockCache.get).toHaveBeenCalledWith('tlds');
@@ -246,7 +246,7 @@ describe('TLDRepository', () => {
                 }),
             });
 
-            const result = await tldRepository.listTLDs();
+            const result = await tldRepository.list();
 
             expect(result).toEqual([
                 {
@@ -298,7 +298,7 @@ describe('TLDRepository', () => {
                 }),
             });
 
-            await tldRepository.updateTLD('com', mockTLD);
+            await tldRepository.update('com', mockTLD);
 
             expect(mockSupabaseClient.from).toHaveBeenCalledWith('tld');
             expect(mockCache.delete).toHaveBeenCalledWith('tlds');
@@ -317,7 +317,7 @@ describe('TLDRepository', () => {
                 }),
             });
 
-            await tldRepository.updateTLD('xn--test', mockTLD);
+            await tldRepository.update('xn--test', mockTLD);
 
             expect(mockEq).toHaveBeenCalledWith('punycode_name', 'xn--test');
         });

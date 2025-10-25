@@ -5,7 +5,7 @@ import logger from '@/utils/logger';
 
 export async function GET(): Promise<NextResponse> {
     try {
-        const count = await tldRepository.countTLDs();
+        const count = await tldRepository.count();
         return NextResponse.json({ count });
     } catch (error) {
         logger.error({ error }, 'Error counting TLDs');

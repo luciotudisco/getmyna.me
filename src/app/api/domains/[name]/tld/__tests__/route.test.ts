@@ -21,7 +21,7 @@ describe('/api/domains/[name]/tld', () => {
             type: TLDType.GENERIC,
             pricing: { [Registrar.PORKBUN]: { registration: 12.99, renewal: 12.99, currency: 'USD' } },
         };
-        mockTldRepository.getTLD.mockResolvedValue(mockTldInfo);
+        mockTldRepository.get.mockResolvedValue(mockTldInfo);
 
         const request = new Request('https://example.com/api/domains/example.com/tld');
         const response = await GET(request, mockCtx);
@@ -36,7 +36,7 @@ describe('/api/domains/[name]/tld', () => {
             pricing: { [Registrar.PORKBUN]: { registration: 12.99, renewal: 12.99, currency: 'USD' } },
         });
 
-        expect(mockTldRepository.getTLD).toHaveBeenCalledWith('com');
+        expect(mockTldRepository.get).toHaveBeenCalledWith('com');
     });
 
     it('should handle subdomain and extract correct TLD', async () => {
@@ -48,7 +48,7 @@ describe('/api/domains/[name]/tld', () => {
         };
         const subdomainCtx = { params: Promise.resolve({ name: 'blog.example.com' }) };
 
-        mockTldRepository.getTLD.mockResolvedValue(mockTldInfo);
+        mockTldRepository.get.mockResolvedValue(mockTldInfo);
 
         const request = new Request('https://example.com/api/domains/blog.example.com/tld');
         const response = await GET(request, subdomainCtx);
@@ -56,7 +56,7 @@ describe('/api/domains/[name]/tld', () => {
 
         expect(response.status).toBe(200);
         expect(responseData.name).toBe('com');
-        expect(mockTldRepository.getTLD).toHaveBeenCalledWith('com');
+        expect(mockTldRepository.get).toHaveBeenCalledWith('com');
     });
 
     it('should handle internationalized domain names', async () => {
@@ -67,7 +67,7 @@ describe('/api/domains/[name]/tld', () => {
             type: TLDType.COUNTRY_CODE,
         };
 
-        mockTldRepository.getTLD.mockResolvedValue(mockTldInfo);
+        mockTldRepository.get.mockResolvedValue(mockTldInfo);
 
         const request = new Request('https://example.com/api/domains/пример.рф/tld');
         const response = await GET(request, unicodeDomainCtx);
@@ -75,7 +75,7 @@ describe('/api/domains/[name]/tld', () => {
 
         expect(response.status).toBe(200);
         expect(responseData.name).toBe('рф');
-        expect(mockTldRepository.getTLD).toHaveBeenCalledWith('рф');
+        expect(mockTldRepository.get).toHaveBeenCalledWith('рф');
     });
 
     it('should return 400 for invalid domain name', async () => {
@@ -88,7 +88,7 @@ describe('/api/domains/[name]/tld', () => {
         expect(response.status).toBe(400);
         expect(responseData).toEqual({ error: "The domain 'invalid-domain' is not a valid domain" });
 
-        expect(mockTldRepository.getTLD).not.toHaveBeenCalled();
+        expect(mockTldRepository.get).not.toHaveBeenCalled();
     });
 
     it('should raise 400 for invalid domain names', async () => {
@@ -100,11 +100,11 @@ describe('/api/domains/[name]/tld', () => {
 
         expect(response.status).toBe(400);
         expect(responseData).toEqual({ error: "The domain 'localhost' is not a valid domain" });
-        expect(mockTldRepository.getTLD).not.toHaveBeenCalled();
+        expect(mockTldRepository.get).not.toHaveBeenCalled();
     });
 
     it('should raise 404 when TLD info is not found', async () => {
-        mockTldRepository.getTLD.mockResolvedValue(null);
+        mockTldRepository.get.mockResolvedValue(null);
 
         const request = new Request('https://example.com/api/domains/example.com/tld');
         const response = await GET(request, mockCtx);
@@ -113,12 +113,12 @@ describe('/api/domains/[name]/tld', () => {
         expect(response.status).toBe(404);
         expect(responseData).toEqual({ error: "TLD not found for domain 'example.com'" });
 
-        expect(mockTldRepository.getTLD).toHaveBeenCalledWith('com');
+        expect(mockTldRepository.get).toHaveBeenCalledWith('com');
     });
 
     it('should raise 500 when an error occurs', async () => {
         const mockError = new Error('Database connection failed');
-        mockTldRepository.getTLD.mockRejectedValue(mockError);
+        mockTldRepository.get.mockRejectedValue(mockError);
 
         const request = new Request('https://example.com/api/domains/example.com/tld');
         const response = await GET(request, mockCtx);

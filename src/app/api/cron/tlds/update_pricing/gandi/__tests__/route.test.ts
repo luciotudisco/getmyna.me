@@ -22,18 +22,18 @@ describe('/api/cron/tlds/update_pricing/gandi', () => {
 
         const mockTldInfo = { name: 'com', punycodeName: 'com' };
         mockAxios.get.mockResolvedValue(mockGandiResponse);
-        mockTldRepository.getTLD.mockResolvedValueOnce(mockTldInfo as any);
-        mockTldRepository.updateTLD.mockResolvedValue();
+        mockTldRepository.get.mockResolvedValueOnce(mockTldInfo as any);
+        mockTldRepository.update.mockResolvedValue();
 
         const response = await GET();
         const responseData = await response.json();
 
         expect(response.status).toBe(200);
         expect(responseData).toEqual({ message: 'TLD pricing enrichment from Gandi completed successfully' });
-        expect(mockTldRepository.getTLD).toHaveBeenCalledTimes(1);
-        expect(mockTldRepository.getTLD).toHaveBeenCalledWith('com');
-        expect(mockTldRepository.updateTLD).toHaveBeenCalledTimes(1);
-        expect(mockTldRepository.updateTLD).toHaveBeenCalledWith('com', { pricing: { [Registrar.GANDI]: {} } });
+        expect(mockTldRepository.get).toHaveBeenCalledTimes(1);
+        expect(mockTldRepository.get).toHaveBeenCalledWith('com');
+        expect(mockTldRepository.update).toHaveBeenCalledTimes(1);
+        expect(mockTldRepository.update).toHaveBeenCalledWith('com', { pricing: { [Registrar.GANDI]: {} } });
     });
 
     it('should throw 500 when request fails', async () => {

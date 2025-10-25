@@ -12,19 +12,19 @@ describe('/api/tlds/count', () => {
     describe('GET', () => {
         it('should return TLD count when repository succeeds', async () => {
             const mockCount = 1500;
-            mockTldRepository.countTLDs.mockResolvedValue(mockCount);
+            mockTldRepository.count.mockResolvedValue(mockCount);
 
             const response = await GET();
             const responseData = await response.json();
 
             expect(response.status).toBe(200);
             expect(responseData).toEqual({ count: mockCount });
-            expect(mockTldRepository.countTLDs).toHaveBeenCalledTimes(1);
+            expect(mockTldRepository.count).toHaveBeenCalledTimes(1);
         });
 
         it('should throw 500 when request fails', async () => {
             const mockError = new Error('Database connection failed');
-            mockTldRepository.countTLDs.mockRejectedValue(mockError);
+            mockTldRepository.count.mockRejectedValue(mockError);
 
             const response = await GET();
             const responseData = await response.json();

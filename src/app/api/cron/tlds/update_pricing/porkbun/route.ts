@@ -37,7 +37,7 @@ export async function GET(): Promise<NextResponse> {
         const pricing = response.data.pricing;
         const tlds = Object.keys(pricing).map((tld) => tld.toLowerCase());
         for (const tld of tlds) {
-            const tldInfo = await tldRepository.getTLD(tld);
+            const tldInfo = await tldRepository.get(tld);
             if (!tldInfo) {
                 logger.info(`TLD ${tld} not found in database. Skipping...`);
                 continue;
@@ -48,7 +48,7 @@ export async function GET(): Promise<NextResponse> {
                 currency: 'USD',
             };
             const updatedPricing = { ...tldInfo?.pricing, [Registrar.PORKBUN]: tldPricing };
-            await tldRepository.updateTLD(tld, { pricing: updatedPricing });
+            await tldRepository.update(tld, { pricing: updatedPricing });
             logger.info(`Updated ${tld} with Porkbun pricing`);
         }
         logger.info('TLD pricing enrichment from Porkbun completed');

@@ -20,7 +20,7 @@ describe('/api/cron/tlds/import', () => {
         const mockApiResponse = { data: mockTldData };
 
         mockAxios.get.mockResolvedValue(mockApiResponse);
-        mockTldRepository.getTLD.mockResolvedValue(null); // TLD doesn't exist
+        mockTldRepository.get.mockResolvedValue(null); // TLD doesn't exist
 
         const response = await GET();
         const responseData = await response.json();
@@ -32,18 +32,18 @@ describe('/api/cron/tlds/import', () => {
         expect(mockAxios.get).toHaveBeenCalledWith('https://data.iana.org/TLD/tlds-alpha-by-domain.txt');
 
         // Verify TLD processing
-        expect(mockTldRepository.getTLD).toHaveBeenCalledTimes(2); // 2 TLDs after filtering
-        expect(mockTldRepository.createTld).toHaveBeenCalledTimes(2);
+        expect(mockTldRepository.get).toHaveBeenCalledTimes(2); // 2 TLDs after filtering
+        expect(mockTldRepository.create).toHaveBeenCalledTimes(2);
 
         // Verify specific TLD calls
-        expect(mockTldRepository.getTLD).toHaveBeenCalledWith('com');
-        expect(mockTldRepository.getTLD).toHaveBeenCalledWith('io');
+        expect(mockTldRepository.get).toHaveBeenCalledWith('com');
+        expect(mockTldRepository.get).toHaveBeenCalledWith('io');
 
         // Verify createTld calls
         const comTLD = { name: 'com', punycodeName: 'com' };
         const ioTLD = { name: 'io', punycodeName: 'io' };
-        expect(mockTldRepository.createTld).toHaveBeenCalledWith(comTLD);
-        expect(mockTldRepository.createTld).toHaveBeenCalledWith(ioTLD);
+        expect(mockTldRepository.create).toHaveBeenCalledWith(comTLD);
+        expect(mockTldRepository.create).toHaveBeenCalledWith(ioTLD);
     });
 
     it('should handle Unicode TLDs correctly', async () => {
@@ -51,7 +51,7 @@ describe('/api/cron/tlds/import', () => {
 
         const mockApiResponse = { data: mockTldData };
         mockAxios.get.mockResolvedValue(mockApiResponse);
-        mockTldRepository.getTLD.mockResolvedValue(null);
+        mockTldRepository.get.mockResolvedValue(null);
 
         const response = await GET();
         const responseData = await response.json();
@@ -60,11 +60,11 @@ describe('/api/cron/tlds/import', () => {
         expect(responseData).toEqual({ message: 'TLD import completed successfully' });
 
         // Verify specific TLD calls
-        expect(mockTldRepository.getTLD).toHaveBeenCalledWith('xn--bcher-kva');
+        expect(mockTldRepository.get).toHaveBeenCalledWith('xn--bcher-kva');
 
         // Verify createTld calls
         const bcherKvaTLD = { name: 'bücher', punycodeName: 'xn--bcher-kva' };
-        expect(mockTldRepository.createTld).toHaveBeenCalledWith(bcherKvaTLD);
+        expect(mockTldRepository.create).toHaveBeenCalledWith(bcherKvaTLD);
     });
 
     it('should return 500 when axios request fails', async () => {

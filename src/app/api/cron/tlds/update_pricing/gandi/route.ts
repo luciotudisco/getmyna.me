@@ -33,13 +33,13 @@ export async function GET(): Promise<NextResponse> {
         const tlds = response.data;
         for (const tldData of tlds) {
             const tldName = toUnicode(tldData.name);
-            const tldInfo = await tldRepository.getTLD(tldName);
+            const tldInfo = await tldRepository.get(tldName);
             if (!tldInfo) {
                 logger.info(`TLD ${tldName} not found in database. Skipping...`);
                 continue;
             }
             const updatedPricing = { ...tldInfo?.pricing, [Registrar.GANDI]: {} };
-            await tldRepository.updateTLD(tldName, { pricing: updatedPricing });
+            await tldRepository.update(tldName, { pricing: updatedPricing });
             logger.info(`Updated ${tldName} with Gandi pricing`);
         }
         logger.info('TLD pricing enrichment from Gandi completed');

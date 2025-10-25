@@ -18,25 +18,25 @@ describe('/api/tlds/[name]', () => {
             yearEstablished: 1985,
         };
 
-        mockTldRepository.getTLD.mockResolvedValue(mockTld);
+        mockTldRepository.get.mockResolvedValue(mockTld);
 
         const response = await GET({} as any, { params: Promise.resolve({ name: 'com' }) });
         const data = await response.json();
 
         expect(response.status).toBe(200);
         expect(data).toEqual(mockTld);
-        expect(mockTldRepository.getTLD).toHaveBeenCalledWith('com');
+        expect(mockTldRepository.get).toHaveBeenCalledWith('com');
     });
 
     it('should return 404 when TLD not found', async () => {
-        mockTldRepository.getTLD.mockResolvedValue(null);
+        mockTldRepository.get.mockResolvedValue(null);
 
         const response = await GET({} as any, { params: Promise.resolve({ name: 'nonexistent' }) });
         const data = await response.json();
 
         expect(response.status).toBe(404);
         expect(data).toEqual({ error: 'TLD not found' });
-        expect(mockTldRepository.getTLD).toHaveBeenCalledWith('nonexistent');
+        expect(mockTldRepository.get).toHaveBeenCalledWith('nonexistent');
     });
 
     it('should return 400 when name is empty', async () => {
@@ -45,11 +45,11 @@ describe('/api/tlds/[name]', () => {
 
         expect(response.status).toBe(400);
         expect(data).toEqual({ error: 'TLD name is required' });
-        expect(mockTldRepository.getTLD).not.toHaveBeenCalled();
+        expect(mockTldRepository.get).not.toHaveBeenCalled();
     });
 
     it('should return 500 when repository throws error', async () => {
-        mockTldRepository.getTLD.mockRejectedValue(new Error('Database error'));
+        mockTldRepository.get.mockRejectedValue(new Error('Database error'));
 
         const response = await GET({} as any, { params: Promise.resolve({ name: 'com' }) });
         const data = await response.json();
@@ -66,14 +66,14 @@ describe('/api/tlds/[name]', () => {
             type: TLDType.GENERIC,
         };
 
-        mockTldRepository.getTLD.mockResolvedValue(mockTld);
+        mockTldRepository.get.mockResolvedValue(mockTld);
 
         const response = await GET({} as any, { params: Promise.resolve({ name: 'xn--0zwm56d' }) });
         const data = await response.json();
 
         expect(response.status).toBe(200);
         expect(data).toEqual(mockTld);
-        expect(mockTldRepository.getTLD).toHaveBeenCalledWith('xn--0zwm56d');
+        expect(mockTldRepository.get).toHaveBeenCalledWith('xn--0zwm56d');
     });
 
     it('should remove leading dot from TLD name', async () => {
@@ -84,13 +84,13 @@ describe('/api/tlds/[name]', () => {
             yearEstablished: 1985,
         };
 
-        mockTldRepository.getTLD.mockResolvedValue(mockTld);
+        mockTldRepository.get.mockResolvedValue(mockTld);
 
         const response = await GET({} as any, { params: Promise.resolve({ name: '.com' }) });
         const data = await response.json();
 
         expect(response.status).toBe(200);
         expect(data).toEqual(mockTld);
-        expect(mockTldRepository.getTLD).toHaveBeenCalledWith('com');
+        expect(mockTldRepository.get).toHaveBeenCalledWith('com');
     });
 });
