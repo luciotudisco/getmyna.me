@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 
 import LoadingMessage from '@/components/LoadingMessage';
 
@@ -12,15 +12,19 @@ jest.mock('@lottiefiles/react-lottie-player', () => ({
 }));
 
 describe('LoadingMessage', () => {
-    it('should render with custom message', () => {
+    it('should render with custom message', async () => {
         const customMessage = 'Loading custom content...';
-        render(<LoadingMessage message={customMessage} />);
+        await act(async () => {
+            render(<LoadingMessage message={customMessage} />);
+        });
 
         expect(screen.getByText(customMessage)).toBeInTheDocument();
     });
 
-    it('should render Lottie player with correct props', () => {
-        render(<LoadingMessage />);
+    it('should render Lottie player with correct props', async () => {
+        await act(async () => {
+            render(<LoadingMessage />);
+        });
 
         const lottiePlayer = screen.getByTestId('lottie-player');
         expect(lottiePlayer).toBeInTheDocument();

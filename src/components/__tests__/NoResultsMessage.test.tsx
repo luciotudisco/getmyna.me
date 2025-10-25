@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 
 import NoResultsMessage from '@/components/NoResultsMessage';
 
@@ -12,15 +12,19 @@ jest.mock('@lottiefiles/react-lottie-player', () => ({
 }));
 
 describe('NoResultsMessage', () => {
-    it('should render with custom message', () => {
+    it('should render with custom message', async () => {
         const customMessage = 'No results found for your search';
-        render(<NoResultsMessage message={customMessage} />);
+        await act(async () => {
+            render(<NoResultsMessage message={customMessage} />);
+        });
 
         expect(screen.getByText(customMessage)).toBeInTheDocument();
     });
 
-    it('should render Lottie player with correct props', () => {
-        render(<NoResultsMessage />);
+    it('should render Lottie player with correct props', async () => {
+        await act(async () => {
+            render(<NoResultsMessage />);
+        });
 
         const lottiePlayer = screen.getByTestId('lottie-player');
         expect(lottiePlayer).toBeInTheDocument();
