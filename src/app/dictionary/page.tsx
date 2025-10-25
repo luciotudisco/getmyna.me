@@ -21,10 +21,8 @@ export default function DictionaryPage() {
         startTransition(async () => {
             try {
                 const data = await apiClient.listWords({ hasMatchingDomains: true });
-                const flatMatchingDomains = data.flatMap(
-                    (entry) => entry.matchingDomains?.map((domain) => domain.domain) || [],
-                );
-                const uniqueDomains = Array.from(new Set(flatMatchingDomains));
+                const flatList = data.flatMap((e) => e.matchingDomains?.map((d) => d.domain) || []);
+                const uniqueDomains = Array.from(new Set(flatList));
                 setDomains(uniqueDomains.map((domain) => new Domain(domain)));
             } catch {
                 setHasError(true);
@@ -32,15 +30,12 @@ export default function DictionaryPage() {
         });
     }, []);
 
-    const handleDomainClick = useCallback(
-        async (domain: Domain) => {
-            setSelectedDomain(domain);
-            const status = await apiClient.getDomainStatus(domain.getName());
-            domain.setStatus(status);
-            setIsDrawerOpen(true);
-        },
-        [apiClient],
-    );
+    const handleDomainClick = useCallback(async (domain: Domain) => {
+        setSelectedDomain(domain);
+        const status = await apiClient.getDomainStatus(domain.getName());
+        domain.setStatus(status);
+        setIsDrawerOpen(true);
+    }, []);
 
     if (hasError) {
         return <ErrorMessage />;
