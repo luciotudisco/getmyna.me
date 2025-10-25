@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
+import { DictionaryEntry } from '@/models/dictionary';
 import { DomainStatus } from '@/models/domain';
 import { Registrar, TLD, TLDType } from '@/models/tld';
 import { WhoisInfo } from '@/models/whois';
@@ -206,6 +207,18 @@ describe('APIClient', () => {
             const result = await apiClient.getTLDsCount();
 
             expect(result).toEqual(mockCount);
+        });
+    });
+
+    describe('listWords', () => {
+        it('should return dictionary entries with matching domains', async () => {
+            const mockEntries: DictionaryEntry[] = [
+                { word: 'example', matchingDomains: [{ domain: 'example.com' }, { domain: 'example.dev' }] },
+                { word: 'test', matchingDomains: [{ domain: 'test.io' }] },
+            ];
+            mockAdapter.onGet('/api/dictionary?hasMatchingDomains=true').reply(200, mockEntries);
+            const result = (await apiClient.listWords({ hasMatchingDomains: true })) as DictionaryEntry[];
+            expect(result).toEqual(mockEntries);
         });
     });
 

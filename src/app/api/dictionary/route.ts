@@ -11,7 +11,7 @@ export async function GET(request: Request): Promise<NextResponse> {
         const limit = parseInt(searchParams.get('limit') || '1000', 10);
         const options = { category, locale, limit, hasMatchingDomains: true };
         const entries = await dictionaryRepository.list(options);
-        return NextResponse.json({ entries, count: entries.length, filters: options });
+        return NextResponse.json(entries);
     } catch (error) {
         logger.error({ error }, 'Error fetching dictionary entries');
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

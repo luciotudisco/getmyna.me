@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 
 import ErrorMessage from '@/components/ErrorMessage';
 
@@ -12,15 +12,19 @@ jest.mock('@lottiefiles/react-lottie-player', () => ({
 }));
 
 describe('ErrorMessage', () => {
-    it('should render with custom message', () => {
+    it('should render with custom message', async () => {
         const customMessage = 'Custom error message';
-        render(<ErrorMessage message={customMessage} />);
+        await act(async () => {
+            render(<ErrorMessage message={customMessage} />);
+        });
 
         expect(screen.getByText(customMessage)).toBeInTheDocument();
     });
 
-    it('should render Lottie player with correct props', () => {
-        render(<ErrorMessage />);
+    it('should render Lottie player with correct props', async () => {
+        await act(async () => {
+            render(<ErrorMessage />);
+        });
 
         const lottiePlayer = screen.getByTestId('lottie-player');
         expect(lottiePlayer).toBeInTheDocument();
