@@ -24,40 +24,37 @@ export function SearchResults() {
                 setHasError(false);
                 const term = searchParams.get('term');
                 const includeSubdomains = searchParams.get('include_subdomains') === 'true';
-                
+
                 // Track search event
                 if (term) {
                     trackEvent('search_performed', {
                         search_term: term,
                         include_subdomains: includeSubdomains,
-                        timestamp: new Date().toISOString(),
                     });
                 }
-                
+
                 const names = await apiClient.searchDomains(term || '', includeSubdomains);
                 const matchingDomains = names.map((name: string) => new Domain(name));
                 setDomains(matchingDomains);
-                
+
                 // Track search results event
                 if (term) {
                     trackEvent('search_results', {
                         search_term: term,
                         include_subdomains: includeSubdomains,
                         result_count: matchingDomains.length,
-                        timestamp: new Date().toISOString(),
                     });
                 }
             } catch (error) {
                 setHasError(true);
                 setDomains([]);
-                
+
                 // Track search error event
                 const term = searchParams.get('term');
                 if (term) {
                     trackEvent('search_error', {
                         search_term: term,
                         error_message: error instanceof Error ? error.message : 'Unknown error',
-                        timestamp: new Date().toISOString(),
                     });
                 }
             }

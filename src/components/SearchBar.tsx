@@ -24,13 +24,12 @@ export default function SearchBar() {
         if (!searchTerm) {
             return;
         }
-        
+
         // Track search initiation event
         trackEvent('search_initiated', {
             search_term: searchTerm,
-            timestamp: new Date().toISOString(),
         });
-        
+
         const parms = { term: searchTerm };
         router.push(`/search?${new URLSearchParams(parms).toString()}`);
         router.refresh();
