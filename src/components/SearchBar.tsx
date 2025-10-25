@@ -6,11 +6,13 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useAmplitude } from '@/contexts/AmplitudeContext';
 
 export default function SearchBar() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [searchTerm, setSearchTerm] = useState<string>('');
+    const { trackEvent } = useAmplitude();
 
     useEffect(() => {
         const term = searchParams.get('term');
@@ -22,6 +24,7 @@ export default function SearchBar() {
         if (!searchTerm) {
             return;
         }
+        trackEvent('search', { term: searchTerm });
         const parms = { term: searchTerm };
         router.push(`/search?${new URLSearchParams(parms).toString()}`);
         router.refresh();
