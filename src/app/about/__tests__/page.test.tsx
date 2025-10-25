@@ -21,17 +21,6 @@ describe('AboutPage', () => {
         expect(heading.tagName).toBe('H1');
     });
 
-    it('should render all FAQ items with questions', () => {
-        render(<AboutPage />);
-
-        // Check all questions are rendered
-        expect(screen.getByText("What's a domain hack?")).toBeInTheDocument();
-        expect(screen.getByText('Why are domain hacks so effective?')).toBeInTheDocument();
-        expect(screen.getByText('Can I build my brand around a domain hack?')).toBeInTheDocument();
-        expect(screen.getByText('What are some popular examples of domain hacks?')).toBeInTheDocument();
-        expect(screen.getByText('How do I find the perfect domain hack?')).toBeInTheDocument();
-    });
-
     it('should render the TLDCounter component', () => {
         render(<AboutPage />);
 

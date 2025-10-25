@@ -58,7 +58,7 @@ export default function TldsPage() {
                 <div className="text-center">
                     <Badge className="text-xs font-medium">TLD DIRECTORY</Badge>
                     <h1 className="mt-4 text-2xl font-semibold lg:text-3xl">The ultimate TLDs list</h1>
-                    <p className="mt-2 text-sm font-medium text-muted-foreground lg:mt-6 lg:text-base">
+                    <p className="mt-2 text-sm font-medium text-muted-foreground lg:text-base">
                         Explore our complete collection of{' '}
                         <Highlighter action="underline" color="#fde2e4">
                             {filteredTlds.length} TLDs
