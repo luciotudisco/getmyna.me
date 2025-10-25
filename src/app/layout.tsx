@@ -1,7 +1,6 @@
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata } from 'next';
 
-import { Amplitude } from '@/components/Amplitude';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import { AmplitudeProvider } from '@/contexts/AmplitudeContext';
@@ -44,7 +43,6 @@ export default function RootLayout({
         <html lang="en">
             <body>
                 <AmplitudeProvider>
-                    <Amplitude />
                     <SpeedInsights />
                     <Header />
                     {children}
