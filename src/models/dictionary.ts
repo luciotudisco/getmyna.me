@@ -5,7 +5,7 @@ export interface DictionaryEntry {
     category?: string;
     createdAt?: string;
     locale?: string;
-    matchingDomains?: Array<{ domain: string; tld: string; status: DomainStatus }>;
+    matchingDomains?: Array<{ domain: string; status?: DomainStatus }>;
     rank?: number;
     updatedAt?: string;
 }

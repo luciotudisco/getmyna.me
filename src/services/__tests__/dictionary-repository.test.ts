@@ -30,7 +30,7 @@ describe('DictionaryRepository', () => {
             category: 'noun',
             locale: 'en',
             rank: 1,
-            matchingDomains: [{ domain: 'example.com', tld: 'com', status: DomainStatus.ACTIVE }],
+            matchingDomains: [{ domain: 'example.com', status: DomainStatus.ACTIVE }],
         };
 
         it('should create a dictionary entry successfully', async () => {
@@ -160,43 +160,42 @@ describe('DictionaryRepository', () => {
             },
         ];
 
-        it('should return list of dictionary entries without filters', async () => {
-            mockSupabaseClient.from = jest.fn().mockReturnValue({
-                select: jest.fn().mockReturnValue({
-                    order: jest.fn().mockReturnValue({
-                        limit: jest.fn().mockResolvedValue({
-                            data: mockData,
-                            error: null,
-                        }),
-                    }),
+        it('should return list of dictionary entries with filters', async () => {
+            const mockQuery = {
+                select: jest.fn().mockReturnThis(),
+                order: jest.fn().mockReturnThis(),
+                limit: jest.fn().mockReturnThis(),
+                eq: jest.fn().mockReturnThis(),
+                not: jest.fn().mockResolvedValue({
+                    data: mockData,
+                    error: null,
                 }),
-            });
+            };
+            mockSupabaseClient.from = jest.fn().mockReturnValue(mockQuery);
 
-            const result = await dictionaryRepository.list();
-
-            expect(result).toHaveLength(2);
-            expect(result[0]).toEqual({
-                word: 'example',
+            const result = await dictionaryRepository.list({
                 category: 'noun',
                 locale: 'en',
-                rank: 1,
-                matchingDomains: [],
+                hasMatchingDomains: true,
+                limit: 100,
             });
+
+            expect(result).toHaveLength(2);
             expect(mockSupabaseClient.from).toHaveBeenCalledWith('dictionary');
         });
 
         it('should throw error when list fails', async () => {
             const errorMessage = 'Database error';
-            mockSupabaseClient.from = jest.fn().mockReturnValue({
-                select: jest.fn().mockReturnValue({
-                    order: jest.fn().mockReturnValue({
-                        limit: jest.fn().mockResolvedValue({
-                            data: null,
-                            error: { message: errorMessage },
-                        }),
-                    }),
+            const mockQuery = {
+                select: jest.fn().mockReturnThis(),
+                order: jest.fn().mockReturnThis(),
+                limit: jest.fn().mockReturnThis(),
+                not: jest.fn().mockResolvedValue({
+                    data: null,
+                    error: { message: errorMessage },
                 }),
-            });
+            };
+            mockSupabaseClient.from = jest.fn().mockReturnValue(mockQuery);
 
             await expect(dictionaryRepository.list()).rejects.toThrow(
                 `Failed to fetch dictionary entries: ${errorMessage}`,
@@ -210,7 +209,7 @@ describe('DictionaryRepository', () => {
             category: 'noun',
             locale: 'en',
             rank: 1,
-            matchingDomains: [{ domain: 'example.com', tld: 'com', status: DomainStatus.ACTIVE }],
+            matchingDomains: [{ domain: 'example.com', status: DomainStatus.ACTIVE }],
         };
 
         it('should update a dictionary entry successfully', async () => {

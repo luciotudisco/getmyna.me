@@ -79,12 +79,18 @@ class DictionaryRepository {
     /**
      * Lists dictionary entries from the database.
      *
-     * @param category - Optional category filter.
-     * @param locale - Optional locale filter.
-     * @param limit - Maximum number of entries to return.
+     * @param options - Filter and pagination options
      * @returns A list of dictionary entries.
      */
-    async list(category?: string, locale?: string, limit: number = 1000): Promise<DictionaryEntry[]> {
+    async list(
+        options: {
+            category?: string;
+            locale?: string;
+            hasMatchingDomains?: boolean;
+            limit?: number;
+        } = {},
+    ): Promise<DictionaryEntry[]> {
+        const { category, locale, hasMatchingDomains = true, limit = 1000 } = options;
         let query = this.client
             .from('dictionary')
             .select('word, category, locale, rank, matching_domains')
@@ -97,6 +103,10 @@ class DictionaryRepository {
 
         if (locale) {
             query = query.eq('locale', locale);
+        }
+
+        if (hasMatchingDomains) {
+            query = query.not('matching_domains', 'is', null);
         }
 
         const { data, error } = await query;
