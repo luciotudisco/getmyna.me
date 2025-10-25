@@ -84,7 +84,8 @@ class APIClient {
         limit?: number;
         hasMatchingDomains?: boolean;
     }): Promise<DictionaryEntry[]> {
-        const params = new URLSearchParams(Object.entries(options ?? {}).map(([key, value]) => [key, String(value)]));
+        const filteredOptions = Object.fromEntries(Object.entries(options ?? {}).filter(([, v]) => v !== undefined));
+        const params = new URLSearchParams(Object.entries(filteredOptions).map(([key, value]) => [key, String(value)]));
         const response = await this.client.get(`/api/dictionary?${params.toString()}`);
         return response.data as DictionaryEntry[];
     }

@@ -220,6 +220,17 @@ describe('APIClient', () => {
             const result = (await apiClient.listWords({ hasMatchingDomains: true })) as DictionaryEntry[];
             expect(result).toEqual(mockEntries);
         });
+
+        it('should filter out undefined values from query parameters', async () => {
+            const mockEntries: DictionaryEntry[] = [{ word: 'example', matchingDomains: [{ domain: 'example.com' }] }];
+            // Should only include hasMatchingDomains=true, not category=undefined
+            mockAdapter.onGet('/api/dictionary?hasMatchingDomains=true').reply(200, mockEntries);
+            const result = (await apiClient.listWords({
+                category: undefined,
+                hasMatchingDomains: true,
+            })) as DictionaryEntry[];
+            expect(result).toEqual(mockEntries);
+        });
     });
 
     describe('searchDomains', () => {
