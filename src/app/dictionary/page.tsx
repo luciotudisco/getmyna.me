@@ -20,7 +20,7 @@ export default function DictionaryPage() {
     useEffect(() => {
         startTransition(async () => {
             try {
-                const data = await apiClient.listWords({ hasMatchingDomains: true });
+                const data = await apiClient.listWords({ hasMatchingDomains: true, limit: 5000 });
                 const flatList = data.flatMap((e) => e.matchingDomains?.map((d) => d.domain) || []);
                 const uniqueDomains = Array.from(new Set(flatList));
                 setDomains(uniqueDomains.map((domain) => new Domain(domain)));
