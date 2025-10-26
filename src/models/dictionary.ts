@@ -9,3 +9,17 @@ export interface DictionaryEntry {
     rank?: number;
     updatedAt?: string;
 }
+
+export interface PaginationMetadata {
+    page: number;
+    pageSize: number;
+    totalCount: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+}
+
+export interface PaginatedDictionaryResponse {
+    data: DictionaryEntry[];
+    pagination: PaginationMetadata;
+}

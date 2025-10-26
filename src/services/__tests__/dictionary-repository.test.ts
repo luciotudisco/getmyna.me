@@ -203,6 +203,239 @@ describe('DictionaryRepository', () => {
         });
     });
 
+    describe('listPaginated', () => {
+        const mockData = [
+            {
+                word: 'example',
+                category: 'noun',
+                locale: 'en',
+                rank: 1,
+                matching_domains: [],
+            },
+            {
+                word: 'test',
+                category: 'verb',
+                locale: 'en',
+                rank: 2,
+                matching_domains: [],
+            },
+        ];
+
+        beforeEach(() => {
+            // Reset mock to include count functionality
+            mockSupabaseClient = {
+                from: jest.fn().mockReturnThis(),
+                select: jest.fn().mockReturnThis(),
+                eq: jest.fn().mockReturnThis(),
+                single: jest.fn().mockReturnThis(),
+                upsert: jest.fn().mockReturnThis(),
+                update: jest.fn().mockReturnThis(),
+                order: jest.fn().mockReturnThis(),
+                limit: jest.fn().mockReturnThis(),
+                range: jest.fn().mockReturnThis(),
+                not: jest.fn().mockReturnThis(),
+            };
+            (dictionaryRepository as any).client = mockSupabaseClient;
+        });
+
+        it('should return paginated dictionary entries with default pagination', async () => {
+            const mockCountQuery = {
+                select: jest.fn().mockReturnThis(),
+                eq: jest.fn().mockReturnThis(),
+                not: jest.fn().mockResolvedValue({
+                    count: 100,
+                    error: null,
+                }),
+            };
+
+            const mockDataQuery = {
+                select: jest.fn().mockReturnThis(),
+                order: jest.fn().mockReturnThis(),
+                range: jest.fn().mockReturnThis(),
+                eq: jest.fn().mockReturnThis(),
+                not: jest.fn().mockResolvedValue({
+                    data: mockData,
+                    error: null,
+                }),
+            };
+
+            mockSupabaseClient.from = jest
+                .fn()
+                .mockReturnValueOnce(mockCountQuery) // First call for count
+                .mockReturnValueOnce(mockDataQuery); // Second call for data
+
+            const result = await dictionaryRepository.listPaginated();
+
+            expect(result).toHaveProperty('data');
+            expect(result).toHaveProperty('pagination');
+            expect(result.data).toHaveLength(2);
+            expect(result.pagination).toEqual({
+                page: 1,
+                pageSize: 50,
+                totalCount: 100,
+                totalPages: 2,
+                hasNextPage: true,
+                hasPreviousPage: false,
+            });
+        });
+
+        it('should return paginated dictionary entries with custom pagination', async () => {
+            const mockCountQuery = {
+                select: jest.fn().mockReturnThis(),
+                eq: jest.fn().mockReturnThis(),
+                not: jest.fn().mockResolvedValue({
+                    count: 25,
+                    error: null,
+                }),
+            };
+
+            const mockDataQuery = {
+                select: jest.fn().mockReturnThis(),
+                order: jest.fn().mockReturnThis(),
+                range: jest.fn().mockReturnThis(),
+                eq: jest.fn().mockReturnThis(),
+                not: jest.fn().mockResolvedValue({
+                    data: mockData,
+                    error: null,
+                }),
+            };
+
+            mockSupabaseClient.from = jest.fn().mockReturnValueOnce(mockCountQuery).mockReturnValueOnce(mockDataQuery);
+
+            const result = await dictionaryRepository.listPaginated({
+                page: 2,
+                pageSize: 10,
+                category: 'noun',
+                locale: 'en',
+            });
+
+            expect(result.pagination).toEqual({
+                page: 2,
+                pageSize: 10,
+                totalCount: 25,
+                totalPages: 3,
+                hasNextPage: true,
+                hasPreviousPage: true,
+            });
+        });
+
+        it('should handle empty results', async () => {
+            const mockCountQuery = {
+                select: jest.fn().mockReturnThis(),
+                eq: jest.fn().mockReturnThis(),
+                not: jest.fn().mockResolvedValue({
+                    count: 0,
+                    error: null,
+                }),
+            };
+
+            const mockDataQuery = {
+                select: jest.fn().mockReturnThis(),
+                order: jest.fn().mockReturnThis(),
+                range: jest.fn().mockReturnThis(),
+                eq: jest.fn().mockReturnThis(),
+                not: jest.fn().mockResolvedValue({
+                    data: [],
+                    error: null,
+                }),
+            };
+
+            mockSupabaseClient.from = jest.fn().mockReturnValueOnce(mockCountQuery).mockReturnValueOnce(mockDataQuery);
+
+            const result = await dictionaryRepository.listPaginated();
+
+            expect(result.data).toHaveLength(0);
+            expect(result.pagination).toEqual({
+                page: 1,
+                pageSize: 50,
+                totalCount: 0,
+                totalPages: 0,
+                hasNextPage: false,
+                hasPreviousPage: false,
+            });
+        });
+
+        it('should validate and clamp pagination parameters', async () => {
+            const mockCountQuery = {
+                select: jest.fn().mockReturnThis(),
+                eq: jest.fn().mockReturnThis(),
+                not: jest.fn().mockResolvedValue({
+                    count: 100,
+                    error: null,
+                }),
+            };
+
+            const mockDataQuery = {
+                select: jest.fn().mockReturnThis(),
+                order: jest.fn().mockReturnThis(),
+                range: jest.fn().mockReturnThis(),
+                eq: jest.fn().mockReturnThis(),
+                not: jest.fn().mockResolvedValue({
+                    data: mockData,
+                    error: null,
+                }),
+            };
+
+            mockSupabaseClient.from = jest.fn().mockReturnValueOnce(mockCountQuery).mockReturnValueOnce(mockDataQuery);
+
+            // Test with invalid parameters (should be clamped)
+            const result = await dictionaryRepository.listPaginated({
+                page: -1, // Should be clamped to 1
+                pageSize: 2000, // Should be clamped to 1000
+            });
+
+            expect(result.pagination.page).toBe(1);
+            expect(result.pagination.pageSize).toBe(1000);
+        });
+
+        it('should throw error when count query fails', async () => {
+            const errorMessage = 'Count query error';
+            const mockCountQuery = {
+                select: jest.fn().mockReturnThis(),
+                eq: jest.fn().mockReturnThis(),
+                not: jest.fn().mockResolvedValue({
+                    count: null,
+                    error: { message: errorMessage },
+                }),
+            };
+
+            mockSupabaseClient.from = jest.fn().mockReturnValue(mockCountQuery);
+
+            await expect(dictionaryRepository.listPaginated()).rejects.toThrow(
+                `Failed to count dictionary entries: ${errorMessage}`,
+            );
+        });
+
+        it('should throw error when data query fails', async () => {
+            const errorMessage = 'Data query error';
+            const mockCountQuery = {
+                select: jest.fn().mockReturnThis(),
+                eq: jest.fn().mockReturnThis(),
+                not: jest.fn().mockResolvedValue({
+                    count: 100,
+                    error: null,
+                }),
+            };
+
+            const mockDataQuery = {
+                select: jest.fn().mockReturnThis(),
+                order: jest.fn().mockReturnThis(),
+                range: jest.fn().mockReturnThis(),
+                eq: jest.fn().mockReturnThis(),
+                not: jest.fn().mockResolvedValue({
+                    data: null,
+                    error: { message: errorMessage },
+                }),
+            };
+
+            mockSupabaseClient.from = jest.fn().mockReturnValueOnce(mockCountQuery).mockReturnValueOnce(mockDataQuery);
+
+            await expect(dictionaryRepository.listPaginated()).rejects.toThrow(
+                `Failed to fetch paginated dictionary entries: ${errorMessage}`,
+            );
+        });
+    });
+
     describe('update', () => {
         const mockDictionaryEntry: DictionaryEntry = {
             word: 'example',
