@@ -97,13 +97,81 @@ class DictionaryRepository {
 
         // Check if pagination is requested
         if (page !== undefined || pageSize !== undefined) {
-            return this.listPaginated({
-                category,
-                locale,
-                hasMatchingDomains,
-                page: page || 1,
-                pageSize: pageSize || 5000,
-            });
+            const validPage = Math.max(1, page || 1);
+            const validPageSize = Math.min(Math.max(1, pageSize || 5000), 10000); // Max 10000 items per page
+            const offset = (validPage - 1) * validPageSize;
+
+            // Build the base query for counting total records
+            let countQuery = this.client.from('dictionary').select('*', { count: 'exact', head: true });
+
+            if (category) {
+                countQuery = countQuery.eq('category', category);
+            }
+
+            if (locale) {
+                countQuery = countQuery.eq('locale', locale);
+            }
+
+            if (hasMatchingDomains) {
+                countQuery = countQuery.not('matching_domains', 'is', null);
+            }
+
+            // Get total count
+            const { count, error: countError } = await countQuery;
+            if (countError) {
+                logger.error({ error: countError }, 'Error counting dictionary entries');
+                throw new Error(`Failed to count dictionary entries: ${countError.message}`);
+            }
+
+            const totalCount = count || 0;
+            const totalPages = Math.ceil(totalCount / validPageSize);
+
+            // Build the data query
+            let dataQuery = this.client
+                .from('dictionary')
+                .select('word, category, locale, rank, matching_domains')
+                .order('rank', { ascending: true, nullsFirst: false })
+                .range(offset, offset + validPageSize - 1);
+
+            if (category) {
+                dataQuery = dataQuery.eq('category', category);
+            }
+
+            if (locale) {
+                dataQuery = dataQuery.eq('locale', locale);
+            }
+
+            if (hasMatchingDomains) {
+                dataQuery = dataQuery.not('matching_domains', 'is', null);
+            }
+
+            const { data, error } = await dataQuery;
+            if (error) {
+                logger.error({ error }, 'Error fetching paginated dictionary entries');
+                throw new Error(`Failed to fetch paginated dictionary entries: ${error.message}`);
+            }
+
+            const entries = data.map((entry) => ({
+                word: entry.word,
+                category: entry.category,
+                locale: entry.locale,
+                rank: entry.rank,
+                matchingDomains: entry.matching_domains,
+            }));
+
+            const pagination: PaginationMetadata = {
+                page: validPage,
+                pageSize: validPageSize,
+                totalCount,
+                totalPages,
+                hasNextPage: validPage < totalPages,
+                hasPreviousPage: validPage > 1,
+            };
+
+            return {
+                data: entries,
+                pagination,
+            };
         }
 
         // Legacy non-paginated behavior
@@ -138,101 +206,6 @@ class DictionaryRepository {
             rank: entry.rank,
             matchingDomains: entry.matching_domains,
         }));
-    }
-
-    /**
-     * Lists dictionary entries from the database with pagination support.
-     *
-     * @param options - Filter and pagination options
-     * @returns A paginated response with dictionary entries and pagination metadata.
-     */
-    async listPaginated(
-        options: {
-            category?: string;
-            locale?: string;
-            hasMatchingDomains?: boolean;
-            page?: number;
-            pageSize?: number;
-        } = {},
-    ): Promise<PaginatedDictionaryResponse> {
-        const { category, locale, hasMatchingDomains = true, page = 1, pageSize = 5000 } = options;
-
-        // Validate pagination parameters
-        const validPage = Math.max(1, page);
-        const validPageSize = Math.min(Math.max(1, pageSize), 10000); // Max 10000 items per page
-        const offset = (validPage - 1) * validPageSize;
-
-        // Build the base query for counting total records
-        let countQuery = this.client.from('dictionary').select('*', { count: 'exact', head: true });
-
-        if (category) {
-            countQuery = countQuery.eq('category', category);
-        }
-
-        if (locale) {
-            countQuery = countQuery.eq('locale', locale);
-        }
-
-        if (hasMatchingDomains) {
-            countQuery = countQuery.not('matching_domains', 'is', null);
-        }
-
-        // Get total count
-        const { count, error: countError } = await countQuery;
-        if (countError) {
-            logger.error({ error: countError }, 'Error counting dictionary entries');
-            throw new Error(`Failed to count dictionary entries: ${countError.message}`);
-        }
-
-        const totalCount = count || 0;
-        const totalPages = Math.ceil(totalCount / validPageSize);
-
-        // Build the data query
-        let dataQuery = this.client
-            .from('dictionary')
-            .select('word, category, locale, rank, matching_domains')
-            .order('rank', { ascending: true, nullsFirst: false })
-            .range(offset, offset + validPageSize - 1);
-
-        if (category) {
-            dataQuery = dataQuery.eq('category', category);
-        }
-
-        if (locale) {
-            dataQuery = dataQuery.eq('locale', locale);
-        }
-
-        if (hasMatchingDomains) {
-            dataQuery = dataQuery.not('matching_domains', 'is', null);
-        }
-
-        const { data, error } = await dataQuery;
-        if (error) {
-            logger.error({ error }, 'Error fetching paginated dictionary entries');
-            throw new Error(`Failed to fetch paginated dictionary entries: ${error.message}`);
-        }
-
-        const entries = data.map((entry) => ({
-            word: entry.word,
-            category: entry.category,
-            locale: entry.locale,
-            rank: entry.rank,
-            matchingDomains: entry.matching_domains,
-        }));
-
-        const pagination: PaginationMetadata = {
-            page: validPage,
-            pageSize: validPageSize,
-            totalCount,
-            totalPages,
-            hasNextPage: validPage < totalPages,
-            hasPreviousPage: validPage > 1,
-        };
-
-        return {
-            data: entries,
-            pagination,
-        };
     }
 
     /**
