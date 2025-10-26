@@ -8,19 +8,36 @@ export async function GET(request: Request): Promise<NextResponse> {
         const { searchParams } = new URL(request.url);
         const category = searchParams.get('category') || undefined;
         const locale = searchParams.get('locale') || undefined;
-        const limit = parseInt(searchParams.get('limit') || '1000', 10);
-        const page = searchParams.get('page');
-        const pageSize = searchParams.get('pageSize');
-        
+        const pageParam = searchParams.get('page');
+        const pageSizeParam = searchParams.get('pageSize');
+
+        // Validate required pagination parameters
+        if (!pageParam || !pageSizeParam) {
+            return NextResponse.json(
+                { error: 'Missing required parameters: page and pageSize are required' },
+                { status: 400 },
+            );
+        }
+
+        const page = parseInt(pageParam, 10);
+        const pageSize = parseInt(pageSizeParam, 10);
+
+        // Validate parameter values
+        if (isNaN(page) || isNaN(pageSize) || page < 1 || pageSize < 1) {
+            return NextResponse.json(
+                { error: 'Invalid parameters: page and pageSize must be positive integers' },
+                { status: 400 },
+            );
+        }
+
         const options = {
             category,
             locale,
             hasMatchingDomains: true,
-            limit,
-            page: page ? parseInt(page, 10) : undefined,
-            pageSize: pageSize ? parseInt(pageSize, 10) : undefined,
+            page,
+            pageSize,
         };
-        
+
         const result = await dictionaryRepository.list(options);
         return NextResponse.json(result);
     } catch (error) {
