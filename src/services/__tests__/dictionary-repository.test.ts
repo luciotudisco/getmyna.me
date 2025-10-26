@@ -1,4 +1,5 @@
-import { DictionaryEntry } from '@/models/dictionary';
+import { PaginationMetadata } from '@/models/common';
+import { DictionaryEntry, PaginatedDictionaryResponse } from '@/models/dictionary';
 import { DomainStatus } from '@/models/domain';
 import { dictionaryRepository } from '@/services/dictionary-repository';
 

@@ -1,6 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-import { DictionaryEntry, PaginatedDictionaryResponse, PaginationMetadata } from '@/models/dictionary';
+import { PaginationMetadata } from '@/models/common';
+import { DictionaryEntry, PaginatedDictionaryResponse } from '@/models/dictionary';
 import logger from '@/utils/logger';
 
 /**

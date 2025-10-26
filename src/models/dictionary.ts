@@ -1,4 +1,5 @@
 import { DomainStatus } from '@/models/domain';
+import { PaginatedResponse } from '@/models/common';
 
 export interface DictionaryEntry {
     word: string;
@@ -10,16 +11,4 @@ export interface DictionaryEntry {
     updatedAt?: string;
 }
 
-export interface PaginationMetadata {
-    page: number;
-    pageSize: number;
-    totalCount: number;
-    totalPages: number;
-    hasNextPage: boolean;
-    hasPreviousPage: boolean;
-}
-
-export interface PaginatedDictionaryResponse {
-    data: DictionaryEntry[];
-    pagination: PaginationMetadata;
-}
+export type PaginatedDictionaryResponse = PaginatedResponse<DictionaryEntry>;
