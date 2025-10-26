@@ -93,14 +93,7 @@ class DictionaryRepository {
             pageSize?: number;
         } = {},
     ): Promise<DictionaryEntry[] | PaginatedDictionaryResponse> {
-        const { 
-            category, 
-            locale, 
-            hasMatchingDomains = true, 
-            limit = 1000,
-            page,
-            pageSize
-        } = options;
+        const { category, locale, hasMatchingDomains = true, limit = 1000, page, pageSize } = options;
 
         // Check if pagination is requested
         if (page !== undefined || pageSize !== undefined) {
@@ -109,7 +102,7 @@ class DictionaryRepository {
                 locale,
                 hasMatchingDomains,
                 page: page || 1,
-                pageSize: pageSize || 50,
+                pageSize: pageSize || 5000,
             });
         }
 
@@ -162,11 +155,11 @@ class DictionaryRepository {
             pageSize?: number;
         } = {},
     ): Promise<PaginatedDictionaryResponse> {
-        const { category, locale, hasMatchingDomains = true, page = 1, pageSize = 50 } = options;
+        const { category, locale, hasMatchingDomains = true, page = 1, pageSize = 5000 } = options;
 
         // Validate pagination parameters
         const validPage = Math.max(1, page);
-        const validPageSize = Math.min(Math.max(1, pageSize), 1000); // Max 1000 items per page
+        const validPageSize = Math.min(Math.max(1, pageSize), 10000); // Max 10000 items per page
         const offset = (validPage - 1) * validPageSize;
 
         // Build the base query for counting total records

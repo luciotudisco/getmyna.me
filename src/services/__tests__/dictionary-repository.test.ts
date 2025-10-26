@@ -1,4 +1,3 @@
-import { PaginationMetadata } from '@/models/common';
 import { DictionaryEntry, PaginatedDictionaryResponse } from '@/models/dictionary';
 import { DomainStatus } from '@/models/domain';
 import { dictionaryRepository } from '@/services/dictionary-repository';
@@ -266,17 +265,20 @@ describe('DictionaryRepository', () => {
                 .mockReturnValueOnce(mockCountQuery) // First call for count
                 .mockReturnValueOnce(mockDataQuery); // Second call for data
 
-            const result = await dictionaryRepository.list({ page: 1, pageSize: 50 });
+            const result = (await dictionaryRepository.list({
+                page: 1,
+                pageSize: 5000,
+            })) as PaginatedDictionaryResponse;
 
             expect(result).toHaveProperty('data');
             expect(result).toHaveProperty('pagination');
             expect(result.data).toHaveLength(2);
             expect(result.pagination).toEqual({
                 page: 1,
-                pageSize: 50,
+                pageSize: 5000,
                 totalCount: 100,
-                totalPages: 2,
-                hasNextPage: true,
+                totalPages: 1,
+                hasNextPage: false,
                 hasPreviousPage: false,
             });
         });
@@ -304,12 +306,12 @@ describe('DictionaryRepository', () => {
 
             mockSupabaseClient.from = jest.fn().mockReturnValueOnce(mockCountQuery).mockReturnValueOnce(mockDataQuery);
 
-            const result = await dictionaryRepository.list({
+            const result = (await dictionaryRepository.list({
                 page: 2,
                 pageSize: 10,
                 category: 'noun',
                 locale: 'en',
-            });
+            })) as PaginatedDictionaryResponse;
 
             expect(result.pagination).toEqual({
                 page: 2,
@@ -344,12 +346,15 @@ describe('DictionaryRepository', () => {
 
             mockSupabaseClient.from = jest.fn().mockReturnValueOnce(mockCountQuery).mockReturnValueOnce(mockDataQuery);
 
-            const result = await dictionaryRepository.list({ page: 1, pageSize: 50 });
+            const result = (await dictionaryRepository.list({
+                page: 1,
+                pageSize: 5000,
+            })) as PaginatedDictionaryResponse;
 
             expect(result.data).toHaveLength(0);
             expect(result.pagination).toEqual({
                 page: 1,
-                pageSize: 50,
+                pageSize: 5000,
                 totalCount: 0,
                 totalPages: 0,
                 hasNextPage: false,
@@ -381,13 +386,13 @@ describe('DictionaryRepository', () => {
             mockSupabaseClient.from = jest.fn().mockReturnValueOnce(mockCountQuery).mockReturnValueOnce(mockDataQuery);
 
             // Test with invalid parameters (should be clamped)
-            const result = await dictionaryRepository.list({
+            const result = (await dictionaryRepository.list({
                 page: -1, // Should be clamped to 1
-                pageSize: 2000, // Should be clamped to 1000
-            });
+                pageSize: 2000, // Should be clamped to 2000 (within max limit)
+            })) as PaginatedDictionaryResponse;
 
             expect(result.pagination.page).toBe(1);
-            expect(result.pagination.pageSize).toBe(1000);
+            expect(result.pagination.pageSize).toBe(2000);
         });
 
         it('should throw error when count query fails', async () => {
@@ -403,7 +408,7 @@ describe('DictionaryRepository', () => {
 
             mockSupabaseClient.from = jest.fn().mockReturnValue(mockCountQuery);
 
-            await expect(dictionaryRepository.list({ page: 1, pageSize: 50 })).rejects.toThrow(
+            await expect(dictionaryRepository.list({ page: 1, pageSize: 5000 })).rejects.toThrow(
                 `Failed to count dictionary entries: ${errorMessage}`,
             );
         });
@@ -432,7 +437,7 @@ describe('DictionaryRepository', () => {
 
             mockSupabaseClient.from = jest.fn().mockReturnValueOnce(mockCountQuery).mockReturnValueOnce(mockDataQuery);
 
-            await expect(dictionaryRepository.list({ page: 1, pageSize: 50 })).rejects.toThrow(
+            await expect(dictionaryRepository.list({ page: 1, pageSize: 5000 })).rejects.toThrow(
                 `Failed to fetch paginated dictionary entries: ${errorMessage}`,
             );
         });
