@@ -11,16 +11,9 @@ export async function GET(request: Request): Promise<NextResponse> {
         const pageParam = searchParams.get('page');
         const pageSizeParam = searchParams.get('pageSize');
 
-        // Validate required pagination parameters
-        if (!pageParam || !pageSizeParam) {
-            return NextResponse.json(
-                { error: 'Missing required parameters: page and pageSize are required' },
-                { status: 400 },
-            );
-        }
-
-        const page = parseInt(pageParam, 10);
-        const pageSize = parseInt(pageSizeParam, 10);
+        // Set defaults: page=1, pageSize=5000
+        const page = pageParam ? parseInt(pageParam, 10) : 1;
+        const pageSize = pageSizeParam ? parseInt(pageSizeParam, 10) : 5000;
 
         // Validate parameter values
         if (isNaN(page) || isNaN(pageSize) || page < 1 || pageSize < 1) {
