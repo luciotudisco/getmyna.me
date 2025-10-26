@@ -81,7 +81,7 @@ class DictionaryRepository {
      * Lists dictionary entries from the database.
      *
      * @param options - Filter and pagination options
-     * @returns A list of dictionary entries.
+     * @returns A list of dictionary entries or paginated response.
      */
     async list(
         options: {
@@ -89,9 +89,31 @@ class DictionaryRepository {
             locale?: string;
             hasMatchingDomains?: boolean;
             limit?: number;
+            page?: number;
+            pageSize?: number;
         } = {},
-    ): Promise<DictionaryEntry[]> {
-        const { category, locale, hasMatchingDomains = true, limit = 1000 } = options;
+    ): Promise<DictionaryEntry[] | PaginatedDictionaryResponse> {
+        const { 
+            category, 
+            locale, 
+            hasMatchingDomains = true, 
+            limit = 1000,
+            page,
+            pageSize
+        } = options;
+
+        // Check if pagination is requested
+        if (page !== undefined || pageSize !== undefined) {
+            return this.listPaginated({
+                category,
+                locale,
+                hasMatchingDomains,
+                page: page || 1,
+                pageSize: pageSize || 50,
+            });
+        }
+
+        // Legacy non-paginated behavior
         let query = this.client
             .from('dictionary')
             .select('word, category, locale, rank, matching_domains')
