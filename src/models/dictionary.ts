@@ -1,5 +1,5 @@
-import { DomainStatus } from '@/models/domain';
 import { PaginatedResponse } from '@/models/common';
+import { DomainStatus } from '@/models/domain';
 
 export interface DictionaryEntry {
     word: string;
