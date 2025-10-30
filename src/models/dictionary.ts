@@ -1,3 +1,4 @@
+import { PaginatedResponse } from '@/models/common';
 import { DomainStatus } from '@/models/domain';
 
 export interface DictionaryEntry {
@@ -9,3 +10,5 @@ export interface DictionaryEntry {
     rank?: number;
     updatedAt?: string;
 }
+
+export type PaginatedDictionaryResponse = PaginatedResponse<DictionaryEntry>;

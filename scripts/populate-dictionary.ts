@@ -21,19 +21,8 @@ interface CSVRow {
  */
 async function parseCSV(filePath: string): Promise<CSVRow[]> {
     const fileContent = fs.readFileSync(filePath, 'utf-8');
-    const records = parse(fileContent, {
-        columns: true,
-        skip_empty_lines: true,
-        trim: true,
-    });
-
-    const rows: CSVRow[] = [];
-    for (const record of records as Array<Record<string, string>>) {
-        const row: CSVRow = { word: record.word };
-        rows.push(row);
-    }
-
-    return rows;
+    const records = parse(fileContent, { columns: true, skip_empty_lines: true, trim: true });
+    return records.map((record) => ({ word: (record as Record<string, string>).word })) as CSVRow[];
 }
 
 /**

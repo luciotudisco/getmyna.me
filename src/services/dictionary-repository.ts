@@ -1,6 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-import { DictionaryEntry } from '@/models/dictionary';
+import { PaginationMetadata } from '@/models/common';
+import { DictionaryEntry, PaginatedDictionaryResponse } from '@/models/dictionary';
 import logger from '@/utils/logger';
 
 /**
@@ -77,51 +78,76 @@ class DictionaryRepository {
     }
 
     /**
-     * Lists dictionary entries from the database.
+     * Lists dictionary entries from the database with pagination.
      *
      * @param options - Filter and pagination options
-     * @returns A list of dictionary entries.
+     * @returns A paginated response with dictionary entries and pagination metadata.
      */
-    async list(
-        options: {
-            category?: string;
-            locale?: string;
-            hasMatchingDomains?: boolean;
-            limit?: number;
-        } = {},
-    ): Promise<DictionaryEntry[]> {
-        const { category, locale, hasMatchingDomains = true, limit = 1000 } = options;
-        let query = this.client
+    async list(options: {
+        category?: string;
+        locale?: string;
+        page: number;
+        pageSize: number;
+    }): Promise<PaginatedDictionaryResponse> {
+        const { category, locale, page, pageSize } = options;
+
+        const validPage = Math.max(1, page);
+        const validPageSize = Math.min(Math.max(1, pageSize), 10000);
+        const offset = (validPage - 1) * validPageSize;
+
+        // Build the base query for counting total records
+        let countQuery = this.client.from('dictionary').select('*', { count: 'exact', head: true });
+        countQuery = category ? countQuery.eq('category', category) : countQuery;
+        countQuery = locale ? countQuery.eq('locale', locale) : countQuery;
+        countQuery = countQuery.not('matching_domains', 'is', null);
+
+        // Get total count
+        const { count, error: countError } = await countQuery;
+        if (countError) {
+            logger.error({ error: countError }, 'Error counting dictionary entries');
+            throw new Error(`Failed to count dictionary entries: ${countError.message}`);
+        }
+
+        const totalCount = count || 0;
+        const totalPages = Math.ceil(totalCount / validPageSize);
+
+        // Build the data query
+        let dataQuery = this.client
             .from('dictionary')
             .select('word, category, locale, rank, matching_domains')
             .order('rank', { ascending: true, nullsFirst: false })
-            .limit(limit);
+            .range(offset, offset + validPageSize - 1);
+        dataQuery = category ? dataQuery.eq('category', category) : dataQuery;
+        dataQuery = locale ? dataQuery.eq('locale', locale) : dataQuery;
+        dataQuery = dataQuery.not('matching_domains', 'is', null);
 
-        if (category) {
-            query = query.eq('category', category);
-        }
-
-        if (locale) {
-            query = query.eq('locale', locale);
-        }
-
-        if (hasMatchingDomains) {
-            query = query.not('matching_domains', 'is', null);
-        }
-
-        const { data, error } = await query;
+        const { data, error } = await dataQuery;
         if (error) {
-            logger.error({ error }, 'Error fetching dictionary entries');
-            throw new Error(`Failed to fetch dictionary entries: ${error.message}`);
+            logger.error({ error }, 'Error fetching paginated dictionary entries');
+            throw new Error(`Failed to fetch paginated dictionary entries: ${error.message}`);
         }
 
-        return data.map((entry) => ({
+        const entries = data.map((entry) => ({
             word: entry.word,
             category: entry.category,
             locale: entry.locale,
             rank: entry.rank,
             matchingDomains: entry.matching_domains,
         }));
+
+        const pagination: PaginationMetadata = {
+            page: validPage,
+            pageSize: validPageSize,
+            totalCount,
+            totalPages,
+            hasNextPage: validPage < totalPages,
+            hasPreviousPage: validPage > 1,
+        };
+
+        return {
+            data: entries,
+            pagination,
+        };
     }
 
     /**
