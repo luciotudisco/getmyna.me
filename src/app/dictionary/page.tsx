@@ -2,11 +2,14 @@
 
 import { useCallback, useEffect, useState, useTransition } from 'react';
 import { motion } from 'framer-motion';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import DomainDetailDrawer from '@/components/DomainDetailDrawer';
 import ErrorMessage from '@/components/ErrorMessage';
 import LoadingMessage from '@/components/LoadingMessage';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { PaginationMetadata } from '@/models/common';
 import { Domain } from '@/models/domain';
 import { apiClient } from '@/services/api';
 
@@ -16,33 +19,58 @@ export default function DictionaryPage() {
     const [isPending, startTransition] = useTransition();
     const [selectedDomain, setSelectedDomain] = useState<Domain | null>(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [currentPage, setCurrentPage] = useState<PaginationMetadata>({
+        page: 1,
+        pageSize: 1000,
+        totalCount: 0,
+        totalPages: 0,
+        hasNextPage: false,
+        hasPreviousPage: false,
+    });
+
+    const loadData = useCallback(
+        (page: number) => {
+            startTransition(async () => {
+                try {
+                    setHasError(false);
+                    const response = await apiClient.listWords({ page, pageSize: currentPage.pageSize });
+                    const flatList = response.data.flatMap((e) => e.matchingDomains?.map((d) => d.domain) || []);
+                    const uniqueDomains = Array.from(new Set(flatList));
+                    setDomains(uniqueDomains.map((domain) => new Domain(domain)));
+                    setCurrentPage(response.pagination);
+                } catch {
+                    setHasError(true);
+                }
+            });
+        },
+        [currentPage.pageSize],
+    );
 
     useEffect(() => {
-        startTransition(async () => {
-            try {
-                const data = await apiClient.listWords({ hasMatchingDomains: true });
-                const flatList = data.flatMap((e) => e.matchingDomains?.map((d) => d.domain) || []);
-                const uniqueDomains = Array.from(new Set(flatList));
-                setDomains(uniqueDomains.map((domain) => new Domain(domain)));
-            } catch {
-                setHasError(true);
-            }
-        });
-    }, []);
+        loadData(1);
+    }, [loadData]);
 
-    const handleDomainClick = useCallback(async (domain: Domain) => {
+    const handleItemClick = useCallback(async (domain: Domain) => {
         setSelectedDomain(domain);
         const status = await apiClient.getDomainStatus(domain.getName());
         domain.setStatus(status);
         setIsDrawerOpen(true);
     }, []);
 
+    const handlePreviousPage = useCallback(() => {
+        if (currentPage.hasPreviousPage) {
+            loadData(currentPage.page - 1);
+        }
+    }, [currentPage.hasPreviousPage, currentPage.page, loadData]);
+
+    const handleNextPage = useCallback(() => {
+        if (currentPage.hasNextPage) {
+            loadData(currentPage.page + 1);
+        }
+    }, [currentPage.hasNextPage, currentPage.page, loadData]);
+
     if (hasError) {
         return <ErrorMessage />;
-    }
-
-    if (isPending) {
-        return <LoadingMessage />;
     }
 
     return (
@@ -53,28 +81,62 @@ export default function DictionaryPage() {
                     <h1 className="mt-4 text-2xl font-semibold lg:text-3xl">Domain Hacks Dictionary</h1>
                 </div>
 
-                <div className="mt-3 flex w-full flex-wrap justify-center gap-2 lg:mt-6">
-                    {domains.map((domain) => (
-                        <motion.div
-                            key={domain.getName()}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{
-                                duration: 0.5,
-                                delay: Math.random() * 0.8,
-                                ease: 'easeOut',
-                            }}
-                        >
-                            <Badge
-                                variant="outline"
-                                className="cursor-pointer font-light transition-all duration-300 hover:scale-110 hover:bg-muted"
-                                onClick={() => handleDomainClick(domain)}
-                            >
-                                {domain.getName()}
-                            </Badge>
-                        </motion.div>
-                    ))}
+                {/* Pagination Controls */}
+                <div className="mt-8 flex items-center justify-center gap-4">
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handlePreviousPage}
+                        disabled={!currentPage.hasPreviousPage || isPending}
+                        className="flex min-w-24 items-center gap-2"
+                    >
+                        <ChevronLeft className="h-4 w-4" />
+                    </Button>
+
+                    <div className="flex min-w-24 items-center gap-2 text-sm text-muted-foreground">
+                        <span>
+                            {' '}
+                            {currentPage.page} / {currentPage.totalPages}
+                        </span>
+                    </div>
+
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleNextPage}
+                        disabled={!currentPage.hasNextPage || isPending}
+                        className="flex min-w-24 items-center gap-2"
+                    >
+                        <ChevronRight className="h-4 w-4" />
+                    </Button>
                 </div>
+
+                {isPending ? (
+                    <LoadingMessage />
+                ) : (
+                    <div className="mt-3 flex w-full flex-wrap justify-center gap-2 lg:mt-6">
+                        {domains.map((domain) => (
+                            <motion.div
+                                key={domain.getName()}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{
+                                    duration: 0.5,
+                                    delay: Math.random() * 0.8,
+                                    ease: 'easeOut',
+                                }}
+                            >
+                                <Badge
+                                    variant="outline"
+                                    className="cursor-pointer font-light transition-all duration-300 hover:scale-110 hover:bg-muted"
+                                    onClick={() => handleItemClick(domain)}
+                                >
+                                    {domain.getName()}
+                                </Badge>
+                            </motion.div>
+                        ))}
+                    </div>
+                )}
             </main>
 
             {selectedDomain && (

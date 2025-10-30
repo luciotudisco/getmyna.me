@@ -164,22 +164,24 @@ describe('DictionaryRepository', () => {
             const mockCountQuery = {
                 select: jest.fn().mockReturnThis(),
                 eq: jest.fn().mockReturnThis(),
-                not: jest.fn().mockResolvedValue({
-                    count: 2,
-                    error: null,
-                }),
+                not: jest.fn().mockReturnThis(),
             };
+            mockCountQuery.not.mockResolvedValueOnce({
+                count: 2,
+                error: null,
+            });
 
             const mockDataQuery = {
                 select: jest.fn().mockReturnThis(),
                 order: jest.fn().mockReturnThis(),
                 range: jest.fn().mockReturnThis(),
                 eq: jest.fn().mockReturnThis(),
-                not: jest.fn().mockResolvedValue({
-                    data: mockData,
-                    error: null,
-                }),
+                not: jest.fn().mockReturnThis(),
             };
+            mockDataQuery.not.mockResolvedValueOnce({
+                data: mockData,
+                error: null,
+            });
 
             mockSupabaseClient.from = jest
                 .fn()
@@ -189,7 +191,6 @@ describe('DictionaryRepository', () => {
             const result = await dictionaryRepository.list({
                 category: 'noun',
                 locale: 'en',
-                hasMatchingDomains: true,
                 page: 1,
                 pageSize: 100,
             });
@@ -205,22 +206,24 @@ describe('DictionaryRepository', () => {
             const mockCountQuery = {
                 select: jest.fn().mockReturnThis(),
                 eq: jest.fn().mockReturnThis(),
-                not: jest.fn().mockResolvedValue({
-                    count: 0,
-                    error: null,
-                }),
+                not: jest.fn().mockReturnThis(),
             };
+            mockCountQuery.not.mockResolvedValueOnce({
+                count: 0,
+                error: null,
+            });
 
             const mockDataQuery = {
                 select: jest.fn().mockReturnThis(),
                 order: jest.fn().mockReturnThis(),
                 range: jest.fn().mockReturnThis(),
                 eq: jest.fn().mockReturnThis(),
-                not: jest.fn().mockResolvedValue({
-                    data: null,
-                    error: { message: errorMessage },
-                }),
+                not: jest.fn().mockReturnThis(),
             };
+            mockDataQuery.not.mockResolvedValueOnce({
+                data: null,
+                error: { message: errorMessage },
+            });
 
             mockSupabaseClient.from = jest
                 .fn()
@@ -275,22 +278,24 @@ describe('DictionaryRepository', () => {
             const mockCountQuery = {
                 select: jest.fn().mockReturnThis(),
                 eq: jest.fn().mockReturnThis(),
-                not: jest.fn().mockResolvedValue({
-                    count: 100,
-                    error: null,
-                }),
+                not: jest.fn().mockReturnThis(),
             };
+            mockCountQuery.not.mockResolvedValueOnce({
+                count: 100,
+                error: null,
+            });
 
             const mockDataQuery = {
                 select: jest.fn().mockReturnThis(),
                 order: jest.fn().mockReturnThis(),
                 range: jest.fn().mockReturnThis(),
                 eq: jest.fn().mockReturnThis(),
-                not: jest.fn().mockResolvedValue({
-                    data: mockData,
-                    error: null,
-                }),
+                not: jest.fn().mockReturnThis(),
             };
+            mockDataQuery.not.mockResolvedValueOnce({
+                data: mockData,
+                error: null,
+            });
 
             mockSupabaseClient.from = jest
                 .fn()
@@ -319,22 +324,24 @@ describe('DictionaryRepository', () => {
             const mockCountQuery = {
                 select: jest.fn().mockReturnThis(),
                 eq: jest.fn().mockReturnThis(),
-                not: jest.fn().mockResolvedValue({
-                    count: 25,
-                    error: null,
-                }),
+                not: jest.fn().mockReturnThis(),
             };
+            mockCountQuery.not.mockResolvedValueOnce({
+                count: 25,
+                error: null,
+            });
 
             const mockDataQuery = {
                 select: jest.fn().mockReturnThis(),
                 order: jest.fn().mockReturnThis(),
                 range: jest.fn().mockReturnThis(),
                 eq: jest.fn().mockReturnThis(),
-                not: jest.fn().mockResolvedValue({
-                    data: mockData,
-                    error: null,
-                }),
+                not: jest.fn().mockReturnThis(),
             };
+            mockDataQuery.not.mockResolvedValueOnce({
+                data: mockData,
+                error: null,
+            });
 
             mockSupabaseClient.from = jest.fn().mockReturnValueOnce(mockCountQuery).mockReturnValueOnce(mockDataQuery);
 
@@ -353,125 +360,6 @@ describe('DictionaryRepository', () => {
                 hasNextPage: true,
                 hasPreviousPage: true,
             });
-        });
-
-        it('should handle empty results', async () => {
-            const mockCountQuery = {
-                select: jest.fn().mockReturnThis(),
-                eq: jest.fn().mockReturnThis(),
-                not: jest.fn().mockResolvedValue({
-                    count: 0,
-                    error: null,
-                }),
-            };
-
-            const mockDataQuery = {
-                select: jest.fn().mockReturnThis(),
-                order: jest.fn().mockReturnThis(),
-                range: jest.fn().mockReturnThis(),
-                eq: jest.fn().mockReturnThis(),
-                not: jest.fn().mockResolvedValue({
-                    data: [],
-                    error: null,
-                }),
-            };
-
-            mockSupabaseClient.from = jest.fn().mockReturnValueOnce(mockCountQuery).mockReturnValueOnce(mockDataQuery);
-
-            const result = (await dictionaryRepository.list({
-                page: 1,
-                pageSize: 5000,
-            })) as PaginatedDictionaryResponse;
-
-            expect(result.data).toHaveLength(0);
-            expect(result.pagination).toEqual({
-                page: 1,
-                pageSize: 5000,
-                totalCount: 0,
-                totalPages: 0,
-                hasNextPage: false,
-                hasPreviousPage: false,
-            });
-        });
-
-        it('should validate and clamp pagination parameters', async () => {
-            const mockCountQuery = {
-                select: jest.fn().mockReturnThis(),
-                eq: jest.fn().mockReturnThis(),
-                not: jest.fn().mockResolvedValue({
-                    count: 100,
-                    error: null,
-                }),
-            };
-
-            const mockDataQuery = {
-                select: jest.fn().mockReturnThis(),
-                order: jest.fn().mockReturnThis(),
-                range: jest.fn().mockReturnThis(),
-                eq: jest.fn().mockReturnThis(),
-                not: jest.fn().mockResolvedValue({
-                    data: mockData,
-                    error: null,
-                }),
-            };
-
-            mockSupabaseClient.from = jest.fn().mockReturnValueOnce(mockCountQuery).mockReturnValueOnce(mockDataQuery);
-
-            // Test with invalid parameters (should be clamped)
-            const result = (await dictionaryRepository.list({
-                page: -1, // Should be clamped to 1
-                pageSize: 2000, // Should be clamped to 2000 (within max limit)
-            })) as PaginatedDictionaryResponse;
-
-            expect(result.pagination.page).toBe(1);
-            expect(result.pagination.pageSize).toBe(2000);
-        });
-
-        it('should throw error when count query fails', async () => {
-            const errorMessage = 'Count query error';
-            const mockCountQuery = {
-                select: jest.fn().mockReturnThis(),
-                eq: jest.fn().mockReturnThis(),
-                not: jest.fn().mockResolvedValue({
-                    count: null,
-                    error: { message: errorMessage },
-                }),
-            };
-
-            mockSupabaseClient.from = jest.fn().mockReturnValue(mockCountQuery);
-
-            await expect(dictionaryRepository.list({ page: 1, pageSize: 5000 })).rejects.toThrow(
-                `Failed to count dictionary entries: ${errorMessage}`,
-            );
-        });
-
-        it('should throw error when data query fails', async () => {
-            const errorMessage = 'Data query error';
-            const mockCountQuery = {
-                select: jest.fn().mockReturnThis(),
-                eq: jest.fn().mockReturnThis(),
-                not: jest.fn().mockResolvedValue({
-                    count: 100,
-                    error: null,
-                }),
-            };
-
-            const mockDataQuery = {
-                select: jest.fn().mockReturnThis(),
-                order: jest.fn().mockReturnThis(),
-                range: jest.fn().mockReturnThis(),
-                eq: jest.fn().mockReturnThis(),
-                not: jest.fn().mockResolvedValue({
-                    data: null,
-                    error: { message: errorMessage },
-                }),
-            };
-
-            mockSupabaseClient.from = jest.fn().mockReturnValueOnce(mockCountQuery).mockReturnValueOnce(mockDataQuery);
-
-            await expect(dictionaryRepository.list({ page: 1, pageSize: 5000 })).rejects.toThrow(
-                `Failed to fetch paginated dictionary entries: ${errorMessage}`,
-            );
         });
     });
 

@@ -86,31 +86,20 @@ class DictionaryRepository {
     async list(options: {
         category?: string;
         locale?: string;
-        hasMatchingDomains?: boolean;
         page: number;
         pageSize: number;
     }): Promise<PaginatedDictionaryResponse> {
-        const { category, locale, hasMatchingDomains = true, page, pageSize } = options;
+        const { category, locale, page, pageSize } = options;
 
-        // Validate pagination parameters
         const validPage = Math.max(1, page);
-        const validPageSize = Math.min(Math.max(1, pageSize), 10000); // Max 10000 items per page
+        const validPageSize = Math.min(Math.max(1, pageSize), 10000);
         const offset = (validPage - 1) * validPageSize;
 
         // Build the base query for counting total records
         let countQuery = this.client.from('dictionary').select('*', { count: 'exact', head: true });
-
-        if (category) {
-            countQuery = countQuery.eq('category', category);
-        }
-
-        if (locale) {
-            countQuery = countQuery.eq('locale', locale);
-        }
-
-        if (hasMatchingDomains) {
-            countQuery = countQuery.not('matching_domains', 'is', null);
-        }
+        countQuery = category ? countQuery.eq('category', category) : countQuery;
+        countQuery = locale ? countQuery.eq('locale', locale) : countQuery;
+        countQuery = countQuery.not('matching_domains', 'is', null);
 
         // Get total count
         const { count, error: countError } = await countQuery;
@@ -128,18 +117,9 @@ class DictionaryRepository {
             .select('word, category, locale, rank, matching_domains')
             .order('rank', { ascending: true, nullsFirst: false })
             .range(offset, offset + validPageSize - 1);
-
-        if (category) {
-            dataQuery = dataQuery.eq('category', category);
-        }
-
-        if (locale) {
-            dataQuery = dataQuery.eq('locale', locale);
-        }
-
-        if (hasMatchingDomains) {
-            dataQuery = dataQuery.not('matching_domains', 'is', null);
-        }
+        dataQuery = category ? dataQuery.eq('category', category) : dataQuery;
+        dataQuery = locale ? dataQuery.eq('locale', locale) : dataQuery;
+        dataQuery = dataQuery.not('matching_domains', 'is', null);
 
         const { data, error } = await dataQuery;
         if (error) {

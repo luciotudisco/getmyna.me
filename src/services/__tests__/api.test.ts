@@ -216,9 +216,20 @@ describe('APIClient', () => {
                 { word: 'example', matchingDomains: [{ domain: 'example.com' }, { domain: 'example.dev' }] },
                 { word: 'test', matchingDomains: [{ domain: 'test.io' }] },
             ];
-            mockAdapter.onGet('/api/dictionary?hasMatchingDomains=true').reply(200, mockEntries);
-            const result = (await apiClient.listWords({ hasMatchingDomains: true })) as DictionaryEntry[];
-            expect(result).toEqual(mockEntries);
+            const mockResponse = {
+                data: mockEntries,
+                pagination: {
+                    page: 1,
+                    pageSize: 5000,
+                    totalCount: 2,
+                    totalPages: 1,
+                    hasNextPage: false,
+                    hasPreviousPage: false,
+                },
+            };
+            mockAdapter.onGet('/api/dictionary?').reply(200, mockResponse);
+            const result = await apiClient.listWords();
+            expect(result).toEqual(mockResponse);
         });
     });
 
