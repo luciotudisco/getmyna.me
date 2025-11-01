@@ -98,6 +98,11 @@ SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 # AI & External APIs
 OPENAI_API_KEY=your_openai_api_key
 RAPID_API_KEY=your_rapid_api_key
+
+# Search (Algolia)
+ALGOLIA_APP_ID=your_algolia_app_id
+ALGOLIA_API_KEY=your_algolia_api_key
+ALGOLIA_INDEX_NAME=dictionary_entries
 ```
 
 ### Getting API Keys
@@ -109,6 +114,7 @@ RAPID_API_KEY=your_rapid_api_key
 - **Supabase**: [Project Settings](https://app.supabase.com/project/_/settings/api)
 - **OpenAI**: [API Keys](https://platform.openai.com/api-keys)
 - **RapidAPI**: [API Hub](https://rapidapi.com/)
+- **Algolia**: [Dashboard](https://www.algolia.com/dashboard) - Get your App ID and API Key
 
 ## 🛠 Development
 
@@ -130,6 +136,9 @@ npm run code-quality # Run both linting and type checking
 # Testing
 npm test            # Run tests
 npm run test:watch  # Run tests in watch mode
+
+# Data Management
+npm run populate-dictionary <csv-file>  # Populate dictionary from CSV and index in Algolia
 ```
 
 ### Project Structure
