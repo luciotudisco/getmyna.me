@@ -86,18 +86,18 @@ export default function DictionaryPage() {
                             )}
                             classNames={{
                                 root: 'w-full',
-                                list: 'flex flex-wrap gap-2',
+                                list: 'flex flex-wrap gap-2 items-center justify-center',
                             }}
                         />
                     </div>
 
-                    <div className="mt-auto p-4">
+                    <div className="mt-auto p-6">
                         <div className="m-auto w-full max-w-6xl">
                             <Pagination
                                 classNames={{
                                     root: 'flex items-center justify-center gap-2',
                                     list: 'flex items-center gap-1',
-                                    item: 'px-3 py-2 text-sm border border-input rounded-md hover:bg-muted transition-colors',
+                                    item: 'px-3 py-3 text-sm border border-input rounded-md hover:bg-muted transition-colors',
                                     selectedItem: 'bg-primary text-primary-foreground border-primary',
                                     disabledItem: 'opacity-50 cursor-not-allowed',
                                     link: 'block w-full h-full',
