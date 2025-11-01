@@ -9,13 +9,10 @@ import { Badge } from '@/components/ui/badge';
 import { Domain } from '@/models/domain';
 import { apiClient } from '@/services/api';
 
-// Algolia search client
-const searchClient = algoliasearch(
-    process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!,
-    process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY!,
-);
+const ALGOLIA_APP_ID = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!;
+const ALGOLIA_SEARCH_KEY = process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY!;
+const searchClient = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_SEARCH_KEY);
 
-// Define the hit type based on our Algolia object structure
 interface AlgoliaHit {
     objectID: string;
     word: string;
