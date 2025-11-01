@@ -21,7 +21,7 @@ export default function DictionaryPage() {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState<PaginationMetadata>({
         page: 1,
-        pageSize: 1000,
+        pageSize: 500,
         totalCount: 0,
         totalPages: 0,
         hasNextPage: false,
@@ -52,9 +52,9 @@ export default function DictionaryPage() {
 
     const handleItemClick = useCallback(async (domain: Domain) => {
         setSelectedDomain(domain);
+        setIsDrawerOpen(true);
         const status = await apiClient.getDomainStatus(domain.getName());
         domain.setStatus(status);
-        setIsDrawerOpen(true);
     }, []);
 
     const handlePreviousPage = useCallback(() => {
@@ -93,7 +93,7 @@ export default function DictionaryPage() {
                         <ChevronLeft className="h-4 w-4" />
                     </Button>
 
-                    <div className="flex min-w-24 items-center gap-2 text-sm text-muted-foreground">
+                    <div className="flex w-full items-center gap-2 text-sm text-muted-foreground">
                         <span>
                             {' '}
                             {currentPage.page} / {currentPage.totalPages}
