@@ -102,7 +102,12 @@ RAPID_API_KEY=your_rapid_api_key
 # Search (Algolia)
 ALGOLIA_APP_ID=your_algolia_app_id
 ALGOLIA_API_KEY=your_algolia_api_key
-ALGOLIA_INDEX_NAME=dictionary_entries
+ALGOLIA_INDEX_NAME=dictionary
+
+# Search (Algolia - Client-side)
+NEXT_PUBLIC_ALGOLIA_APP_ID=your_algolia_app_id
+NEXT_PUBLIC_ALGOLIA_SEARCH_KEY=your_algolia_search_only_api_key
+NEXT_PUBLIC_ALGOLIA_INDEX_NAME=dictionary
 ```
 
 ### Getting API Keys

@@ -10,7 +10,8 @@ import SearchBar from '@/components/SearchBar';
 import { Button } from '@/components/ui/button';
 
 export default function Header() {
-    const isHome = usePathname() === '/';
+    const pathname = usePathname();
+    const showSearchBar = !['/', '/dictionary'].includes(pathname);
 
     return (
         <header
@@ -22,8 +23,7 @@ export default function Header() {
             </Link>
 
             <div className="flex w-full items-center gap-4">
-                {/* Title on home page, search bar on other pages */}
-                {isHome ? (
+                {!showSearchBar ? (
                     <h1 className="font-mono text-xl font-extralight uppercase">GetMyNa.me</h1>
                 ) : (
                     <Suspense>
@@ -31,10 +31,8 @@ export default function Header() {
                     </Suspense>
                 )}
 
-                {/* Spacer */}
                 <div className="flex-1" aria-hidden />
 
-                {/* About button */}
                 <Button asChild variant="ghost" size="icon" aria-label="About GetMyNa.me">
                     <Link href="/about" prefetch>
                         <Info aria-hidden className="size-5" />
