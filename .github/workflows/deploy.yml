@@ -21,10 +21,14 @@ jobs:
 
             - name: 🏗️ Build Next.js
               env:
+                  ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_API_KEY }}
                   DYNADOT_API_KEY: ${{ secrets.DYNADOT_API_KEY }}
                   GANDI_API_KEY: ${{ secrets.GANDI_API_KEY }}
                   NAMECOM_API_KEY: ${{ secrets.NAMECOM_API_KEY }}
                   NAMESILO_API_KEY: ${{ secrets.NAMESILO_API_KEY }}
+                  NEXT_PUBLIC_ALGOLIA_APP_ID: ${{ secrets.NEXT_PUBLIC_ALGOLIA_APP_ID }}
+                  NEXT_PUBLIC_ALGOLIA_INDEX_NAME: ${{ secrets.NEXT_PUBLIC_ALGOLIA_INDEX_NAME }}
+                  NEXT_PUBLIC_ALGOLIA_SEARCH_KEY: ${{ secrets.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY }}
                   NEXT_PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.NEXT_PUBLIC_AMPLITUDE_API_KEY }}
                   NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
                   NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
