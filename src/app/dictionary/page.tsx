@@ -3,7 +3,6 @@
 import { useCallback, useState } from 'react';
 import { Hits, InstantSearch, Pagination, SearchBox } from 'react-instantsearch';
 import { liteClient as algoliasearch } from 'algoliasearch/lite';
-import { motion } from 'framer-motion';
 
 import DomainDetailDrawer from '@/components/DomainDetailDrawer';
 import { Badge } from '@/components/ui/badge';
@@ -23,59 +22,21 @@ interface AlgoliaHit {
     category?: string;
     locale?: string;
     rank?: number;
-    matchingDomains?: Array<{ domain: string; status?: string }>;
-    domainCount: number;
+    domain: string;
+    tld: string;
 }
 
 // Custom Hit component for displaying search results
 function Hit({ hit, onDomainClick }: { hit: AlgoliaHit; onDomainClick: (domain: Domain) => void }) {
-    const domains = hit.matchingDomains || [];
-
-    // Don't render if no matching domains (additional safeguard)
-    if (domains.length === 0) {
-        return null;
-    }
-
-    const handleKeyDown = (event: React.KeyboardEvent) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            onDomainClick(new Domain(domains[0].domain));
-        }
-    };
-
     return (
-        <div
-            className="mb-4 flex cursor-pointer flex-row justify-between gap-2 rounded-md border p-3 align-middle hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring"
-            onClick={() => onDomainClick(new Domain(domains[0].domain))}
-            onKeyDown={handleKeyDown}
-            role="button"
-            tabIndex={0}
-            aria-label={`View domain hacks for ${hit.word}`}
+        <Badge
+            key={hit.objectID}
+            variant="outline"
+            className="cursor-pointer font-light transition-all duration-300 hover:scale-110 hover:bg-muted"
+            onClick={() => onDomainClick(new Domain(hit.domain))}
         >
-            <h3 className="text-md font-black">{hit.word}</h3>
-            <div className="flex flex-wrap gap-2 align-middle">
-                {domains.map((domainData: { domain: string; status?: string }, index: number) => (
-                    <motion.div
-                        key={`${hit.objectID}-${index}`}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{
-                            duration: 0.3,
-                            delay: index * 0.05,
-                            ease: 'easeOut',
-                        }}
-                    >
-                        <Badge
-                            variant="outline"
-                            className="cursor-pointer font-light transition-all duration-300 hover:scale-110 hover:bg-muted"
-                            onClick={() => onDomainClick(new Domain(domainData.domain))}
-                        >
-                            {domainData.domain}
-                        </Badge>
-                    </motion.div>
-                ))}
-            </div>
-        </div>
+            {hit.domain}
+        </Badge>
     );
 }
 
@@ -91,15 +52,17 @@ export default function DictionaryPage() {
     }, []);
 
     return (
-        <div className="min-h-screen">
-            <main className="m-auto flex w-full max-w-6xl flex-col items-center gap-2 p-5 md:p-10">
-                <div className="mb-5 text-center md:mb-10">
-                    <Badge className="text-xs font-medium">DICTIONARY</Badge>
-                    <h1 className="mt-4 text-2xl font-semibold lg:text-3xl">Domain Hacks Dictionary</h1>
-                    <p className="mt-2 text-muted-foreground">Search through words that have available domain hacks</p>
-                </div>
+        <div className="flex min-h-screen flex-col">
+            <InstantSearch searchClient={searchClient} indexName={process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME!}>
+                <main className="m-auto flex w-full max-w-6xl flex-grow flex-col items-center gap-2 p-5 md:p-10">
+                    <div className="mb-5 text-center md:mb-10">
+                        <Badge className="text-xs font-medium">DICTIONARY</Badge>
+                        <h1 className="mt-4 text-2xl font-semibold lg:text-3xl">Domain Hacks Dictionary</h1>
+                        <p className="mt-2 text-muted-foreground">
+                            Search through words that have available domain hacks
+                        </p>
+                    </div>
 
-                <InstantSearch searchClient={searchClient} indexName={process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME!}>
                     {/* Search Box */}
                     <div className="w-full max-w-4xl">
                         <SearchBox
@@ -115,34 +78,38 @@ export default function DictionaryPage() {
                     </div>
 
                     {/* Search Results */}
-                    <div className="w-full max-w-4xl">
+                    <div className="w-full max-w-4xl flex-grow">
                         <Hits
                             hitComponent={({ hit }) => (
-                                <Hit hit={hit as unknown as AlgoliaHit} onDomainClick={handleDomainClick} />
+                                <Hit
+                                    hit={hit as unknown as AlgoliaHit}
+                                    onDomainClick={handleDomainClick}
+                                    key={hit.objectID}
+                                />
                             )}
                             classNames={{
                                 root: 'w-full',
-                                list: 'space-y-4',
-                                item: 'w-full',
+                                list: 'flex flex-wrap gap-2',
                             }}
                         />
                     </div>
 
-                    {/* Pagination */}
-                    <div className="mt-8">
-                        <Pagination
-                            classNames={{
-                                root: 'flex items-center justify-center gap-2',
-                                list: 'flex items-center gap-1',
-                                item: 'px-3 py-2 text-sm border border-input rounded-md hover:bg-muted transition-colors',
-                                selectedItem: 'bg-primary text-primary-foreground border-primary',
-                                disabledItem: 'opacity-50 cursor-not-allowed',
-                                link: 'block w-full h-full',
-                            }}
-                        />
+                    <div className="mt-auto p-4">
+                        <div className="m-auto w-full max-w-6xl">
+                            <Pagination
+                                classNames={{
+                                    root: 'flex items-center justify-center gap-2',
+                                    list: 'flex items-center gap-1',
+                                    item: 'px-3 py-2 text-sm border border-input rounded-md hover:bg-muted transition-colors',
+                                    selectedItem: 'bg-primary text-primary-foreground border-primary',
+                                    disabledItem: 'opacity-50 cursor-not-allowed',
+                                    link: 'block w-full h-full',
+                                }}
+                            />
+                        </div>
                     </div>
-                </InstantSearch>
-            </main>
+                </main>
+            </InstantSearch>
 
             {selectedDomain && (
                 <DomainDetailDrawer

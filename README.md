@@ -100,9 +100,7 @@ OPENAI_API_KEY=your_openai_api_key
 RAPID_API_KEY=your_rapid_api_key
 
 # Search (Algolia)
-ALGOLIA_APP_ID=your_algolia_app_id
 ALGOLIA_API_KEY=your_algolia_api_key
-ALGOLIA_INDEX_NAME=dictionary
 
 # Search (Algolia - Client-side)
 NEXT_PUBLIC_ALGOLIA_APP_ID=your_algolia_app_id

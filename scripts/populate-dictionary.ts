@@ -1,18 +1,17 @@
 #!/usr/bin/env node
-
 import { algoliasearch } from 'algoliasearch';
 import { parse } from 'csv-parse/sync';
-import dotenv from 'dotenv';
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { DictionaryEntry } from '../src/models/dictionary';
-import { dictionaryRepository } from '../src/services/dictionary-repository';
+import { Domain } from '../src/models/domain';
 import { DomainHacksGenerator } from '../src/services/domain-hacks';
 import { tldRepository } from '../src/services/tld-repository';
 import logger from '../src/utils/logger';
 
-dotenv.config({ path: '.env.local' });
+const ALGOLIA_INDEX_NAME = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME!;
+const ALGOLIA_APP_ID = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!;
+const ALGOLIA_API_KEY = process.env.ALGOLIA_API_KEY!;
 
 interface CSVRow {
     word: string;
@@ -30,37 +29,39 @@ async function parseCSV(filePath: string): Promise<CSVRow[]> {
 }
 
 /**
- * Populates the Supabase table and Algolia index with the dictionary from a CSV file.
+ * Populates the Algolia dictionary domain hacks from words in a CSV file.
  * @param csvPath - Path to the CSV file
  */
 async function populateDictionary(csvPath: string): Promise<void> {
     logger.info({ csvPath }, 'Starting dictionary population');
     const rows = await parseCSV(csvPath);
     logger.info({ count: rows.length }, 'Parsed CSV rows');
+
     const tlds = await tldRepository.list();
     const domainHacks = new DomainHacksGenerator(tlds);
-    const algoliaClient = algoliasearch(process.env.ALGOLIA_APP_ID!, process.env.ALGOLIA_API_KEY!);
+    const algoliaClient = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY);
 
+    logger.info('Starting Algolia indexing...');
+    let indexedCount = 0;
     for (let index = 0; index < rows.length; index++) {
         const row = rows[index];
-        const domains = domainHacks.getDomainsHacks(row.word, false);
-        const matchingDomains = domains.length > 0 ? domains.map((domain) => ({ domain })) : undefined;
-        const entry: DictionaryEntry = {
-            word: row.word,
-            locale: 'en_US',
-            rank: index + 1,
-            matchingDomains,
-        };
-
-        // Create entry in database
-        await dictionaryRepository.create(entry);
-        logger.info({ word: row.word, matchingDomains: matchingDomains?.length }, 'Created dictionary entry');
-
-        // Create entry in Algolia
-        const algoliaObject = { objectID: entry.word, ...entry };
-        await algoliaClient.saveObject({ indexName: process.env.ALGOLIA_INDEX_NAME!, body: algoliaObject });
+        const domainNames = domainHacks.getDomainsHacks(row.word, false);
+        for (const domainName of domainNames) {
+            logger.info({ domainName }, 'Processing domain name');
+            const domain = new Domain(domainName);
+            const entry = {
+                objectID: domain.getName(),
+                domain: domain.getName(),
+                tld: domain.getTLD(),
+                word: row.word,
+                category: 'common',
+                locale: 'en_US',
+                rank: indexedCount + 1,
+            };
+            await algoliaClient.saveObject({ indexName: ALGOLIA_INDEX_NAME, body: entry });
+            indexedCount++;
+        }
     }
-
     logger.info('Dictionary population and Algolia indexing completed');
 }
 
