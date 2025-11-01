@@ -29,7 +29,7 @@ function Hit({ hit, onDomainClick }: { hit: AlgoliaHit; onDomainClick: (domain: 
         <Badge
             key={hit.objectID}
             variant="outline"
-            className="cursor-pointer font-light transition-all duration-300 hover:scale-110 hover:bg-muted"
+            className="cursor-pointer p-3 font-light transition-all duration-300 hover:scale-110 hover:bg-muted"
             onClick={() => onDomainClick(new Domain(hit.domain))}
         >
             {hit.domain}
@@ -60,7 +60,6 @@ export default function DictionaryPage() {
                         </p>
                     </div>
 
-                    {/* Search Box */}
                     <div className="w-full max-w-4xl">
                         <SearchBox
                             placeholder="Search for words with domain hacks (e.g., 'example', 'creative', 'domain')..."
@@ -68,13 +67,12 @@ export default function DictionaryPage() {
                                 root: 'w-full mb-3',
                                 form: 'relative',
                                 input: 'w-full px-4 py-2 !text-base border border-input bg-background rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent ',
-                                submit: 'absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground',
+                                submit: 'hidden',
                                 reset: 'absolute right-12 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground',
                             }}
                         />
                     </div>
 
-                    {/* Search Results */}
                     <div className="w-full max-w-4xl flex-grow">
                         <Hits
                             hitComponent={({ hit }) => (
