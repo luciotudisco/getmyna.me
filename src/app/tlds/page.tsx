@@ -97,7 +97,7 @@ export default function TldsPage() {
                         >
                             <Badge
                                 variant="outline"
-                                className="cursor-pointer p-3 font-light transition-all duration-300 hover:scale-110 hover:bg-muted"
+                                className="cursor-pointer p-1 font-light transition-all duration-300 hover:scale-110 hover:bg-muted md:p-3"
                                 onClick={() => showDrawer(tld)}
                             >
                                 .{tld.name}
