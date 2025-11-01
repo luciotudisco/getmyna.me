@@ -95,8 +95,8 @@ export default function DictionaryPage() {
                                 classNames={{
                                     root: 'flex items-center justify-center gap-2',
                                     list: 'flex items-center gap-1',
-                                    item: 'px-3 py-3 text-sm border border-input rounded-md',
-                                    selectedItem: 'bg-primary text-primary-foreground border-primary',
+                                    item: 'px-3 py-3 text-sm',
+                                    selectedItem: 'bg-primary text-primary-foreground',
                                     disabledItem: 'opacity-50 cursor-not-allowed',
                                     link: 'block w-full h-full',
                                 }}
