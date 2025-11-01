@@ -67,7 +67,7 @@ export default function DictionaryPage() {
                             classNames={{
                                 root: 'w-full mb-3',
                                 form: 'relative',
-                                input: 'w-full px-4 py-3 text-md border border-input bg-background rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent ',
+                                input: 'w-full px-4 py-2 !text-base border border-input bg-background rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent ',
                                 submit: 'absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground',
                                 reset: 'absolute right-12 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground',
                             }}
@@ -97,7 +97,7 @@ export default function DictionaryPage() {
                                 classNames={{
                                     root: 'flex items-center justify-center gap-2',
                                     list: 'flex items-center gap-1',
-                                    item: 'px-3 py-3 text-sm border border-input rounded-md hover:bg-muted transition-colors',
+                                    item: 'px-3 py-3 text-sm border border-input rounded-md',
                                     selectedItem: 'bg-primary text-primary-foreground border-primary',
                                     disabledItem: 'opacity-50 cursor-not-allowed',
                                     link: 'block w-full h-full',
