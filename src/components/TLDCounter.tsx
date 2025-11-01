@@ -56,7 +56,7 @@ function TLDCounter() {
     }, []);
 
     return (
-        <div className="flex flex-col items-center justify-center gap-1 pb-8">
+        <div className="flex flex-col items-center justify-center gap-1">
             <h2 className="text-muted-foreground">Powered by a collection of</h2>
             <CountDisplay isPending={isPending} hasError={hasError} count={count} />
         </div>
