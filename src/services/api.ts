@@ -1,6 +1,5 @@
 import axios, { AxiosError, AxiosInstance } from 'axios';
 
-import { PaginatedDictionaryResponse } from '@/models/dictionary';
 import { DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { TLD } from '@/models/tld';
 import { WhoisInfo } from '@/models/whois';
@@ -73,21 +72,6 @@ class APIClient {
     async getTLDsCount(): Promise<number> {
         const response = await this.client.get('/api/tlds/count');
         return response.data.count ?? 0;
-    }
-
-    /**
-     * Lists words from the dictionary with optional filters and pagination.
-     */
-    async listWords(options?: {
-        category?: string;
-        locale?: string;
-        page?: number;
-        pageSize?: number;
-    }): Promise<PaginatedDictionaryResponse> {
-        const filteredOptions = Object.fromEntries(Object.entries(options ?? {}).filter(([, v]) => v !== undefined));
-        const params = new URLSearchParams(Object.entries(filteredOptions).map(([key, value]) => [key, String(value)]));
-        const response = await this.client.get(`/api/dictionary?${params.toString()}`);
-        return response.data as PaginatedDictionaryResponse;
     }
 
     /**
