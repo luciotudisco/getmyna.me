@@ -16,8 +16,19 @@ const searchClient = algoliasearch(
     process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY!,
 );
 
+// Define the hit type based on our Algolia object structure
+interface AlgoliaHit {
+    objectID: string;
+    word: string;
+    category?: string;
+    locale?: string;
+    rank?: number;
+    matchingDomains?: Array<{ domain: string; status?: string }>;
+    domainCount: number;
+}
+
 // Custom Hit component for displaying search results
-function Hit({ hit, onDomainClick }: { hit: any; onDomainClick: (domain: Domain) => void }) {
+function Hit({ hit, onDomainClick }: { hit: AlgoliaHit; onDomainClick: (domain: Domain) => void }) {
     const domains = hit.matchingDomains || [];
 
     // Don't render if no matching domains (additional safeguard)
@@ -25,11 +36,25 @@ function Hit({ hit, onDomainClick }: { hit: any; onDomainClick: (domain: Domain)
         return null;
     }
 
+    const handleKeyDown = (event: React.KeyboardEvent) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            onDomainClick(new Domain(domains[0].domain));
+        }
+    };
+
     return (
-        <div className="mb-4 rounded-lg border p-4">
-            <h3 className="mb-2 text-lg font-semibold">{hit.word}</h3>
-            <div className="flex flex-wrap gap-2">
-                {domains.map((domainData: any, index: number) => (
+        <div
+            className="mb-4 flex cursor-pointer flex-row justify-between gap-2 rounded-md border p-3 align-middle hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring"
+            onClick={() => onDomainClick(new Domain(domains[0].domain))}
+            onKeyDown={handleKeyDown}
+            role="button"
+            tabIndex={0}
+            aria-label={`View domain hacks for ${hit.word}`}
+        >
+            <h3 className="text-md font-black">{hit.word}</h3>
+            <div className="flex flex-wrap gap-2 align-middle">
+                {domains.map((domainData: { domain: string; status?: string }, index: number) => (
                     <motion.div
                         key={`${hit.objectID}-${index}`}
                         initial={{ opacity: 0, y: 20 }}
@@ -68,7 +93,7 @@ export default function DictionaryPage() {
     return (
         <div className="min-h-screen">
             <main className="m-auto flex w-full max-w-6xl flex-col items-center gap-2 p-5 md:p-10">
-                <div className="text-center">
+                <div className="mb-5 text-center md:mb-10">
                     <Badge className="text-xs font-medium">DICTIONARY</Badge>
                     <h1 className="mt-4 text-2xl font-semibold lg:text-3xl">Domain Hacks Dictionary</h1>
                     <p className="mt-2 text-muted-foreground">Search through words that have available domain hacks</p>
@@ -80,9 +105,9 @@ export default function DictionaryPage() {
                         <SearchBox
                             placeholder="Search for words with domain hacks (e.g., 'example', 'creative', 'domain')..."
                             classNames={{
-                                root: 'w-full',
+                                root: 'w-full mb-3',
                                 form: 'relative',
-                                input: 'w-full px-4 py-3 text-md border border-input bg-background rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent',
+                                input: 'w-full px-4 py-3 text-md border border-input bg-background rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent ',
                                 submit: 'absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground',
                                 reset: 'absolute right-12 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground',
                             }}
@@ -92,7 +117,9 @@ export default function DictionaryPage() {
                     {/* Search Results */}
                     <div className="w-full max-w-4xl">
                         <Hits
-                            hitComponent={({ hit }) => <Hit hit={hit} onDomainClick={handleDomainClick} />}
+                            hitComponent={({ hit }) => (
+                                <Hit hit={hit as unknown as AlgoliaHit} onDomainClick={handleDomainClick} />
+                            )}
                             classNames={{
                                 root: 'w-full',
                                 list: 'space-y-4',
