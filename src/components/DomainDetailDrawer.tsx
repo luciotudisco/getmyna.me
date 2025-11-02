@@ -89,14 +89,14 @@ function DomainDetailDrawer({ domain, open, onClose }: DomainDetailDrawerProps) 
 
     return (
         <Drawer open={open} onOpenChange={(openState: boolean) => !openState && onClose()} direction="bottom">
-            <DrawerContent className="min-h-[400px] px-0 md:px-4 lg:px-10">
-                <DrawerHeader>
-                    <DrawerTitle className="flex items-center justify-between">
-                        <div className="flex max-w-[400px] items-center gap-2 truncate">{domain.getName()}</div>
+            <DrawerContent className="min-h-[400px] p-6 md:p-10">
+                <DrawerHeader className="px-0">
+                    <DrawerTitle className="flex items-center justify-between px-0">
+                        <div className="flex max-w-[400px] items-center truncate">{domain.getName()}</div>
                         <DomainStatusBadge status={domain.getStatus()} className="min-w-[8rem]" />
                     </DrawerTitle>
                 </DrawerHeader>
-                <div className="space-y-4 p-6 pt-0">
+                <div className="space-y-4">
                     {domain.isAvailable() && (
                         <>
                             <Separator />
