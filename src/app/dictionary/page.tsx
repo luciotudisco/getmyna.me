@@ -96,7 +96,7 @@ export default function DictionaryPage() {
                                 showPrevious={false}
                                 classNames={{
                                     root: 'flex items-center justify-center gap-1 text-muted-foreground',
-                                    list: 'flex items-center gap-1',
+                                    list: 'flex items-center',
                                     item: 'p-2 text-xs',
                                     selectedItem: 'bg-primary text-primary-foreground',
                                     disabledItem: 'opacity-50 cursor-not-allowed',
