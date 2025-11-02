@@ -7,10 +7,6 @@ import NumberTicker from '@/components/ui/number-ticker';
 import { apiClient } from '@/services/api';
 
 function CountDisplay({ isPending, hasError, count }: { isPending: boolean; hasError: boolean; count: number }) {
-    if (isPending) {
-        return <span className="animate-pulse text-2xl font-semibold">....</span>;
-    }
-
     if (hasError) {
         return (
             <div className="flex flex-col items-center justify-center gap-1">
@@ -22,9 +18,12 @@ function CountDisplay({ isPending, hasError, count }: { isPending: boolean; hasE
 
     return (
         <div className="flex flex-col items-center gap-1">
-            <div className="flex items-center gap-2">
-                <NumberTicker value={count} className="min-w-20 text-2xl font-semibold tabular-nums text-primary" />
-                <span className="text-lg font-medium text-muted-foreground">TLDs</span>
+            <div className="flex items-center gap-2 align-bottom">
+                <NumberTicker
+                    value={isPending ? 0 : count}
+                    className="min-h-8 min-w-20 text-2xl font-semibold tabular-nums text-primary"
+                />
+                <span className="align-bottom text-lg font-medium text-muted-foreground">TLDs</span>
             </div>
             <Link
                 href="/tlds"
