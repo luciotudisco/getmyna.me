@@ -92,10 +92,12 @@ export default function DictionaryPage() {
                     <div className="mt-auto p-6">
                         <div className="m-auto w-full max-w-6xl">
                             <Pagination
+                                showNext={false}
+                                showPrevious={false}
                                 classNames={{
-                                    root: 'flex items-center justify-center gap-2',
+                                    root: 'flex items-center justify-center gap-1 text-muted-foreground',
                                     list: 'flex items-center gap-1',
-                                    item: 'px-3 py-3 text-sm',
+                                    item: 'p-2 text-xs',
                                     selectedItem: 'bg-primary text-primary-foreground',
                                     disabledItem: 'opacity-50 cursor-not-allowed',
                                     link: 'block w-full h-full',
