@@ -6,14 +6,14 @@ import { Registrar, TLDPricing } from '@/models/tld';
 describe('DomainRegistrarButtons', () => {
     describe('when no pricing data is available', () => {
         it('should display unsupported TLD message', () => {
-            render(<DomainRegistrarButtons domainName="example.com" pricing={{}} />);
+            render(<DomainRegistrarButtons domainName="example.com" pricing={{}} isPremiumDomain={false} />);
 
             expect(screen.getByText(/Oops! This TLD seems to be flying under our radar/)).toBeInTheDocument();
             expect(screen.getByText(/The registrar for this TLD is not yet supported/)).toBeInTheDocument();
         });
 
         it('should not display any registrar buttons', () => {
-            render(<DomainRegistrarButtons domainName="example.com" pricing={{}} />);
+            render(<DomainRegistrarButtons domainName="example.com" pricing={{}} isPremiumDomain={false} />);
 
             expect(screen.queryByRole('button')).not.toBeInTheDocument();
         });
@@ -27,7 +27,7 @@ describe('DomainRegistrarButtons', () => {
         };
 
         it('should display registrar buttons sorted by price (lowest first)', () => {
-            render(<DomainRegistrarButtons domainName="example.com" pricing={mockPricing} />);
+            render(<DomainRegistrarButtons domainName="example.com" pricing={mockPricing} isPremiumDomain={false} />);
 
             const buttons = screen.getAllByRole('button');
             expect(buttons).toHaveLength(3);
@@ -52,7 +52,7 @@ describe('DomainRegistrarButtons', () => {
                 [Registrar.NAMESILO]: { registration: 9.25 },
             };
 
-            render(<DomainRegistrarButtons domainName="example.com" pricing={largePricing} />);
+            render(<DomainRegistrarButtons domainName="example.com" pricing={largePricing} isPremiumDomain={false} />);
 
             const buttons = screen.getAllByRole('button');
             expect(buttons).toHaveLength(3);
@@ -73,7 +73,7 @@ describe('DomainRegistrarButtons', () => {
                 [Registrar.PORKBUN]: { registration: 8.75 },
             };
 
-            render(<DomainRegistrarButtons domainName="example.com" pricing={mixedPricing} />);
+            render(<DomainRegistrarButtons domainName="example.com" pricing={mixedPricing} isPremiumDomain={false} />);
 
             const buttons = screen.getAllByRole('button');
             expect(buttons).toHaveLength(3);
@@ -90,11 +90,40 @@ describe('DomainRegistrarButtons', () => {
                 [Registrar.PORKBUN]: { registration: 8.123 }, // Should show as $8.12
             };
 
-            render(<DomainRegistrarButtons domainName="example.com" pricing={pricingWithDecimals} />);
+            render(
+                <DomainRegistrarButtons
+                    domainName="example.com"
+                    pricing={pricingWithDecimals}
+                    isPremiumDomain={false}
+                />,
+            );
 
             expect(screen.getByText('$10.00')).toBeInTheDocument();
             expect(screen.getByText('$12.50')).toBeInTheDocument();
             expect(screen.getByText('$8.12')).toBeInTheDocument();
+        });
+
+        it('should handle premium domain status', () => {
+            const pricingData: Partial<Record<Registrar, TLDPricing>> = {
+                [Registrar.DYNADOT]: { registration: 10.99 },
+                [Registrar.GANDI]: { registration: 12.5 },
+            };
+
+            render(<DomainRegistrarButtons domainName="premium.com" pricing={pricingData} isPremiumDomain={true} />);
+
+            const buttons = screen.getAllByRole('button');
+            expect(buttons).toHaveLength(2);
+
+            // Should show registrar buttons with "Premium Price" instead of actual pricing
+            expect(buttons[0]).toHaveTextContent('Dynadot');
+            expect(buttons[0]).toHaveTextContent('Premium Price');
+
+            expect(buttons[1]).toHaveTextContent('Gandi');
+            expect(buttons[1]).toHaveTextContent('Premium Price');
+
+            // Should NOT show actual prices for premium domains
+            expect(buttons[0]).not.toHaveTextContent('$10.99');
+            expect(buttons[1]).not.toHaveTextContent('$12.50');
         });
     });
 });

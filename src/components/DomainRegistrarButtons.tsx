@@ -8,9 +8,10 @@ import { Registrar, REGISTRAR_DISPLAY_NAMES, REGISTRAR_DOMAIN_SEARCH_URLS, TLDPr
 interface DomainRegistrarButtonsProps {
     domainName: string;
     pricing: Partial<Record<Registrar, TLDPricing>>;
+    isPremiumDomain: boolean;
 }
 
-function DomainRegistrarButtons({ domainName, pricing }: DomainRegistrarButtonsProps) {
+function DomainRegistrarButtons({ domainName, pricing, isPremiumDomain }: DomainRegistrarButtonsProps) {
     if (Object.keys(pricing).length === 0) {
         return (
             <div className="flex items-center rounded-md bg-red-100 p-4 text-xs">
@@ -51,10 +52,14 @@ function DomainRegistrarButtons({ domainName, pricing }: DomainRegistrarButtonsP
                                 <div className="min-w-[100px] text-right text-xs">
                                     {hasPricing ? (
                                         <div>
-                                            <div className="font-extrabold text-white">
-                                                <span className="text-xs text-white/70">from</span>{' '}
-                                                {roundedRegistrationPrice}
-                                            </div>
+                                            {isPremiumDomain ? (
+                                                <div className="mb-1 text-xs font-semibold">Premium Price</div>
+                                            ) : (
+                                                <div className="font-extrabold text-white">
+                                                    <span className="text-xs text-white/70">from</span>{' '}
+                                                    {roundedRegistrationPrice}
+                                                </div>
+                                            )}
                                         </div>
                                     ) : (
                                         <div className="text-xs font-extralight text-white">No pricing data</div>

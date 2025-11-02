@@ -27,6 +27,19 @@ describe('DomainStatusBadge', () => {
 
             expect(screen.getByText('Available')).toBeInTheDocument();
         });
+
+        it('should render both premium and available badges for premium domain', () => {
+            render(<DomainStatusBadge status={DomainStatus.PREMIUM} />);
+
+            expect(screen.getByText('Premium')).toBeInTheDocument();
+            expect(screen.getByText('Available')).toBeInTheDocument();
+        });
+
+        it('should render transferable domain as available', () => {
+            render(<DomainStatusBadge status={DomainStatus.TRANSFERABLE} />);
+
+            expect(screen.getByText('Available')).toBeInTheDocument();
+        });
     });
 
     describe('Taken Status', () => {

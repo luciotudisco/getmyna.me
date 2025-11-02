@@ -31,11 +31,18 @@ function ErrorBadge({ className }: { className?: string }) {
     );
 }
 
-function AvailableBadge({ className }: { className?: string }) {
+function AvailableBadge({ className, isPremiumDomain }: { className?: string; isPremiumDomain?: boolean }) {
     return (
-        <Badge className={cn(baseClasses, 'bg-green-500 hover:bg-green-600', className)}>
-            <span className="text-white">Available</span>
-        </Badge>
+        <div className="flex items-center gap-2">
+            {isPremiumDomain && (
+                <Badge className={cn(baseClasses, 'bg-primary text-primary-foreground', className)}>
+                    <span className="font-semibold text-white">Premium</span>
+                </Badge>
+            )}
+            <Badge className={cn(baseClasses, 'bg-green-500 hover:bg-green-600', className)}>
+                <span className="text-white">Available</span>
+            </Badge>
+        </div>
     );
 }
 
@@ -57,7 +64,7 @@ function DomainStatusBadge({ status, className }: DomainStatusBadgeProps) {
     }
 
     if (DOMAIN_AVAILABLE_STATUS_VALUES.has(status)) {
-        return <AvailableBadge className={className} />;
+        return <AvailableBadge className={className} isPremiumDomain={status === DomainStatus.PREMIUM} />;
     }
 
     return <TakenBadge className={className} />;

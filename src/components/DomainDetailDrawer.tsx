@@ -12,7 +12,7 @@ import LoadingMessage from '@/components/LoadingMessage';
 import TLDSection from '@/components/TLDSection';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
-import { Domain } from '@/models/domain';
+import { Domain, DomainStatus } from '@/models/domain';
 import { TLD } from '@/models/tld';
 import { WhoisInfo } from '@/models/whois';
 import { apiClient } from '@/services/api';
@@ -100,7 +100,11 @@ function DomainDetailDrawer({ domain, open, onClose }: DomainDetailDrawerProps) 
                     {domain.isAvailable() && (
                         <>
                             <Separator />
-                            <DomainRegistrarButtons domainName={domain.getName()} pricing={tldInfo?.pricing || {}} />
+                            <DomainRegistrarButtons
+                                domainName={domain.getName()}
+                                pricing={tldInfo?.pricing || {}}
+                                isPremiumDomain={domain.getStatus() === DomainStatus.PREMIUM}
+                            />
                         </>
                     )}
 
