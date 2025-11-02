@@ -49,7 +49,7 @@ export default function DictionaryPage() {
     }, []);
 
     return (
-        <div className="flex min-h-screen flex-col">
+        <div className="flex flex-col">
             <InstantSearch searchClient={searchClient} indexName={process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME!}>
                 <main className="m-auto flex w-full max-w-6xl flex-grow flex-col items-center gap-2 p-5 md:p-10">
                     <div className="mb-5 text-center md:mb-10">

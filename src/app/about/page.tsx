@@ -6,7 +6,7 @@ import { Highlighter } from '@/components/ui/highlighter';
 
 const AboutPage = () => {
     return (
-        <div className="min-h-screen">
+        <div className="flex flex-col">
             <main className="m-auto flex w-full max-w-4xl flex-col items-center gap-5 p-5 md:p-10">
                 <div className="text-center">
                     <Badge className="text-xs font-medium">ABOUT</Badge>

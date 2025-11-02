@@ -8,6 +8,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 [![Supabase](https://img.shields.io/badge/Supabase-2.56-green?style=for-the-badge&logo=supabase)](https://supabase.com/)
+[![Algolia](https://img.shields.io/badge/Algolia-5.42-5468FF?style=for-the-badge&logo=algolia)](https://www.algolia.com/)
 
 [Live Demo](https://getmyna.me) • [Features](#-features) • [Quick Start](#-quick-start) • [Contributing](#-contributing)
 
