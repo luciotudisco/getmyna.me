@@ -114,12 +114,12 @@ describe('DomainRegistrarButtons', () => {
             const buttons = screen.getAllByRole('button');
             expect(buttons).toHaveLength(2);
 
-            // Should show registrar buttons with "Premium Price" instead of actual pricing
+            // Should show registrar buttons with "premium price" instead of actual pricing
             expect(buttons[0]).toHaveTextContent('Dynadot');
-            expect(buttons[0]).toHaveTextContent('Premium Price');
+            expect(buttons[0]).toHaveTextContent('premium price');
 
             expect(buttons[1]).toHaveTextContent('Gandi');
-            expect(buttons[1]).toHaveTextContent('Premium Price');
+            expect(buttons[1]).toHaveTextContent('premium price');
 
             // Should NOT show actual prices for premium domains
             expect(buttons[0]).not.toHaveTextContent('$10.99');

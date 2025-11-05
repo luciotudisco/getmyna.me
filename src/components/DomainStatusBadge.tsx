@@ -34,14 +34,21 @@ function ErrorBadge({ className }: { className?: string }) {
 function AvailableBadge({ className, isPremiumDomain }: { className?: string; isPremiumDomain?: boolean }) {
     return (
         <div className="flex items-center gap-2">
-            {isPremiumDomain && (
-                <Badge className={cn(baseClasses, 'bg-primary text-primary-foreground', className)}>
-                    <span className="font-semibold text-white">Premium</span>
+            {isPremiumDomain ? (
+                <Badge
+                    className={cn(
+                        baseClasses,
+                        'border-none bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 shadow-lg shadow-purple-500/25 hover:from-purple-600 hover:via-pink-600 hover:to-red-600',
+                        className,
+                    )}
+                >
+                    <span className="font-bold tracking-wide text-white">✨ Premium ✨</span>
+                </Badge>
+            ) : (
+                <Badge className={cn(baseClasses, 'bg-green-500 hover:bg-green-600', className)}>
+                    <span className="text-white">Available</span>
                 </Badge>
             )}
-            <Badge className={cn(baseClasses, 'bg-green-500 hover:bg-green-600', className)}>
-                <span className="text-white">Available</span>
-            </Badge>
         </div>
     );
 }

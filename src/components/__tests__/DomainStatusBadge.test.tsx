@@ -28,11 +28,11 @@ describe('DomainStatusBadge', () => {
             expect(screen.getByText('Available')).toBeInTheDocument();
         });
 
-        it('should render both premium and available badges for premium domain', () => {
+        it('should render premium badge for premium domain', () => {
             render(<DomainStatusBadge status={DomainStatus.PREMIUM} />);
 
-            expect(screen.getByText('Premium')).toBeInTheDocument();
-            expect(screen.getByText('Available')).toBeInTheDocument();
+            expect(screen.getByText('✨ Premium ✨')).toBeInTheDocument();
+            expect(screen.queryByText('Available')).not.toBeInTheDocument();
         });
 
         it('should render transferable domain as available', () => {

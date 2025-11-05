@@ -53,7 +53,9 @@ function DomainRegistrarButtons({ domainName, pricing, isPremiumDomain }: Domain
                                     {hasPricing ? (
                                         <div>
                                             {isPremiumDomain ? (
-                                                <div className="mb-1 text-xs font-semibold">Premium Price</div>
+                                                <div className="mb-1 text-xs font-extralight text-white/70">
+                                                    premium price
+                                                </div>
                                             ) : (
                                                 <div className="font-extrabold text-white">
                                                     <span className="text-xs text-white/70">from</span>{' '}
@@ -62,7 +64,7 @@ function DomainRegistrarButtons({ domainName, pricing, isPremiumDomain }: Domain
                                             )}
                                         </div>
                                     ) : (
-                                        <div className="text-xs font-extralight text-white">No pricing data</div>
+                                        <div className="text-xs font-extralight text-white/70">No pricing data</div>
                                     )}
                                 </div>
                             </div>
