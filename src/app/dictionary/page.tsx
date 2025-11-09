@@ -1,11 +1,12 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { Hits, InstantSearch, Pagination, SearchBox } from 'react-instantsearch';
+import { Configure, Hits, InstantSearch, Pagination, SearchBox } from 'react-instantsearch';
 import { liteClient as algoliasearch } from 'algoliasearch/lite';
 
 import DomainDetailDrawer from '@/components/DomainDetailDrawer';
 import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
 import { Domain } from '@/models/domain';
 import { apiClient } from '@/services/api';
 
@@ -21,15 +22,20 @@ interface AlgoliaHit {
     rank?: number;
     domain: string;
     tld: string;
+    isAvailable?: boolean;
 }
 
 // Custom Hit component for displaying search results
 function Hit({ hit, onDomainClick }: { hit: AlgoliaHit; onDomainClick: (domain: Domain) => void }) {
+    const isAvailable = hit.isAvailable === true;
+
     return (
         <Badge
             key={hit.objectID}
             variant="outline"
-            className="cursor-pointer p-1 font-light transition-all duration-300 hover:scale-110 hover:bg-muted md:p-3"
+            className={`cursor-pointer p-1 font-light transition-all duration-300 hover:scale-110 hover:bg-muted md:p-3 ${
+                isAvailable ? 'border-green-500 bg-green-50 text-green-700 hover:bg-green-100' : ''
+            }`}
             onClick={() => onDomainClick(new Domain(hit.domain))}
         >
             {hit.domain}
@@ -40,6 +46,7 @@ function Hit({ hit, onDomainClick }: { hit: AlgoliaHit; onDomainClick: (domain: 
 export default function DictionaryPage() {
     const [selectedDomain, setSelectedDomain] = useState<Domain | null>(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [showOnlyAvailable, setShowOnlyAvailable] = useState(false);
 
     const handleDomainClick = useCallback(async (domain: Domain) => {
         setSelectedDomain(domain);
@@ -51,6 +58,7 @@ export default function DictionaryPage() {
     return (
         <div className="flex flex-col">
             <InstantSearch searchClient={searchClient} indexName={process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME!}>
+                <Configure filters={showOnlyAvailable ? 'isAvailable:true' : ''} />
                 <main className="m-auto flex w-full max-w-6xl flex-grow flex-col items-center gap-2 p-5 md:p-10">
                     <div className="mb-5 text-center md:mb-10">
                         <Badge className="text-xs font-medium">DICTIONARY</Badge>
@@ -71,6 +79,17 @@ export default function DictionaryPage() {
                                 reset: 'absolute right-6 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground',
                             }}
                         />
+
+                        <div className="mb-4 flex items-center justify-center gap-2">
+                            <Switch
+                                id="available-filter"
+                                checked={showOnlyAvailable}
+                                onCheckedChange={setShowOnlyAvailable}
+                            />
+                            <label htmlFor="available-filter" className="cursor-pointer text-sm text-muted-foreground">
+                                Show only available domains
+                            </label>
+                        </div>
                     </div>
 
                     <div className="w-full max-w-4xl flex-grow">
