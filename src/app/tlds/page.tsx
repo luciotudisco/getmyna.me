@@ -54,7 +54,7 @@ export default function TldsPage() {
 
     return (
         <div className="flex flex-col">
-            <main className="m-auto flex w-full max-w-4xl flex-col items-center gap-5 p-5 md:p-10">
+            <main className="m-auto flex w-full max-w-5xl flex-col items-center gap-5 p-5 md:p-10">
                 <div className="text-center">
                     <Badge className="text-xs font-medium">TLD DIRECTORY</Badge>
                     <h1 className="mt-4 text-2xl font-semibold lg:text-3xl">The ultimate TLDs list</h1>
@@ -67,23 +67,26 @@ export default function TldsPage() {
                 </div>
 
                 {/* Type Filter Buttons */}
-                <div className="mt-6 hidden flex-wrap justify-center gap-2 md:block">
-                    <ButtonGroup orientation="horizontal">
+                <div className="space-between mt-6 hidden w-full flex-wrap justify-center gap-2 md:block">
+                    <ButtonGroup orientation="horizontal" className="w-full">
                         {Object.values(TLDType).map((type) => (
                             <Button
                                 key={type}
                                 variant={selectedType === type ? 'default' : 'secondary'}
                                 size="sm"
                                 onClick={() => setSelectedType(selectedType === type ? null : type)}
-                                className="min-w-32 text-xs uppercase"
+                                className="min-h-10 w-full min-w-32 gap-2 text-xs"
                             >
-                                {TLD_TYPE_DISPLAY_NAMES[type]}
+                                <span className="uppercase">{TLD_TYPE_DISPLAY_NAMES[type]}</span>
+                                <span className="text-xs text-muted-foreground">
+                                    ({tlds.filter((tld) => tld.type === type).length})
+                                </span>
                             </Button>
                         ))}
                     </ButtonGroup>
                 </div>
 
-                <div className="mt-3 flex w-full flex-wrap justify-center gap-2 lg:mt-6">
+                <div className="mt-3 flex w-full flex-wrap justify-between gap-2 after:flex-auto lg:mt-6">
                     {filteredTlds.map((tld) => (
                         <motion.div
                             key={tld.name}
@@ -97,7 +100,7 @@ export default function TldsPage() {
                         >
                             <Badge
                                 variant="outline"
-                                className="cursor-pointer p-1 font-light transition-all duration-300 hover:scale-110 hover:bg-muted md:p-3"
+                                className="cursor-pointer p-1 font-light transition-all duration-300 hover:scale-110 hover:bg-muted md:p-2"
                                 onClick={() => showDrawer(tld)}
                             >
                                 .{tld.name}

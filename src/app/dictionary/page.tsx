@@ -33,7 +33,7 @@ function Hit({ hit, onDomainClick }: { hit: AlgoliaHit; onDomainClick: (domain: 
         <Badge
             key={hit.objectID}
             variant="outline"
-            className={`cursor-pointer p-1 font-light transition-all duration-300 hover:scale-110 hover:bg-muted md:p-3 ${
+            className={`min-w-8 cursor-pointer p-1 font-light transition-all duration-300 hover:scale-110 hover:bg-muted md:p-3 ${
                 isAvailable ? 'border-green-500 bg-green-50 text-green-700 hover:bg-green-100' : ''
             }`}
             onClick={() => onDomainClick(new Domain(hit.domain))}
@@ -46,7 +46,7 @@ function Hit({ hit, onDomainClick }: { hit: AlgoliaHit; onDomainClick: (domain: 
 export default function DictionaryPage() {
     const [selectedDomain, setSelectedDomain] = useState<Domain | null>(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    const [showOnlyAvailable, setShowOnlyAvailable] = useState(false);
+    const [showOnlyAvailable, setShowOnlyAvailable] = useState(true);
 
     const handleDomainClick = useCallback(async (domain: Domain) => {
         setSelectedDomain(domain);
@@ -69,6 +69,16 @@ export default function DictionaryPage() {
                     </div>
 
                     <div className="w-full max-w-4xl">
+                        <div className="mb-4 flex items-center justify-center gap-2 p-4">
+                            <Switch
+                                id="available-filter"
+                                checked={showOnlyAvailable}
+                                onCheckedChange={setShowOnlyAvailable}
+                            />
+                            <label htmlFor="available-filter" className="cursor-pointer text-sm text-muted-foreground">
+                                Show only available domains
+                            </label>
+                        </div>
                         <SearchBox
                             placeholder="Search for words with domain hacks (e.g., 'example', 'creative', 'domain')..."
                             classNames={{
@@ -79,17 +89,6 @@ export default function DictionaryPage() {
                                 reset: 'absolute right-6 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground',
                             }}
                         />
-
-                        <div className="mb-4 flex items-center justify-center gap-2">
-                            <Switch
-                                id="available-filter"
-                                checked={showOnlyAvailable}
-                                onCheckedChange={setShowOnlyAvailable}
-                            />
-                            <label htmlFor="available-filter" className="cursor-pointer text-sm text-muted-foreground">
-                                Show only available domains
-                            </label>
-                        </div>
                     </div>
 
                     <div className="w-full max-w-4xl flex-grow">
@@ -103,7 +102,7 @@ export default function DictionaryPage() {
                             )}
                             classNames={{
                                 root: 'w-full',
-                                list: 'flex flex-wrap gap-2 items-center justify-center',
+                                list: 'flex flex-wrap gap-2 justify-between after:flex-auto',
                             }}
                         />
                     </div>
