@@ -3,6 +3,7 @@ import Link from 'next/link';
 import TLDCounter from '@/components/TLDCounter';
 import { Badge } from '@/components/ui/badge';
 import { Highlighter } from '@/components/ui/highlighter';
+import { RainbowButton } from '@/components/ui/rainbow-button';
 
 const AboutPage = () => {
     return (
@@ -50,14 +51,10 @@ const AboutPage = () => {
                         endless creative possibilities. The best domain hacks are short, memorable, and perfectly
                         aligned with your brand's personality.
                     </p>
-                    <div className="p-8 text-center">
-                        <Link
-                            href="/dictionary"
-                            className="inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-medium text-white transition-all duration-300 hover:scale-105 hover:shadow-lg"
-                            style={{ backgroundColor: '#FF595E' }}
-                        >
-                            🧑🏻‍🚀 Explore the Dictionary
-                        </Link>
+                    <div className="space-y-4 p-8 text-center">
+                        <RainbowButton asChild size="lg">
+                            <Link href="/dictionary">🧑🏻‍🚀 Explore the Dictionary</Link>
+                        </RainbowButton>
                         <p className="mt-2 text-xs text-muted-foreground">
                             Search through thousands of words with available domain hacks
                         </p>
