@@ -58,7 +58,7 @@ function Hit({ hit, onDomainClick }: { hit: AlgoliaHit; onDomainClick: (domain: 
                 <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0 flex-1">
                         <div className="mb-2 flex items-center gap-2">
-                            <h3 className="truncate text-lg font-semibold transition-colors group-hover:text-primary">
+                            <h3 className="truncate text-base font-semibold transition-colors group-hover:text-primary">
                                 {domain.getName()}
                             </h3>
                         </div>
@@ -101,9 +101,9 @@ export default function DictionaryPage() {
                 <main className="m-auto flex w-full max-w-7xl flex-grow flex-col items-center gap-6 p-5 md:p-10">
                     {/* Header Section */}
                     <div className="mb-2 text-center md:mb-6">
-                        <Badge className="mb-4 text-xs font-medium">DICTIONARY</Badge>
-                        <h1 className="mt-2 text-3xl font-bold tracking-tight lg:text-4xl">Domain Hacks Dictionary</h1>
-                        <p className="mx-auto mt-3 max-w-2xl text-base text-muted-foreground">
+                        <Badge className="text-xs font-medium">DICTIONARY</Badge>
+                        <h1 className="mt-4 text-2xl font-semibold lg:text-3xl">Domain Hacks Dictionary</h1>
+                        <p className="mx-auto mt-2 max-w-2xl text-sm font-medium text-muted-foreground lg:text-base">
                             Discover creative domain hacks from thousands of words. Find the perfect domain that
                             combines your word with the perfect TLD.
                         </p>
@@ -126,7 +126,7 @@ export default function DictionaryPage() {
                             classNames={{
                                 root: 'w-full mb-4',
                                 form: 'relative',
-                                input: 'w-full px-5 py-3 !text-base border border-input bg-background rounded-xl focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary/50 transition-all shadow-sm hover:shadow-md',
+                                input: 'w-full px-4 py-2.5 !text-sm lg:!text-base border border-input bg-background rounded-xl focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary/50 transition-all shadow-sm hover:shadow-md',
                                 submit: 'hidden',
                                 reset: 'absolute right-4 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors',
                             }}
