@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useTransition } from 'react';
 import { motion } from 'framer-motion';
+import { Search } from 'lucide-react';
 
 import ErrorMessage from '@/components/ErrorMessage';
 import LoadingMessage from '@/components/LoadingMessage';
@@ -12,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Card, CardContent } from '@/components/ui/card';
 import { Highlighter } from '@/components/ui/highlighter';
+import { Input } from '@/components/ui/input';
 import { TLD, TLD_TYPE_DISPLAY_NAMES, TLDType } from '@/models/tld';
 import { apiClient } from '@/services/api';
 
@@ -22,6 +24,7 @@ export default function TldsPage() {
     const [selectedTld, setSelectedTld] = useState<TLD | null>(null);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [selectedType, setSelectedType] = useState<TLDType | null>(null);
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         startTransition(async () => {
@@ -44,7 +47,11 @@ export default function TldsPage() {
         setSelectedTld(null);
     };
 
-    const filteredTlds = selectedType === null ? tlds : tlds.filter((tld) => tld.type === selectedType);
+    const filteredTlds = tlds.filter((tld) => {
+        const matchesType = selectedType === null || tld.type === selectedType;
+        const matchesSearch = searchQuery === '' || tld.name?.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesType && matchesSearch;
+    });
 
     if (hasError) {
         return <ErrorMessage />;
@@ -66,6 +73,20 @@ export default function TldsPage() {
                             {filteredTlds.length} TLDs
                         </Highlighter>
                     </p>
+                </div>
+
+                {/* Search Bar */}
+                <div className="mt-4 w-full">
+                    <div className="relative">
+                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                            type="search"
+                            placeholder="Search TLDs by name ..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full pl-9 pr-4"
+                        />
+                    </div>
                 </div>
 
                 {/* Type Filter Buttons */}
