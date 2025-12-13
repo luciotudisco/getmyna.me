@@ -47,18 +47,18 @@ function Hit({ hit, onDomainClick }: { hit: AlgoliaHit; onDomainClick: (domain: 
     return (
         <Card
             className={cn(
-                'group relative cursor-pointer overflow-hidden border-[0.5px] transition-all duration-300 hover:scale-[1.02] hover:shadow-xl',
+                'group relative cursor-pointer overflow-hidden border-[0.5px] transition-colors duration-200 hover:shadow-lg',
                 isAvailable
                     ? 'border-green-400/60 bg-green-50/50 hover:border-green-500 hover:shadow-green-200/40 dark:border-green-500/40 dark:bg-green-950/20 dark:hover:border-green-400/60 dark:hover:shadow-green-900/30'
                     : 'border-gray-200 bg-gray-50/50 hover:border-gray-300 hover:shadow-gray-200/30 dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-gray-700 dark:hover:shadow-gray-900/20',
             )}
             onClick={() => onDomainClick(domain)}
         >
-            <CardContent className="p-4">
-                <div className="flex items-start justify-between gap-3">
+            <CardContent className="p-3">
+                <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
-                        <div className="mb-2 flex items-center gap-2">
-                            <h3 className="truncate text-base font-semibold transition-colors group-hover:text-primary">
+                        <div className="mb-1 flex items-center gap-2">
+                            <h3 className="truncate text-sm font-semibold transition-colors group-hover:text-primary">
                                 {domain.getName()}
                             </h3>
                         </div>
@@ -73,7 +73,7 @@ function Hit({ hit, onDomainClick }: { hit: AlgoliaHit; onDomainClick: (domain: 
                     </div>
                     {isAvailable && (
                         <div className="flex-shrink-0">
-                            <div className="h-2.5 w-2.5 animate-pulse rounded-full bg-green-500 shadow-lg shadow-green-500/50 dark:bg-green-400 dark:shadow-green-400/50" />
+                            <div className="h-2 w-2 animate-pulse rounded-full bg-green-500 shadow shadow-green-500/40 dark:bg-green-400 dark:shadow-green-400/40" />
                         </div>
                     )}
                 </div>
@@ -146,7 +146,7 @@ export default function DictionaryPage() {
                             )}
                             classNames={{
                                 root: 'w-full',
-                                list: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4',
+                                list: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3',
                             }}
                         />
                     </div>
