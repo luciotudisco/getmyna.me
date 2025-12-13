@@ -6,9 +6,11 @@ import { motion } from 'framer-motion';
 import ErrorMessage from '@/components/ErrorMessage';
 import LoadingMessage from '@/components/LoadingMessage';
 import TLDDrawer from '@/components/TLDDrawer';
+import TLDTypeIcon from '@/components/TLDTypeIcon';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
+import { Card, CardContent } from '@/components/ui/card';
 import { Highlighter } from '@/components/ui/highlighter';
 import { TLD, TLD_TYPE_DISPLAY_NAMES, TLDType } from '@/models/tld';
 import { apiClient } from '@/services/api';
@@ -86,27 +88,41 @@ export default function TldsPage() {
                     </ButtonGroup>
                 </div>
 
-                <div className="mt-3 flex w-full flex-wrap justify-between gap-2 after:flex-auto lg:mt-6">
-                    {filteredTlds.map((tld) => (
-                        <motion.div
-                            key={tld.name}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{
-                                duration: 0.5,
-                                delay: Math.random() * 0.8,
-                                ease: 'easeOut',
-                            }}
-                        >
-                            <Badge
-                                variant="outline"
-                                className="cursor-pointer p-1 font-light transition-all duration-300 hover:scale-110 hover:bg-muted md:p-2"
-                                onClick={() => showDrawer(tld)}
+                <div className="mt-3 w-full lg:mt-6">
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                        {filteredTlds.map((tld, idx) => (
+                            <motion.div
+                                key={tld.name}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{
+                                    duration: 0.5,
+                                    delay: Math.min(idx * 0.02, 0.3),
+                                    ease: 'easeOut',
+                                }}
                             >
-                                .{tld.name}
-                            </Badge>
-                        </motion.div>
-                    ))}
+                                <Card
+                                    className="group relative cursor-pointer overflow-hidden border-[0.5px] border-gray-200 bg-gray-50/50 transition-colors duration-200 hover:border-gray-300 hover:shadow-lg hover:shadow-gray-200/30 dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-gray-700 dark:hover:shadow-gray-900/20"
+                                    onClick={() => showDrawer(tld)}
+                                >
+                                    <CardContent className="p-3">
+                                        <div className="flex items-center justify-between gap-2">
+                                            <h3 className="truncate text-sm font-semibold transition-colors group-hover:text-primary">
+                                                .{tld.name}
+                                            </h3>
+                                            <Badge
+                                                variant="outline"
+                                                className="flex flex-shrink-0 items-center gap-1 border-muted-foreground/20 bg-muted/50 text-xs uppercase"
+                                            >
+                                                <TLDTypeIcon tld={tld} size="sm" />
+                                                <span>{tld.type ? TLD_TYPE_DISPLAY_NAMES[tld.type] : 'Unknown'}</span>
+                                            </Badge>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </motion.div>
+                        ))}
+                    </div>
                 </div>
             </main>
 
