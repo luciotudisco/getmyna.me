@@ -5,17 +5,19 @@ import { TLD, TLDType } from '@/models/tld';
 
 interface TLDTypeIconProps {
     tld: TLD;
-    size?: 'sm' | 'md' | 'lg';
+    size?: 'xs' | 'sm' | 'md' | 'lg';
     className?: string;
 }
 
 const SIZE_CLASSES = {
+    xs: 'h-3 w-3',
     sm: 'h-4 w-4',
     md: 'h-6 w-6',
     lg: 'h-8 w-8',
 };
 
 const FLAG_SIZE_STYLES = {
+    xs: { fontSize: '0.5rem' },
     sm: { fontSize: '0.75rem' },
     md: { fontSize: '1.5rem' },
     lg: { fontSize: '2rem' },

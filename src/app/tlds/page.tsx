@@ -70,7 +70,7 @@ export default function TldsPage() {
 
                 {/* Type Filter Buttons */}
                 <div className="space-between mt-6 hidden w-full flex-wrap justify-center gap-2 md:block">
-                    <ButtonGroup orientation="horizontal" className="w-full">
+                    <ButtonGroup orientation="horizontal" className="w-full rounded-sm">
                         {Object.values(TLDType).map((type) => (
                             <Button
                                 key={type}
@@ -102,7 +102,7 @@ export default function TldsPage() {
                                 }}
                             >
                                 <Card
-                                    className="group relative cursor-pointer overflow-hidden border-[0.5px] border-gray-200 bg-gray-50/50 transition-colors duration-200 hover:border-gray-300 hover:shadow-lg hover:shadow-gray-200/30 dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-gray-700 dark:hover:shadow-gray-900/20"
+                                    className="group relative cursor-pointer overflow-hidden rounded-sm border-[0.5px] border-gray-200 transition-colors duration-200 hover:border-gray-300 hover:shadow-lg hover:shadow-gray-200/30 dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-gray-700 dark:hover:shadow-gray-900/20"
                                     onClick={() => showDrawer(tld)}
                                 >
                                     <CardContent className="p-3">
@@ -112,9 +112,9 @@ export default function TldsPage() {
                                             </h3>
                                             <Badge
                                                 variant="outline"
-                                                className="flex flex-shrink-0 items-center gap-1 border-muted-foreground/20 bg-muted/50 text-xs uppercase"
+                                                className="flex flex-shrink-0 items-center gap-1 border-muted-foreground/20 text-xs font-light uppercase"
                                             >
-                                                <TLDTypeIcon tld={tld} size="sm" />
+                                                <TLDTypeIcon tld={tld} size="xs" />
                                                 <span>{tld.type ? TLD_TYPE_DISPLAY_NAMES[tld.type] : 'Unknown'}</span>
                                             </Badge>
                                         </div>

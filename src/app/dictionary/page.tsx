@@ -3,7 +3,7 @@
 import { useCallback, useState } from 'react';
 import { Configure, Hits, InstantSearch, Pagination, SearchBox, useStats } from 'react-instantsearch';
 import { liteClient as algoliasearch } from 'algoliasearch/lite';
-import { Globe2, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
 import DomainDetailDrawer from '@/components/DomainDetailDrawer';
 import { Badge } from '@/components/ui/badge';
@@ -47,10 +47,10 @@ function Hit({ hit, onDomainClick }: { hit: AlgoliaHit; onDomainClick: (domain: 
     return (
         <Card
             className={cn(
-                'group relative cursor-pointer overflow-hidden border-[0.5px] transition-colors duration-200 hover:shadow-lg',
+                'group relative cursor-pointer overflow-hidden rounded-sm border-[0.5px] transition-colors duration-200 hover:shadow-lg',
                 isAvailable
-                    ? 'border-green-400/60 bg-green-50/50 hover:border-green-500 hover:shadow-green-200/40 dark:border-green-500/40 dark:bg-green-950/20 dark:hover:border-green-400/60 dark:hover:shadow-green-900/30'
-                    : 'border-gray-200 bg-gray-50/50 hover:border-gray-300 hover:shadow-gray-200/30 dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-gray-700 dark:hover:shadow-gray-900/20',
+                    ? 'border-green-400/60 bg-green-200/80 hover:border-green-500 hover:shadow-green-200/40 dark:border-green-500/40 dark:bg-green-950/20 dark:hover:border-green-400/60 dark:hover:shadow-green-900/30'
+                    : 'border-gray-200 bg-gray-100/50 hover:border-gray-300 hover:shadow-gray-200/30 dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-gray-700 dark:hover:shadow-gray-900/20',
             )}
             onClick={() => onDomainClick(domain)}
         >
@@ -64,16 +64,16 @@ function Hit({ hit, onDomainClick }: { hit: AlgoliaHit; onDomainClick: (domain: 
                                 </h3>
                                 {isAvailable && (
                                     <div
-                                        className="h-2 w-2 flex-shrink-0 animate-pulse rounded-full bg-green-500 shadow shadow-green-500/40 dark:bg-green-400 dark:shadow-green-400/40"
+                                        className="h-2 w-2 flex-shrink-0 animate-pulse rounded-full bg-green-800 shadow shadow-green-500/40 dark:bg-green-800 dark:shadow-green-400/40"
                                         aria-label="Available"
                                     />
                                 )}
                             </div>
                             <Badge
                                 variant="outline"
-                                className="flex-shrink-0 border-muted-foreground/20 bg-muted/50 font-mono text-xs"
+                                className="min-w-16 flex-shrink-0 justify-center bg-white font-mono text-xs"
                             >
-                                <Globe2 className="mr-1 h-3 w-3" />.{tld}
+                                .{tld}
                             </Badge>
                         </div>
                     </div>
@@ -127,7 +127,7 @@ export default function DictionaryPage() {
                             classNames={{
                                 root: 'w-full mb-4',
                                 form: 'relative',
-                                input: 'w-full px-4 py-2.5 !text-sm lg:!text-base border border-input bg-background rounded-xl focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary/50 transition-all shadow-sm hover:shadow-md',
+                                input: 'w-full px-4 py-2.5 !text-sm lg:!text-base border border-input bg-background rounded-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary/50 transition-all shadow-sm hover:shadow-md',
                                 submit: 'hidden',
                                 reset: 'absolute right-4 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors',
                             }}
@@ -161,7 +161,7 @@ export default function DictionaryPage() {
                                 classNames={{
                                     root: 'flex items-center justify-center gap-2 text-muted-foreground',
                                     list: 'flex items-center gap-1',
-                                    item: 'px-3 py-2 text-sm rounded-lg transition-all hover:bg-muted',
+                                    item: 'px-3 py-2 text-sm rounded-sm transition-all hover:bg-muted',
                                     selectedItem: 'bg-primary text-primary-foreground font-semibold shadow-sm',
                                     disabledItem: 'opacity-50 cursor-not-allowed',
                                     link: 'block w-full h-full',
