@@ -57,25 +57,26 @@ function Hit({ hit, onDomainClick }: { hit: AlgoliaHit; onDomainClick: (domain: 
             <CardContent className="p-3">
                 <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
-                        <div className="mb-1 flex items-center gap-2">
-                            <h3 className="truncate text-sm font-semibold transition-colors group-hover:text-primary">
-                                {domain.getName()}
-                            </h3>
-                        </div>
-                        <div className="flex flex-wrap items-center gap-2">
+                        <div className="mb-1 flex items-center justify-between gap-2">
+                            <div className="flex min-w-0 items-center gap-2">
+                                <h3 className="truncate text-sm font-semibold transition-colors group-hover:text-primary">
+                                    {domain.getName()}
+                                </h3>
+                                {isAvailable && (
+                                    <div
+                                        className="h-2 w-2 flex-shrink-0 animate-pulse rounded-full bg-green-500 shadow shadow-green-500/40 dark:bg-green-400 dark:shadow-green-400/40"
+                                        aria-label="Available"
+                                    />
+                                )}
+                            </div>
                             <Badge
                                 variant="outline"
-                                className="border-muted-foreground/20 bg-muted/50 font-mono text-xs"
+                                className="flex-shrink-0 border-muted-foreground/20 bg-muted/50 font-mono text-xs"
                             >
                                 <Globe2 className="mr-1 h-3 w-3" />.{tld}
                             </Badge>
                         </div>
                     </div>
-                    {isAvailable && (
-                        <div className="flex-shrink-0">
-                            <div className="h-2 w-2 animate-pulse rounded-full bg-green-500 shadow shadow-green-500/40 dark:bg-green-400 dark:shadow-green-400/40" />
-                        </div>
-                    )}
                 </div>
             </CardContent>
         </Card>
