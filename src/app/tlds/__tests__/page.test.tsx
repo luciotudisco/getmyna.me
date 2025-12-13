@@ -126,11 +126,11 @@ describe('TldsPage', () => {
 
             await waitFor(() => {
                 // Check that the filter buttons are present
-                expect(screen.getByText('Country Code')).toBeInTheDocument();
-                expect(screen.getByText('Generic')).toBeInTheDocument();
-                expect(screen.getByText('Generic Restricted')).toBeInTheDocument();
-                expect(screen.getByText('Infrastructure')).toBeInTheDocument();
-                expect(screen.getByText('Sponsored')).toBeInTheDocument();
+                expect(screen.getByRole('button', { name: /^Country Code\s*\(\d+\)$/i })).toBeInTheDocument();
+                expect(screen.getByRole('button', { name: /^Generic\s*\(\d+\)$/i })).toBeInTheDocument();
+                expect(screen.getByRole('button', { name: /^Generic Restricted\s*\(\d+\)$/i })).toBeInTheDocument();
+                expect(screen.getByRole('button', { name: /^Infrastructure\s*\(\d+\)$/i })).toBeInTheDocument();
+                expect(screen.getByRole('button', { name: /^Sponsored\s*\(\d+\)$/i })).toBeInTheDocument();
             });
         });
 
@@ -148,7 +148,7 @@ describe('TldsPage', () => {
             });
 
             // Click on the Country Code filter button
-            const countryCodeButton = screen.getByText('Country Code');
+            const countryCodeButton = screen.getByRole('button', { name: /Country Code/i });
             fireEvent.click(countryCodeButton);
 
             await waitFor(() => {
@@ -178,7 +178,7 @@ describe('TldsPage', () => {
             });
 
             // First click on Country Code filter button
-            const countryCodeButton = screen.getByText('Country Code');
+            const countryCodeButton = screen.getByRole('button', { name: /Country Code/i });
             fireEvent.click(countryCodeButton);
 
             await waitFor(() => {
