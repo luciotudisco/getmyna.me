@@ -127,7 +127,7 @@ export default function DictionaryPage() {
                             classNames={{
                                 root: 'w-full mb-4',
                                 form: 'relative',
-                                input: 'w-full px-4 py-2.5 !text-sm lg:!text-base border border-input bg-background rounded-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary/50 transition-all shadow-sm hover:shadow-md',
+                                input: 'w-full px-4 py-2.5 !text-base border border-input bg-background rounded-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary/50 transition-all shadow-sm hover:shadow-md',
                                 submit: 'hidden',
                                 reset: 'absolute right-4 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors',
                             }}
