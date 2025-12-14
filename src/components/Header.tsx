@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 
 export default function Header() {
     const pathname = usePathname();
-    const showSearchBar = !['/', '/dictionary'].includes(pathname);
+    const showSearchBar = !['/', '/dictionary', '/tlds'].includes(pathname);
 
     return (
         <header
