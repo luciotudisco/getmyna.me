@@ -49,34 +49,22 @@ function Hit({ hit, onDomainClick }: { hit: AlgoliaHit; onDomainClick: (domain: 
             className={cn(
                 'group relative cursor-pointer overflow-hidden rounded-sm border-[0.5px] transition-colors duration-200 hover:shadow-lg',
                 isAvailable
-                    ? 'border-green-400/60 bg-green-200/80 hover:border-green-500 hover:shadow-green-200/40 dark:border-green-500/40 dark:bg-green-950/20 dark:hover:border-green-400/60 dark:hover:shadow-green-900/30'
+                    ? 'border-green-400/40 bg-green-200/60 hover:border-green-500 hover:shadow-green-200/20 dark:border-green-500/20 dark:bg-green-950/10 dark:hover:border-green-400/40 dark:hover:shadow-green-900/20'
                     : 'border-gray-200 bg-gray-100/50 hover:border-gray-300 hover:shadow-gray-200/30 dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-gray-700 dark:hover:shadow-gray-900/20',
             )}
             onClick={() => onDomainClick(domain)}
         >
             <CardContent className="p-3">
-                <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0 flex-1">
-                        <div className="mb-1 flex items-center justify-between gap-2">
-                            <div className="flex min-w-0 items-center gap-2">
-                                <h3 className="truncate text-sm font-semibold transition-colors group-hover:text-primary">
-                                    {domain.getName()}
-                                </h3>
-                                {isAvailable && (
-                                    <div
-                                        className="h-2 w-2 flex-shrink-0 animate-pulse rounded-full bg-green-800 shadow shadow-green-500/40 dark:bg-green-800 dark:shadow-green-400/40"
-                                        aria-label="Available"
-                                    />
-                                )}
-                            </div>
-                            <Badge
-                                variant="outline"
-                                className="min-w-16 flex-shrink-0 justify-center bg-white font-mono text-xs"
-                            >
-                                .{tld}
-                            </Badge>
-                        </div>
-                    </div>
+                <div className="flex items-center justify-between gap-2">
+                    <h3 className="truncate text-sm font-semibold transition-colors group-hover:text-primary">
+                        {domain.getName()}
+                    </h3>
+                    {isAvailable && (
+                        <div
+                            className="h-2 w-2 flex-shrink-0 animate-pulse rounded-full bg-green-800 shadow shadow-green-500/40 dark:bg-green-800 dark:shadow-green-400/40"
+                            aria-label="Available"
+                        />
+                    )}
                 </div>
             </CardContent>
         </Card>

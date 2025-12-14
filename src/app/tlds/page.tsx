@@ -14,6 +14,7 @@ import { ButtonGroup } from '@/components/ui/button-group';
 import { Card, CardContent } from '@/components/ui/card';
 import { Highlighter } from '@/components/ui/highlighter';
 import { Input } from '@/components/ui/input';
+import { cn } from '@/components/ui/utils';
 import { TLD, TLD_TYPE_DISPLAY_NAMES, TLDType } from '@/models/tld';
 import { apiClient } from '@/services/api';
 
@@ -84,7 +85,7 @@ export default function TldsPage() {
                             placeholder="Search TLDs by name ..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-9 pr-4"
+                            className="w-full border border-input bg-background pl-9 pr-4 shadow-sm transition-all hover:shadow-md focus-visible:ring-2 focus-visible:ring-ring"
                         />
                     </div>
                 </div>
@@ -123,7 +124,11 @@ export default function TldsPage() {
                                 }}
                             >
                                 <Card
-                                    className="group relative cursor-pointer overflow-hidden rounded-sm border-[0.5px] border-gray-200 transition-colors duration-200 hover:border-gray-300 hover:shadow-lg hover:shadow-gray-200/30 dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-gray-700 dark:hover:shadow-gray-900/20"
+                                    className={cn(
+                                        'group relative cursor-pointer overflow-hidden rounded-sm border-[0.5px] transition-all duration-200 hover:scale-[1.02] hover:shadow-lg',
+                                        'border-gray-200 bg-white hover:border-gray-300 hover:shadow-gray-200/40',
+                                        'dark:border-gray-800 dark:bg-gray-900/80 dark:hover:border-gray-700 dark:hover:shadow-gray-900/30',
+                                    )}
                                     onClick={() => showDrawer(tld)}
                                 >
                                     <CardContent className="p-3">
@@ -133,7 +138,13 @@ export default function TldsPage() {
                                             </h3>
                                             <Badge
                                                 variant="outline"
-                                                className="flex flex-shrink-0 items-center gap-1 border-muted-foreground/20 text-xs font-light uppercase"
+                                                className={cn(
+                                                    'flex min-w-40 flex-shrink-0 items-center justify-center gap-1.5 border px-2 py-0.5 text-xs font-medium uppercase backdrop-blur-sm',
+                                                    'border-slate-300/50 bg-slate-100/80 text-foreground',
+                                                    'hover:border-slate-400/60 hover:bg-slate-200/80',
+                                                    'dark:border-slate-700/50 dark:bg-slate-800/60',
+                                                    'dark:hover:border-slate-600/60 dark:hover:bg-slate-700/60',
+                                                )}
                                             >
                                                 <TLDTypeIcon tld={tld} size="xs" />
                                                 <span>{tld.type ? TLD_TYPE_DISPLAY_NAMES[tld.type] : 'Unknown'}</span>
