@@ -84,7 +84,7 @@ export default function TldsPage() {
                             placeholder="Search TLDs by name ..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-9 pr-4"
+                            className="w-full pl-9 pr-4 !text-base md:!text-sm"
                         />
                     </div>
                 </div>
