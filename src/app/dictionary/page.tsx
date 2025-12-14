@@ -42,7 +42,6 @@ function StatsDisplay() {
 function Hit({ hit, onDomainClick }: { hit: AlgoliaHit; onDomainClick: (domain: Domain) => void }) {
     const isAvailable = hit.isAvailable === true;
     const domain = new Domain(hit.domain);
-    const tld = domain.getTLD();
 
     return (
         <Card
@@ -55,16 +54,19 @@ function Hit({ hit, onDomainClick }: { hit: AlgoliaHit; onDomainClick: (domain: 
             onClick={() => onDomainClick(domain)}
         >
             <CardContent className="p-3">
-                <div className="flex items-center justify-between gap-2">
-                    <h3 className="truncate text-sm font-semibold transition-colors group-hover:text-primary">
-                        {domain.getName()}
-                    </h3>
-                    {isAvailable && (
-                        <div
-                            className="h-2 w-2 flex-shrink-0 animate-pulse rounded-full bg-green-800 shadow shadow-green-500/40 dark:bg-green-800 dark:shadow-green-400/40"
-                            aria-label="Available"
-                        />
-                    )}
+                <div className="flex flex-col gap-2">
+                    <div className="flex items-center justify-between gap-2">
+                        <h3 className="truncate text-sm font-semibold transition-colors group-hover:text-primary">
+                            {domain.getName()}
+                        </h3>
+                        {isAvailable && (
+                            <div
+                                className="h-2 w-2 flex-shrink-0 animate-pulse rounded-full bg-green-800 shadow shadow-green-500/40 dark:bg-green-800 dark:shadow-green-400/40"
+                                aria-label="Available"
+                            />
+                        )}
+                    </div>
+                    {hit.category && <p className="text-xs text-muted-foreground">{hit.category}</p>}
                 </div>
             </CardContent>
         </Card>
