@@ -54,9 +54,10 @@ describe('Header', () => {
         const logoImage = screen.getByAltText('GetMyNa.me');
         expect(logoImage).toHaveAttribute('src', '/logo.svg');
 
-        // Check title on home page
+        // Check title on home page (should be a link too)
         const title = screen.getByText('GetMyNa.me');
         expect(title).toBeInTheDocument();
+        expect(title).toHaveAttribute('href', '/');
 
         // Check about buttons (desktop and mobile)
         const aboutButton = screen.getByLabelText('About GetMyNa.me');

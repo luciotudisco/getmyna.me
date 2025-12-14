@@ -24,7 +24,14 @@ export default function Header() {
 
             <div className="flex w-full items-center gap-4">
                 {!showSearchBar ? (
-                    <h1 className="font-mono text-xl font-extralight uppercase">GetMyNa.me</h1>
+                    <h1 className="font-mono text-xl font-extralight uppercase">
+                        <Link
+                            href="/"
+                            className="rounded-sm outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                        >
+                            GetMyNa.me
+                        </Link>
+                    </h1>
                 ) : (
                     <Suspense>
                         <SearchBar />
