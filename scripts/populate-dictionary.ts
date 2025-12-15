@@ -41,6 +41,8 @@ async function populateDictionary(csvPath: string): Promise<void> {
     const rows = await parseCSV(csvPath);
     logger.info({ count: rows.length }, 'Parsed CSV rows');
 
+    const lastUpdatedAt = new Date().toISOString();
+
     const tlds = await tldRepository.list();
     const domainHacks = new DomainHacksGenerator(tlds);
     const algoliaClient = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY);
@@ -63,6 +65,7 @@ async function populateDictionary(csvPath: string): Promise<void> {
                 locale: 'en_US',
                 rank: indexedCount + 1,
                 isAvailable,
+                lastUpdatedAt,
             };
             await algoliaClient.saveObject({ indexName: ALGOLIA_INDEX_NAME, body: entry });
             indexedCount++;
