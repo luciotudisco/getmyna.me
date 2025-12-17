@@ -7,7 +7,6 @@ import { Search } from 'lucide-react';
 import ErrorMessage from '@/components/ErrorMessage';
 import LoadingMessage from '@/components/LoadingMessage';
 import TLDDrawer from '@/components/TLDDrawer';
-import TLDTypeIcon from '@/components/TLDTypeIcon';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
@@ -133,22 +132,12 @@ export default function TldsPage() {
                                 >
                                     <CardContent className="p-3">
                                         <div className="flex items-center justify-between gap-2">
-                                            <h3 className="truncate text-sm font-semibold transition-colors group-hover:text-primary">
-                                                .{tld.name}
+                                            <h3 className="flex min-w-0 items-center gap-2 text-sm font-semibold transition-colors group-hover:text-primary">
+                                                <span className="truncate">.{tld.name}</span>
+                                                <span className="shrink-0 text-[11px] font-medium uppercase text-muted-foreground">
+                                                    {tld.type ? TLD_TYPE_DISPLAY_NAMES[tld.type] : 'Unknown'}
+                                                </span>
                                             </h3>
-                                            <Badge
-                                                variant="outline"
-                                                className={cn(
-                                                    'flex min-w-40 flex-shrink-0 items-center justify-center gap-1.5 border px-2 py-0.5 text-xs font-medium uppercase backdrop-blur-sm',
-                                                    'border-slate-300/50 bg-slate-100/80 text-foreground',
-                                                    'hover:border-slate-400/60 hover:bg-slate-200/80',
-                                                    'dark:border-slate-700/50 dark:bg-slate-800/60',
-                                                    'dark:hover:border-slate-600/60 dark:hover:bg-slate-700/60',
-                                                )}
-                                            >
-                                                <TLDTypeIcon tld={tld} size="xs" />
-                                                <span>{tld.type ? TLD_TYPE_DISPLAY_NAMES[tld.type] : 'Unknown'}</span>
-                                            </Badge>
                                         </div>
                                     </CardContent>
                                 </Card>
