@@ -131,13 +131,13 @@ export default function TldsPage() {
                                     onClick={() => showDrawer(tld)}
                                 >
                                     <CardContent className="p-3">
-                                        <div className="flex items-center justify-between gap-2">
-                                            <h3 className="flex min-w-0 items-center gap-2 text-sm font-semibold transition-colors group-hover:text-primary">
-                                                <span className="truncate">.{tld.name}</span>
-                                                <span className="shrink-0 text-[11px] font-medium uppercase text-muted-foreground">
-                                                    {tld.type ? TLD_TYPE_DISPLAY_NAMES[tld.type] : 'Unknown'}
-                                                </span>
+                                        <div className="flex flex-col gap-1">
+                                            <h3 className="flex min-w-0 items-center gap-2 truncate text-sm font-semibold transition-colors group-hover:text-primary">
+                                                .{tld.name}
                                             </h3>
+                                            <span className="shrink-0 text-xs font-light text-muted-foreground">
+                                                {tld.type ? TLD_TYPE_DISPLAY_NAMES[tld.type] : 'Unknown'}
+                                            </span>
                                         </div>
                                     </CardContent>
                                 </Card>
