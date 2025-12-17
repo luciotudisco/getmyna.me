@@ -135,7 +135,7 @@ export default function TldsPage() {
                                             <h3 className="flex min-w-0 items-center gap-2 truncate text-sm font-semibold transition-colors group-hover:text-primary">
                                                 .{tld.name}
                                             </h3>
-                                            <span className="shrink-0 text-xs font-light text-muted-foreground">
+                                            <span className="shrink-0 text-xs font-light lowercase text-muted-foreground">
                                                 {tld.type ? TLD_TYPE_DISPLAY_NAMES[tld.type] : 'Unknown'}
                                             </span>
                                         </div>
