@@ -132,12 +132,14 @@ export default function TldsPage() {
                                 >
                                     <CardContent className="p-3">
                                         <div className="flex items-center justify-between gap-2">
-                                            <h3 className="flex min-w-0 items-center gap-2 text-sm font-semibold transition-colors group-hover:text-primary">
-                                                <span className="truncate">.{tld.name}</span>
-                                                <span className="shrink-0 text-[11px] font-medium uppercase text-muted-foreground">
-                                                    {tld.type ? TLD_TYPE_DISPLAY_NAMES[tld.type] : 'Unknown'}
-                                                </span>
-                                            </h3>
+                                            <div className="min-w-0">
+                                                <h3 className="truncate text-sm font-semibold transition-colors group-hover:text-primary">
+                                                    .{tld.name}
+                                                </h3>
+                                                <p className="truncate text-[11px] font-medium lowercase text-muted-foreground">
+                                                    {tld.type ? TLD_TYPE_DISPLAY_NAMES[tld.type] : 'unknown'}
+                                                </p>
+                                            </div>
                                         </div>
                                     </CardContent>
                                 </Card>
