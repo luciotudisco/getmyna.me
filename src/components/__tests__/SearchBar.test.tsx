@@ -44,9 +44,9 @@ describe('SearchBar', () => {
             </AmplitudeProvider>,
         );
 
-        const input = screen.getByPlaceholderText('Find the perfect domain hack');
+        const input = screen.getByPlaceholderText('Try finding a domain hack for this name ...');
         expect(input).toBeInTheDocument();
-        expect(input).toHaveAttribute('type', 'text');
+        expect(input).toHaveAttribute('type', 'search');
 
         const searchButton = screen.getByRole('button', { name: 'Search' });
         expect(searchButton).toBeInTheDocument();
@@ -75,7 +75,7 @@ describe('SearchBar', () => {
             </AmplitudeProvider>,
         );
 
-        const input = screen.getByPlaceholderText('Find the perfect domain hack');
+        const input = screen.getByPlaceholderText('Try finding a domain hack for this name ...');
         fireEvent.change(input, { target: { value: 'test' } });
 
         const clearButton = screen.getByRole('button', { name: 'Clear search' });
@@ -91,7 +91,7 @@ describe('SearchBar', () => {
             </AmplitudeProvider>,
         );
 
-        const input = screen.getByPlaceholderText('Find the perfect domain hack');
+        const input = screen.getByPlaceholderText('Try finding a domain hack for this name ...');
         fireEvent.change(input, { target: { value: 'test' } });
 
         const clearButton = screen.getByRole('button', { name: 'Clear search' });
@@ -109,7 +109,7 @@ describe('SearchBar', () => {
             </AmplitudeProvider>,
         );
 
-        const input = screen.getByPlaceholderText('Find the perfect domain hack');
+        const input = screen.getByPlaceholderText('Try finding a domain hack for this name ...');
         const form = input.closest('form');
 
         fireEvent.change(input, { target: { value: 'test-domain' } });
@@ -130,7 +130,7 @@ describe('SearchBar', () => {
             </AmplitudeProvider>,
         );
 
-        const input = screen.getByPlaceholderText('Find the perfect domain hack');
+        const input = screen.getByPlaceholderText('Try finding a domain hack for this name ...');
         const form = input.closest('form');
 
         fireEvent.change(input, { target: { value: 'test-domain' } });

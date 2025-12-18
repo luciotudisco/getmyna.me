@@ -19,10 +19,15 @@ const AboutPage = () => {
                         </Highlighter>
                     </p>
                 </div>
-                <div className="pt-6">
-                    <TLDCounter />
+                <div className="space-y-4 p-4 text-center">
+                    <RainbowButton asChild size="lg">
+                        <Link href="/dictionary">🧑🏻‍🚀 Explore the Dictionary</Link>
+                    </RainbowButton>
+                    <p className="mt-2 text-xs text-muted-foreground">
+                        Search through thousands of words with available domain hacks
+                    </p>
                 </div>
-                <div className="mx-auto mt-6 max-w-2xl space-y-6 text-sm leading-relaxed">
+                <div className="mx-auto max-w-2xl space-y-6 text-sm leading-relaxed">
                     <p>
                         A <span className="font-bold">domain hack</span> is a clever twist on the traditional web
                         address. Instead of sticking to the usual ".com," it creatively blends words with top-level
@@ -51,14 +56,9 @@ const AboutPage = () => {
                         endless creative possibilities. The best domain hacks are short, memorable, and perfectly
                         aligned with your brand's personality.
                     </p>
-                    <div className="space-y-4 p-8 text-center">
-                        <RainbowButton asChild size="lg">
-                            <Link href="/dictionary">🧑🏻‍🚀 Explore the Dictionary</Link>
-                        </RainbowButton>
-                        <p className="mt-2 text-xs text-muted-foreground">
-                            Search through thousands of words with available domain hacks
-                        </p>
-                    </div>
+                </div>
+                <div className="pt-4">
+                    <TLDCounter />
                 </div>
             </main>
         </div>
