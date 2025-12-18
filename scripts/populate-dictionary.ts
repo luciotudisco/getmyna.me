@@ -18,13 +18,13 @@ const ALGOLIA_API_KEY = process.env.ALGOLIA_API_KEY!;
 
 const AVAILABLE_PATTERNS = new RegExp(
     [
+        'does not exist',
+        'domain not found',
+        'is free',
+        'no data found',
+        'no entries found',
         'no match',
         'not found',
-        'no entries found',
-        'no data found',
-        'domain not found',
-        'does not exist',
-        'is free',
         'status:\\s*available',
         'status:\\s*free',
     ].join('|'),
@@ -33,18 +33,18 @@ const AVAILABLE_PATTERNS = new RegExp(
 
 const REGISTERED_PATTERNS = new RegExp(
     [
-        'domain name:',
-        'registrar:',
         'creation date:',
-        'expiry date:',
-        'registry expiry date:',
+        'domain name:',
         'domain status:',
-        'updated date:',
+        'expiry date:',
         'holder',
         'registrant',
+        'registrar:',
+        'registry expiry date:',
         'status:\\s*active',
-        'status:\\s*ok',
         'status:\\s*connect',
+        'status:\\s*ok',
+        'updated date:',
     ].join('|'),
     'i',
 );

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Configure, Hits, InstantSearch, Pagination, SearchBox, useStats } from 'react-instantsearch';
 import { liteClient as algoliasearch } from 'algoliasearch/lite';
 import { Sparkles } from 'lucide-react';
@@ -85,10 +85,16 @@ export default function DictionaryPage() {
         domain.setStatus(status);
     }, []);
 
+    const filters = useMemo(() => {
+        return [showOnlyAvailable ? 'isAvailable:true' : '', 'category:"common" OR category:"name"']
+            .filter(Boolean)
+            .join(' AND ');
+    }, [showOnlyAvailable]);
+
     return (
         <div className="flex min-h-screen flex-col">
             <InstantSearch searchClient={searchClient} indexName={process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME!}>
-                <Configure filters={showOnlyAvailable ? 'isAvailable:true' : ''} />
+                <Configure filters={filters} />
                 <main className="m-auto flex w-full max-w-7xl flex-grow flex-col items-center gap-6 p-5 md:p-10">
                     {/* Header Section */}
                     <div className="mb-2 text-center md:mb-6">
