@@ -16,10 +16,38 @@ const ALGOLIA_INDEX_NAME = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME!;
 const ALGOLIA_APP_ID = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!;
 const ALGOLIA_API_KEY = process.env.ALGOLIA_API_KEY!;
 
-const AVAILABLE_PATTERNS =
-    /no match|not found|no entries found|no data found|domain not found|does not exist|is free|status:\s*available|status:\s*free/i;
-const REGISTERED_PATTERNS =
-    /domain name:|registrar:|creation date:|expiry date:|registry expiry date:|domain status:|updated date:|holder|registrant|status:\s*active|status:\s*ok|status:\s*connect/i;
+const AVAILABLE_PATTERNS = new RegExp(
+    [
+        'no match',
+        'not found',
+        'no entries found',
+        'no data found',
+        'domain not found',
+        'does not exist',
+        'is free',
+        'status:\\s*available',
+        'status:\\s*free',
+    ].join('|'),
+    'i',
+);
+
+const REGISTERED_PATTERNS = new RegExp(
+    [
+        'domain name:',
+        'registrar:',
+        'creation date:',
+        'expiry date:',
+        'registry expiry date:',
+        'domain status:',
+        'updated date:',
+        'holder',
+        'registrant',
+        'status:\\s*active',
+        'status:\\s*ok',
+        'status:\\s*connect',
+    ].join('|'),
+    'i',
+);
 
 /**
  * Parses a CSV file and returns an array of rows.
@@ -35,9 +63,15 @@ async function parseCSV(filePath: string): Promise<Array<{ word: string }>> {
 /**
  * Populates the Algolia dictionary domain hacks from words in a CSV file.
  * @param csvPath - Path to the CSV file.
+ * @param category - Category for the dictionary entries (default: 'common').
+ * @param locale - Locale for the dictionary entries (default: 'en_US').
  */
-async function populateDictionary(csvPath: string): Promise<void> {
-    logger.info({ csvPath }, 'Starting dictionary population');
+async function populateDictionary(
+    csvPath: string,
+    category: string = 'common',
+    locale: string = 'en_US',
+): Promise<void> {
+    logger.info({ csvPath, category, locale }, 'Starting dictionary population');
     const rows = await parseCSV(csvPath);
     logger.info({ count: rows.length }, 'Parsed CSV rows');
 
@@ -59,10 +93,11 @@ async function populateDictionary(csvPath: string): Promise<void> {
                 domain: domain.getName(),
                 tld: domain.getTLD(),
                 word: row.word,
-                category: 'common',
-                locale: 'en_US',
+                category,
+                locale,
                 rank: indexedCount + 1,
                 isAvailable,
+                lastUpdated: new Date().toISOString(),
             };
             await algoliaClient.saveObject({ indexName: ALGOLIA_INDEX_NAME, body: entry });
             indexedCount++;
@@ -104,19 +139,24 @@ export async function isDomainAvailable(domain: string, opts?: { timeoutMs?: num
 async function main(): Promise<void> {
     const args = process.argv.slice(2);
     if (args.length === 0) {
-        console.error('Usage: tsx scripts/populate-dictionary.ts <path-to-csv>');
+        console.error('Usage: tsx scripts/populate-dictionary.ts <path-to-csv> [category] [locale]');
         console.error('Example: tsx scripts/populate-dictionary.ts data/words.csv');
+        console.error('Example: tsx scripts/populate-dictionary.ts data/words.csv companies');
+        console.error('Example: tsx scripts/populate-dictionary.ts data/words.csv companies en_US');
         process.exit(1);
     }
 
     const csvPath = args[0];
+    const category = args[1] || 'common';
+    const locale = args[2] || 'en_US';
+
     const absolutePath = path.resolve(csvPath);
     if (!fs.existsSync(absolutePath)) {
         console.error(`Error: CSV file not found: ${absolutePath}`);
         process.exit(1);
     }
 
-    await populateDictionary(absolutePath);
+    await populateDictionary(absolutePath, category, locale);
 }
 
 main().catch((error) => {
