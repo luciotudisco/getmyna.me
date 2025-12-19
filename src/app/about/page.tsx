@@ -21,7 +21,7 @@ const AboutPage = () => {
                 </div>
                 <div className="space-y-4 p-4 text-center">
                     <RainbowButton asChild size="lg">
-                        <Link href="/dictionary">Browse the Dictionary</Link>
+                        <Link href="/dictionary">Explore the Dictionary</Link>
                     </RainbowButton>
                     <p className="mt-2 text-xs text-muted-foreground">
                         Browse through thousands of available domain hacks
