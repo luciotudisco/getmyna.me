@@ -21,10 +21,10 @@ const AboutPage = () => {
                 </div>
                 <div className="space-y-4 p-4 text-center">
                     <RainbowButton asChild size="lg">
-                        <Link href="/dictionary">🧑🏻‍🚀 Explore the Dictionary</Link>
+                        <Link href="/dictionary">Browse the Dictionary</Link>
                     </RainbowButton>
                     <p className="mt-2 text-xs text-muted-foreground">
-                        Search through thousands of words with available domain hacks
+                        Browse through thousands of available domain hacks
                     </p>
                 </div>
                 <div className="mx-auto max-w-2xl space-y-6 text-sm leading-relaxed">
