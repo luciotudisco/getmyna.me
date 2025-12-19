@@ -2,6 +2,9 @@ import '@testing-library/jest-dom';
 
 // Set up environment variables for tests
 process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY = 'test-amplitude-api-key';
+process.env.NEXT_PUBLIC_ALGOLIA_APP_ID = 'test-algolia-app-id';
+process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY = 'test-algolia-search-key';
+process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME = 'dictionary';
 process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test.supabase.co';
 process.env.OPENAI_API_KEY = 'test-openai-key';
 process.env.RAPID_API_KEY = 'test-rapid-api-key';

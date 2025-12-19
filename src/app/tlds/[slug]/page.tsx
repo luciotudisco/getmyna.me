@@ -5,6 +5,7 @@ import { Building2, Calendar, DollarSign, ExternalLink, FileText } from 'lucide-
 
 import ErrorMessage from '@/components/ErrorMessage';
 import LoadingMessage from '@/components/LoadingMessage';
+import TLDDictionaryEntriesSection from '@/components/TLDDictionaryEntriesSection';
 import TLDTypeIcon from '@/components/TLDTypeIcon';
 import { Badge } from '@/components/ui/badge';
 import { REGISTRAR_DISPLAY_NAMES, REGISTRAR_TLD_SEARCH_URLS, TLD, TLD_TYPE_DISPLAY_NAMES } from '@/models/tld';
@@ -127,6 +128,8 @@ export default function TLDPage({ params }: { params: Promise<{ slug: string }> 
                             {tld.description ?? 'No additional information is available for this TLD, just yet.'}
                         </p>
                     </div>
+
+                    <TLDDictionaryEntriesSection tld={tld.name} />
                     {tld?.pricing &&
                         Object.values(tld.pricing).some((pricing) => typeof pricing.registration === 'number') && (
                             <div className="rounded-lg border p-6 shadow-sm">
