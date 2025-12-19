@@ -58,7 +58,9 @@ export default function TLDDictionaryEntriesSection({ tld }: { tld: string }) {
 
     const filters = useMemo(() => {
         const safeTld = escapeAlgoliaFilterValue(tld.replace(/^\./, '').toLowerCase());
-        return `tld:"${safeTld}" AND isAvailable:true`;
+        // Limit categories shown on the TLD page.
+        // NOTE: keep this in sync with the dictionary page category filter.
+        return `tld:"${safeTld}" AND isAvailable:true AND (category:"common" OR category:"names")`;
     }, [tld]);
 
     useEffect(() => {

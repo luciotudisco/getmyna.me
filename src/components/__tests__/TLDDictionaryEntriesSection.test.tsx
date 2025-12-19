@@ -63,7 +63,7 @@ describe('TLDDictionaryEntriesSection', () => {
                         {
                             objectID: '2',
                             word: 'world',
-                            category: 'name',
+                            category: 'names',
                             domain: 'world.com',
                             tld: 'com',
                             isAvailable: true,
@@ -84,7 +84,9 @@ describe('TLDDictionaryEntriesSection', () => {
         const firstCallArg = mockAlgoliaSearch.mock.calls[0]?.[0]?.[0];
         expect(firstCallArg?.indexName).toBe(process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME);
         expect(firstCallArg?.params?.hitsPerPage).toBe(20);
-        expect(firstCallArg?.params?.filters).toBe('tld:"com" AND isAvailable:true');
+        expect(firstCallArg?.params?.filters).toBe(
+            'tld:"com" AND isAvailable:true AND (category:"common" OR category:"names")',
+        );
     });
 
     it('shows an empty state when no hits are found', async () => {
