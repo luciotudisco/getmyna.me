@@ -86,7 +86,7 @@ export default function DictionaryPage() {
     }, []);
 
     const filters = useMemo(() => {
-        return [showOnlyAvailable ? 'isAvailable:true' : '', 'category:"common" OR category:"name"']
+        return [showOnlyAvailable ? 'isAvailable:true' : '', 'category:"common" OR category:"names"']
             .filter(Boolean)
             .join(' AND ');
     }, [showOnlyAvailable]);
