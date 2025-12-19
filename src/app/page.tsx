@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { Compass } from 'lucide-react';
+import { BookOpen } from 'lucide-react';
 import Link from 'next/link';
 
 import Feature from '@/components/Feature';
@@ -17,9 +17,9 @@ export default function Home() {
                     href="/dictionary"
                     className="flex items-center gap-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
                 >
-                    <Compass className="h-3 w-3" />
-                    <span>explore a dictionary of available domain hacks</span>
-                    <Compass className="h-3 w-3" />
+                    <BookOpen className="h-3 w-3" />
+                    <span>browse available domain hacks</span>
+                    <BookOpen className="h-3 w-3" />
                 </Link>
                 <InspirationCarousel />
                 <Feature
