@@ -44,7 +44,7 @@ describe('SearchBar', () => {
             </AmplitudeProvider>,
         );
 
-        const input = screen.getByPlaceholderText('Try finding a domain hack for this name ...');
+        const input = screen.getByPlaceholderText('Find a domain hack');
         expect(input).toBeInTheDocument();
         expect(input).toHaveAttribute('type', 'search');
 
@@ -75,7 +75,7 @@ describe('SearchBar', () => {
             </AmplitudeProvider>,
         );
 
-        const input = screen.getByPlaceholderText('Try finding a domain hack for this name ...');
+        const input = screen.getByPlaceholderText('Find a domain hack');
         fireEvent.change(input, { target: { value: 'test' } });
 
         const clearButton = screen.getByRole('button', { name: 'Clear search' });
@@ -91,7 +91,7 @@ describe('SearchBar', () => {
             </AmplitudeProvider>,
         );
 
-        const input = screen.getByPlaceholderText('Try finding a domain hack for this name ...');
+        const input = screen.getByPlaceholderText('Find a domain hack');
         fireEvent.change(input, { target: { value: 'test' } });
 
         const clearButton = screen.getByRole('button', { name: 'Clear search' });
@@ -109,7 +109,7 @@ describe('SearchBar', () => {
             </AmplitudeProvider>,
         );
 
-        const input = screen.getByPlaceholderText('Try finding a domain hack for this name ...');
+        const input = screen.getByPlaceholderText('Find a domain hack');
         const form = input.closest('form');
 
         fireEvent.change(input, { target: { value: 'test-domain' } });
@@ -130,7 +130,7 @@ describe('SearchBar', () => {
             </AmplitudeProvider>,
         );
 
-        const input = screen.getByPlaceholderText('Try finding a domain hack for this name ...');
+        const input = screen.getByPlaceholderText('Find a domain hack');
         const form = input.closest('form');
 
         fireEvent.change(input, { target: { value: 'test-domain' } });
