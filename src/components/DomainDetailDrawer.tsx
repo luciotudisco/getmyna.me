@@ -135,14 +135,14 @@ function DomainDetailDrawer({ domain, open, onClose }: DomainDetailDrawerProps) 
 
                 {domain.isAvailable() && (
                     <DrawerFooter className="mt-6 p-0">
-                        <Button asChild variant="outline" size="lg" className="w-full">
+                        <Button asChild variant="outline" size="md" className="w-full">
                             <Link
                                 href={`/domain/${encodeURIComponent(domain.getName())}`}
                                 onClick={onClose}
                                 aria-label={`Share ${domain.getName()}`}
                             >
                                 <Share2Icon className="mr-2 h-4 w-4" />
-                                Share
+                                Share Link
                             </Link>
                         </Button>
                     </DrawerFooter>
