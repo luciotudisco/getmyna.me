@@ -34,9 +34,12 @@ function TLDDictionaryHits() {
 }
 
 export default function TLDDictionaryEntries({ tld }: { tld: string }) {
-    const filters = useMemo(() => {
-        return `tld:"${tld.toLowerCase()}" AND isAvailable:true AND (category:"common" OR category:"names")`;
-    }, [tld]);
+    const normalizedTld = useMemo(() => tld.trim().replace(/^\./, '').toLowerCase(), [tld]);
+    const facetFilters = useMemo(() => {
+        // Use facetFilters for facet attributes (more reliable than `filters` string parsing).
+        // AND between entries, OR within nested arrays.
+        return [`tld:${normalizedTld}`, 'isAvailable:true', ['category:common', 'category:names']];
+    }, [normalizedTld]);
 
     return (
         <div className="rounded-lg border p-6 shadow-sm">
@@ -54,7 +57,7 @@ export default function TLDDictionaryEntries({ tld }: { tld: string }) {
                 </div>
             </div>
             <InstantSearch searchClient={searchClient} indexName={process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME!}>
-                <Configure filters={filters} />
+                <Configure facetFilters={facetFilters} />
                 <TLDDictionaryHits />
             </InstantSearch>
         </div>
