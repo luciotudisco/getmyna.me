@@ -15,7 +15,8 @@
         "prepare": "husky",
         "test": "jest",
         "test:watch": "jest --watch",
-        "populate-dictionary": "dotenv -e .env.local -- tsx scripts/populate-dictionary.ts"
+        "populate-dictionary": "dotenv -e .env.local -- tsx scripts/populate-dictionary.ts",
+        "algolia:reupsert-last-updated": "dotenv -e .env.local -- tsx scripts/reupsert-algolia-last-updated.ts"
     },
     "dependencies": {
         "@amplitude/analytics-browser": "^2.11.11",

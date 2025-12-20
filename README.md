@@ -143,6 +143,9 @@ npm run test:watch  # Run tests in watch mode
 
 # Data Management
 npm run populate-dictionary <csv-file>  # Populate dictionary from CSV and index in Algolia
+npm run algolia:reupsert-last-updated -- --dryRun                       # (Dry-run) Re-save all Algolia objects with lastUpdated = now
+npm run algolia:reupsert-last-updated -- --field lastUpdatedDate        # Use a different field name
+npm run algolia:reupsert-last-updated -- --index dictionary --batchSize 500
 ```
 
 ### Project Structure
