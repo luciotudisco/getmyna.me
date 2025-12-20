@@ -1,32 +1,18 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Configure, Hits, InstantSearch, Pagination, SearchBox, useStats } from 'react-instantsearch';
 import { liteClient as algoliasearch } from 'algoliasearch/lite';
 import { Sparkles } from 'lucide-react';
 
-import DomainDetailDrawer from '@/components/DomainDetailDrawer';
+import DictionaryEntryCard from '@/components/DictionaryEntryCard';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { cn } from '@/components/ui/utils';
-import { Domain } from '@/models/domain';
-import { apiClient } from '@/services/api';
+import { DictionaryEntry } from '@/models/dictionary';
 
 const ALGOLIA_APP_ID = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!;
 const ALGOLIA_SEARCH_KEY = process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY!;
 const searchClient = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_SEARCH_KEY);
-
-interface AlgoliaHit {
-    objectID: string;
-    word: string;
-    category?: string;
-    locale?: string;
-    rank?: number;
-    domain: string;
-    tld: string;
-    isAvailable?: boolean;
-}
 
 function StatsDisplay() {
     const { nbHits } = useStats();
@@ -39,51 +25,8 @@ function StatsDisplay() {
     );
 }
 
-function Hit({ hit, onDomainClick }: { hit: AlgoliaHit; onDomainClick: (domain: Domain) => void }) {
-    const isAvailable = hit.isAvailable === true;
-    const domain = new Domain(hit.domain);
-
-    return (
-        <Card
-            className={cn(
-                'group relative cursor-pointer overflow-hidden rounded-sm border-[0.5px] transition-colors duration-200 hover:shadow-lg',
-                isAvailable
-                    ? 'border-green-400/40 bg-green-200/60 hover:border-green-500 hover:shadow-green-200/20 dark:border-green-500/20 dark:bg-green-950/10 dark:hover:border-green-400/40 dark:hover:shadow-green-900/20'
-                    : 'border-gray-200 bg-gray-100/50 hover:border-gray-300 hover:shadow-gray-200/30 dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-gray-700 dark:hover:shadow-gray-900/20',
-            )}
-            onClick={() => onDomainClick(domain)}
-        >
-            <CardContent className="p-3">
-                <div className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between gap-2">
-                        <h3 className="truncate text-sm font-semibold transition-colors group-hover:text-primary">
-                            {domain.getName()}
-                        </h3>
-                        {isAvailable && (
-                            <div
-                                className="h-2 w-2 flex-shrink-0 animate-pulse rounded-full bg-green-800 shadow shadow-green-500/40 dark:bg-green-800 dark:shadow-green-400/40"
-                                aria-label="Available"
-                            />
-                        )}
-                    </div>
-                    {hit.category && <p className="text-xs text-muted-foreground">{hit.category}</p>}
-                </div>
-            </CardContent>
-        </Card>
-    );
-}
-
 export default function DictionaryPage() {
-    const [selectedDomain, setSelectedDomain] = useState<Domain | null>(null);
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [showOnlyAvailable, setShowOnlyAvailable] = useState(true);
-
-    const handleDomainClick = useCallback(async (domain: Domain) => {
-        setSelectedDomain(domain);
-        setIsDrawerOpen(true);
-        const status = await apiClient.getDomainStatus(domain.getName());
-        domain.setStatus(status);
-    }, []);
 
     const filters = useMemo(() => {
         return [showOnlyAvailable ? 'isAvailable:true' : '', 'category:"common" OR category:"names"']
@@ -135,11 +78,7 @@ export default function DictionaryPage() {
                     <div className="w-full max-w-5xl flex-grow">
                         <Hits
                             hitComponent={({ hit }) => (
-                                <Hit
-                                    hit={hit as unknown as AlgoliaHit}
-                                    onDomainClick={handleDomainClick}
-                                    key={hit.objectID}
-                                />
+                                <DictionaryEntryCard entry={hit as unknown as DictionaryEntry} key={hit.objectID} />
                             )}
                             classNames={{
                                 root: 'w-full',
@@ -167,17 +106,6 @@ export default function DictionaryPage() {
                     </div>
                 </main>
             </InstantSearch>
-
-            {selectedDomain && (
-                <DomainDetailDrawer
-                    domain={selectedDomain}
-                    open={isDrawerOpen}
-                    onClose={() => {
-                        setIsDrawerOpen(false);
-                        setSelectedDomain(null);
-                    }}
-                />
-            )}
         </div>
     );
 }

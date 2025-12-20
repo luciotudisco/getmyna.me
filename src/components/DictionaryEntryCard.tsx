@@ -1,0 +1,80 @@
+'use client';
+
+import { useCallback, useState } from 'react';
+
+import DomainDetailDrawer from '@/components/DomainDetailDrawer';
+import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/components/ui/utils';
+import { DictionaryEntry } from '@/models/dictionary';
+import { Domain } from '@/models/domain';
+import { apiClient } from '@/services/api';
+
+interface DictionaryEntryCardProps {
+    entry: DictionaryEntry;
+    variant?: 'compact' | 'normal';
+}
+
+export default function DictionaryEntryCard({ entry, variant = 'normal' }: DictionaryEntryCardProps) {
+    const isAvailable = entry.isAvailable === true;
+    const domain = new Domain(entry.domain);
+    const [selectedDomain, setSelectedDomain] = useState<Domain | null>(null);
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const isCompact = variant === 'compact';
+
+    const handleDomainClick = useCallback(async () => {
+        setSelectedDomain(domain);
+        setIsDrawerOpen(true);
+        const status = await apiClient.getDomainStatus(domain.getName());
+        domain.setStatus(status);
+    }, [domain]);
+
+    return (
+        <>
+            <Card
+                className={cn(
+                    'group relative cursor-pointer overflow-hidden rounded-sm border-[0.5px] transition-colors duration-200 hover:shadow-lg',
+                    isAvailable
+                        ? 'border-green-400/40 bg-green-200/60 hover:border-green-500 hover:shadow-green-200/20 dark:border-green-500/20 dark:bg-green-950/10 dark:hover:border-green-400/40 dark:hover:shadow-green-900/20'
+                        : 'border-gray-200 bg-gray-100/50 hover:border-gray-300 hover:shadow-gray-200/30 dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-gray-700 dark:hover:shadow-gray-900/20',
+                )}
+                onClick={handleDomainClick}
+            >
+                <CardContent className={cn(isCompact ? 'p-2' : 'p-3')}>
+                    <div className={cn('flex flex-col', isCompact ? 'gap-1' : 'gap-2')}>
+                        <div className="flex items-center justify-between gap-2">
+                            <h3
+                                className={cn(
+                                    'truncate font-semibold transition-colors group-hover:text-primary',
+                                    isCompact ? 'text-xs' : 'text-sm',
+                                )}
+                            >
+                                {domain.getName()}
+                            </h3>
+                            {isAvailable && isCompact && (
+                                <div
+                                    className="h-1.5 w-1.5 flex-shrink-0 animate-pulse rounded-full bg-green-800 shadow shadow-green-500/40 dark:bg-green-800 dark:shadow-green-400/40"
+                                    aria-label="Available"
+                                />
+                            )}
+                        </div>
+                        {entry.category && (
+                            <p className={cn('text-muted-foreground', isCompact ? 'text-[10px]' : 'text-xs')}>
+                                {entry.category}
+                            </p>
+                        )}
+                    </div>
+                </CardContent>
+            </Card>
+            {selectedDomain && (
+                <DomainDetailDrawer
+                    domain={selectedDomain}
+                    open={isDrawerOpen}
+                    onClose={() => {
+                        setIsDrawerOpen(false);
+                        setSelectedDomain(null);
+                    }}
+                />
+            )}
+        </>
+    );
+}
