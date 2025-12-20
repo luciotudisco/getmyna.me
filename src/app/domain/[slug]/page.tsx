@@ -1,2 +1,3 @@
-export { default } from '../../domains/[slug]/page';
+import DomainsSlugPage from '../../domains/[slug]/page';
 
+export default DomainsSlugPage;
