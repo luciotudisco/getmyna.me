@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
-import { Share2Icon } from 'lucide-react';
-import Link from 'next/link';
 
 import DomainRegistrarButtons from '@/components/DomainRegistrarButtons';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
@@ -12,7 +10,7 @@ import { DomainWhoisSection } from '@/components/DomainWhoisSection';
 import ErrorMessage from '@/components/ErrorMessage';
 import LoadingMessage from '@/components/LoadingMessage';
 import TLDSection from '@/components/TLDSection';
-import { Button } from '@/components/ui/button';
+import { CopyButton } from '@/components/ui/copy';
 import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
 import { Domain, DomainStatus } from '@/models/domain';
@@ -135,16 +133,13 @@ function DomainDetailDrawer({ domain, open, onClose }: DomainDetailDrawerProps) 
 
                 {domain.isAvailable() && (
                     <DrawerFooter className="mt-6 p-0">
-                        <Button asChild variant="outline" className="w-full">
-                            <Link
-                                href={`/domain/${encodeURIComponent(domain.getName())}`}
-                                onClick={onClose}
-                                aria-label={`Share ${domain.getName()}`}
-                            >
-                                <Share2Icon className="mr-2 h-4 w-4" />
-                                Share Link
-                            </Link>
-                        </Button>
+                        <CopyButton
+                            variant="outline"
+                            className="w-full"
+                            content={`https://getmydomain.com/domains/${encodeURIComponent(domain.getName())}`}
+                            label="copy link"
+                            copiedLabel="link copied!"
+                        />
                     </DrawerFooter>
                 )}
             </DrawerContent>
