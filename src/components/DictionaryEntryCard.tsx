@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import DomainDetailDrawer from '@/components/DomainDetailDrawer';
 import { Card, CardContent } from '@/components/ui/card';
@@ -16,7 +16,7 @@ interface DictionaryEntryCardProps {
 
 export default function DictionaryEntryCard({ entry, variant = 'normal' }: DictionaryEntryCardProps) {
     const isAvailable = entry.isAvailable === true;
-    const domain = new Domain(entry.domain);
+    const domain = useMemo(() => new Domain(entry.domain), [entry.domain]);
     const [selectedDomain, setSelectedDomain] = useState<Domain | null>(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const isCompact = variant === 'compact';
