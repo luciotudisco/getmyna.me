@@ -136,7 +136,7 @@ function DomainDetailDrawer({ domain, open, onClose }: DomainDetailDrawerProps) 
                         <CopyButton
                             variant="outline"
                             className="w-full"
-                            content={`https://getmydomain.com/domains/${encodeURIComponent(domain.getName())}`}
+                            content={`https://getmyna.me/domains/${encodeURIComponent(domain.getName())}`}
                             label="copy link"
                             copiedLabel="link copied!"
                         />

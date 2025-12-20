@@ -100,7 +100,7 @@ function CopyButton({
     return (
         <motion.button
             data-slot="copy-button"
-            className={cn(buttonVariants({ variant, size }), label && 'flex flex-row p-3', className)}
+            className={cn(buttonVariants({ variant, size }), label && 'flex flex-row p-4', className)}
             onClick={handleCopy}
             {...(props as any)}
         >

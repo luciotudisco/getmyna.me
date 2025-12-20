@@ -50,7 +50,7 @@ export default function DictionaryEntryCard({ entry, variant = 'normal' }: Dicti
                             >
                                 {domain.getName()}
                             </h3>
-                            {isAvailable && isCompact && (
+                            {isAvailable && (
                                 <div
                                     className="h-1.5 w-1.5 flex-shrink-0 animate-pulse rounded-full bg-green-800 shadow shadow-green-500/40 dark:bg-green-800 dark:shadow-green-400/40"
                                     aria-label="Available"
