@@ -13,7 +13,7 @@ const AboutPage = () => {
                     <Badge className="text-xs font-medium">ABOUT</Badge>
                     <h1 className="mt-4 text-2xl font-semibold lg:text-3xl">Domain Hacks</h1>
                     <p className="mt-2 text-sm font-medium text-muted-foreground lg:text-base">
-                        Discover how to create memorable domains that{' '}
+                        Memorable domains that{' '}
                         <Highlighter action="highlight" color="#fde2e4">
                             stand out
                         </Highlighter>
@@ -24,7 +24,7 @@ const AboutPage = () => {
                         <Link href="/dictionary">Explore the Dictionary</Link>
                     </RainbowButton>
                     <p className="mt-2 text-xs text-muted-foreground">
-                        Browse through thousands of available domain hacks
+                        Browse through thousands of domain hacks
                     </p>
                 </div>
                 <div className="mx-auto max-w-2xl space-y-6 text-sm leading-relaxed">
