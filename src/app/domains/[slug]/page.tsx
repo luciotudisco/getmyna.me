@@ -71,7 +71,7 @@ export default function DomainPage({ params }: { params: Promise<{ slug: string 
             <main className="m-auto flex w-full max-w-4xl flex-col items-center gap-5 p-5 md:p-10">
                 <Badge className="text-xs font-medium">DOMAIN</Badge>
 
-                <div className="w-full rounded-lg border bg-card p-6 shadow-sm">
+                <div className="w-full p-6">
                     <div className="flex items-center justify-between gap-3">
                         <h1 className="min-w-0 truncate text-xl font-semibold md:text-2xl">{domain.getName()}</h1>
                         <DomainStatusBadge status={domain.getStatus()} className="min-w-[8rem]" />
