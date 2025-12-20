@@ -44,8 +44,7 @@ export default function DictionaryPage() {
                         <Badge className="text-xs font-medium">DICTIONARY</Badge>
                         <h1 className="mt-4 text-2xl font-semibold lg:text-3xl">Domain Hacks Dictionary</h1>
                         <p className="mx-auto mt-2 max-w-2xl text-sm font-medium text-muted-foreground lg:text-base">
-                            Discover creative domain hacks from thousands of words. Find the perfect domain that
-                            combines your word with the perfect TLD.
+                            Browse through thousands of available domain hacks.
                         </p>
                     </div>
 
