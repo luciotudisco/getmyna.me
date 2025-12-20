@@ -23,9 +23,7 @@ const AboutPage = () => {
                     <RainbowButton asChild size="lg">
                         <Link href="/dictionary">Explore the Dictionary</Link>
                     </RainbowButton>
-                    <p className="mt-2 text-xs text-muted-foreground">
-                        Browse through thousands of domain hacks
-                    </p>
+                    <p className="mt-2 text-xs text-muted-foreground">Browse through thousands of domain hacks</p>
                 </div>
                 <div className="mx-auto max-w-2xl space-y-6 text-sm leading-relaxed">
                     <p>

@@ -1,7 +1,7 @@
 'use client';
 
-import { search } from 'fast-fuzzy';
 import { useEffect, useMemo, useState, useTransition } from 'react';
+import { search } from 'fast-fuzzy';
 import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
 
