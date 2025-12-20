@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { Share2Icon } from 'lucide-react';
-import Link from 'next/link';
 
 import DomainRegistrarButtons from '@/components/DomainRegistrarButtons';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
@@ -29,8 +28,43 @@ interface DomainDetailDrawerProps {
 function DomainDetailDrawer({ domain, open, onClose }: DomainDetailDrawerProps) {
     const [hasError, setHasError] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [didCopyShareLink, setDidCopyShareLink] = useState(false);
     const [tldInfo, setTldInfo] = useState<TLD | null>(null);
     const [whoisInfo, setWhoisInfo] = useState<WhoisInfo | null>(null);
+
+    const copyShareLink = async () => {
+        const shareUrl =
+            typeof window === 'undefined'
+                ? `/domain/${encodeURIComponent(domain.getName())}`
+                : `${window.location.origin}/domain/${encodeURIComponent(domain.getName())}`;
+
+        try {
+            await navigator.clipboard.writeText(shareUrl);
+            setDidCopyShareLink(true);
+            window.setTimeout(() => setDidCopyShareLink(false), 1500);
+        } catch {
+            // Fallback for browsers without clipboard permissions (or non-secure contexts).
+            try {
+                const textarea = document.createElement('textarea');
+                textarea.value = shareUrl;
+                textarea.setAttribute('readonly', '');
+                textarea.style.position = 'fixed';
+                textarea.style.top = '0';
+                textarea.style.left = '0';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.focus();
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+
+                setDidCopyShareLink(true);
+                window.setTimeout(() => setDidCopyShareLink(false), 1500);
+            } catch {
+                // If even the fallback fails, we silently no-op.
+            }
+        }
+    };
 
     useEffect(() => {
         if (!open) {
@@ -135,15 +169,15 @@ function DomainDetailDrawer({ domain, open, onClose }: DomainDetailDrawerProps) 
 
                 {domain.isAvailable() && (
                     <DrawerFooter className="mt-6 p-0">
-                        <Button asChild className="min-h-10 w-full bg-blue-500 text-white hover:bg-blue-700">
-                            <Link
-                                href={`/domain/${encodeURIComponent(domain.getName())}`}
-                                onClick={onClose}
-                                aria-label={`Share ${domain.getName()}`}
-                            >
-                                <Share2Icon className="mr-2 h-4 w-4" />
-                                Share
-                            </Link>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            className="min-h-10 w-full"
+                            onClick={copyShareLink}
+                            aria-label={`Copy share link for ${domain.getName()}`}
+                        >
+                            <Share2Icon className="mr-2 h-4 w-4" />
+                            {didCopyShareLink ? 'Copied' : 'Share'}
                         </Button>
                     </DrawerFooter>
                 )}
