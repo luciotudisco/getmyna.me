@@ -58,13 +58,8 @@ export default function TldsPage() {
         if (!normalizedQuery) {
             return typeFilteredTlds;
         }
-
-        // `fast-fuzzy` already returns results in descending order of score (best matches first).
-        // We intentionally keep its ordering rather than sorting alphabetically.
         return search(normalizedQuery, typeFilteredTlds, {
             keySelector: (tld) => tld.name ?? '',
-            // Keep default threshold (0.6) to avoid returning nearly-everything on short queries.
-            // This also keeps behavior closer to the old "substring filter" intent.
         });
     }, [normalizedQuery, typeFilteredTlds]);
 
