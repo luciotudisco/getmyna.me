@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState, useTransition } from 'react';
+import { search } from 'fast-fuzzy';
+import { useEffect, useMemo, useState, useTransition } from 'react';
 import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
 
@@ -47,11 +48,25 @@ export default function TldsPage() {
         setSelectedTld(null);
     };
 
-    const filteredTlds = tlds.filter((tld) => {
-        const matchesType = selectedType === null || tld.type === selectedType;
-        const matchesSearch = searchQuery === '' || tld.name?.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchesType && matchesSearch;
-    });
+    const normalizedQuery = searchQuery.trim();
+
+    const typeFilteredTlds = useMemo(() => {
+        return tlds.filter((tld) => selectedType === null || tld.type === selectedType);
+    }, [tlds, selectedType]);
+
+    const filteredTlds = useMemo(() => {
+        if (!normalizedQuery) {
+            return typeFilteredTlds;
+        }
+
+        // `fast-fuzzy` already returns results in descending order of score (best matches first).
+        // We intentionally keep its ordering rather than sorting alphabetically.
+        return search(normalizedQuery, typeFilteredTlds, {
+            keySelector: (tld) => tld.name ?? '',
+            // Keep default threshold (0.6) to avoid returning nearly-everything on short queries.
+            // This also keeps behavior closer to the old "substring filter" intent.
+        });
+    }, [normalizedQuery, typeFilteredTlds]);
 
     if (hasError) {
         return <ErrorMessage />;

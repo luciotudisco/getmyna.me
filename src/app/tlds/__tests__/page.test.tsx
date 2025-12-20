@@ -201,5 +201,36 @@ describe('TldsPage', () => {
                 expect(screen.getByText('.москва')).toBeInTheDocument();
             });
         });
+
+        it('should rank search results by fuzzy score', async () => {
+            const searchTlds: TLD[] = [
+                { name: 'com', punycodeName: 'com', type: TLDType.GENERIC },
+                { name: 'comm', punycodeName: 'comm', type: TLDType.GENERIC },
+                { name: 'company', punycodeName: 'company', type: TLDType.GENERIC },
+                { name: 'cmo', punycodeName: 'cmo', type: TLDType.GENERIC },
+                { name: 'org', punycodeName: 'org', type: TLDType.GENERIC },
+            ];
+
+            mockApiClient.getTLDs.mockResolvedValue(searchTlds);
+
+            render(<TldsPage />);
+
+            await waitFor(() => {
+                expect(screen.getByText('.com')).toBeInTheDocument();
+            });
+
+            const input = screen.getByPlaceholderText('Search TLDs by name ...');
+            fireEvent.change(input, { target: { value: 'com' } });
+
+            await waitFor(() => {
+                const results = screen.getAllByRole('heading', { level: 3 });
+                const texts = results.map((el) => el.textContent);
+
+                // Exact match should be first, followed by close substring matches.
+                expect(texts[0]).toBe('.com');
+                expect(texts[1]).toBe('.comm');
+                expect(texts[2]).toBe('.company');
+            });
+        });
     });
 });
