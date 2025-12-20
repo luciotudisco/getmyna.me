@@ -79,6 +79,16 @@ async function populateDictionary(
     const domainHacks = new DomainHacksGenerator(tlds);
     const algoliaClient = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY);
 
+    // Ensure index settings support filtering (e.g. `filters: 'tld:"com"'`).
+    // Without `attributesForFaceting`, Algolia will ignore or error on filters for those attributes.
+    const settingsResponse = await algoliaClient.setSettings({
+        indexName: ALGOLIA_INDEX_NAME,
+        indexSettings: {
+            attributesForFaceting: ['filterOnly(tld)', 'filterOnly(category)', 'filterOnly(isAvailable)'],
+        },
+    });
+    await algoliaClient.waitForTask({ indexName: ALGOLIA_INDEX_NAME, taskID: settingsResponse.taskID });
+
     logger.info('Starting Algolia indexing...');
     let indexedCount = 0;
     for (let index = 0; index < rows.length; index++) {
@@ -91,7 +101,7 @@ async function populateDictionary(
             const entry = {
                 objectID: domain.getName(),
                 domain: domain.getName(),
-                tld: domain.getTLD(),
+                tld: domain.getTLD().toLowerCase(),
                 word: row.word,
                 category,
                 locale,

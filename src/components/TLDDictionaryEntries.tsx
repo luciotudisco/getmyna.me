@@ -34,9 +34,10 @@ function TLDDictionaryHits() {
 }
 
 export default function TLDDictionaryEntries({ tld }: { tld: string }) {
+    const normalizedTld = useMemo(() => tld.trim().replace(/^\./, '').toLowerCase(), [tld]);
     const filters = useMemo(() => {
-        return `tld:"${tld.toLowerCase()}" AND isAvailable:true AND (category:"common" OR category:"names")`;
-    }, [tld]);
+        return `tld:"${normalizedTld}" AND isAvailable:true AND (category:"common" OR category:"names")`;
+    }, [normalizedTld]);
 
     return (
         <div className="rounded-lg border p-6 shadow-sm">
