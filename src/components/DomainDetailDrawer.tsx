@@ -135,7 +135,7 @@ function DomainDetailDrawer({ domain, open, onClose }: DomainDetailDrawerProps) 
 
                 {domain.isAvailable() && (
                     <DrawerFooter className="mt-6 p-0">
-                        <Button asChild className="min-h-10 w-full bg-blue-500 text-white hover:bg-blue-700">
+                        <Button asChild variant="outline" size="lg" className="w-full">
                             <Link
                                 href={`/domain/${encodeURIComponent(domain.getName())}`}
                                 onClick={onClose}
