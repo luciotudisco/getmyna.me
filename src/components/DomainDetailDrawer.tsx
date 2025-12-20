@@ -3,11 +3,15 @@
 import { useEffect, useState } from 'react';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
-import { DomainDetailSections } from '@/components/DomainDetailSections';
+import DomainRegistrarButtons from '@/components/DomainRegistrarButtons';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
+import { DomainStatusSection } from '@/components/DomainStatusSection';
+import { DomainWhoisSection } from '@/components/DomainWhoisSection';
 import ErrorMessage from '@/components/ErrorMessage';
 import LoadingMessage from '@/components/LoadingMessage';
+import TLDSection from '@/components/TLDSection';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { Separator } from '@/components/ui/separator';
 import { Domain, DomainStatus } from '@/models/domain';
 import { TLD } from '@/models/tld';
 import { WhoisInfo } from '@/models/whois';
@@ -92,7 +96,39 @@ function DomainDetailDrawer({ domain, open, onClose }: DomainDetailDrawerProps) 
                         <DomainStatusBadge status={domain.getStatus()} className="min-w-[8rem]" />
                     </DrawerTitle>
                 </DrawerHeader>
-                <DomainDetailSections domain={domain} tldInfo={tldInfo} whoisInfo={whoisInfo} />
+                <div className="space-y-4">
+                    {domain.isAvailable() && (
+                        <>
+                            <Separator />
+                            <DomainRegistrarButtons
+                                domainName={domain.getName()}
+                                pricing={tldInfo?.pricing || {}}
+                                isPremiumDomain={domain.getStatus() === DomainStatus.PREMIUM}
+                            />
+                        </>
+                    )}
+
+                    {!domain.isAvailable() && (
+                        <>
+                            <Separator />
+                            <DomainStatusSection status={domain.getStatus()} />
+                        </>
+                    )}
+
+                    {!domain.isAvailable() && whoisInfo && whoisInfo.creationDate && (
+                        <>
+                            <Separator />
+                            <DomainWhoisSection whoisInfo={whoisInfo} />
+                        </>
+                    )}
+
+                    {tldInfo && (
+                        <>
+                            <Separator />
+                            <TLDSection {...tldInfo} />
+                        </>
+                    )}
+                </div>
             </DrawerContent>
         </Drawer>
     );
