@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
+import { Share2Icon } from 'lucide-react';
+import Link from 'next/link';
 
 import DomainRegistrarButtons from '@/components/DomainRegistrarButtons';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
@@ -10,7 +12,8 @@ import { DomainWhoisSection } from '@/components/DomainWhoisSection';
 import ErrorMessage from '@/components/ErrorMessage';
 import LoadingMessage from '@/components/LoadingMessage';
 import TLDSection from '@/components/TLDSection';
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { Button } from '@/components/ui/button';
+import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
 import { Domain, DomainStatus } from '@/models/domain';
 import { TLD } from '@/models/tld';
@@ -129,6 +132,21 @@ function DomainDetailDrawer({ domain, open, onClose }: DomainDetailDrawerProps) 
                         </>
                     )}
                 </div>
+
+                {domain.isAvailable() && (
+                    <DrawerFooter className="mt-6 p-0">
+                        <Button asChild className="min-h-10 w-full bg-blue-500 text-white hover:bg-blue-700">
+                            <Link
+                                href={`/domain/${encodeURIComponent(domain.getName())}`}
+                                onClick={onClose}
+                                aria-label={`Share ${domain.getName()}`}
+                            >
+                                <Share2Icon className="mr-2 h-4 w-4" />
+                                Share
+                            </Link>
+                        </Button>
+                    </DrawerFooter>
+                )}
             </DrawerContent>
         </Drawer>
     );
