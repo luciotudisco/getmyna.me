@@ -131,17 +131,15 @@ function DomainDetailDrawer({ domain, open, onClose }: DomainDetailDrawerProps) 
                     )}
                 </div>
 
-                {domain.isAvailable() && (
-                    <DrawerFooter className="mt-6 p-0">
-                        <CopyButton
-                            variant="outline"
-                            className="w-full"
-                            content={`https://getmyna.me/domains/${encodeURIComponent(domain.getName())}`}
-                            label="copy link"
-                            copiedLabel="link copied!"
-                        />
-                    </DrawerFooter>
-                )}
+                <DrawerFooter className="mt-6 p-0">
+                    <CopyButton
+                        variant="outline"
+                        className="w-full"
+                        content={`https://getmyna.me/domains/${encodeURIComponent(domain.getName())}`}
+                        label="copy link"
+                        copiedLabel="link copied!"
+                    />
+                </DrawerFooter>
             </DrawerContent>
         </Drawer>
     );
