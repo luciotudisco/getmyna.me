@@ -33,7 +33,7 @@
             "schedule": "0 7 * * *"
         },
         {
-            "path": "/api/cron/dictionary/fetch-oldest",
+            "path": "/api/cron/dictionary/refresh",
             "schedule": "0 8 * * *"
         }
     ]

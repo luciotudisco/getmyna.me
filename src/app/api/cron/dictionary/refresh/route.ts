@@ -16,19 +16,18 @@ const ALGOLIA_API_KEY = process.env.ALGOLIA_API_KEY!;
 export async function GET(): Promise<NextResponse> {
     try {
         logger.info('Starting fetch of oldest dictionary entries...');
-        const lastUpdatedThreshold = subDays(new Date(), 30).toISOString();
+        const lastUpdatedThreshold = subDays(new Date(), 30).getTime();
         const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY);
         const searchResponse = await client.search([
             {
                 indexName: ALGOLIA_INDEX_NAME,
                 params: {
                     query: '',
-                    filters: `lastUpdated < "${lastUpdatedThreshold}"`,
-                    hitsPerPage: 1000,
+                    filters: `lastUpdatedAt <= ${lastUpdatedThreshold}`,
                 },
             },
         ]);
-        const hits = searchResponse.results[0];
+        const hits = (searchResponse.results[0] as { hits?: unknown[] })?.hits || [];
         console.log(hits);
         return NextResponse.json({ message: 'Updated dictionary entries' });
     } catch (error) {
