@@ -34,12 +34,9 @@ function TLDDictionaryHits() {
 }
 
 export default function TLDDictionaryEntries({ tld }: { tld: string }) {
-    const normalizedTld = useMemo(() => tld.trim().replace(/^\./, '').toLowerCase(), [tld]);
     const facetFilters = useMemo(() => {
-        // Use facetFilters for facet attributes (more reliable than `filters` string parsing).
-        // AND between entries, OR within nested arrays.
-        return [`tld:${normalizedTld}`, 'isAvailable:true', ['category:common', 'category:names']];
-    }, [normalizedTld]);
+        return [`tld:${tld}`, 'isAvailable:true', ['category:common', 'category:names']];
+    }, [tld]);
 
     return (
         <div className="rounded-lg border p-6 shadow-sm">
