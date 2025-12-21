@@ -14,9 +14,9 @@ interface DomainRegistrarButtonsProps {
 function DomainRegistrarButtons({ domainName, pricing, isPremiumDomain }: DomainRegistrarButtonsProps) {
     if (Object.keys(pricing).length === 0) {
         return (
-            <div className="flex items-center rounded-md bg-red-100 p-4 text-xs">
+            <div className="flex items-center rounded-md bg-stone-100 p-4 text-xs">
                 <span>
-                    Oops! This TLD seems to be flying under our radar. The registrar for this TLD is not yet supported.
+                    This TLD seems to be flying under our radar. The registrar for this TLD is not yet supported.
                 </span>
             </div>
         );
