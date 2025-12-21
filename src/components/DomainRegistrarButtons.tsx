@@ -23,14 +23,14 @@ function DomainRegistrarButtons({ domainName, pricing, isPremiumDomain }: Domain
         );
     }
 
-    // Sort registrars by pricing in descending order and take first 3
+    // Sort registrars by pricing in ASC order and take first 3
     const sortedRegistrars = Object.entries(pricing)
         .sort(([, aPricing], [, bPricing]) => {
             const aPrice = aPricing?.registration || Infinity;
             const bPrice = bPricing?.registration || Infinity;
-            return aPrice - bPrice; // ASC order (lowest first)
+            return aPrice - bPrice;
         })
-        .slice(0, 3); // Take first 3
+        .slice(0, 3);
 
     return (
         <div className="space-y-2">

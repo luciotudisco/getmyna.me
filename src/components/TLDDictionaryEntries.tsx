@@ -34,8 +34,8 @@ function TLDDictionaryHits() {
 }
 
 export default function TLDDictionaryEntries({ tld }: { tld: string }) {
-    const facetFilters = useMemo(() => {
-        return [`tld:${tld}`, 'isAvailable:true', ['category:common', 'category:names']];
+    const filters = useMemo(() => {
+        return `tld:${tld} AND isAvailable:true AND (category:common OR category:names)`;
     }, [tld]);
 
     return (
@@ -54,7 +54,7 @@ export default function TLDDictionaryEntries({ tld }: { tld: string }) {
                 </div>
             </div>
             <InstantSearch searchClient={searchClient} indexName={process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME!}>
-                <Configure facetFilters={facetFilters} />
+                <Configure filters={filters} />
                 <TLDDictionaryHits />
             </InstantSearch>
         </div>
