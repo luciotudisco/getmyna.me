@@ -37,7 +37,7 @@ export default function SearchBar() {
                 <Input
                     className="rounded-sm pl-10 pr-10 !text-base shadow-sm"
                     onChange={(event) => setSearchTerm(event.target.value)}
-                    placeholder="Try finding a domain hack for this name ..."
+                    placeholder="Find a domain hack"
                     type="search"
                     value={searchTerm}
                 />
