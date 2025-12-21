@@ -22,7 +22,7 @@ describe('DomainStatusSection', () => {
         it('should display description for active status', () => {
             render(<DomainStatusSection status={DomainStatus.ACTIVE} />);
 
-            expect(screen.getByText(/This domain is alive and kicking/)).toBeInTheDocument();
+            expect(screen.getByText(/This domain is taken/)).toBeInTheDocument();
         });
 
         it('should display description for claimed status', () => {
