@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { BookOpen } from 'lucide-react';
+import { Link2 } from 'lucide-react';
 import Link from 'next/link';
 
 import Feature from '@/components/Feature';
@@ -10,17 +10,18 @@ export default function Home() {
     return (
         <div className="flex flex-col">
             <main className="m-auto flex w-full max-w-4xl flex-col items-center gap-5 p-5 md:p-10">
-                <Suspense fallback={null}>
-                    <SearchBar />
-                </Suspense>
-                <Link
-                    href="/dictionary"
-                    className="flex items-center gap-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
-                >
-                    <BookOpen className="h-3 w-3" />
-                    <span>browse available domain hacks</span>
-                    <BookOpen className="h-3 w-3" />
-                </Link>
+                <div className="flex w-full flex-col items-center gap-2">
+                    <Suspense fallback={null}>
+                        <SearchBar />
+                    </Suspense>
+                    <Link
+                        href="/dictionary"
+                        className="flex items-center gap-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                        <span>browse available domain hacks</span>
+                        <Link2 className="h-3 w-3" />
+                    </Link>
+                </div>
                 <InspirationCarousel />
                 <Feature
                     color="#fcf6bd"
