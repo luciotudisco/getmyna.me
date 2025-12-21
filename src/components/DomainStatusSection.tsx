@@ -4,7 +4,8 @@ import { Badge } from '@/components/ui/badge';
 import { DomainStatus as DomainStatusEnum } from '@/models/domain';
 
 const DOMAIN_STATUS_DESCRIPTIONS: Record<DomainStatusEnum, string> = {
-    [DomainStatusEnum.ACTIVE]: 'This domain is taken. It is out there on the internet doing its thing for someone else',
+    [DomainStatusEnum.ACTIVE]:
+        'This domain is taken. It is out there on the internet doing its thing for someone else.',
     [DomainStatusEnum.CLAIMED]: "Someone owns this domain, so you'll need to wait, buy, or trade if you want it.",
     [DomainStatusEnum.DELETING]: 'The domain is currently being deleted and soon heading back into the wild.',
     [DomainStatusEnum.DISALLOWED]: "This domain is off-limits by rules or policy, so it can't be registered by anyone.",

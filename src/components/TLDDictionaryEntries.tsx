@@ -54,7 +54,7 @@ export default function TLDDictionaryEntries({ tld }: { tld: string }) {
                 </div>
             </div>
             <InstantSearch searchClient={searchClient} indexName={process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME!}>
-                <Configure filters={filters} />
+                <Configure filters={filters} hitsPerPage={20} />
                 <TLDDictionaryHits />
             </InstantSearch>
         </div>
