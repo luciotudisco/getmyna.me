@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import { Link2 } from 'lucide-react';
 import Link from 'next/link';
 
 import Feature from '@/components/Feature';
@@ -10,16 +9,15 @@ export default function Home() {
     return (
         <div className="flex flex-col">
             <main className="m-auto flex w-full max-w-4xl flex-col items-center gap-5 p-5 md:p-10">
-                <div className="flex w-full flex-col items-center gap-2">
+                <div className="flex w-full flex-col items-center gap-3">
                     <Suspense fallback={null}>
                         <SearchBar />
                     </Suspense>
                     <Link
                         href="/dictionary"
-                        className="flex items-center gap-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+                        className="flex items-center text-xs text-muted-foreground transition-colors hover:text-foreground"
                     >
-                        <span>browse available domain hacks</span>
-                        <Link2 className="h-3 w-3" />
+                        <span>or browse available domain hacks</span>
                     </Link>
                 </div>
                 <InspirationCarousel />
