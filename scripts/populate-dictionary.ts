@@ -88,6 +88,7 @@ async function populateDictionary(
             logger.info({ domainName }, 'Processing domain name');
             const domain = new Domain(domainName);
             const isAvailable = await isDomainAvailable(domainName);
+            const now = new Date();
             const entry = {
                 objectID: domain.getName(),
                 domain: domain.getName(),
@@ -97,7 +98,8 @@ async function populateDictionary(
                 locale,
                 rank: indexedCount + 1,
                 isAvailable,
-                lastUpdated: new Date().toISOString(),
+                lastUpdated: now.toISOString(),
+                lastUpdatedTimestamp: Math.floor(now.getTime() / 1000),
             };
             await algoliaClient.saveObject({ indexName: ALGOLIA_INDEX_NAME, body: entry });
             indexedCount++;

@@ -8,4 +8,8 @@ export interface DictionaryEntry {
     domain: string;
     tld: string;
     isAvailable?: boolean;
+    rank?: number;
+    lastUpdated?: string;
+    lastUpdatedTimestamp?: number;
+    locale?: string;
 }
