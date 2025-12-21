@@ -90,7 +90,7 @@ function DomainDetailDrawer({ domain, open, onClose }: DomainDetailDrawerProps) 
 
     return (
         <Drawer open={open} onOpenChange={(openState: boolean) => !openState && onClose()} direction="bottom">
-            <DrawerContent className="min-h-[400px] p-6 md:p-10">
+            <DrawerContent className="min-h-[400px] p-4 md:p-10">
                 <DrawerHeader className="px-0">
                     <DrawerTitle className="flex items-center justify-between px-0">
                         <div className="flex max-w-[200px] items-center truncate">{domain.getName()}</div>
