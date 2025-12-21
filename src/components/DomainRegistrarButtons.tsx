@@ -16,7 +16,8 @@ function DomainRegistrarButtons({ domainName, pricing, isPremiumDomain }: Domain
         return (
             <div className="flex items-center rounded-md bg-stone-100 p-4 text-xs">
                 <span>
-                    This TLD seems to be flying under our radar. The registrar for this TLD is not yet supported.
+                    We are not aware of any registrars that support this TLD. You may need to do some research to find
+                    one.
                 </span>
             </div>
         );

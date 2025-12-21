@@ -8,8 +8,7 @@ describe('DomainRegistrarButtons', () => {
         it('should display unsupported TLD message', () => {
             render(<DomainRegistrarButtons domainName="example.com" pricing={{}} isPremiumDomain={false} />);
 
-            expect(screen.getByText(/This TLD seems to be flying under our radar/)).toBeInTheDocument();
-            expect(screen.getByText(/The registrar for this TLD is not yet supported/)).toBeInTheDocument();
+            expect(screen.getByText(/We are not aware of any registrars that support this TLD/)).toBeInTheDocument();
         });
 
         it('should not display any registrar buttons', () => {
