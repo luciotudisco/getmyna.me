@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { DomainStatus as DomainStatusEnum } from '@/models/domain';
 
 const DOMAIN_STATUS_DESCRIPTIONS: Record<DomainStatusEnum, string> = {
-    [DomainStatusEnum.ACTIVE]: 'This domain is taken. It`s out there on the internet doing its thing for someone else.',
+    [DomainStatusEnum.ACTIVE]: 'The domain is taken. It is out there on the internet doing its thing for someone else.',
     [DomainStatusEnum.CLAIMED]: "Someone owns this domain, so you'll need to wait, buy, or trade if you want it.",
     [DomainStatusEnum.DELETING]: 'The domain is currently being deleted and soon heading back into the wild.',
     [DomainStatusEnum.DISALLOWED]: "This domain is off-limits by rules or policy, so it can't be registered by anyone.",
@@ -15,7 +15,7 @@ const DOMAIN_STATUS_DESCRIPTIONS: Record<DomainStatusEnum, string> = {
     [DomainStatusEnum.MARKETED]: 'This domain is up for sale and being advertised like digital real estate.',
     [DomainStatusEnum.PARKED]: 'The domain has an owner but is sitting there, usually pointing to ads or placeholders.',
     [DomainStatusEnum.PENDING]: 'In limbo—this domain is waiting for a registration or transfer to finish processing.',
-    [DomainStatusEnum.PREMIUM]: 'This domain is considered "special" and comes with a price tag to match.',
+    [DomainStatusEnum.PREMIUM]: "This domain is considered 'special' and comes with a price tag to match.",
     [DomainStatusEnum.PRICED]: "This domain has a set sticker price and can be bought directly if you're willing.",
     [DomainStatusEnum.RESERVED]: "The registry has this domain stashed away, so the public can't grab it.",
     [DomainStatusEnum.SUFFIX]: 'This is a known domain ending rather than a name you can register directly.',

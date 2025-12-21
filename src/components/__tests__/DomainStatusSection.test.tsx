@@ -22,7 +22,7 @@ describe('DomainStatusSection', () => {
         it('should display description for active status', () => {
             render(<DomainStatusSection status={DomainStatus.ACTIVE} />);
 
-            expect(screen.getByText(/This domain is taken/)).toBeInTheDocument();
+            expect(screen.getByText(/The domain is taken/)).toBeInTheDocument();
         });
 
         it('should display description for claimed status', () => {
@@ -88,7 +88,7 @@ describe('DomainStatusSection', () => {
         it('should display description for premium status', () => {
             render(<DomainStatusSection status={DomainStatus.PREMIUM} />);
 
-            expect(screen.getByText(/This domain is considered "special"/)).toBeInTheDocument();
+            expect(screen.getByText(/This domain is considered 'special'/)).toBeInTheDocument();
         });
 
         it('should display description for priced status', () => {

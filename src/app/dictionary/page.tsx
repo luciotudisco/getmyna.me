@@ -61,7 +61,7 @@ export default function DictionaryPage() {
                             </label>
                         </div>
                         <SearchBox
-                            placeholder="Search for words with domain hacks (e.g., 'example', 'creative', 'domain')..."
+                            placeholder="Search for available domain hacks in the dictionary ..."
                             classNames={{
                                 root: 'w-full mb-4',
                                 form: 'relative',
