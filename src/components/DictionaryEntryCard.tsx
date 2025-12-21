@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
-import { formatDistanceToNow } from 'date-fns';
 
 import DomainDetailDrawer from '@/components/DomainDetailDrawer';
 import { Card, CardContent } from '@/components/ui/card';
@@ -59,11 +58,6 @@ export default function DictionaryEntryCard({ entry, variant = 'normal' }: Dicti
                             )}
                         </div>
                         {entry.category && <p className="text-xs text-muted-foreground">{entry.category}</p>}
-                        {entry.lastUpdated && (
-                            <p className="text-xs text-muted-foreground">
-                                Last updated: {formatDistanceToNow(entry.lastUpdated, { addSuffix: true })}
-                            </p>
-                        )}
                     </div>
                 </CardContent>
             </Card>
