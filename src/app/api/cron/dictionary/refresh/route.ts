@@ -28,7 +28,6 @@ export async function GET(): Promise<NextResponse> {
             },
         ]);
         const hits = (searchResponse.results[0] as { hits?: unknown[] })?.hits || [];
-        console.log(hits);
         return NextResponse.json({ message: 'Updated dictionary entries' });
     } catch (error) {
         logger.error({ error }, 'Error fetching oldest dictionary entries');
