@@ -35,7 +35,7 @@ function TLDDictionaryHits() {
 
 export default function TLDDictionaryEntries({ tld }: { tld: string }) {
     const filters = useMemo(() => {
-        return `tld:${tld} AND isAvailable:true AND (category:common OR category:names)`;
+        return `tld:${tld} AND isAvailable:true`;
     }, [tld]);
 
     return (

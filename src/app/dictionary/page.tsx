@@ -29,9 +29,7 @@ export default function DictionaryPage() {
     const [showOnlyAvailable, setShowOnlyAvailable] = useState(true);
 
     const filters = useMemo(() => {
-        return [showOnlyAvailable ? 'isAvailable:true' : '', 'category:"common" OR category:"names"']
-            .filter(Boolean)
-            .join(' AND ');
+        return [showOnlyAvailable ? 'isAvailable:true' : ''].filter(Boolean).join(' AND ');
     }, [showOnlyAvailable]);
 
     return (
