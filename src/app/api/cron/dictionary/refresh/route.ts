@@ -10,14 +10,15 @@ export const maxDuration = 300;
 const ALGOLIA_INDEX_NAME = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME!;
 const ALGOLIA_APP_ID = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!;
 const ALGOLIA_API_KEY = process.env.ALGOLIA_API_KEY!;
+const STALE_THRESHOLD_DAYS = 30;
 
 /**
  * Updates the dictionary of domain hacks.
  */
 export async function GET(): Promise<NextResponse> {
     try {
-        logger.info('Starting fetch of all dictionary entries via pagination...');
-        const lastUpdatedThreshold = subDays(new Date(), 0).toISOString();
+        logger.info('Starting fetch stale dictionary ...');
+        const lastUpdatedThreshold = subDays(new Date(), STALE_THRESHOLD_DAYS).toISOString();
         logger.info({ lastUpdatedThreshold }, 'Last updated threshold');
 
         const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY);
@@ -35,7 +36,8 @@ export async function GET(): Promise<NextResponse> {
                 return cursor !== undefined;
             },
         });
-        logger.info({ totalStaleEntries: staleEntries.length }, 'Finished fetching stale dictionary entries');
+        logger.info({ count: staleEntries.length }, 'Finished fetching stale dictionary entries');
+
         return NextResponse.json({ message: 'Fetched stale dictionary entries', totalCount: staleEntries.length });
     } catch (error) {
         logger.error({ error }, 'Error fetching dictionary entries');
