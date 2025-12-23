@@ -38,45 +38,41 @@ describe('DictionaryEntryCard', () => {
         jest.clearAllMocks();
     });
 
-    describe('Rendering', () => {
-        it('should render domain name and category', () => {
-            render(<DictionaryEntryCard entry={mockEntry} />);
+    it('should render domain name and category', () => {
+        render(<DictionaryEntryCard entry={mockEntry} />);
 
-            expect(screen.getByText('example.com')).toBeInTheDocument();
-            expect(screen.getByText('Technology')).toBeInTheDocument();
-        });
-
-        it('should show availability indicator when domain is available', () => {
-            render(<DictionaryEntryCard entry={mockEntry} />);
-
-            const availableIndicator = document.querySelector('[aria-label="Available"]');
-            expect(availableIndicator).toBeInTheDocument();
-        });
-
-        it('should not show availability indicator when domain is not available', () => {
-            const unavailableEntry = { ...mockEntry, isAvailable: false };
-            render(<DictionaryEntryCard entry={unavailableEntry} />);
-
-            const availableIndicator = document.querySelector('[aria-label="Available"]');
-            expect(availableIndicator).not.toBeInTheDocument();
-        });
+        expect(screen.getByText('example.com')).toBeInTheDocument();
+        expect(screen.getByText('Technology')).toBeInTheDocument();
     });
 
-    describe('Interactions', () => {
-        it('should open drawer when card is clicked and fetch domain status', async () => {
-            (apiClient.getDomainStatus as jest.Mock).mockResolvedValue('available');
+    it('should show availability indicator when domain is available', () => {
+        render(<DictionaryEntryCard entry={mockEntry} />);
 
-            render(<DictionaryEntryCard entry={mockEntry} />);
+        const availableIndicator = document.querySelector('[aria-label="Available"]');
+        expect(availableIndicator).toBeInTheDocument();
+    });
 
-            const card = screen.getByText('example.com').closest('.group');
-            fireEvent.click(card!);
+    it('should not show availability indicator when domain is not available', () => {
+        const unavailableEntry = { ...mockEntry, isAvailable: false };
+        render(<DictionaryEntryCard entry={unavailableEntry} />);
 
-            await waitFor(() => {
-                expect(screen.getByTestId('domain-detail-drawer')).toBeInTheDocument();
-            });
-            await waitFor(() => {
-                expect(apiClient.getDomainStatus).toHaveBeenCalledWith('example.com');
-            });
+        const availableIndicator = document.querySelector('[aria-label="Available"]');
+        expect(availableIndicator).not.toBeInTheDocument();
+    });
+
+    it('should open drawer when card is clicked and fetch domain status', async () => {
+        (apiClient.getDomainStatus as jest.Mock).mockResolvedValue('available');
+
+        render(<DictionaryEntryCard entry={mockEntry} />);
+
+        const card = screen.getByText('example.com').closest('.group');
+        fireEvent.click(card!);
+
+        await waitFor(() => {
+            expect(screen.getByTestId('domain-detail-drawer')).toBeInTheDocument();
+        });
+        await waitFor(() => {
+            expect(apiClient.getDomainStatus).toHaveBeenCalledWith('example.com');
         });
     });
 });
