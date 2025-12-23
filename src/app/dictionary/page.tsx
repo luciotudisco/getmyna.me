@@ -1,12 +1,22 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Configure, Hits, InstantSearch, Pagination, SearchBox, useStats } from 'react-instantsearch';
+import {
+    Configure,
+    Hits,
+    InstantSearch,
+    Pagination,
+    SearchBox,
+    useRefinementList,
+    useStats,
+} from 'react-instantsearch';
 import { liteClient as algoliasearch } from 'algoliasearch/lite';
 import { Sparkles } from 'lucide-react';
 
 import DictionaryEntryCard from '@/components/DictionaryEntryCard';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { ButtonGroup } from '@/components/ui/button-group';
 import { Switch } from '@/components/ui/switch';
 import { DictionaryEntry } from '@/models/dictionary';
 
@@ -21,6 +31,51 @@ function StatsDisplay() {
             <Sparkles className="h-4 w-4" />
             <span className="font-medium">{nbHits.toLocaleString()}</span>
             <span>domains found</span>
+        </div>
+    );
+}
+
+function CategoryFilter() {
+    const { items, refine } = useRefinementList({
+        attribute: 'category',
+        operator: 'or',
+    });
+
+    if (!items.length) {
+        return null;
+    }
+
+    const handleCategoryClick = (item: { value: string; isRefined: boolean }) => {
+        if (item.isRefined) {
+            refine(item.value);
+        } else {
+            items.forEach((i) => {
+                if (i.isRefined) {
+                    refine(i.value);
+                }
+            });
+            refine(item.value);
+        }
+    };
+
+    return (
+        <div className="mb-4 hidden w-full flex-wrap justify-center gap-2 md:flex">
+            <ButtonGroup orientation="horizontal" className="w-full rounded-sm">
+                {items
+                    .sort((a, b) => a.label.localeCompare(b.label))
+                    .map((item) => (
+                        <Button
+                            key={item.value}
+                            variant={item.isRefined ? 'default' : 'secondary'}
+                            size="sm"
+                            onClick={() => handleCategoryClick(item)}
+                            className="min-h-10 w-full min-w-32 gap-2 text-xs"
+                        >
+                            <span className="uppercase">{item.label}</span>
+                            <span className="text-xs text-muted-foreground">({item.count.toLocaleString()})</span>
+                        </Button>
+                    ))}
+            </ButtonGroup>
         </div>
     );
 }
@@ -68,6 +123,7 @@ export default function DictionaryPage() {
                                 reset: 'absolute right-4 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors',
                             }}
                         />
+                        <CategoryFilter />
                         <StatsDisplay />
                     </div>
 
