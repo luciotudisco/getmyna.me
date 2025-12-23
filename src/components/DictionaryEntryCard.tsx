@@ -47,7 +47,7 @@ export default function DictionaryEntryCard({ entry, variant = 'normal' }: Dicti
                             </h3>
                             {isAvailable && (
                                 <div
-                                    className="h-1.5 w-1.5 flex-shrink-0 animate-pulse rounded-full bg-green-800 shadow shadow-green-500/40 dark:bg-green-800 dark:shadow-green-400/40"
+                                   className="h-1.5 w-1.5 flex-shrink-0 animate-pulse rounded-full bg-green-800 shadow shadow-green-500/40"
                                     aria-label="Available"
                                 />
                             )}
