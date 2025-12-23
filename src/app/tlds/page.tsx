@@ -136,7 +136,6 @@ export default function TldsPage() {
                                     className={cn(
                                         'group relative cursor-pointer overflow-hidden rounded-sm border-[0.5px] transition-all duration-200 hover:scale-[1.02] hover:shadow-lg',
                                         'border-gray-200 bg-white hover:border-gray-300 hover:shadow-gray-200/40',
-                                        'dark:border-gray-800 dark:bg-gray-900/80 dark:hover:border-gray-700 dark:hover:shadow-gray-900/30',
                                     )}
                                     onClick={() => showDrawer(tld)}
                                 >
