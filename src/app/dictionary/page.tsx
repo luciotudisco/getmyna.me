@@ -151,9 +151,10 @@ export default function DictionaryPage() {
 
     return (
         <div className="flex min-h-screen flex-col">
-            <InstantSearch searchClient={searchClient} indexName={process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME!}>
-                <Configure filters={filters} />
-                <main className="m-auto flex w-full max-w-7xl flex-grow flex-col items-center gap-6 p-5 md:p-10">
+            <main className="m-auto flex w-full max-w-7xl flex-grow flex-col items-center gap-6 p-5 md:p-10">
+                <InstantSearch searchClient={searchClient} indexName={process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME!}>
+                    <Configure filters={filters} />
+
                     {/* Header Section */}
                     <div className="mb-2 text-center">
                         <Badge className="text-xs font-medium">DICTIONARY</Badge>
@@ -197,8 +198,8 @@ export default function DictionaryPage() {
 
                     {/* Pagination */}
                     <SearchPagination />
-                </main>
-            </InstantSearch>
+                </InstantSearch>
+            </main>
         </div>
     );
 }
