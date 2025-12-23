@@ -31,16 +31,12 @@ describe('TLDDictionary', () => {
             objectID: '1',
             domain: 'example.com',
             tld: 'com',
-            word: 'example',
-            category: 'common',
             isAvailable: true,
         },
         {
             objectID: '2',
-            domain: 'test.io',
-            tld: 'io',
-            word: 'test',
-            category: 'common',
+            domain: 'test.com',
+            tld: 'com',
             isAvailable: true,
         },
     ];
@@ -49,24 +45,18 @@ describe('TLDDictionary', () => {
         jest.clearAllMocks();
     });
 
-    it('should render the component with header and search component', () => {
-        mockUseHits.mockReturnValue({ items: [] });
-
-        render(<TLDDictionary tld="com" />);
-
-        expect(screen.getByText('Dictionary entries')).toBeInTheDocument();
-        expect(screen.getByTestId('instant-search')).toBeInTheDocument();
-    });
-
-    it('should render dictionary entry cards when hits are available', () => {
+    it('should render the component with header and dictionary entries', () => {
         mockUseHits.mockReturnValue({ items: mockEntries });
 
         render(<TLDDictionary tld="com" />);
 
+        expect(screen.getByText('Domain Hacks')).toBeInTheDocument();
+        expect(screen.getByTestId('instant-search')).toBeInTheDocument();
+
         const cards = screen.getAllByTestId('dictionary-entry-card');
         expect(cards).toHaveLength(2);
         expect(screen.getByText('example.com')).toBeInTheDocument();
-        expect(screen.getByText('test.io')).toBeInTheDocument();
+        expect(screen.getByText('test.com')).toBeInTheDocument();
     });
 
     it('should render empty state when no hits are available', () => {
@@ -74,11 +64,12 @@ describe('TLDDictionary', () => {
 
         render(<TLDDictionary tld="com" />);
 
-        expect(screen.getByText('No available domain hacks for this TLD.')).toBeInTheDocument();
+        expect(screen.queryByText('Domain Hacks')).toBeNull();
+        expect(screen.queryAllByTestId('dictionary-entry-card')).toHaveLength(0);
     });
 
     it('should generate correct filter for the provided TLD', () => {
-        mockUseHits.mockReturnValue({ items: [] });
+        mockUseHits.mockReturnValue({ items: mockEntries });
 
         render(<TLDDictionary tld="com" />);
 
