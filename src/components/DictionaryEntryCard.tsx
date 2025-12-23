@@ -39,8 +39,8 @@ export default function DictionaryEntryCard({ entry, variant = 'normal' }: Dicti
                 )}
                 onClick={handleDomainClick}
             >
-                <CardContent className={cn(isCompact ? 'p-1' : 'p-3')}>
-                    <div className={cn('flex flex-col', isCompact ? 'gap-1' : 'gap-2')}>
+                <CardContent className='p-3'>
+                    <div className='flex flex-col gap-2'>
                         <div className="flex items-center justify-between gap-2">
                             <h3 className="truncate text-xs font-semibold transition-colors group-hover:text-primary">
                                 {domain.getName()}
