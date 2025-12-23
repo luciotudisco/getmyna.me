@@ -114,7 +114,7 @@ function SearchCategories() {
 function SearchStatus() {
     const { status } = useInstantSearch();
 
-    if (status !== 'loading') {
+    if (status !== 'loading' && status !== 'stalled') {
         return null;
     }
 
