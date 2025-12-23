@@ -14,13 +14,11 @@ interface DictionaryEntryCardProps {
     variant?: 'compact' | 'normal';
 }
 
-export default function DictionaryEntryCard({ entry, variant = 'normal' }: DictionaryEntryCardProps) {
+export default function DictionaryEntryCard({ entry }: DictionaryEntryCardProps) {
     const isAvailable = entry.isAvailable === true;
     const domain = useMemo(() => new Domain(entry.domain), [entry.domain]);
     const [selectedDomain, setSelectedDomain] = useState<Domain | null>(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    const isCompact = variant === 'compact';
-
     const handleDomainClick = useCallback(async () => {
         setSelectedDomain(domain);
         setIsDrawerOpen(true);
@@ -39,15 +37,15 @@ export default function DictionaryEntryCard({ entry, variant = 'normal' }: Dicti
                 )}
                 onClick={handleDomainClick}
             >
-                <CardContent className='p-3'>
-                    <div className='flex flex-col gap-2'>
+                <CardContent className="p-3">
+                    <div className="flex flex-col gap-2">
                         <div className="flex items-center justify-between gap-2">
                             <h3 className="truncate text-xs font-semibold transition-colors group-hover:text-primary">
                                 {domain.getName()}
                             </h3>
                             {isAvailable && (
                                 <div
-                                   className="h-1.5 w-1.5 flex-shrink-0 animate-pulse rounded-full bg-green-800 shadow shadow-green-500/40"
+                                    className="h-1.5 w-1.5 flex-shrink-0 animate-pulse rounded-full bg-green-800 shadow shadow-green-500/40"
                                     aria-label="Available"
                                 />
                             )}
