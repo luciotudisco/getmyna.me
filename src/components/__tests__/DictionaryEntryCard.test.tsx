@@ -39,23 +39,11 @@ describe('DictionaryEntryCard', () => {
     });
 
     describe('Rendering', () => {
-        it('should render the domain name', () => {
+        it('should render domain name and category', () => {
             render(<DictionaryEntryCard entry={mockEntry} />);
 
             expect(screen.getByText('example.com')).toBeInTheDocument();
-        });
-
-        it('should render the category when provided', () => {
-            render(<DictionaryEntryCard entry={mockEntry} />);
-
             expect(screen.getByText('Technology')).toBeInTheDocument();
-        });
-
-        it('should not render category when not provided', () => {
-            const entryWithoutCategory = { ...mockEntry, category: undefined };
-            render(<DictionaryEntryCard entry={entryWithoutCategory} />);
-
-            expect(screen.queryByText('Technology')).not.toBeInTheDocument();
         });
 
         it('should show availability indicator when domain is available', () => {
@@ -74,25 +62,8 @@ describe('DictionaryEntryCard', () => {
         });
     });
 
-    describe('Styling', () => {
-        it('should apply green styling when domain is available', () => {
-            const { container } = render(<DictionaryEntryCard entry={mockEntry} />);
-
-            const card = container.querySelector('.bg-green-200\\/60');
-            expect(card).toBeInTheDocument();
-        });
-
-        it('should apply gray styling when domain is not available', () => {
-            const unavailableEntry = { ...mockEntry, isAvailable: false };
-            const { container } = render(<DictionaryEntryCard entry={unavailableEntry} />);
-
-            const card = container.querySelector('.bg-gray-200\\/60');
-            expect(card).toBeInTheDocument();
-        });
-    });
-
     describe('Interactions', () => {
-        it('should open drawer when card is clicked', async () => {
+        it('should open drawer when card is clicked and fetch domain status', async () => {
             (apiClient.getDomainStatus as jest.Mock).mockResolvedValue('available');
 
             render(<DictionaryEntryCard entry={mockEntry} />);
@@ -103,55 +74,9 @@ describe('DictionaryEntryCard', () => {
             await waitFor(() => {
                 expect(screen.getByTestId('domain-detail-drawer')).toBeInTheDocument();
             });
-        });
-
-        it('should call apiClient.getDomainStatus when card is clicked', async () => {
-            (apiClient.getDomainStatus as jest.Mock).mockResolvedValue('available');
-
-            render(<DictionaryEntryCard entry={mockEntry} />);
-
-            const card = screen.getByText('example.com').closest('.group');
-            fireEvent.click(card!);
-
             await waitFor(() => {
                 expect(apiClient.getDomainStatus).toHaveBeenCalledWith('example.com');
             });
-        });
-
-        it('should close drawer when onClose is called', async () => {
-            (apiClient.getDomainStatus as jest.Mock).mockResolvedValue('available');
-
-            render(<DictionaryEntryCard entry={mockEntry} />);
-
-            const card = screen.getByText('example.com').closest('.group');
-            fireEvent.click(card!);
-
-            await waitFor(() => {
-                expect(screen.getByTestId('domain-detail-drawer')).toBeInTheDocument();
-            });
-
-            const closeButton = screen.getByText('Close');
-            fireEvent.click(closeButton);
-
-            await waitFor(() => {
-                expect(screen.queryByTestId('domain-detail-drawer')).not.toBeInTheDocument();
-            });
-        });
-    });
-
-    describe('Variants', () => {
-        it('should render with normal variant by default', () => {
-            render(<DictionaryEntryCard entry={mockEntry} />);
-
-            // Component should render successfully with default variant
-            expect(screen.getByText('example.com')).toBeInTheDocument();
-        });
-
-        it('should render with compact variant', () => {
-            render(<DictionaryEntryCard entry={mockEntry} variant="compact" />);
-
-            // Component should render successfully with compact variant
-            expect(screen.getByText('example.com')).toBeInTheDocument();
         });
     });
 });

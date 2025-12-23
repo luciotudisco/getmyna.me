@@ -11,15 +11,13 @@ import { apiClient } from '@/services/api';
 
 interface DictionaryEntryCardProps {
     entry: DictionaryEntry;
-    variant?: 'compact' | 'normal';
 }
 
-export default function DictionaryEntryCard({ entry, variant = 'normal' }: DictionaryEntryCardProps) {
+export default function DictionaryEntryCard({ entry }: DictionaryEntryCardProps) {
     const isAvailable = entry.isAvailable === true;
     const domain = useMemo(() => new Domain(entry.domain), [entry.domain]);
     const [selectedDomain, setSelectedDomain] = useState<Domain | null>(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    const isCompact = variant === 'compact';
 
     const handleDomainClick = useCallback(async () => {
         setSelectedDomain(domain);
@@ -39,7 +37,7 @@ export default function DictionaryEntryCard({ entry, variant = 'normal' }: Dicti
                 )}
                 onClick={handleDomainClick}
             >
-                <CardContent className={cn('p-3', isCompact && 'p-2')}>
+                <CardContent className="p-3">
                     <div className="flex flex-col gap-2">
                         <div className="flex items-center justify-between gap-2">
                             <h3 className="truncate text-xs font-semibold transition-colors group-hover:text-primary">

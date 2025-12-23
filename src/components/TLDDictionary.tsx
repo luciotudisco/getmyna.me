@@ -27,7 +27,7 @@ function TLDDictionaryHits() {
     return (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             {items.map((item) => (
-                <DictionaryEntryCard key={item.objectID} entry={item as unknown as DictionaryEntry} variant="compact" />
+                <DictionaryEntryCard key={item.objectID} entry={item as unknown as DictionaryEntry} />
             ))}
         </div>
     );
