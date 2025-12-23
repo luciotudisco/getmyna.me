@@ -33,7 +33,7 @@ function TLDDictionaryHits() {
     );
 }
 
-export default function TLDDictionaryEntries({ tld }: { tld: string }) {
+export default function TLDDictionary({ tld }: { tld: string }) {
     const filters = useMemo(() => {
         return `tld:${tld} AND isAvailable:true`;
     }, [tld]);

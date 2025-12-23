@@ -5,7 +5,7 @@ import { Building2, Calendar, DollarSign, ExternalLink, FileText } from 'lucide-
 
 import ErrorMessage from '@/components/ErrorMessage';
 import LoadingMessage from '@/components/LoadingMessage';
-import TLDDictionaryEntries from '@/components/TLDDictionaryEntries';
+import TLDDictionary from '@/components/TLDDictionary';
 import TLDTypeIcon from '@/components/TLDTypeIcon';
 import { Badge } from '@/components/ui/badge';
 import { REGISTRAR_DISPLAY_NAMES, REGISTRAR_TLD_SEARCH_URLS, TLD, TLD_TYPE_DISPLAY_NAMES } from '@/models/tld';
@@ -218,7 +218,7 @@ export default function TLDPage({ params }: { params: Promise<{ slug: string }> 
                                 </div>
                             </div>
                         )}
-                    <TLDDictionaryEntries tld={tld.name} />
+                    <TLDDictionary tld={tld.name} />
                 </div>
             </main>
         </div>
