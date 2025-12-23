@@ -39,15 +39,15 @@ export default function DictionaryEntryCard({ entry, variant = 'normal' }: Dicti
                 )}
                 onClick={handleDomainClick}
             >
-                <CardContent className='p-3'>
-                    <div className='flex flex-col gap-2'>
+                <CardContent className={cn('p-3', isCompact && 'p-2')}>
+                    <div className="flex flex-col gap-2">
                         <div className="flex items-center justify-between gap-2">
                             <h3 className="truncate text-xs font-semibold transition-colors group-hover:text-primary">
                                 {domain.getName()}
                             </h3>
                             {isAvailable && (
                                 <div
-                                   className="h-1.5 w-1.5 flex-shrink-0 animate-pulse rounded-full bg-green-800 shadow shadow-green-500/40"
+                                    className="h-1.5 w-1.5 flex-shrink-0 animate-pulse rounded-full bg-green-800 shadow shadow-green-500/40"
                                     aria-label="Available"
                                 />
                             )}
