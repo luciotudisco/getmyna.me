@@ -35,19 +35,15 @@ export default function DictionaryEntryCard({ entry, variant = 'normal' }: Dicti
                     'group relative cursor-pointer overflow-hidden rounded-sm border-[0.5px] transition-colors duration-200 hover:shadow-lg',
                     isAvailable
                         ? 'border-green-400/40 bg-green-200/60 hover:border-green-500 hover:shadow-green-200/20 dark:border-green-500/20 dark:bg-green-950/10 dark:hover:border-green-400/40 dark:hover:shadow-green-900/20'
-                        : 'border-gray-200 bg-gray-100/50 hover:border-gray-300 hover:shadow-gray-200/30 dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-gray-700 dark:hover:shadow-gray-900/20',
+                        : 'border-gray-400/40 bg-gray-200/60 hover:border-gray-500 hover:shadow-gray-200/20 dark:border-gray-500/20 dark:bg-gray-950/10 dark:hover:border-gray-400/40 dark:hover:shadow-gray-900/20',
                 )}
                 onClick={handleDomainClick}
             >
-                <CardContent className={cn(isCompact ? 'p-2' : 'p-3')}>
+                <CardContent className={cn(isCompact ? 'p-1' : 'p-3')}>
                     <div className={cn('flex flex-col', isCompact ? 'gap-1' : 'gap-2')}>
                         <div className="flex items-center justify-between gap-2">
                             <h3
-                                className={cn(
-                                    'truncate font-semibold transition-colors group-hover:text-primary',
-                                    isCompact ? 'text-xs' : 'text-sm',
-                                )}
-                            >
+                                className='truncate font-semibold transition-colors group-hover:text-primary text-xs'>
                                 {domain.getName()}
                             </h3>
                             {isAvailable && (
