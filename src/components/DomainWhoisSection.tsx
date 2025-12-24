@@ -28,7 +28,7 @@ export function DomainWhoisSection({ whoisInfo }: DomainWhoisSectionProps) {
     }
 
     return (
-        <div className="space-y-2 text-xs">
+        <div className="space-y-2 text-xs" data-testid="domain-whois-section">
             <div className="flex items-center justify-between">
                 <span className="font-semibold uppercase text-muted-foreground">Domain Whois</span>
             </div>

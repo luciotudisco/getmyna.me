@@ -9,7 +9,7 @@ export default function TLDSection({ name, description, type }: TLD) {
     const tldDisplayName = type ? TLD_TYPE_DISPLAY_NAMES[type] : null;
 
     return (
-        <div className="space-y-2 text-xs">
+        <div className="space-y-2 text-xs" data-testid="tld-section">
             <div className="flex items-center justify-between">
                 <span className="font-semibold uppercase text-muted-foreground">Top Level Domain</span>
                 <div className="flex items-center gap-2">
