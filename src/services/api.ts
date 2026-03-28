@@ -22,7 +22,7 @@ class APIClient {
      */
     async getDomainStatus(domain: string): Promise<DomainStatusEnum> {
         const response = await this.client.get(`/api/domains/${domain}/status`);
-        return response.data.status.toUpperCase() as DomainStatusEnum;
+        return this.parseDomainStatus(response.data.status);
     }
 
     /**
@@ -90,6 +90,17 @@ class APIClient {
             params: { term, include_subdomains: includeSubdomains },
         });
         return response.data.domainHacks ?? [];
+    }
+
+    /**
+     * Parses a domain status string to a DomainStatusEnum.
+     */
+    private parseDomainStatus(raw: string): DomainStatusEnum {
+        const upper = raw.toUpperCase();
+        if (Object.values(DomainStatusEnum).includes(upper as DomainStatusEnum)) {
+            return upper as DomainStatusEnum;
+        }
+        return DomainStatusEnum.UNKNOWN;
     }
 }
 

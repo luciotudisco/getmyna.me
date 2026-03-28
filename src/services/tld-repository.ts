@@ -12,8 +12,11 @@ import logger from '@/utils/logger';
 class TLDRepository {
     private readonly TTL_MILLISECONDS = 60_000;
     private readonly POSTGREST_NO_ROWS_ERROR = 'PGRST116';
+    private readonly TLD_SELECT =
+        'country_code,description,name,organization,pricing,punycode_name,tagline,type,year_established' as const;
+
     private client: SupabaseClient;
-    private cache = new TTLCache<unknown>();
+    private cache = new TTLCache<TLD | TLD[] | null>();
 
     constructor() {
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -27,12 +30,12 @@ class TLDRepository {
      * @returns The number of TLDs.
      */
     async count(): Promise<number> {
-        const { data, error } = await this.client.from('tld').select('*', { count: 'exact' });
+        const { count, error } = await this.client.from('tld').select('*', { count: 'exact', head: true });
         if (error) {
             logger.error({ error }, 'Error counting TLDs');
             throw new Error(`Failed to count TLDs: ${error.message}`);
         }
-        return data.length;
+        return count ?? 0;
     }
 
     /**
@@ -67,7 +70,6 @@ class TLDRepository {
 
         this.cache.delete('tlds');
         this.cache.delete(`tld:${tld.name}`);
-        this.cache.delete(`tld:exists:${tld.name}`);
     }
 
     /**
@@ -85,34 +87,17 @@ class TLDRepository {
         }
 
         const searchField = name.startsWith('xn--') ? 'punycode_name' : 'name';
-        const { data, error } = await this.client
-            .from('tld')
-            .select(
-                'country_code, description, name, organization, pricing, punycode_name, tagline, type, year_established',
-            )
-            .eq(searchField, name)
-            .single();
+        const { data, error } = await this.client.from('tld').select(this.TLD_SELECT).eq(searchField, name).single();
 
         if (error) {
             if (error.code === this.POSTGREST_NO_ROWS_ERROR) {
-                // No rows returned
                 this.cache.set(cacheKey, null, this.TTL_MILLISECONDS);
                 return null;
             }
             logger.error({ error }, `Error fetching TLD ${name}`);
             throw new Error(`Failed to fetch TLD ${name}: ${error.message}`);
         }
-        const tld = {
-            countryCode: data.country_code,
-            description: data.description,
-            name: data.name,
-            organization: data.organization,
-            pricing: data.pricing,
-            punycodeName: data.punycode_name,
-            tagline: data.tagline,
-            type: data.type,
-            yearEstablished: data.year_established,
-        } as TLD;
+        const tld = this.mapRow(data);
         this.cache.set(cacheKey, tld, this.TTL_MILLISECONDS);
         return tld;
     }
@@ -131,26 +116,14 @@ class TLDRepository {
 
         const { data, error } = await this.client
             .from('tld')
-            .select(
-                'country_code, description, name, organization, pricing, punycode_name, tagline, type, year_established',
-            )
+            .select(this.TLD_SELECT)
             .order('name', { ascending: true })
             .limit(5000);
         if (error) {
             logger.error({ error }, 'Error fetching TLDs');
             throw new Error(`Failed to fetch TLDs: ${error.message}`);
         }
-        const tlds: TLD[] = data.map((tld) => ({
-            countryCode: tld.country_code,
-            description: tld.description,
-            name: tld.name,
-            organization: tld.organization,
-            pricing: tld.pricing,
-            punycodeName: tld.punycode_name,
-            tagline: tld.tagline,
-            type: tld.type,
-            yearEstablished: tld.year_established,
-        }));
+        const tlds: TLD[] = data.map((row) => this.mapRow(row));
         this.cache.set(cacheKey, tlds, this.TTL_MILLISECONDS);
         return tlds;
     }
@@ -172,7 +145,7 @@ class TLDRepository {
                 name: tld.name,
                 organization: tld.organization,
                 pricing: tld.pricing,
-                punycodeName: tld.punycodeName,
+                punycode_name: tld.punycodeName,
                 tagline: tld.tagline,
                 type: tld.type,
                 updated_at: new Date().toISOString(),
@@ -187,7 +160,20 @@ class TLDRepository {
 
         this.cache.delete('tlds');
         this.cache.delete(`tld:${name}`);
-        this.cache.delete(`tld:exists:${name}`);
+    }
+
+    private mapRow(row: Record<string, unknown>): TLD {
+        return {
+            countryCode: row.country_code,
+            description: row.description,
+            name: row.name,
+            organization: row.organization,
+            pricing: row.pricing,
+            punycodeName: row.punycode_name,
+            tagline: row.tagline,
+            type: row.type,
+            yearEstablished: row.year_established,
+        } as TLD;
     }
 }
 

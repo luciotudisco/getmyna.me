@@ -25,9 +25,8 @@ export default function SearchBar() {
             return;
         }
         trackEvent('search', { term: searchTerm });
-        const parms = { term: searchTerm };
-        router.push(`/search?${new URLSearchParams(parms).toString()}`);
-        router.refresh();
+        const params = { term: searchTerm };
+        router.push(`/search?${new URLSearchParams(params).toString()}`);
     };
 
     return (

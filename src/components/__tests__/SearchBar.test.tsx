@@ -117,7 +117,6 @@ describe('SearchBar', () => {
 
         await waitFor(() => {
             expect(mockPush).toHaveBeenCalledWith('/search?term=test-domain');
-            expect(mockRefresh).toHaveBeenCalled();
         });
     });
 

@@ -44,10 +44,9 @@ describe('TLDRepository', () => {
 
     describe('countTLDs', () => {
         it('should return the count of TLDs', async () => {
-            const mockData = [{}, {}, {}]; // 3 items
             mockSupabaseClient.from = jest.fn().mockReturnValue({
                 select: jest.fn().mockResolvedValue({
-                    data: mockData,
+                    count: 3,
                     error: null,
                 }),
             });
@@ -90,7 +89,6 @@ describe('TLDRepository', () => {
             expect(mockSupabaseClient.from).toHaveBeenCalledWith('tld');
             expect(mockCache.delete).toHaveBeenCalledWith('tlds');
             expect(mockCache.delete).toHaveBeenCalledWith('tld:com');
-            expect(mockCache.delete).toHaveBeenCalledWith('tld:exists:com');
         });
     });
 
@@ -303,7 +301,6 @@ describe('TLDRepository', () => {
             expect(mockSupabaseClient.from).toHaveBeenCalledWith('tld');
             expect(mockCache.delete).toHaveBeenCalledWith('tlds');
             expect(mockCache.delete).toHaveBeenCalledWith('tld:com');
-            expect(mockCache.delete).toHaveBeenCalledWith('tld:exists:com');
         });
 
         it('should search by punycode_name when name starts with xn--', async () => {

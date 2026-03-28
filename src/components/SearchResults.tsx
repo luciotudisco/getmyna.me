@@ -1,4 +1,4 @@
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 import ErrorMessage from '@/components/ErrorMessage';
@@ -14,26 +14,39 @@ export function SearchResults() {
     const searchParams = useSearchParams();
     const [domains, setDomains] = useState<Domain[]>([]);
     const [hasError, setHasError] = useState(false);
-    const [isPending, startTransition] = useTransition();
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        startTransition(async () => {
+        let cancelled = false;
+        setIsLoading(true);
+        setHasError(false);
+
+        (async () => {
             try {
-                setHasError(false);
                 const term = searchParams.get('term');
                 const includeSubdomains = searchParams.get('include_subdomains') === 'true';
-
                 const names = await apiClient.searchDomains(term || '', includeSubdomains);
-                const matchingDomains = names.map((name: string) => new Domain(name));
-                setDomains(matchingDomains);
+                if (!cancelled) {
+                    setDomains(names.map((name: string) => new Domain(name)));
+                }
             } catch {
-                setHasError(true);
-                setDomains([]);
+                if (!cancelled) {
+                    setHasError(true);
+                    setDomains([]);
+                }
+            } finally {
+                if (!cancelled) {
+                    setIsLoading(false);
+                }
             }
-        });
+        })();
+
+        return () => {
+            cancelled = true;
+        };
     }, [searchParams]);
 
-    if (isPending) {
+    if (isLoading) {
         return <LoadingMessage />;
     }
 

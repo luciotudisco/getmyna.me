@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 import NumberTicker from '@/components/ui/number-ticker';
 import { apiClient } from '@/services/api';
 
-function CountDisplay({ isPending, hasError, count }: { isPending: boolean; hasError: boolean; count: number }) {
+function CountDisplay({ isLoading, hasError, count }: { isLoading: boolean; hasError: boolean; count: number }) {
     if (hasError) {
         return (
             <div className="flex flex-col items-center justify-center gap-1">
@@ -20,7 +20,7 @@ function CountDisplay({ isPending, hasError, count }: { isPending: boolean; hasE
         <div className="flex flex-col items-center gap-1">
             <div className="flex items-center gap-2 align-bottom">
                 <NumberTicker
-                    value={isPending ? 0 : count}
+                    value={isLoading ? 0 : count}
                     className="min-h-8 min-w-20 text-2xl font-semibold tabular-nums text-primary"
                 />
                 <span className="align-bottom text-lg font-medium text-muted-foreground">TLDs</span>
@@ -38,26 +38,38 @@ function CountDisplay({ isPending, hasError, count }: { isPending: boolean; hasE
 
 function TLDCounter() {
     const [count, setCount] = useState(0);
-    const [isPending, startTransition] = useTransition();
+    const [isLoading, setIsLoading] = useState(true);
     const [hasError, setHasError] = useState(false);
 
     useEffect(() => {
-        startTransition(async () => {
+        let cancelled = false;
+        (async () => {
             try {
                 setHasError(false);
-                const count = await apiClient.getTLDsCount();
-                setCount(count);
+                const next = await apiClient.getTLDsCount();
+                if (!cancelled) {
+                    setCount(next);
+                }
             } catch {
-                setHasError(true);
-                setCount(0);
+                if (!cancelled) {
+                    setHasError(true);
+                    setCount(0);
+                }
+            } finally {
+                if (!cancelled) {
+                    setIsLoading(false);
+                }
             }
-        });
+        })();
+        return () => {
+            cancelled = true;
+        };
     }, []);
 
     return (
         <div className="flex flex-col items-center justify-center gap-1">
             <h2 className="text-muted-foreground">Powered by a collection of</h2>
-            <CountDisplay isPending={isPending} hasError={hasError} count={count} />
+            <CountDisplay isLoading={isLoading} hasError={hasError} count={count} />
         </div>
     );
 }

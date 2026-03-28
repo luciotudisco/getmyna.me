@@ -47,6 +47,10 @@ export class DomainHacksGenerator {
         // Generate permutations for each element in the power set.
         const candidateNames: string[] = [];
         for (const element of namePartsPowerSet) {
+            if (element.length === 0) {
+                // Skip the empty subset — it matches every TLD and produces no domains.
+                continue;
+            }
             const namePartsElementPermutations = Permutation.of(element);
             for (const permutation of namePartsElementPermutations) {
                 candidateNames.push(permutation.join(''));
