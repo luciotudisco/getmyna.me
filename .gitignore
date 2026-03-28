@@ -264,4 +264,7 @@ dist
 # SvelteKit build / generate output
 .svelte-kit
 
+# Claude.ai
+.claude/
+
 # End of https://www.toptal.com/developers/gitignore/api/node,nextjs,typescript,visualstudiocode

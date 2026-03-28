@@ -5,7 +5,7 @@ import { Domain, DomainStatus } from '@/models/domain';
 import logger from '@/utils/logger';
 
 const DOMAINR_BASE_URL = 'https://domainr.p.rapidapi.com/v2/status';
-const RAPID_API_KEY = process.env.RAPIDAPI_KEY!;
+const RAPID_API_KEY = process.env.RAPID_API_KEY!;
 
 export async function GET(_request: Request, ctx: { params: Promise<{ name: string }> }): Promise<NextResponse> {
     try {
