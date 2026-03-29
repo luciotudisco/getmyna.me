@@ -43,10 +43,12 @@ function DomainDetailDrawer({ domain, open, onClose }: DomainDetailDrawerProps) 
             try {
                 setHasError(false);
                 const isAvailable = domain.isAvailable();
-                const whoisPromise = isAvailable ? Promise.resolve(null) : apiClient.getWhoisInfo(domain.getName());
+                const whoisPromise = isAvailable
+                    ? Promise.resolve(null)
+                    : apiClient.getWhoisInfo(domain.getName()).catch(() => null);
                 const tldPromise = apiClient.getDomainTLD(domain.getName());
                 const [whoisData, tldData] = await Promise.all([whoisPromise, tldPromise]);
-                setWhoisInfo(whoisData as WhoisInfo);
+                setWhoisInfo(whoisData);
                 setTldInfo(tldData as TLD);
             } catch {
                 setHasError(true);
