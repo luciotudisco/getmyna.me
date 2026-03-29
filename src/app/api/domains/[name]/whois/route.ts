@@ -13,22 +13,19 @@ export async function GET(_request: Request, ctx: { params: Promise<{ name: stri
             return NextResponse.json({ error: `The domain '${domain}' is not a valid domain` }, { status: 400 });
         }
 
-        const byServer = await whoisDomain(domain, { follow: 2, timeout: WHOIS_TIMEOUT_MS });
-        const whoisData = byServer ? (Object.values(byServer)[0] as Record<string, unknown>) : undefined;
-        if (!whoisData) {
+        const whoisDataByServer = await whoisDomain(domain, { follow: 2, timeout: WHOIS_TIMEOUT_MS });
+        const whois = whoisDataByServer ? (Object.values(whoisDataByServer)[0] as Record<string, unknown>) : undefined;
+        if (!whois) {
             return NextResponse.json({});
         }
-        console.log(whoisData);
-
         return NextResponse.json({
-            creationDate: readWhoisValue(whoisData, 'Created Date'),
-            expirationDate: readWhoisValue(whoisData, 'Expiry Date'),
-            lastUpdatedDate: readWhoisValue(whoisData, 'Updated Date'),
-            registrar: readWhoisValue(whoisData, 'Registrar'),
-            registrarUrl: readWhoisValue(whoisData, 'Registrar URL'),
-            registrantName:
-                readWhoisValue(whoisData, 'Registrant Name') || readWhoisValue(whoisData, 'Registrant Organization'),
-            nameServer: readWhoisValue(whoisData, 'Name Server'),
+            creationDate: get(whois, 'Created Date'),
+            expirationDate: get(whois, 'Expiry Date'),
+            lastUpdatedDate: get(whois, 'Updated Date'),
+            registrar: get(whois, 'Registrar'),
+            registrarUrl: get(whois, 'Registrar URL'),
+            registrantName: get(whois, 'Registrant Name') || get(whois, 'Registrant Organization'),
+            nameServer: get(whois, 'Name Server'),
         });
     } catch (error) {
         logger.error({ error }, 'Error fetching whois data');
@@ -36,8 +33,8 @@ export async function GET(_request: Request, ctx: { params: Promise<{ name: stri
     }
 }
 
-const readWhoisValue = (data: Record<string, unknown>, key: string): string | undefined => {
-    const raw = data[key];
+const get = (whoisData: Record<string, unknown>, key: string): string | undefined => {
+    const raw = whoisData[key];
     if (Array.isArray(raw)) return typeof raw[0] === 'string' && raw[0].trim() ? raw[0] : undefined;
     return typeof raw === 'string' && raw.trim() ? raw : undefined;
 };
