@@ -1,10 +1,12 @@
-import axios from 'axios';
+import { whoisDomain } from 'whoiser';
 
 import { GET } from '@/app/api/domains/[name]/whois/route';
 
-jest.mock('axios');
+jest.mock('whoiser', () => ({
+    whoisDomain: jest.fn(),
+}));
 
-const mockAxios = axios as jest.Mocked<typeof axios>;
+const mockWhoisDomain = whoisDomain as jest.MockedFunction<typeof whoisDomain>;
 
 describe('/api/domains/[name]/whois', () => {
     const mockCtx = { params: Promise.resolve({ name: 'example.com' }) };
@@ -13,20 +15,18 @@ describe('/api/domains/[name]/whois', () => {
         jest.clearAllMocks();
     });
 
-    it('should return whois data when API succeeds and returs has string values', async () => {
-        const mockApiResponse = {
-            data: {
-                result: {
-                    creation_date: '2023-01-15T10:30:00Z',
-                    expiration_date: '2025-01-15T10:30:00Z',
-                    updated_date: '2024-06-10T14:20:00Z',
-                    registrar: 'Example Registrar Inc.',
-                    registrar_url: 'https://example-registrar.com',
-                    registrant_name: 'John Doe',
-                },
+    it('should map registry-style WHOIS from whoiser', async () => {
+        mockWhoisDomain.mockResolvedValue({
+            'whois.verisign-grs.com': {
+                'Domain Status': ['clientDeleteProhibited https://icann.org/epp#clientDeleteProhibited'],
+                'Domain Name': 'EXAMPLE.COM',
+                'Updated Date': '2026-01-16T18:26:50Z',
+                'Created Date': '1995-08-14T04:00:00Z',
+                'Expiry Date': '2026-08-13T04:00:00Z',
+                Registrar: 'RESERVED-Internet Assigned Numbers Authority',
+                'Registrar URL': 'http://res-dom.iana.org',
             },
-        };
-        mockAxios.post.mockResolvedValue(mockApiResponse);
+        });
 
         const request = new Request('https://example.com/api/domains/example.com/whois');
         const response = await GET(request, mockCtx);
@@ -34,30 +34,45 @@ describe('/api/domains/[name]/whois', () => {
 
         expect(response.status).toBe(200);
         expect(responseData).toEqual({
-            creationDate: '2023-01-15T10:30:00Z',
-            expirationDate: '2025-01-15T10:30:00Z',
-            lastUpdatedDate: '2024-06-10T14:20:00Z',
-            registrar: 'Example Registrar Inc.',
-            registrarUrl: 'https://example-registrar.com',
-            registrantName: 'John Doe',
+            creationDate: '1995-08-14T04:00:00Z',
+            expirationDate: '2026-08-13T04:00:00Z',
+            lastUpdatedDate: '2026-01-16T18:26:50Z',
+            registrar: 'RESERVED-Internet Assigned Numbers Authority',
+            registrarUrl: 'http://res-dom.iana.org',
+            registrantName: undefined,
         });
+        expect(mockWhoisDomain).toHaveBeenCalledWith('example.com', { follow: 2, timeout: 15_000 });
     });
 
-    it('should return whois data when API succeeds and returns array values', async () => {
-        const mockApiResponse = {
-            data: {
-                result: {
-                    creation_date: ['2023-01-15T10:30:00Z', '2023-01-15T10:30:01Z'],
-                    expiration_date: ['2025-01-15T10:30:00Z'],
-                    updated_date: ['2024-06-10T14:20:00Z', '2024-06-10T14:20:01Z'],
-                    registrar: 'Example Registrar Inc.',
-                    registrar_url: 'https://example-registrar.com',
-                    registrant_name: ['John Doe', 'Jane Doe'],
-                },
+    it('should fall back to Registrant Organization when Registrant Name is absent', async () => {
+        mockWhoisDomain.mockResolvedValue({
+            'whois.registrar.example': {
+                'Created Date': '2020-01-01T00:00:00Z',
+                'Expiry Date': '2026-01-01T00:00:00Z',
+                Registrar: 'Example Registrar',
+                'Registrant Organization': 'Acme Ltd',
             },
-        };
+        });
 
-        mockAxios.post.mockResolvedValue(mockApiResponse);
+        const request = new Request('https://example.com/api/domains/example.com/whois');
+        const response = await GET(request, mockCtx);
+        const responseData = await response.json();
+
+        expect(response.status).toBe(200);
+        expect(responseData.registrantName).toBe('Acme Ltd');
+    });
+
+    it('should use first element when date fields are arrays', async () => {
+        mockWhoisDomain.mockResolvedValue({
+            'whois.example.org': {
+                'Created Date': ['1995-08-14T04:00:00Z', '1995-08-15T04:00:00Z'],
+                'Expiry Date': ['2026-08-13T04:00:00Z'],
+                'Updated Date': ['2026-01-16T18:26:50Z'],
+                Registrar: 'Example Registrar',
+                'Registrar URL': 'https://registrar.example',
+                'Registrant Name': ['Alice', 'Bob'],
+            },
+        });
 
         const request = new Request('https://example.com/api/domains/example.com/whois');
         const response = await GET(request, mockCtx);
@@ -65,23 +80,36 @@ describe('/api/domains/[name]/whois', () => {
 
         expect(response.status).toBe(200);
         expect(responseData).toEqual({
-            creationDate: '2023-01-15T10:30:00Z', // First element of array
-            expirationDate: '2025-01-15T10:30:00Z', // First element of array
-            lastUpdatedDate: '2024-06-10T14:20:00Z', // First element of array
-            registrar: 'Example Registrar Inc.',
-            registrarUrl: 'https://example-registrar.com',
-            registrantName: 'John Doe', // First element of array
+            creationDate: '1995-08-14T04:00:00Z',
+            expirationDate: '2026-08-13T04:00:00Z',
+            lastUpdatedDate: '2026-01-16T18:26:50Z',
+            registrar: 'Example Registrar',
+            registrarUrl: 'https://registrar.example',
+            registrantName: 'Alice',
         });
     });
 
-    it('should return empty values when API returns no result', async () => {
-        const mockApiResponse = {
-            data: {
-                result: null,
+    it('should use the first WHOIS record only when multiple servers are returned', async () => {
+        mockWhoisDomain.mockResolvedValue({
+            'whois.registry.example': { error: 'timeout' },
+            'whois.registrar.example': {
+                'Created Date': '2020-01-01T00:00:00Z',
+                'Expiry Date': '2026-01-01T00:00:00Z',
+                Registrar: 'Good Registrar',
             },
-        };
+        });
 
-        mockAxios.post.mockResolvedValue(mockApiResponse);
+        const request = new Request('https://example.com/api/domains/example.com/whois');
+        const response = await GET(request, mockCtx);
+        const responseData = await response.json();
+
+        expect(response.status).toBe(200);
+        expect(responseData.registrar).toBeUndefined();
+        expect(responseData.creationDate).toBeUndefined();
+    });
+
+    it('should return empty payload when whoiser returns no usable data', async () => {
+        mockWhoisDomain.mockResolvedValue({});
 
         const request = new Request('https://example.com/api/domains/example.com/whois');
         const response = await GET(request, mockCtx);
@@ -107,11 +135,11 @@ describe('/api/domains/[name]/whois', () => {
 
         expect(response.status).toBe(400);
         expect(responseData).toEqual({ error: "The domain 'invalid-domain' is not a valid domain" });
+        expect(mockWhoisDomain).not.toHaveBeenCalled();
     });
 
-    it('should raise 500 when an error occurs', async () => {
-        const mockError = new Error('Network error');
-        mockAxios.post.mockRejectedValue(mockError);
+    it('should return 500 when whoiser throws', async () => {
+        mockWhoisDomain.mockRejectedValue(new Error('TLD not supported'));
 
         const request = new Request('https://example.com/api/domains/example.com/whois');
         const response = await GET(request, mockCtx);
