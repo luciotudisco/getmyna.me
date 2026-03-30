@@ -1,6 +1,6 @@
 'use client';
 
-import { format, formatDistanceToNow, parseISO } from 'date-fns';
+import { format, formatDistanceToNow, isValid, parseISO } from 'date-fns';
 
 import { WhoisInfo } from '@/models/whois';
 
@@ -13,18 +13,25 @@ export function DomainWhoisSection({ whoisInfo }: DomainWhoisSectionProps) {
     const formattedExpirationDate = formatDate(whoisInfo?.expirationDate);
     const domainAge = getAge(whoisInfo?.creationDate);
 
-    function formatDate(dateString: string | undefined): string | null {
-        if (!dateString) {
-            return null;
-        }
-        return format(parseISO(dateString), 'MMMM do, yyyy');
+    function parseValidIsoDate(dateString: string): Date | null {
+        const d = parseISO(dateString.trim());
+        return isValid(d) ? d : null;
     }
 
-    function getAge(dateString: string | undefined): string | null {
-        if (!dateString) {
+    function formatDate(dateString: string | undefined | null): string | null {
+        if (!dateString?.trim()) {
             return null;
         }
-        return formatDistanceToNow(parseISO(dateString), { addSuffix: false });
+        const d = parseValidIsoDate(dateString);
+        return d ? format(d, 'MMMM do, yyyy') : null;
+    }
+
+    function getAge(dateString: string | undefined | null): string | null {
+        if (!dateString?.trim()) {
+            return null;
+        }
+        const d = parseValidIsoDate(dateString);
+        return d ? formatDistanceToNow(d, { addSuffix: false }) : null;
     }
 
     return (

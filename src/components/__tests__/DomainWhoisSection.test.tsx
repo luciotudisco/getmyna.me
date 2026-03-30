@@ -42,4 +42,19 @@ describe('DomainWhoisSection', () => {
         expect(screen.getByText('Registrant:')).toBeInTheDocument();
         expect(screen.getByText('John Doe')).toBeInTheDocument();
     });
+
+    it('should omit created and expires lines when dates are not valid ISO strings', () => {
+        const whoisInfo: WhoisInfo = {
+            creationDate: 'not-a-date',
+            expirationDate: '2025-13-45',
+            registrar: 'Example Registrar',
+        };
+
+        render(<DomainWhoisSection whoisInfo={whoisInfo} />);
+
+        expect(screen.getByText('Domain Whois')).toBeInTheDocument();
+        expect(screen.queryByText('Created:')).not.toBeInTheDocument();
+        expect(screen.queryByText('Expires:')).not.toBeInTheDocument();
+        expect(screen.getByText('Registrar:')).toBeInTheDocument();
+    });
 });
