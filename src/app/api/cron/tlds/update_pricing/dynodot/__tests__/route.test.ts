@@ -10,9 +10,20 @@ jest.mock('@/services/tld-repository');
 const mockAxios = axios as jest.Mocked<typeof axios>;
 const mockTldRepository = tldRepository as jest.Mocked<typeof tldRepository>;
 
+const authorizedRequest = () =>
+    new Request('http://localhost/api/cron/tlds/update_pricing/dynodot', {
+        headers: { authorization: `Bearer ${process.env.CRON_SECRET}` },
+    });
+
 describe('/api/cron/tlds/update_pricing/dynodot', () => {
     beforeEach(() => {
         jest.clearAllMocks();
+    });
+
+    it('should return 401 when authorization header is missing', async () => {
+        const response = await GET(new Request('http://localhost/api/cron/tlds/update_pricing/dynodot'));
+        expect(response.status).toBe(401);
+        expect(await response.json()).toEqual({ error: 'Unauthorized' });
     });
 
     it('should successfully update TLD pricing from Dynadot', async () => {
@@ -35,7 +46,7 @@ describe('/api/cron/tlds/update_pricing/dynodot', () => {
         mockTldRepository.get.mockResolvedValueOnce(mockComTldInfo as any);
         mockTldRepository.update.mockResolvedValue();
 
-        const response = await GET();
+        const response = await GET(authorizedRequest());
         const responseData = await response.json();
 
         expect(response.status).toBe(200);
@@ -52,7 +63,7 @@ describe('/api/cron/tlds/update_pricing/dynodot', () => {
         const mockError = new Error('Network error');
         mockAxios.get.mockRejectedValue(mockError);
 
-        const response = await GET();
+        const response = await GET(authorizedRequest());
         const responseData = await response.json();
 
         expect(response.status).toBe(500);

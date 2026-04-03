@@ -29,7 +29,10 @@ interface DynadotPricingResponse {
  * This function fetches the TLDs from the database and enriches them with the pricing information from Dynadot.
  * It then updates the TLDs in the database with the new pricing information.
  */
-export async function GET(): Promise<NextResponse> {
+export async function GET(request: Request): Promise<NextResponse> {
+    if (request.headers.get('authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
     try {
         logger.info('Starting TLD pricing enrichment from Dynadot ...');
         const headers = { Authorization: `Bearer ${DYNADOT_API_KEY}`, Accept: 'application/json' };

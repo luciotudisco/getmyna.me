@@ -2,6 +2,10 @@ import '@testing-library/jest-dom';
 
 // Set up environment variables for tests
 process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY = 'test-amplitude-api-key';
+process.env.CRON_SECRET = 'test-cron-secret';
+process.env.NAMECOM_API_KEY = 'test-namecom-api-key';
+process.env.GANDI_API_KEY = 'test-gandi-api-key';
+process.env.NAMESILO_API_KEY = 'test-namesilo-api-key';
 process.env.NEXT_PUBLIC_ALGOLIA_APP_ID = 'test-algolia-app-id';
 process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY = 'test-algolia-search-key';
 process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME = 'dictionary';

@@ -12,7 +12,10 @@ export const maxDuration = 300; // This function can run for a maximum of 5 minu
  * Enrich TLDs with a description.
  * This function fetches the TLDs from the database and enriches them with a description.
  */
-export async function GET(): Promise<NextResponse> {
+export async function GET(request: Request): Promise<NextResponse> {
+    if (request.headers.get('authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
     try {
         logger.info('Starting TLD enrichment with description ...');
         const openaiClient = new OpenAI({ apiKey: process.env['OPENAI_API_KEY'] });

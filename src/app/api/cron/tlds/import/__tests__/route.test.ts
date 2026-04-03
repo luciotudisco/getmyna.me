@@ -9,9 +9,30 @@ jest.mock('@/services/tld-repository');
 const mockAxios = axios as jest.Mocked<typeof axios>;
 const mockTldRepository = tldRepository as jest.Mocked<typeof tldRepository>;
 
+const authorizedRequest = () =>
+    new Request('http://localhost/api/cron/tlds/import', {
+        headers: { authorization: `Bearer ${process.env.CRON_SECRET}` },
+    });
+
 describe('/api/cron/tlds/import', () => {
     beforeEach(() => {
         jest.clearAllMocks();
+    });
+
+    it('should return 401 when authorization header is missing', async () => {
+        const response = await GET(new Request('http://localhost/api/cron/tlds/import'));
+        expect(response.status).toBe(401);
+        expect(await response.json()).toEqual({ error: 'Unauthorized' });
+    });
+
+    it('should return 401 when authorization header is invalid', async () => {
+        const response = await GET(
+            new Request('http://localhost/api/cron/tlds/import', {
+                headers: { authorization: 'Bearer wrong-secret' },
+            }),
+        );
+        expect(response.status).toBe(401);
+        expect(await response.json()).toEqual({ error: 'Unauthorized' });
     });
 
     it('should successfully import TLDs from IANA', async () => {
@@ -22,7 +43,7 @@ describe('/api/cron/tlds/import', () => {
         mockAxios.get.mockResolvedValue(mockApiResponse);
         mockTldRepository.get.mockResolvedValue(null); // TLD doesn't exist
 
-        const response = await GET();
+        const response = await GET(authorizedRequest());
         const responseData = await response.json();
 
         expect(response.status).toBe(200);
@@ -53,7 +74,7 @@ describe('/api/cron/tlds/import', () => {
         mockAxios.get.mockResolvedValue(mockApiResponse);
         mockTldRepository.get.mockResolvedValue(null);
 
-        const response = await GET();
+        const response = await GET(authorizedRequest());
         const responseData = await response.json();
 
         expect(response.status).toBe(200);
@@ -71,7 +92,7 @@ describe('/api/cron/tlds/import', () => {
         const mockError = new Error('Network error');
         mockAxios.get.mockRejectedValue(mockError);
 
-        const response = await GET();
+        const response = await GET(authorizedRequest());
         const responseData = await response.json();
 
         expect(response.status).toBe(500);
