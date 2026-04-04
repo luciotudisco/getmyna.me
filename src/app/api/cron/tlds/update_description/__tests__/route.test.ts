@@ -13,11 +13,6 @@ const mockAxios = axios as jest.Mocked<typeof axios>;
 const mockTldRepository = tldRepository as jest.Mocked<typeof tldRepository>;
 const mockOpenAI = OpenAI as jest.MockedClass<typeof OpenAI>;
 
-const authorizedRequest = () =>
-    new Request('http://localhost/api/cron/tlds/update_description', {
-        headers: { authorization: `Bearer ${process.env.CRON_SECRET}` },
-    });
-
 describe('/api/cron/tlds/update_description', () => {
     const mockOpenAIClient = {
         chat: {
@@ -33,7 +28,8 @@ describe('/api/cron/tlds/update_description', () => {
     });
 
     it('should return 401 when authorization header is missing', async () => {
-        const response = await GET(new Request('http://localhost/api/cron/tlds/update_description'));
+        const request = new Request('http://localhost/api/cron/tlds/update_description');
+        const response = await GET(request);
         expect(response.status).toBe(401);
         expect(await response.json()).toEqual({ error: 'Unauthorized' });
     });
@@ -77,7 +73,9 @@ describe('/api/cron/tlds/update_description', () => {
         };
         mockOpenAIClient.chat.completions.create.mockResolvedValue(mockAIResponse);
 
-        const response = await GET(authorizedRequest());
+        const headers = { authorization: `Bearer ${process.env.CRON_SECRET}` };
+        const request = new Request('http://localhost/api/cron/tlds/update_description', { headers });
+        const response = await GET(request);
         const responseData = await response.json();
 
         expect(response.status).toBe(200);
@@ -115,7 +113,9 @@ describe('/api/cron/tlds/update_description', () => {
 
         mockTldRepository.list.mockResolvedValue(mockTlds as any);
 
-        const response = await GET(authorizedRequest());
+        const headers = { authorization: `Bearer ${process.env.CRON_SECRET}` };
+        const request = new Request('http://localhost/api/cron/tlds/update_description', { headers });
+        const response = await GET(request);
         const responseData = await response.json();
 
         expect(response.status).toBe(200);
@@ -141,7 +141,9 @@ describe('/api/cron/tlds/update_description', () => {
         mockTldRepository.list.mockResolvedValue(mockTlds as any);
         mockAxios.get.mockRejectedValue(new Error('Network error'));
 
-        const response = await GET(authorizedRequest());
+        const headers = { authorization: `Bearer ${process.env.CRON_SECRET}` };
+        const request = new Request('http://localhost/api/cron/tlds/update_description', { headers });
+        const response = await GET(request);
         const responseData = await response.json();
 
         expect(response.status).toBe(500);

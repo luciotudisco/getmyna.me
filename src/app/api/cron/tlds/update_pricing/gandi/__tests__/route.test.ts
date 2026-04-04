@@ -10,18 +10,14 @@ jest.mock('@/services/tld-repository');
 const mockAxios = axios as jest.Mocked<typeof axios>;
 const mockTldRepository = tldRepository as jest.Mocked<typeof tldRepository>;
 
-const authorizedRequest = () =>
-    new Request('http://localhost/api/cron/tlds/update_pricing/gandi', {
-        headers: { authorization: `Bearer ${process.env.CRON_SECRET}` },
-    });
-
 describe('/api/cron/tlds/update_pricing/gandi', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
     it('should return 401 when authorization header is missing', async () => {
-        const response = await GET(new Request('http://localhost/api/cron/tlds/update_pricing/gandi'));
+        const request = new Request('http://localhost/api/cron/tlds/update_pricing/gandi');
+        const response = await GET(request);
         expect(response.status).toBe(401);
         expect(await response.json()).toEqual({ error: 'Unauthorized' });
     });
@@ -36,7 +32,9 @@ describe('/api/cron/tlds/update_pricing/gandi', () => {
         mockTldRepository.get.mockResolvedValueOnce(mockTldInfo as any);
         mockTldRepository.update.mockResolvedValue();
 
-        const response = await GET(authorizedRequest());
+        const headers = { authorization: `Bearer ${process.env.CRON_SECRET}` };
+        const request = new Request('http://localhost/api/cron/tlds/update_pricing/gandi', { headers });
+        const response = await GET(request);
         const responseData = await response.json();
 
         expect(response.status).toBe(200);
@@ -51,7 +49,9 @@ describe('/api/cron/tlds/update_pricing/gandi', () => {
         const mockError = new Error('Network error');
         mockAxios.get.mockRejectedValue(mockError);
 
-        const response = await GET(authorizedRequest());
+        const headers = { authorization: `Bearer ${process.env.CRON_SECRET}` };
+        const request = new Request('http://localhost/api/cron/tlds/update_pricing/gandi', { headers });
+        const response = await GET(request);
         const responseData = await response.json();
 
         expect(response.status).toBe(500);
