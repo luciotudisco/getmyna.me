@@ -7,7 +7,6 @@ import logger from '@/utils/logger';
 
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
 
-const NAMECOM_API_KEY = process.env.NAMECOM_API_KEY;
 const NAMECOM_PRICES_URL = `https://api.name.com/core/v1/tldpricing`;
 
 /**
@@ -28,10 +27,18 @@ interface NameComPricingResponse {
  * This function fetches the TLDs from the database and enriches them with the pricing information from Name.com.
  * It then updates the TLDs in the database with the new pricing information.
  */
-export async function GET(): Promise<NextResponse> {
+export async function GET(request: Request): Promise<NextResponse> {
+    if (request.headers.get('authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    const namecomApiKey = process.env.NAMECOM_API_KEY;
+    if (!namecomApiKey) {
+        logger.error('NAMECOM_API_KEY is not set');
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    }
     try {
         logger.info('Starting TLD pricing enrichment from Name.com ...');
-        const headers = { Authorization: `Basic ${NAMECOM_API_KEY}` };
+        const headers = { Authorization: `Basic ${namecomApiKey}` };
         let page = 1;
         let hasMoreResults = true;
         const MAX_PAGES = 100;

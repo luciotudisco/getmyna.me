@@ -7,8 +7,7 @@ import logger from '@/utils/logger';
 
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
 
-const NAMESILO_API_KEY = process.env.NAMESILO_API_KEY;
-const NAMESILO_PRICES_URL = `https://www.namesilo.com/api/getPrices?version=1&type=json&key=${NAMESILO_API_KEY}`;
+const NAMESILO_PRICES_BASE_URL = `https://www.namesilo.com/api/getPrices?version=1&type=json`;
 
 /**
  * The response from the Namesilo API for pricing information.
@@ -28,10 +27,18 @@ interface NamesiloPricingResponse {
  * This function fetches the TLDs from the database and enriches them with the pricing information from Namesilo.
  * It then updates the TLDs in the database with the new pricing information.
  */
-export async function GET(): Promise<NextResponse> {
+export async function GET(request: Request): Promise<NextResponse> {
+    if (request.headers.get('authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    const namesiloApiKey = process.env.NAMESILO_API_KEY;
+    if (!namesiloApiKey) {
+        logger.error('NAMESILO_API_KEY is not set');
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    }
     try {
         logger.info('Starting TLD pricing enrichment from Namesilo ...');
-        const response = await axios.get<NamesiloPricingResponse>(NAMESILO_PRICES_URL);
+        const response = await axios.get<NamesiloPricingResponse>(`${NAMESILO_PRICES_BASE_URL}&key=${namesiloApiKey}`);
         const tlds = Object.keys(response.data.reply).map((tld) => tld.toLowerCase());
         for (const tld of tlds) {
             const tldInfo = await tldRepository.get(tld);

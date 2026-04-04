@@ -8,7 +8,6 @@ import logger from '@/utils/logger';
 
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
 
-const GANDI_API_KEY = process.env.GANDI_API_KEY;
 const GANDI_TLDS_URL = 'https://api.gandi.net/v5/domain/tlds';
 
 /**
@@ -25,10 +24,18 @@ type GandiTLDsResponse = Array<{
  * This function fetches the TLDs from Gandi API and enriches them with the pricing information.
  * It then updates the TLDs in the database with the new pricing information.
  */
-export async function GET(): Promise<NextResponse> {
+export async function GET(request: Request): Promise<NextResponse> {
+    if (request.headers.get('authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    const gandiApiKey = process.env.GANDI_API_KEY;
+    if (!gandiApiKey) {
+        logger.error('GANDI_API_KEY is not set');
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    }
     try {
         logger.info('Starting TLD pricing enrichment from Gandi ...');
-        const headers = { Authorization: `Apikey ${GANDI_API_KEY}` };
+        const headers = { Authorization: `Apikey ${gandiApiKey}` };
         const response = await axios.get<GandiTLDsResponse>(GANDI_TLDS_URL, { headers });
         const tlds = response.data;
         for (const tldData of tlds) {

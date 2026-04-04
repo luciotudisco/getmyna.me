@@ -8,7 +8,10 @@ import logger from '@/utils/logger';
 const IANA_TLD_URL = 'https://data.iana.org/TLD/tlds-alpha-by-domain.txt';
 export const maxDuration = 300; // This function can run for a maximum of 5 minutes
 
-export async function GET(): Promise<NextResponse> {
+export async function GET(request: Request): Promise<NextResponse> {
+    if (request.headers.get('authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
     try {
         logger.info('Starting TLD import from IANA ...');
 

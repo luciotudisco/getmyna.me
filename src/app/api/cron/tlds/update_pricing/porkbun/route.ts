@@ -30,7 +30,10 @@ interface PorkbunPricingResponse {
  * This function fetches the TLDs from the database and enriches them with the pricing information from Porkbun.
  * It then updates the TLDs in the database with the new pricing information.
  */
-export async function GET(): Promise<NextResponse> {
+export async function GET(request: Request): Promise<NextResponse> {
+    if (request.headers.get('authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
     try {
         logger.info('Starting TLD pricing enrichment from Porkbun ...');
         const response = await axios.get<PorkbunPricingResponse>(PORKBUN_PRICES_URL);

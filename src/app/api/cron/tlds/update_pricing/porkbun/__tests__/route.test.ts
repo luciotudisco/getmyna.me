@@ -15,6 +15,13 @@ describe('/api/cron/tlds/update_pricing/porkbun', () => {
         jest.clearAllMocks();
     });
 
+    it('should return 401 when authorization header is missing', async () => {
+        const request = new Request('http://localhost/api/cron/tlds/update_pricing/porkbun');
+        const response = await GET(request);
+        expect(response.status).toBe(401);
+        expect(await response.json()).toEqual({ error: 'Unauthorized' });
+    });
+
     it('should successfully update TLD pricing from Porkbun', async () => {
         // Mock Porkbun API response
         const mockPorkbunResponse = {
@@ -37,7 +44,9 @@ describe('/api/cron/tlds/update_pricing/porkbun', () => {
         mockTldRepository.get.mockResolvedValueOnce(mockComTldInfo as any);
         mockTldRepository.update.mockResolvedValue();
 
-        const response = await GET();
+        const headers = { authorization: `Bearer ${process.env.CRON_SECRET}` };
+        const request = new Request('http://localhost/api/cron/tlds/update_pricing/porkbun', { headers });
+        const response = await GET(request);
         const responseData = await response.json();
 
         expect(response.status).toBe(200);
@@ -54,7 +63,9 @@ describe('/api/cron/tlds/update_pricing/porkbun', () => {
         const mockError = new Error('Network error');
         mockAxios.get.mockRejectedValue(mockError);
 
-        const response = await GET();
+        const headers = { authorization: `Bearer ${process.env.CRON_SECRET}` };
+        const request = new Request('http://localhost/api/cron/tlds/update_pricing/porkbun', { headers });
+        const response = await GET(request);
         const responseData = await response.json();
 
         expect(response.status).toBe(500);

@@ -27,6 +27,13 @@ describe('/api/cron/tlds/update_description', () => {
         mockOpenAI.mockImplementation(() => mockOpenAIClient as any);
     });
 
+    it('should return 401 when authorization header is missing', async () => {
+        const request = new Request('http://localhost/api/cron/tlds/update_description');
+        const response = await GET(request);
+        expect(response.status).toBe(401);
+        expect(await response.json()).toEqual({ error: 'Unauthorized' });
+    });
+
     it('should successfully enrich TLDs with description', async () => {
         // Mock TLD data
         const mockTlds = [
@@ -66,7 +73,9 @@ describe('/api/cron/tlds/update_description', () => {
         };
         mockOpenAIClient.chat.completions.create.mockResolvedValue(mockAIResponse);
 
-        const response = await GET();
+        const headers = { authorization: `Bearer ${process.env.CRON_SECRET}` };
+        const request = new Request('http://localhost/api/cron/tlds/update_description', { headers });
+        const response = await GET(request);
         const responseData = await response.json();
 
         expect(response.status).toBe(200);
@@ -104,7 +113,9 @@ describe('/api/cron/tlds/update_description', () => {
 
         mockTldRepository.list.mockResolvedValue(mockTlds as any);
 
-        const response = await GET();
+        const headers = { authorization: `Bearer ${process.env.CRON_SECRET}` };
+        const request = new Request('http://localhost/api/cron/tlds/update_description', { headers });
+        const response = await GET(request);
         const responseData = await response.json();
 
         expect(response.status).toBe(200);
@@ -130,7 +141,9 @@ describe('/api/cron/tlds/update_description', () => {
         mockTldRepository.list.mockResolvedValue(mockTlds as any);
         mockAxios.get.mockRejectedValue(new Error('Network error'));
 
-        const response = await GET();
+        const headers = { authorization: `Bearer ${process.env.CRON_SECRET}` };
+        const request = new Request('http://localhost/api/cron/tlds/update_description', { headers });
+        const response = await GET(request);
         const responseData = await response.json();
 
         expect(response.status).toBe(500);

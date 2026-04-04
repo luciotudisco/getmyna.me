@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 
 import DomainDetailDrawer from '@/components/DomainDetailDrawer';
 import DomainStatusBadge from '@/components/DomainStatusBadge';
@@ -9,7 +9,7 @@ import { Domain, DomainStatus as DomainStatusEnum } from '@/models/domain';
 import { apiClient } from '@/services/api';
 import { rateLimiter } from '@/utils/rate-limiter';
 
-export function SearchResult({ domain }: { domain: Domain }) {
+export const SearchResult = memo(({ domain }: { domain: Domain }) => {
     const [status, setStatus] = useState<DomainStatusEnum>(DomainStatusEnum.UNKNOWN);
     const [open, setOpen] = useState(false);
 
@@ -45,4 +45,4 @@ export function SearchResult({ domain }: { domain: Domain }) {
             <DomainDetailDrawer domain={domain} open={open} onClose={() => setOpen(false)} />
         </>
     );
-}
+});

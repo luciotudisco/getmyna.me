@@ -288,12 +288,12 @@ describe('TLDRepository', () => {
         };
 
         it('should update TLD and invalidate cache', async () => {
+            const mockUpdate = jest.fn().mockReturnValue({
+                eq: jest.fn().mockResolvedValue({ error: null }),
+            });
+
             mockSupabaseClient.from = jest.fn().mockReturnValue({
-                update: jest.fn().mockReturnValue({
-                    eq: jest.fn().mockResolvedValue({
-                        error: null,
-                    }),
-                }),
+                update: mockUpdate,
             });
 
             await tldRepository.update('com', mockTLD);
@@ -301,6 +301,31 @@ describe('TLDRepository', () => {
             expect(mockSupabaseClient.from).toHaveBeenCalledWith('tld');
             expect(mockCache.delete).toHaveBeenCalledWith('tlds');
             expect(mockCache.delete).toHaveBeenCalledWith('tld:com');
+        });
+
+        it('should lowercase name and punycode_name in the update payload', async () => {
+            const mixedCaseTld: TLD = {
+                ...mockTLD,
+                name: 'COM',
+                punycodeName: 'COM',
+            };
+
+            const mockUpdate = jest.fn().mockReturnValue({
+                eq: jest.fn().mockResolvedValue({ error: null }),
+            });
+
+            mockSupabaseClient.from = jest.fn().mockReturnValue({
+                update: mockUpdate,
+            });
+
+            await tldRepository.update('COM', mixedCaseTld);
+
+            expect(mockUpdate).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    name: 'com',
+                    punycode_name: 'com',
+                }),
+            );
         });
 
         it('should search by punycode_name when name starts with xn--', async () => {

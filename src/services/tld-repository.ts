@@ -142,10 +142,10 @@ class TLDRepository {
             .update({
                 country_code: tld.countryCode,
                 description: tld.description,
-                name: tld.name,
+                name: tld.name?.toLowerCase(),
                 organization: tld.organization,
                 pricing: tld.pricing,
-                punycode_name: tld.punycodeName,
+                punycode_name: tld.punycodeName?.toLowerCase(),
                 tagline: tld.tagline,
                 type: tld.type,
                 updated_at: new Date().toISOString(),

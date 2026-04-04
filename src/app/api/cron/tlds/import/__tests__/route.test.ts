@@ -14,6 +14,21 @@ describe('/api/cron/tlds/import', () => {
         jest.clearAllMocks();
     });
 
+    it('should return 401 when authorization header is missing', async () => {
+        const request = new Request('http://localhost/api/cron/tlds/import');
+        const response = await GET(request);
+        expect(response.status).toBe(401);
+        expect(await response.json()).toEqual({ error: 'Unauthorized' });
+    });
+
+    it('should return 401 when authorization header is invalid', async () => {
+        const headers = { authorization: 'Bearer wrong-secret' };
+        const request = new Request('http://localhost/api/cron/tlds/import', { headers });
+        const response = await GET(request);
+        expect(response.status).toBe(401);
+        expect(await response.json()).toEqual({ error: 'Unauthorized' });
+    });
+
     it('should successfully import TLDs from IANA', async () => {
         const mockTldData = ['# This is a comment', 'com', 'io'].join('\n');
 
@@ -22,7 +37,9 @@ describe('/api/cron/tlds/import', () => {
         mockAxios.get.mockResolvedValue(mockApiResponse);
         mockTldRepository.get.mockResolvedValue(null); // TLD doesn't exist
 
-        const response = await GET();
+        const headers = { authorization: `Bearer ${process.env.CRON_SECRET}` };
+        const request = new Request('http://localhost/api/cron/tlds/import', { headers });
+        const response = await GET(request);
         const responseData = await response.json();
 
         expect(response.status).toBe(200);
@@ -53,7 +70,9 @@ describe('/api/cron/tlds/import', () => {
         mockAxios.get.mockResolvedValue(mockApiResponse);
         mockTldRepository.get.mockResolvedValue(null);
 
-        const response = await GET();
+        const headers = { authorization: `Bearer ${process.env.CRON_SECRET}` };
+        const request = new Request('http://localhost/api/cron/tlds/import', { headers });
+        const response = await GET(request);
         const responseData = await response.json();
 
         expect(response.status).toBe(200);
@@ -71,7 +90,9 @@ describe('/api/cron/tlds/import', () => {
         const mockError = new Error('Network error');
         mockAxios.get.mockRejectedValue(mockError);
 
-        const response = await GET();
+        const headers = { authorization: `Bearer ${process.env.CRON_SECRET}` };
+        const request = new Request('http://localhost/api/cron/tlds/import', { headers });
+        const response = await GET(request);
         const responseData = await response.json();
 
         expect(response.status).toBe(500);

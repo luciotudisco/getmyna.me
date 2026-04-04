@@ -16,7 +16,10 @@ const MAX_STALE_ENTRIES = 100;
 /**
  * Updates the dictionary of domain hacks.
  */
-export async function GET(): Promise<NextResponse> {
+export async function GET(request: Request): Promise<NextResponse> {
+    if (request.headers.get('authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
     try {
         logger.info('Starting fetch stale dictionary ...');
         const lastUpdatedThreshold = subDays(new Date(), STALE_THRESHOLD_DAYS).toISOString();
