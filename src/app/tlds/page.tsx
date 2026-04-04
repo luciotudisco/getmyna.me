@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState, useTransition } from 'react';
 import { search } from 'fast-fuzzy';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Search } from 'lucide-react';
 
 import ErrorMessage from '@/components/ErrorMessage';
@@ -121,37 +121,42 @@ export default function TldsPage() {
 
                 <div className="mt-3 w-full lg:mt-6">
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                        {filteredTlds.map((tld, idx) => (
-                            <motion.div
-                                key={tld.name}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{
-                                    duration: 0.5,
-                                    delay: Math.min(idx * 0.02, 0.3),
-                                    ease: 'easeOut',
-                                }}
-                            >
-                                <Card
-                                    className={cn(
-                                        'group relative cursor-pointer overflow-hidden rounded-sm border-[0.5px] transition-all duration-200 hover:scale-[1.02] hover:shadow-lg',
-                                        'border-gray-200 bg-white hover:border-gray-300 hover:shadow-gray-200/40',
-                                    )}
-                                    onClick={() => showDrawer(tld)}
+                        <AnimatePresence mode="popLayout">
+                            {filteredTlds.map((tld, idx) => (
+                                <motion.div
+                                    key={tld.name}
+                                    layout
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.95 }}
+                                    transition={{
+                                        duration: 0.3,
+                                        delay: Math.min(idx * 0.02, 0.3),
+                                        ease: 'easeOut',
+                                        layout: { duration: 0.2 },
+                                    }}
                                 >
-                                    <CardContent className="p-3">
-                                        <div className="flex flex-col gap-1">
-                                            <h3 className="flex min-w-0 items-center gap-2 truncate text-sm font-semibold transition-colors group-hover:text-primary">
-                                                .{tld.name}
-                                            </h3>
-                                            <span className="shrink-0 text-xs font-light lowercase text-muted-foreground">
-                                                {tld.type ? TLD_TYPE_DISPLAY_NAMES[tld.type] : 'Unknown'}
-                                            </span>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            </motion.div>
-                        ))}
+                                    <Card
+                                        className={cn(
+                                            'group relative cursor-pointer overflow-hidden rounded-sm border-[0.5px] transition-all duration-200 hover:scale-[1.02] hover:shadow-lg',
+                                            'border-gray-200 bg-white hover:border-gray-300 hover:shadow-gray-200/40',
+                                        )}
+                                        onClick={() => showDrawer(tld)}
+                                    >
+                                        <CardContent className="p-3">
+                                            <div className="flex flex-col gap-1">
+                                                <h3 className="flex min-w-0 items-center gap-2 truncate text-sm font-semibold transition-colors group-hover:text-primary">
+                                                    .{tld.name}
+                                                </h3>
+                                                <span className="shrink-0 text-xs font-light lowercase text-muted-foreground">
+                                                    {tld.type ? TLD_TYPE_DISPLAY_NAMES[tld.type] : 'Unknown'}
+                                                </span>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                </motion.div>
+                            ))}
+                        </AnimatePresence>
                     </div>
                 </div>
             </main>
