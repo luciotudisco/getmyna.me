@@ -3,8 +3,8 @@ import axios from 'axios';
 import { subDays } from 'date-fns';
 import { NextResponse } from 'next/server';
 
-import { DOMAIN_AVAILABLE_STATUS_VALUES, DomainStatus } from '@/models/domain';
 import { DictionaryEntry } from '@/models/dictionary';
+import { DOMAIN_AVAILABLE_STATUS_VALUES, DomainStatus } from '@/models/domain';
 import logger from '@/utils/logger';
 
 export const maxDuration = 300;

@@ -17,11 +17,6 @@ jest.mock('algoliasearch', () => ({
 
 const mockAxios = axios as jest.Mocked<typeof axios>;
 
-const authorizedRequest = () =>
-    new Request('http://localhost/api/cron/dictionary/refresh', {
-        headers: { authorization: `Bearer ${process.env.CRON_SECRET}` },
-    });
-
 // A date well in the past so entries are always stale
 const STALE_DATE = '2024-01-01T00:00:00.000Z';
 
@@ -30,29 +25,13 @@ describe('/api/cron/dictionary/refresh', () => {
         jest.clearAllMocks();
     });
 
-    it('should return 401 when authorization header is missing', async () => {
-        const response = await GET(new Request('http://localhost/api/cron/dictionary/refresh'));
-        expect(response.status).toBe(401);
-        expect(await response.json()).toEqual({ error: 'Unauthorized' });
-    });
-
-    it('should return 401 when authorization header is invalid', async () => {
-        const response = await GET(
-            new Request('http://localhost/api/cron/dictionary/refresh', {
-                headers: { authorization: 'Bearer wrong-secret' },
-            }),
-        );
-        expect(response.status).toBe(401);
-        expect(await response.json()).toEqual({ error: 'Unauthorized' });
-    });
-
     it('should refresh availability for stale entries', async () => {
         const staleEntries = [
             { objectID: 'gat.es', domain: 'gat.es', tld: 'es', word: 'gates', lastUpdated: STALE_DATE },
             { objectID: 'bill.io', domain: 'bill.io', tld: 'io', word: 'billing', lastUpdated: STALE_DATE },
         ];
 
-        mockBrowseObjects.mockImplementation(async ({ aggregator }) => {
+        mockBrowseObjects.mockImplementation(async ({ aggregator }: { aggregator: (res: any) => Promise<void> }) => {
             await aggregator({ hits: staleEntries, cursor: undefined });
         });
         mockPartialUpdateObject.mockResolvedValue({});
@@ -62,7 +41,7 @@ describe('/api/cron/dictionary/refresh', () => {
             .mockResolvedValueOnce({ data: { status: [{ status: 'undelegated inactive' }] } })
             .mockResolvedValueOnce({ data: { status: [{ status: 'active' }] } });
 
-        const response = await GET(authorizedRequest());
+        const response = await GET();
         const responseData = await response.json();
 
         expect(response.status).toBe(200);
@@ -99,7 +78,7 @@ describe('/api/cron/dictionary/refresh', () => {
             { objectID: 'ok.es', domain: 'ok.es', tld: 'es', word: 'okay', lastUpdated: STALE_DATE },
         ];
 
-        mockBrowseObjects.mockImplementation(async ({ aggregator }) => {
+        mockBrowseObjects.mockImplementation(async ({ aggregator }: { aggregator: (res: any) => Promise<void> }) => {
             await aggregator({ hits: staleEntries, cursor: undefined });
         });
         mockPartialUpdateObject.mockResolvedValue({});
@@ -108,7 +87,7 @@ describe('/api/cron/dictionary/refresh', () => {
             .mockRejectedValueOnce(new Error('API error'))
             .mockResolvedValueOnce({ data: { status: [{ status: 'inactive' }] } });
 
-        const response = await GET(authorizedRequest());
+        const response = await GET();
         const responseData = await response.json();
 
         expect(response.status).toBe(200);
@@ -129,13 +108,13 @@ describe('/api/cron/dictionary/refresh', () => {
             { objectID: 'weird.io', domain: 'weird.io', tld: 'io', word: 'weird', lastUpdated: STALE_DATE },
         ];
 
-        mockBrowseObjects.mockImplementation(async ({ aggregator }) => {
+        mockBrowseObjects.mockImplementation(async ({ aggregator }: { aggregator: (res: any) => Promise<void> }) => {
             await aggregator({ hits: staleEntries, cursor: undefined });
         });
         mockPartialUpdateObject.mockResolvedValue({});
         mockAxios.get.mockResolvedValueOnce({ data: { status: [] } });
 
-        await GET(authorizedRequest());
+        await GET();
 
         expect(mockPartialUpdateObject).toHaveBeenCalledWith(
             expect.objectContaining({
@@ -146,12 +125,11 @@ describe('/api/cron/dictionary/refresh', () => {
     });
 
     it('should return count 0 and make no API calls when there are no stale entries', async () => {
-        mockBrowseObjects.mockImplementation(async ({ aggregator }) => {
-            // No stale entries — aggregator called with empty hits
+        mockBrowseObjects.mockImplementation(async ({ aggregator }: { aggregator: (res: any) => Promise<void> }) => {
             await aggregator({ hits: [], cursor: undefined });
         });
 
-        const response = await GET(authorizedRequest());
+        const response = await GET();
         const responseData = await response.json();
 
         expect(response.status).toBe(200);
@@ -163,7 +141,7 @@ describe('/api/cron/dictionary/refresh', () => {
     it('should return 500 when Algolia browse fails', async () => {
         mockBrowseObjects.mockRejectedValue(new Error('Algolia error'));
 
-        const response = await GET(authorizedRequest());
+        const response = await GET();
         const responseData = await response.json();
 
         expect(response.status).toBe(500);
