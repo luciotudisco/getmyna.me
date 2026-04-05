@@ -9,6 +9,9 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+    experimental: {
+        useCache: true,
+    },
     async headers() {
         return [
             {

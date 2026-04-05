@@ -1,29 +1,25 @@
+import { createClient } from '@supabase/supabase-js';
+import { revalidateTag } from 'next/cache';
+
 import { Registrar, TLD, TLDType } from '@/models/tld';
 import { tldRepository } from '@/services/tld-repository';
-import { TTLCache } from '@/utils/cache';
 
-// Mock the Supabase client
 jest.mock('@supabase/supabase-js', () => ({
     createClient: jest.fn(),
 }));
 
-// Mock the cache
-jest.mock('@/utils/cache', () => ({
-    TTLCache: jest.fn().mockImplementation(() => ({
-        get: jest.fn(),
-        set: jest.fn(),
-        delete: jest.fn(),
-    })),
+jest.mock('next/cache', () => ({
+    unstable_cacheLife: jest.fn(),
+    unstable_cacheTag: jest.fn(),
+    revalidateTag: jest.fn(),
 }));
 
 describe('TLDRepository', () => {
     let mockSupabaseClient: any;
-    let mockCache: jest.Mocked<TTLCache<unknown>>;
 
     beforeEach(() => {
         jest.clearAllMocks();
 
-        // Create mock Supabase client
         mockSupabaseClient = {
             from: jest.fn().mockReturnThis(),
             select: jest.fn().mockReturnThis(),
@@ -35,11 +31,8 @@ describe('TLDRepository', () => {
             limit: jest.fn().mockReturnThis(),
         };
 
-        // Inject the mock client into the repository
+        (createClient as jest.Mock).mockReturnValue(mockSupabaseClient);
         (tldRepository as any).client = mockSupabaseClient;
-
-        // Get the mocked cache instance
-        mockCache = (tldRepository as any).cache;
     });
 
     describe('countTLDs', () => {
@@ -59,7 +52,7 @@ describe('TLDRepository', () => {
     });
 
     describe('createTld', () => {
-        it('should create a new TLD and invalidate cache', async () => {
+        it('should create a new TLD and revalidate cache tags', async () => {
             const mockTLD: TLD = {
                 countryCode: 'US',
                 name: 'com',
@@ -87,8 +80,8 @@ describe('TLDRepository', () => {
             await tldRepository.create(mockTLD);
 
             expect(mockSupabaseClient.from).toHaveBeenCalledWith('tld');
-            expect(mockCache.delete).toHaveBeenCalledWith('tlds');
-            expect(mockCache.delete).toHaveBeenCalledWith('tld:com');
+            expect(revalidateTag).toHaveBeenCalledWith('tlds');
+            expect(revalidateTag).toHaveBeenCalledWith('tld:com');
         });
     });
 
@@ -105,28 +98,7 @@ describe('TLDRepository', () => {
             year_established: 1985,
         };
 
-        it('should return cached TLD if available', async () => {
-            const cachedTLD: TLD = {
-                countryCode: 'US',
-                name: 'com',
-                punycodeName: 'com',
-                type: TLDType.GENERIC,
-                organization: 'VeriSign',
-                tagline: 'For commercial use',
-                yearEstablished: 1985,
-            };
-
-            mockCache.get.mockReturnValue(cachedTLD);
-
-            const result = await tldRepository.get('com');
-
-            expect(result).toBe(cachedTLD);
-            expect(mockCache.get).toHaveBeenCalledWith('tld:com');
-            expect(mockSupabaseClient.from).not.toHaveBeenCalled();
-        });
-
-        it('should fetch TLD from database and cache it', async () => {
-            mockCache.get.mockReturnValue(undefined);
+        it('should fetch TLD from database', async () => {
             mockSupabaseClient.from = jest.fn().mockReturnValue({
                 select: jest.fn().mockReturnValue({
                     eq: jest.fn().mockReturnValue({
@@ -151,11 +123,9 @@ describe('TLDRepository', () => {
                 pricing: {},
                 yearEstablished: 1985,
             });
-            expect(mockCache.set).toHaveBeenCalledWith('tld:com', expect.any(Object), 60000);
         });
 
         it('should search by punycode_name when name starts with xn--', async () => {
-            mockCache.get.mockReturnValue(undefined);
             const mockEq = jest.fn().mockReturnValue({
                 single: jest.fn().mockResolvedValue({
                     data: mockTLDData,
@@ -174,8 +144,7 @@ describe('TLDRepository', () => {
             expect(mockEq).toHaveBeenCalledWith('punycode_name', 'xn--test');
         });
 
-        it('should return null and cache when TLD not found (PGRST116)', async () => {
-            mockCache.get.mockReturnValue(undefined);
+        it('should return null when TLD not found (PGRST116)', async () => {
             mockSupabaseClient.from = jest.fn().mockReturnValue({
                 select: jest.fn().mockReturnValue({
                     eq: jest.fn().mockReturnValue({
@@ -190,7 +159,6 @@ describe('TLDRepository', () => {
             const result = await tldRepository.get('nonexistent');
 
             expect(result).toBeNull();
-            expect(mockCache.set).toHaveBeenCalledWith('tld:nonexistent', null, 60000);
         });
     });
 
@@ -220,19 +188,7 @@ describe('TLDRepository', () => {
             },
         ];
 
-        it('should return cached TLDs if available', async () => {
-            const cachedTLDs: TLD[] = [{ name: 'com' }, { name: 'net' }];
-            mockCache.get.mockReturnValue(cachedTLDs);
-
-            const result = await tldRepository.list();
-
-            expect(result).toBe(cachedTLDs);
-            expect(mockCache.get).toHaveBeenCalledWith('tlds');
-            expect(mockSupabaseClient.from).not.toHaveBeenCalled();
-        });
-
-        it('should fetch TLDs from database and cache them', async () => {
-            mockCache.get.mockReturnValue(undefined);
+        it('should fetch TLDs from database', async () => {
             mockSupabaseClient.from = jest.fn().mockReturnValue({
                 select: jest.fn().mockReturnValue({
                     order: jest.fn().mockReturnValue({
@@ -270,7 +226,6 @@ describe('TLDRepository', () => {
                     yearEstablished: 1985,
                 },
             ]);
-            expect(mockCache.set).toHaveBeenCalledWith('tlds', expect.any(Array), 60000);
         });
     });
 
@@ -287,7 +242,7 @@ describe('TLDRepository', () => {
             yearEstablished: 1985,
         };
 
-        it('should update TLD and invalidate cache', async () => {
+        it('should update TLD and revalidate cache tags', async () => {
             const mockUpdate = jest.fn().mockReturnValue({
                 eq: jest.fn().mockResolvedValue({ error: null }),
             });
@@ -299,8 +254,8 @@ describe('TLDRepository', () => {
             await tldRepository.update('com', mockTLD);
 
             expect(mockSupabaseClient.from).toHaveBeenCalledWith('tld');
-            expect(mockCache.delete).toHaveBeenCalledWith('tlds');
-            expect(mockCache.delete).toHaveBeenCalledWith('tld:com');
+            expect(revalidateTag).toHaveBeenCalledWith('tlds');
+            expect(revalidateTag).toHaveBeenCalledWith('tld:com');
         });
 
         it('should lowercase name and punycode_name in the update payload', async () => {

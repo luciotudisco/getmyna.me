@@ -1,4 +1,10 @@
+import { TextDecoder, TextEncoder } from 'util';
+
 import '@testing-library/jest-dom';
+
+// jsdom doesn't expose TextEncoder/TextDecoder, but Next.js server internals require them
+Object.defineProperty(global, 'TextEncoder', { value: TextEncoder, writable: true });
+Object.defineProperty(global, 'TextDecoder', { value: TextDecoder, writable: true });
 
 // Set up environment variables for tests
 process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY = 'test-amplitude-api-key';

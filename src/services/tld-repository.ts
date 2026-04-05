@@ -1,8 +1,62 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { revalidateTag, unstable_cacheLife as cacheLife, unstable_cacheTag as cacheTag } from 'next/cache';
 
 import { TLD } from '@/models/tld';
-import { TTLCache } from '@/utils/cache';
 import logger from '@/utils/logger';
+
+const POSTGREST_NO_ROWS_ERROR = 'PGRST116';
+const TLD_SELECT =
+    'country_code,description,name,organization,pricing,punycode_name,tagline,type,year_established' as const;
+
+function createDbClient() {
+    return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+}
+
+function mapRow(row: Record<string, unknown>): TLD {
+    return {
+        countryCode: row.country_code,
+        description: row.description,
+        name: row.name,
+        organization: row.organization,
+        pricing: row.pricing,
+        punycodeName: row.punycode_name,
+        tagline: row.tagline,
+        type: row.type,
+        yearEstablished: row.year_established,
+    } as TLD;
+}
+
+async function fetchTLD(name: string): Promise<TLD | null> {
+    'use cache';
+    cacheTag(`tld:${name}`);
+    cacheLife({ revalidate: 60 });
+
+    const client = createDbClient();
+    const searchField = name.startsWith('xn--') ? 'punycode_name' : 'name';
+    const { data, error } = await client.from('tld').select(TLD_SELECT).eq(searchField, name).single();
+
+    if (error) {
+        if (error.code === POSTGREST_NO_ROWS_ERROR) return null;
+        logger.error({ error }, `Error fetching TLD ${name}`);
+        throw new Error(`Failed to fetch TLD ${name}: ${error.message}`);
+    }
+    return mapRow(data);
+}
+
+async function fetchAllTLDs(): Promise<TLD[]> {
+    'use cache';
+    cacheTag('tlds');
+    cacheLife({ revalidate: 60 });
+
+    const client = createDbClient();
+    const { data, error } = await client.from('tld').select(TLD_SELECT).order('name', { ascending: true }).limit(5000);
+
+    if (error) {
+        logger.error({ error }, 'Error fetching TLDs');
+        throw new Error(`Failed to fetch TLDs: ${error.message}`);
+    }
+    return data.map(mapRow);
+}
 
 /**
  * A repository for interacting with TLD data in the Supabase database.
@@ -10,18 +64,10 @@ import logger from '@/utils/logger';
  * This repository provides methods for creating, updating, and fetching TLDs from the database.
  */
 class TLDRepository {
-    private readonly TTL_MILLISECONDS = 60_000;
-    private readonly POSTGREST_NO_ROWS_ERROR = 'PGRST116';
-    private readonly TLD_SELECT =
-        'country_code,description,name,organization,pricing,punycode_name,tagline,type,year_established' as const;
-
     private client: SupabaseClient;
-    private cache = new TTLCache<TLD | TLD[] | null>();
 
     constructor() {
-        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-        const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-        this.client = createClient(supabaseUrl, supabaseServiceKey);
+        this.client = createDbClient();
     }
 
     /**
@@ -68,8 +114,8 @@ class TLDRepository {
             throw new Error(`Failed to upsert TLD ${tld.name}: ${error.message}`);
         }
 
-        this.cache.delete('tlds');
-        this.cache.delete(`tld:${tld.name}`);
+        revalidateTag('tlds');
+        revalidateTag(`tld:${tld.name?.toLowerCase()}`);
     }
 
     /**
@@ -79,27 +125,7 @@ class TLDRepository {
      * @returns The TLD information.
      */
     async get(name: string): Promise<TLD | null> {
-        name = name.toLowerCase();
-        const cacheKey = `tld:${name}`;
-        const cached = this.cache.get(cacheKey);
-        if (cached !== undefined) {
-            return cached as TLD | null;
-        }
-
-        const searchField = name.startsWith('xn--') ? 'punycode_name' : 'name';
-        const { data, error } = await this.client.from('tld').select(this.TLD_SELECT).eq(searchField, name).single();
-
-        if (error) {
-            if (error.code === this.POSTGREST_NO_ROWS_ERROR) {
-                this.cache.set(cacheKey, null, this.TTL_MILLISECONDS);
-                return null;
-            }
-            logger.error({ error }, `Error fetching TLD ${name}`);
-            throw new Error(`Failed to fetch TLD ${name}: ${error.message}`);
-        }
-        const tld = this.mapRow(data);
-        this.cache.set(cacheKey, tld, this.TTL_MILLISECONDS);
-        return tld;
+        return fetchTLD(name.toLowerCase());
     }
 
     /**
@@ -108,24 +134,7 @@ class TLDRepository {
      * @returns A list of TLDs.
      */
     async list(): Promise<TLD[]> {
-        const cacheKey = 'tlds';
-        const cached = this.cache.get(cacheKey);
-        if (cached) {
-            return cached as TLD[];
-        }
-
-        const { data, error } = await this.client
-            .from('tld')
-            .select(this.TLD_SELECT)
-            .order('name', { ascending: true })
-            .limit(5000);
-        if (error) {
-            logger.error({ error }, 'Error fetching TLDs');
-            throw new Error(`Failed to fetch TLDs: ${error.message}`);
-        }
-        const tlds: TLD[] = data.map((row) => this.mapRow(row));
-        this.cache.set(cacheKey, tlds, this.TTL_MILLISECONDS);
-        return tlds;
+        return fetchAllTLDs();
     }
 
     /**
@@ -158,22 +167,8 @@ class TLDRepository {
             throw new Error(`Failed to update TLD ${name}: ${error.message}`);
         }
 
-        this.cache.delete('tlds');
-        this.cache.delete(`tld:${name}`);
-    }
-
-    private mapRow(row: Record<string, unknown>): TLD {
-        return {
-            countryCode: row.country_code,
-            description: row.description,
-            name: row.name,
-            organization: row.organization,
-            pricing: row.pricing,
-            punycodeName: row.punycode_name,
-            tagline: row.tagline,
-            type: row.type,
-            yearEstablished: row.year_established,
-        } as TLD;
+        revalidateTag('tlds');
+        revalidateTag(`tld:${name}`);
     }
 }
 
