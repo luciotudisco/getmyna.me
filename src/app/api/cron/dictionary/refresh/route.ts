@@ -1,7 +1,9 @@
 import { algoliasearch } from 'algoliasearch';
+import axios from 'axios';
 import { subDays } from 'date-fns';
 import { NextResponse } from 'next/server';
 
+import { DOMAIN_AVAILABLE_STATUS_VALUES, DomainStatus } from '@/models/domain';
 import { DictionaryEntry } from '@/models/dictionary';
 import logger from '@/utils/logger';
 
@@ -10,6 +12,8 @@ export const maxDuration = 300;
 const ALGOLIA_INDEX_NAME = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME!;
 const ALGOLIA_APP_ID = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!;
 const ALGOLIA_API_KEY = process.env.ALGOLIA_API_KEY!;
+const RAPID_API_KEY = process.env.RAPID_API_KEY!;
+const DOMAINR_BASE_URL = 'https://domainr.p.rapidapi.com/v2/status';
 const STALE_THRESHOLD_DAYS = 0;
 const MAX_STALE_ENTRIES = 100;
 
@@ -49,12 +53,30 @@ export async function GET(request: Request): Promise<NextResponse> {
         // Refresh the availability of the stale dictionary entries
         for (const entry of staleEntries) {
             const domainName = entry.domain;
-            logger.info({ domainName }, 'Stale dictionary entry');
-            // TODO: Refresh the domain status using the API
+            try {
+                logger.info({ domainName }, 'Refreshing dictionary entry ...');
+                const config = { headers: { 'x-rapidapi-key': RAPID_API_KEY }, params: { domain: domainName } };
+                const response = await axios.get(DOMAINR_BASE_URL, config);
+
+                let isAvailable = false;
+                if (response.data.status?.length > 0 && response.data.status[0].status) {
+                    const status = response.data.status[0].status.split(' ').at(-1)?.toUpperCase() as DomainStatus;
+                    isAvailable = DOMAIN_AVAILABLE_STATUS_VALUES.has(status);
+                }
+
+                await client.partialUpdateObject({
+                    indexName: ALGOLIA_INDEX_NAME,
+                    objectID: entry.objectID!,
+                    attributesToUpdate: { isAvailable, lastUpdated: new Date().toISOString() },
+                });
+                logger.info({ domainName, isAvailable }, 'Updated dictionary entry');
+            } catch (error) {
+                logger.error({ error, domainName }, 'Error refreshing dictionary entry, skipping ...');
+            }
         }
 
-        logger.info({ count: staleEntries.length }, 'Finished fetching stale dictionary entries');
-        return NextResponse.json({ message: 'Refreshed stale dictionary entries' });
+        logger.info({ count: staleEntries.length }, 'Finished refreshing stale dictionary entries');
+        return NextResponse.json({ message: 'Refreshed stale dictionary entries', count: staleEntries.length });
     } catch (error) {
         logger.error({ error }, 'Error fetching dictionary entries');
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
