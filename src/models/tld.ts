@@ -61,6 +61,14 @@ export interface TLD {
     yearEstablished?: number;
 }
 
+export const REGISTRAR_INITIALS: Record<Registrar, string> = {
+    [Registrar.DYNADOT]: 'DY',
+    [Registrar.GANDI]: 'GA',
+    [Registrar.NAMECOM]: 'NC',
+    [Registrar.NAMESILO]: 'NS',
+    [Registrar.PORKBUN]: 'PO',
+};
+
 export const REGISTRAR_ICON_COLORS: Record<Registrar, string> = {
     [Registrar.DYNADOT]: 'bg-blue-500',
     [Registrar.GANDI]: 'bg-sky-600',
