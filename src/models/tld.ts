@@ -61,6 +61,14 @@ export interface TLD {
     yearEstablished?: number;
 }
 
+export const REGISTRAR_ICON_COLORS: Record<Registrar, string> = {
+    [Registrar.DYNADOT]: 'bg-blue-500',
+    [Registrar.GANDI]: 'bg-sky-600',
+    [Registrar.NAMECOM]: 'bg-violet-600',
+    [Registrar.NAMESILO]: 'bg-green-600',
+    [Registrar.PORKBUN]: 'bg-orange-500',
+};
+
 export const TLD_TYPE_DISPLAY_NAMES: Record<TLDType, string> = {
     [TLDType.COUNTRY_CODE]: 'Country Code',
     [TLDType.GENERIC]: 'Generic',

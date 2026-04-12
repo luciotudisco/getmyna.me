@@ -1,9 +1,14 @@
 'use client';
 
-import { ExternalLinkIcon } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
-import { Registrar, REGISTRAR_DISPLAY_NAMES, REGISTRAR_DOMAIN_SEARCH_URLS, TLDPricing } from '@/models/tld';
+import {
+    Registrar,
+    REGISTRAR_DISPLAY_NAMES,
+    REGISTRAR_DOMAIN_SEARCH_URLS,
+    REGISTRAR_ICON_COLORS,
+    TLDPricing,
+} from '@/models/tld';
 
 interface DomainRegistrarButtonsProps {
     domainName: string;
@@ -23,7 +28,6 @@ function DomainRegistrarButtons({ domainName, pricing, isPremiumDomain }: Domain
         );
     }
 
-    // Sort registrars by pricing in ASC order and take first 3
     const sortedRegistrars = Object.entries(pricing)
         .sort(([, aPricing], [, bPricing]) => {
             const aPrice = aPricing?.registration || Infinity;
@@ -33,46 +37,47 @@ function DomainRegistrarButtons({ domainName, pricing, isPremiumDomain }: Domain
         .slice(0, 3);
 
     return (
-        <div className="space-y-2">
-            {sortedRegistrars.map(([registrarKey, registrarPricing]) => {
-                const registrar = registrarKey as Registrar;
-                const searchUrl = REGISTRAR_DOMAIN_SEARCH_URLS[registrar];
-                const displayName = REGISTRAR_DISPLAY_NAMES[registrar];
-                const registrationPrice = registrarPricing?.registration;
-                const hasPricing = typeof registrationPrice === 'number';
-                const roundedRegistrationPrice = hasPricing ? `$${registrationPrice.toFixed(2)}` : null;
-                return (
-                    <div key={registrar} className="flex items-center gap-3">
-                        <Button
-                            className="min-h-10 flex-1 bg-blue-500 text-white hover:bg-blue-700"
-                            onClick={() => window.open(searchUrl(domainName), '_blank')}
+        <div className="space-y-3">
+            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Buy at a registrar
+            </span>
+            <div className="space-y-3">
+                {sortedRegistrars.map(([registrarKey, registrarPricing]) => {
+                    const registrar = registrarKey as Registrar;
+                    const searchUrl = REGISTRAR_DOMAIN_SEARCH_URLS[registrar];
+                    const displayName = REGISTRAR_DISPLAY_NAMES[registrar];
+                    const initials = displayName.slice(0, 2).toUpperCase();
+                    const iconColor = REGISTRAR_ICON_COLORS[registrar];
+                    const registrationPrice = registrarPricing?.registration;
+                    const hasPricing = typeof registrationPrice === 'number';
+                    return (
+                        <a
+                            key={registrar}
+                            href={searchUrl(domainName)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-4 transition-all hover:border-blue-400 hover:bg-blue-50/40 hover:shadow-sm"
                         >
-                            <ExternalLinkIcon className="mr-2 h-4 w-4" />
-                            <div className="flex flex-1 items-center justify-between font-extrabold">
-                                {displayName}
-                                <div className="min-w-[100px] text-right text-xs">
-                                    {hasPricing ? (
-                                        <div>
-                                            {isPremiumDomain ? (
-                                                <div className="mb-1 text-xs font-extralight text-white/70">
-                                                    premium price
-                                                </div>
-                                            ) : (
-                                                <div className="font-extrabold text-white">
-                                                    <span className="text-xs text-white/70">from</span>{' '}
-                                                    {roundedRegistrationPrice}
-                                                </div>
-                                            )}
-                                        </div>
-                                    ) : (
-                                        <div className="text-xs font-extralight text-white/70">No pricing data</div>
+                            <div
+                                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-sm font-bold text-white ${iconColor}`}
+                            >
+                                {initials}
+                            </div>
+                            <div className="flex min-w-0 flex-1 items-center justify-between">
+                                <span className="text-base font-bold text-gray-900">{displayName}</span>
+                                <div className="flex items-center gap-2">
+                                    {hasPricing && (
+                                        <span className="text-sm font-medium text-gray-500">
+                                            {isPremiumDomain ? 'premium' : `$${registrationPrice.toFixed(2)}`}
+                                        </span>
                                     )}
+                                    <ChevronRight className="h-4 w-4 text-gray-400" />
                                 </div>
                             </div>
-                        </Button>
-                    </div>
-                );
-            })}
+                        </a>
+                    );
+                })}
+            </div>
         </div>
     );
 }

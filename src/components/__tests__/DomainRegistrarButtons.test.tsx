@@ -11,10 +11,10 @@ describe('DomainRegistrarButtons', () => {
             expect(screen.getByText(/We are not aware of any registrars that support this TLD/)).toBeInTheDocument();
         });
 
-        it('should not display any registrar buttons', () => {
+        it('should not display any registrar links', () => {
             render(<DomainRegistrarButtons domainName="example.com" pricing={{}} isPremiumDomain={false} />);
 
-            expect(screen.queryByRole('button')).not.toBeInTheDocument();
+            expect(screen.queryByRole('link')).not.toBeInTheDocument();
         });
     });
 
@@ -25,21 +25,26 @@ describe('DomainRegistrarButtons', () => {
             [Registrar.PORKBUN]: { registration: 8.75 },
         };
 
-        it('should display registrar buttons sorted by price (lowest first)', () => {
+        it('should display registrar cards sorted by price (lowest first)', () => {
             render(<DomainRegistrarButtons domainName="example.com" pricing={mockPricing} isPremiumDomain={false} />);
 
-            const buttons = screen.getAllByRole('button');
-            expect(buttons).toHaveLength(3);
+            const links = screen.getAllByRole('link');
+            expect(links).toHaveLength(3);
 
-            // Should be sorted by price: Porkbun ($8.75), Dynadot ($10.99), Gandi ($12.50)
-            expect(buttons[0]).toHaveTextContent('Porkbun');
-            expect(buttons[0]).toHaveTextContent('$8.75');
+            expect(links[0]).toHaveTextContent('Porkbun');
+            expect(links[0]).toHaveTextContent('$8.75');
 
-            expect(buttons[1]).toHaveTextContent('Dynadot');
-            expect(buttons[1]).toHaveTextContent('$10.99');
+            expect(links[1]).toHaveTextContent('Dynadot');
+            expect(links[1]).toHaveTextContent('$10.99');
 
-            expect(buttons[2]).toHaveTextContent('Gandi');
-            expect(buttons[2]).toHaveTextContent('$12.50');
+            expect(links[2]).toHaveTextContent('Gandi');
+            expect(links[2]).toHaveTextContent('$12.50');
+        });
+
+        it('should show section heading', () => {
+            render(<DomainRegistrarButtons domainName="example.com" pricing={mockPricing} isPremiumDomain={false} />);
+
+            expect(screen.getByText('Buy at a registrar')).toBeInTheDocument();
         });
 
         it('should limit to maximum 3 registrars', () => {
@@ -53,40 +58,22 @@ describe('DomainRegistrarButtons', () => {
 
             render(<DomainRegistrarButtons domainName="example.com" pricing={largePricing} isPremiumDomain={false} />);
 
-            const buttons = screen.getAllByRole('button');
-            expect(buttons).toHaveLength(3);
+            const links = screen.getAllByRole('link');
+            expect(links).toHaveLength(3);
 
-            // Should show the 3 cheapest: Porkbun ($8.75), NameSilo ($9.25), Dynadot ($10.99)
-            expect(buttons[0]).toHaveTextContent('Porkbun');
-            expect(buttons[0]).toHaveTextContent('$8.75');
-            expect(buttons[1]).toHaveTextContent('NameSilo');
-            expect(buttons[1]).toHaveTextContent('$9.25');
-            expect(buttons[2]).toHaveTextContent('Dynadot');
-            expect(buttons[2]).toHaveTextContent('$10.99');
-        });
-
-        it('should handle registrars without pricing data', () => {
-            const mixedPricing: Partial<Record<Registrar, TLDPricing>> = {
-                [Registrar.DYNADOT]: { registration: 10.99 },
-                [Registrar.GANDI]: {}, // No registration price
-                [Registrar.PORKBUN]: { registration: 8.75 },
-            };
-
-            render(<DomainRegistrarButtons domainName="example.com" pricing={mixedPricing} isPremiumDomain={false} />);
-
-            const buttons = screen.getAllByRole('button');
-            expect(buttons).toHaveLength(3);
-
-            // Gandi should show "No pricing data"
-            const gandiButton = screen.getByText('Gandi').closest('button');
-            expect(gandiButton).toHaveTextContent('No pricing data');
+            expect(links[0]).toHaveTextContent('Porkbun');
+            expect(links[0]).toHaveTextContent('$8.75');
+            expect(links[1]).toHaveTextContent('NameSilo');
+            expect(links[1]).toHaveTextContent('$9.25');
+            expect(links[2]).toHaveTextContent('Dynadot');
+            expect(links[2]).toHaveTextContent('$10.99');
         });
 
         it('should format prices with 2 decimal places', () => {
             const pricingWithDecimals: Partial<Record<Registrar, TLDPricing>> = {
-                [Registrar.DYNADOT]: { registration: 10 }, // Should show as $10.00
-                [Registrar.GANDI]: { registration: 12.5 }, // Should show as $12.50
-                [Registrar.PORKBUN]: { registration: 8.123 }, // Should show as $8.12
+                [Registrar.DYNADOT]: { registration: 10 },
+                [Registrar.GANDI]: { registration: 12.5 },
+                [Registrar.PORKBUN]: { registration: 8.123 },
             };
 
             render(
@@ -110,19 +97,26 @@ describe('DomainRegistrarButtons', () => {
 
             render(<DomainRegistrarButtons domainName="premium.com" pricing={pricingData} isPremiumDomain={true} />);
 
-            const buttons = screen.getAllByRole('button');
-            expect(buttons).toHaveLength(2);
+            const links = screen.getAllByRole('link');
+            expect(links).toHaveLength(2);
 
-            // Should show registrar buttons with "premium price" instead of actual pricing
-            expect(buttons[0]).toHaveTextContent('Dynadot');
-            expect(buttons[0]).toHaveTextContent('premium price');
+            expect(links[0]).toHaveTextContent('Dynadot');
+            expect(links[0]).toHaveTextContent('premium');
 
-            expect(buttons[1]).toHaveTextContent('Gandi');
-            expect(buttons[1]).toHaveTextContent('premium price');
+            expect(links[1]).toHaveTextContent('Gandi');
+            expect(links[1]).toHaveTextContent('premium');
 
-            // Should NOT show actual prices for premium domains
-            expect(buttons[0]).not.toHaveTextContent('$10.99');
-            expect(buttons[1]).not.toHaveTextContent('$12.50');
+            expect(links[0]).not.toHaveTextContent('$10.99');
+            expect(links[1]).not.toHaveTextContent('$12.50');
+        });
+
+        it('should link to registrar search pages', () => {
+            render(<DomainRegistrarButtons domainName="example.com" pricing={mockPricing} isPremiumDomain={false} />);
+
+            const links = screen.getAllByRole('link');
+            expect(links[0]).toHaveAttribute('href', expect.stringContaining('example.com'));
+            expect(links[0]).toHaveAttribute('target', '_blank');
+            expect(links[0]).toHaveAttribute('rel', 'noopener noreferrer');
         });
     });
 });
