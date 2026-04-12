@@ -95,7 +95,10 @@ function DomainDetailDrawer({ domain, open, onClose }: DomainDetailDrawerProps) 
             <DrawerContent className="min-h-[400px] p-4 md:p-10">
                 <DrawerHeader className="px-0">
                     <DrawerTitle className="flex items-center justify-between px-0">
-                        <div className="flex max-w-[200px] items-center truncate">{domain.getName()}</div>
+                        <div className="flex max-w-[200px] items-center truncate">
+                            <span>{domain.getRootDomain()}</span>
+                            <span className="text-muted-foreground">.{domain.getTLD()}</span>
+                        </div>
                         <DomainStatusBadge status={domain.getStatus()} className="min-w-[8rem]" />
                     </DrawerTitle>
                 </DrawerHeader>
