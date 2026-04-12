@@ -37,11 +37,11 @@ function DomainRegistrarButtons({ domainName, pricing, isPremiumDomain }: Domain
         .slice(0, 3);
 
     return (
-        <div className="space-y-3">
+        <div className="space-y-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Buy at a registrar
             </span>
-            <div className="space-y-3">
+            <div className="space-y-1.5">
                 {sortedRegistrars.map(([registrarKey, registrarPricing]) => {
                     const registrar = registrarKey as Registrar;
                     const searchUrl = REGISTRAR_DOMAIN_SEARCH_URLS[registrar];
@@ -56,22 +56,22 @@ function DomainRegistrarButtons({ domainName, pricing, isPremiumDomain }: Domain
                             href={searchUrl(domainName)}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-4 rounded-xl border border-gray-200 bg-white p-4 transition-all hover:border-blue-400 hover:bg-blue-50/40 hover:shadow-sm"
+                            className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-2.5 transition-all hover:border-blue-400 hover:bg-blue-50/40 hover:shadow-sm"
                         >
                             <div
-                                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-sm font-bold text-white ${iconColor}`}
+                                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs font-bold text-white ${iconColor}`}
                             >
                                 {initials}
                             </div>
                             <div className="flex min-w-0 flex-1 items-center justify-between">
-                                <span className="text-base font-bold text-gray-900">{displayName}</span>
-                                <div className="flex items-center gap-2">
+                                <span className="text-sm font-semibold text-gray-900">{displayName}</span>
+                                <div className="flex items-center gap-1.5">
                                     {hasPricing && (
-                                        <span className="text-sm font-medium text-gray-500">
+                                        <span className="text-xs font-medium text-gray-500">
                                             {isPremiumDomain ? 'premium' : `$${registrationPrice.toFixed(2)}`}
                                         </span>
                                     )}
-                                    <ChevronRight className="h-4 w-4 text-gray-400" />
+                                    <ChevronRight className="h-3.5 w-3.5 text-gray-400" />
                                 </div>
                             </div>
                         </a>
