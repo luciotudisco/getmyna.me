@@ -70,11 +70,11 @@ export const REGISTRAR_INITIALS: Record<Registrar, string> = {
 };
 
 export const REGISTRAR_ICON_COLORS: Record<Registrar, string> = {
-    [Registrar.DYNADOT]: 'bg-blue-500',
-    [Registrar.GANDI]: 'bg-cyan-500',
-    [Registrar.NAMECOM]: 'bg-teal-500',
-    [Registrar.NAMESILO]: 'bg-green-500',
-    [Registrar.PORKBUN]: 'bg-purple-500',
+    [Registrar.DYNADOT]: '#a9def9',
+    [Registrar.GANDI]: '#fcf6bd',
+    [Registrar.NAMECOM]: '#d0f4de',
+    [Registrar.NAMESILO]: '#e4c1f9',
+    [Registrar.PORKBUN]: '#ffd6e7',
 };
 
 export const TLD_TYPE_DISPLAY_NAMES: Record<TLDType, string> = {
