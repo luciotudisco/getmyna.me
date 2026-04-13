@@ -7,6 +7,7 @@ import {
     REGISTRAR_DISPLAY_NAMES,
     REGISTRAR_DOMAIN_SEARCH_URLS,
     REGISTRAR_ICON_COLORS,
+    REGISTRAR_INITIALS,
     TLDPricing,
 } from '@/models/tld';
 
@@ -46,7 +47,7 @@ function DomainRegistrarButtons({ domainName, pricing, isPremiumDomain }: Domain
                     const registrar = registrarKey as Registrar;
                     const searchUrl = REGISTRAR_DOMAIN_SEARCH_URLS[registrar];
                     const displayName = REGISTRAR_DISPLAY_NAMES[registrar];
-                    const initials = displayName.slice(0, 2).toUpperCase();
+                    const initials = REGISTRAR_INITIALS[registrar];
                     const iconColor = REGISTRAR_ICON_COLORS[registrar];
                     const registrationPrice = registrarPricing?.registration;
                     const hasPricing = typeof registrationPrice === 'number';
