@@ -71,9 +71,9 @@ export const REGISTRAR_INITIALS: Record<Registrar, string> = {
 
 export const REGISTRAR_ICON_COLORS: Record<Registrar, string> = {
     [Registrar.DYNADOT]: 'bg-blue-500',
-    [Registrar.GANDI]: 'bg-sky-600',
-    [Registrar.NAMECOM]: 'bg-violet-600',
-    [Registrar.NAMESILO]: 'bg-green-600',
+    [Registrar.GANDI]: 'bg-sky-500',
+    [Registrar.NAMECOM]: 'bg-violet-500',
+    [Registrar.NAMESILO]: 'bg-green-500',
     [Registrar.PORKBUN]: 'bg-orange-500',
 };
 
