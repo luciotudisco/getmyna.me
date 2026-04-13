@@ -74,7 +74,7 @@ export const REGISTRAR_ICON_COLORS: Record<Registrar, string> = {
     [Registrar.GANDI]: 'bg-sky-500',
     [Registrar.NAMECOM]: 'bg-violet-500',
     [Registrar.NAMESILO]: 'bg-green-500',
-    [Registrar.PORKBUN]: 'bg-orange-500',
+    [Registrar.PORKBUN]: 'bg-purple-500',
 };
 
 export const TLD_TYPE_DISPLAY_NAMES: Record<TLDType, string> = {
